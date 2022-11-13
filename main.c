@@ -71,11 +71,22 @@ int zsort(const void *first, const void *second) {
 Entity *StarblazerEntities[NUMOBJECTS];
 Object TestObject;
 Object TestObj2;
+Object TestObj3;
 
 void incoming_script(Entity** input){
 	(*input)->pos.z--;
 	if ((*input)->pos.z == 0){
 		(*input)->pos.z = 1000;
+	}
+}
+
+
+void particle_script(Entity** input){
+	(*input)->state[0]--;
+
+	if (!(*input)->state[0]){ //no time to die
+		free(*input);
+		*input = 0;
 	}
 }
 
@@ -99,7 +110,8 @@ void outgoing_script(Entity** input){
 					collided = 1;
 
 					//BOOOOOOOOOM
-					//spawn explosion dots - Size 8
+					//spawn explosion dots - Size 8 - they have a fixed position and don't move but have a fixed lifetime that decrements until they  despawn
+					//loop through and find some free spots
 
 					free(StarblazerEntities[i]);
 					StarblazerEntities[i] = 0;
@@ -131,6 +143,7 @@ int main(){
 	char* scratch = malloc(128000);
 	char* filebuf = malloc(5000);
 	char c = 252;
+	char C = 240;
 	char* fgbuf = malloc(65078);
 
 	int laserCooldown = 0;
@@ -177,6 +190,11 @@ int main(){
 	fp = fopen("idea.spr", "rb");
 	fread(fgbuf, 1, 64003, fp);
 	fclose(fp);
+
+	TestObj3.size = 8;
+	TestObj3.script = particle_script;
+	TestObj3.bits = &C;
+	TestObj3.spriteSize = 1;
 
 	TestObject.size = 16;
 	TestObject.script = incoming_script;
