@@ -67,6 +67,7 @@ int zsort(const void *first, const void *second) {
 #define NUMOBJECTS 1000
 #define NUMSTARS 75
 
+int explosionFlash = 0;
 
 Entity *StarblazerEntities[NUMOBJECTS];
 Object TestObject;
@@ -82,9 +83,12 @@ void incoming_script(Entity** input){
 
 
 void particle_script(Entity** input){
+	(*input)->pos.z--;
+	(*input)->pos.y += (*input)->state[2];
+	(*input)->pos.x+=(*input)->state[1];
 	(*input)->state[0]--;
 
-	if (!(*input)->state[0]){ //no time to die
+	if ((*input)->pos.z == 0 || !(*input)->state[0]){ //no time to die
 		free(*input);
 		*input = 0;
 	}
@@ -92,8 +96,10 @@ void particle_script(Entity** input){
 
 
 void outgoing_script(Entity** input){
-	int i;
+	int i, p;
 	int collided = 0;
+	int shards = 64;
+	int hitX, hitY, hitZ;
 
 	(*input)->pos.z++;
 
@@ -101,20 +107,39 @@ void outgoing_script(Entity** input){
 	for (i = 0; i < NUMOBJECTS; i++){
 		if (!StarblazerEntities[i]) break; //we've reached the end of the line, therefore breaking
 		if (StarblazerEntities[i] != *input){ //not colliding with ourselves lol
-			if (StarblazerEntities[i]->pos.z == (*input)->pos.z){ //on the same Z level
+			hitX = StarblazerEntities[i]->pos.x;
+			hitY = StarblazerEntities[i]->pos.y;
+			hitZ = StarblazerEntities[i]->pos.z;
+
+			if (!collided && abs(hitZ - (*input)->pos.z) < 1){ //on the same Z level
 				if (abs(StarblazerEntities[i]->pos.x - (*input)->pos.x) < 20 && abs(StarblazerEntities[i]->pos.y - (*input)->pos.y) < 20){
-					outp(0x3C8, 0);
-					outp(0x3C9, 63);
-					outp(0x3C9, 31);
-					outp(0x3C9, 0);
+					explosionFlash = 70;
 					collided = 1;
+
+					free(StarblazerEntities[i]);
+					StarblazerEntities[i] = 0;
 
 					//BOOOOOOOOOM
 					//spawn explosion dots - Size 8 - they have a fixed position and don't move but have a fixed lifetime that decrements until they  despawn
 					//loop through and find some free spots
 
-					free(StarblazerEntities[i]);
-					StarblazerEntities[i] = 0;
+					for (p = i; p < NUMOBJECTS; p++){
+						if (!StarblazerEntities[i]){
+							StarblazerEntities[i] = malloc(sizeof(Entity));
+							StarblazerEntities[i]->pos.x = hitX + rand() % 20 - 10;
+							StarblazerEntities[i]->pos.y = hitY + rand() % 20 - 10;
+							StarblazerEntities[i]->pos.z = hitZ;
+							StarblazerEntities[i]->obj = TestObj3;
+							StarblazerEntities[i]->state[0] = 105;
+							StarblazerEntities[i]->state[1] = rand() % 6 - 3;
+							StarblazerEntities[i]->state[2] = rand() % 6 - 3;
+							shards--;
+						}
+
+						if (!shards) break;
+					}
+
+					
 				}
 			}
 		}
@@ -143,7 +168,7 @@ int main(){
 	char* scratch = malloc(128000);
 	char* filebuf = malloc(5000);
 	char c = 252;
-	char C = 240;
+	char C = 3;
 	char* fgbuf = malloc(65078);
 
 	int laserCooldown = 0;
@@ -230,10 +255,30 @@ int main(){
 	start = *my_clock;
 	
 	while (!kbhit()){
-		outp(0x3c8, 0);
-		outp(0x3c9, 0);
-		outp(0x3c9, 0);
-		outp(0x3c9, 0);
+		if (explosionFlash){
+			if (explosionFlash & 1){
+				outp(0x3c8, 0);
+				outp(0x3c9, 63);
+				outp(0x3c9, 31);
+				outp(0x3c9, 0);
+			}
+
+			else{
+				outp(0x3c8, 0);
+				outp(0x3c9, 0);
+				outp(0x3c9, 0);
+				outp(0x3c9, 0);
+			}
+
+			explosionFlash--;
+
+			if (!explosionFlash){
+				outp(0x3c8, 0);
+				outp(0x3c9, 0);
+				outp(0x3c9, 0);
+				outp(0x3c9, 0);
+			}
+		}
 
 		readMouseKeyboard(&joy); 
 
