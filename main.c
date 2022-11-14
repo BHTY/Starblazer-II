@@ -83,7 +83,7 @@ void incoming_script(Entity** input){
 
 
 void particle_script(Entity** input){
-	(*input)->pos.z--;
+	//if ((*input)->state[0] & 1 == 0) (*input)->pos.z--;
 	(*input)->pos.y += (*input)->state[2];
 	(*input)->pos.x+=(*input)->state[1];
 	(*input)->state[0]--;
@@ -98,7 +98,7 @@ void particle_script(Entity** input){
 void outgoing_script(Entity** input){
 	int i, p;
 	int collided = 0;
-	int shards = 64;
+	int shards = 8;
 	int hitX, hitY, hitZ;
 
 	(*input)->pos.z++;
@@ -111,8 +111,8 @@ void outgoing_script(Entity** input){
 			hitY = StarblazerEntities[i]->pos.y;
 			hitZ = StarblazerEntities[i]->pos.z;
 
-			if (!collided && abs(hitZ - (*input)->pos.z) < 1){ //on the same Z level
-				if (abs(StarblazerEntities[i]->pos.x - (*input)->pos.x) < 20 && abs(StarblazerEntities[i]->pos.y - (*input)->pos.y) < 20){
+			if (!collided && abs(hitZ - (*input)->pos.z) < 10){ //on the same Z level
+				if (abs(StarblazerEntities[i]->pos.x - (*input)->pos.x) < 40 && abs(StarblazerEntities[i]->pos.y - (*input)->pos.y) < 40){
 					explosionFlash = 70;
 					collided = 1;
 
@@ -124,21 +124,20 @@ void outgoing_script(Entity** input){
 					//loop through and find some free spots
 
 					for (p = i; p < NUMOBJECTS; p++){
-						if (!StarblazerEntities[i]){
-							StarblazerEntities[i] = malloc(sizeof(Entity));
-							StarblazerEntities[i]->pos.x = hitX + rand() % 20 - 10;
-							StarblazerEntities[i]->pos.y = hitY + rand() % 20 - 10;
-							StarblazerEntities[i]->pos.z = hitZ;
-							StarblazerEntities[i]->obj = TestObj3;
-							StarblazerEntities[i]->state[0] = 105;
-							StarblazerEntities[i]->state[1] = rand() % 6 - 3;
-							StarblazerEntities[i]->state[2] = rand() % 6 - 3;
+						if (!StarblazerEntities[p]){
+							StarblazerEntities[p] = malloc(sizeof(Entity));
+							StarblazerEntities[p]->pos.x = hitX + rand() % 20 - 10;
+							StarblazerEntities[p]->pos.y = hitY + rand() % 20 - 10;
+							StarblazerEntities[p]->pos.z = hitZ;
+							StarblazerEntities[p]->obj = TestObj3;
+							StarblazerEntities[p]->state[0] = 105;
+							StarblazerEntities[p]->state[1] = rand() % 20 - 10;
+							StarblazerEntities[p]->state[2] = rand() % 20 - 10;
 							shards--;
 						}
 
 						if (!shards) break;
 					}
-
 					
 				}
 			}
@@ -245,8 +244,8 @@ int main(){
 	}
 
 	for (i = 0; i < NUMSTARS; i++){
-		stars[i].x = rand() % 640 - 320;
-		stars[i].y = rand() % 400 - 200;
+		stars[i].x = rand() % 1280 - 640;
+		stars[i].y = rand() % 800 - 400;
 		stars[i].z = rand() % 1500;
 	}
 	
@@ -325,7 +324,7 @@ int main(){
 			xpos = ((stars[i].x - camera.x) * scalefactor) >> 16;
 			ypos = ((stars[i].y - camera.y) * scalefactor) >> 16;
 			
-			if (!(xpos >= 160 || xpos < -160 || ypos >= 100 || ypos < -100)){
+			if (!(xpos >= 160 || xpos < -160 || ypos >= 100 || ypos < -100) && scalefactor > 0x1000){
 				draw_pixel(xpos + 160, ypos + 100, 255);
 			}
 
