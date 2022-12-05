@@ -11,8 +11,9 @@ To-do List
 7. Filled polygons  
 
 Other  
-1.) SoundBlaster SFX/music (FMVs with audio!)  
-2.) Backgrounds, free-range dogfights, other housekeeping stuff (TBD)  
+1. SoundBlaster SFX/music (FMVs with audio!)
+2. Backgrounds, free-range dogfights, other housekeeping stuff (TBD)  
+3. Functional HUD
 
 Tools to upload (this is for you, willk)
 - OBJ sanitizer
