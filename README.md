@@ -18,4 +18,4 @@ Other
 Tools to upload (this is for you, willk)
 - OBJ sanitizer
 - FMV converter
-- Sprite converter
+- Sprite converter  
