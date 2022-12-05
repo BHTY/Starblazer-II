@@ -11,5 +11,5 @@ To-do List
 7.) Filled polygons  
 
 Other  
-1.) SoundBlaster SFX/music  
+1.) SoundBlaster SFX/music (FMVs with audio!)  
 2.) Backgrounds, free-range dogfights, other housekeeping stuff (TBD)  
