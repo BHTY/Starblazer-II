@@ -13,3 +13,8 @@ To-do List
 Other  
 1.) SoundBlaster SFX/music (FMVs with audio!)  
 2.) Backgrounds, free-range dogfights, other housekeeping stuff (TBD)  
+
+Tools to upload (this is for you, willk)
+- OBJ sanitizer
+- FMV converter
+- Sprite converter
