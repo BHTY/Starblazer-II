@@ -34,9 +34,10 @@ void set_palette(char* palette){ //sets the VGA palette to the given array
 }
 
 void draw_pixel(int x, int y, char c){
-	if (x >= 0 && x < 320 && y >= 0 && y < 200){
-		backbuffer[y * 320 + x] = c;
-	}
+        if (x >= 0 && x < 320 && y >= 0 && y < 200){
+                backbuffer[y * 320 + x] = c;
+                //backbuffer[(y<<6) + (y<<8) + x] = c;
+        }
 }
 
 typedef struct Object{
@@ -50,7 +51,58 @@ typedef struct Object{
 #define sgn(x) ((x<0)?-1:((x>0)?1:0)) /* macro to return the sign of a
                                          number */
 
-void drawline(short x1, short y1, short x2, short y2, char color)
+void drawline(int x, int y, int x2, int y2, unsigned char color) {
+    int j, decInc;
+    int i;
+    char *address;
+    int addrInc;
+
+        int yLonger=0;
+        int incrementVal, endVal;
+        int shortLen=y2-y;
+        int longLen=x2-x;
+
+        if (abs(shortLen)>abs(longLen)) {
+                int swap=shortLen;
+                shortLen=longLen;
+                longLen=swap;
+                yLonger=1;
+        }
+        endVal=longLen;
+        if (longLen<0) {
+                incrementVal=-1;
+                addrInc=-320;
+                longLen=-longLen;
+        } else{incrementVal=1;
+            addrInc = 320;
+        }
+        if (longLen==0) decInc=0;
+        else decInc = (shortLen << 16) / longLen;
+        j=0;
+            address = backbuffer + (x) + (y)*320;
+
+        if (yLonger) {
+
+                for (i=0;i!=endVal;i+=incrementVal,address+=addrInc) {
+                        //draw_pixel(x+(j >> 16),y+i, color);
+                        *(address+(j>>16)) = color;
+
+                        j+=decInc;
+                }
+        } else {
+                for (i=0;i!=endVal;i+=incrementVal,address+=incrementVal) {
+                        *(address+(j>>16)*320) = color;
+                        //*(address+(j>>10)+(j>>8)) = color;
+                        //draw_pixel(x+i,y+(j >> 16), color);
+                        j+=decInc;
+                }
+        }
+
+
+}
+
+
+void draw_line(short x1, short y1, short x2, short y2, char color)
 {
     short i, dx, dy, sdx, sdy, dxabs, dyabs, x, y, px, py, address;
 
@@ -74,6 +126,7 @@ void drawline(short x1, short y1, short x2, short y2, char color)
 
     draw_pixel(px, py, color);
     //VGA[(py << 8) + (py << 6) + px] = color;
+
 
     if (dxabs >= dyabs) /* the line is more horizontal than vertical */
     {

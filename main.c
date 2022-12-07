@@ -81,7 +81,7 @@ int main(int argc, char* *argv){
                 cam.vec[2] = z;
 
                 SL_DRAWSCENE(&cube, 1, cam, 0, 0, 0, 0);
-                waitblank();
+                //waitblank();
                 flipbuffer();
                 frames++;
 
