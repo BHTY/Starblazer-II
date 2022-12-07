@@ -8,7 +8,7 @@
 #include <math.h>
 #include "input.h"
 #include "graphics.h"
-#include "slipstream.h"
+#include "slipstr.h"
 
 #define MAX_ENTITIES 500
 
