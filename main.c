@@ -10,8 +10,23 @@
 #include "graphics.h"
 #include "slipstream.h"
 
+#define MAX_ENTITIES 500
+
+
+SL_ENTITY * StarblazerEntities[MAX_ENTITIES];
+
 
 short* my_clock = 0x46C;
+
+int w_firstopenslot(){
+    int i;
+
+    for(i = 0; i < MAX_ENTITIES; i++){
+        if(StarblazerEntities[i] == 0){
+            return i;
+        }
+    }
+}
 
 void setPalette(){
         char* palette = malloc(768);
@@ -61,12 +76,16 @@ int main(int argc, char* *argv){
         fixed x = 0;
         fixed y = 0;
 
-        SL_ENTITY cube = formCube(48, 10);
-        SL_LOADMODEL("star.obj", &cube);
+        StarblazerEntities[0] = malloc(sizeof(SL_ENTITY));
 
-        cube.pitch = 0;
-        cube.yaw = 0;
-        cube.roll = 0;
+        SL_LOADMODEL("star.obj", StarblazerEntities[0]);
+
+        StarblazerEntities[0]->pitch = 0;
+        StarblazerEntities[0]->yaw = 0;
+        StarblazerEntities[0]->roll = 0;
+        StarblazerEntities[0]->pos.vec[0] = 0;
+        StarblazerEntities[0]->pos.vec[1] = 0;
+        StarblazerEntities[0]->pos.vec[2] = 40*65536;
 
         w_starblazerinit();
 
@@ -80,12 +99,12 @@ int main(int argc, char* *argv){
                 cam.vec[1] = y;
                 cam.vec[2] = z;
 
-                SL_DRAWSCENE(&cube, 1, cam, 0, 0, 0, 0);
-                waitblank();
+                SL_DRAWSCENE(StarblazerEntities, 1, cam, 0, 0, 0, 0);
+                //waitblank();
                 flipbuffer();
                 frames++;
 
-                cube.yaw++;
+                StarblazerEntities[0]->yaw++;
         }
 
         getch();
