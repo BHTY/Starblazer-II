@@ -8,9 +8,8 @@
 #include <math.h>
 #include "input.h"
 #include "graphics.h"
-#include "slipstr.h"
-
-#define MAX_ENTITIES 500
+#include "slipstream.h"
+#include "ps2.h"
 
 
 SL_ENTITY * StarblazerEntities[MAX_ENTITIES];
@@ -54,7 +53,7 @@ int w_starblazerinit(){
         _settextcolor(3);
         _outtext("\nStarblazer II");
         _settextcolor(7);
-        _outtext(" Milestone 0.1 ");
+        _outtext(" Milestone 0.2 ");
         _settextcolor(4);
         _outtext("INTERNAL");
         _settextcolor(7);
@@ -67,14 +66,22 @@ int w_starblazerinit(){
 
 int main(int argc, char* *argv){
 
+        char c;
         int start;
 
         SL_VEC3 cam;
+        SL_VEC3 dirVec;
         int frames = 0;
 
-        fixed z = 30*65536;
-        fixed x = 0;
-        fixed y = 0;
+        unsigned char camPitch = 0;
+        unsigned char camYaw = 0;
+        unsigned char camRoll = 0;
+
+        fixed curSpeed = 65536;
+
+        cam.vec[2] = 30*65536;
+        cam.vec[0] = 0;
+        cam.vec[1] = 0;
 
         StarblazerEntities[0] = malloc(sizeof(SL_ENTITY));
 
@@ -93,18 +100,39 @@ int main(int argc, char* *argv){
 
 
 
-        while (!kbhit()){
+        while (1 || !kbhit()){
 
-                cam.vec[0] = x;
-                cam.vec[1] = y;
-                cam.vec[2] = z;
-
-                SL_DRAWSCENE(StarblazerEntities, 1, cam, 0, 0, 0, 0);
-                //waitblank();
-                flipbuffer();
                 frames++;
 
-                StarblazerEntities[0]->yaw++;
+                //StarblazerEntities[0]->yaw++;
+
+                //Draw the screen
+                SL_DRAWSCENE(StarblazerEntities, cam, camPitch, camYaw, camRoll, 0);
+
+                //Calculate direction vector & move forward
+                dirVec.vec[0] = 0;
+                dirVec.vec[1] = 0;
+                dirVec.vec[2] = curSpeed;
+                SL_MATMUL(SL_WORLD_ROTATION_MATRIX, dirVec, &dirVec); //add to camera pos
+
+                //Read & handle input
+                scan_kbd();
+
+                if(keys['q']){
+                    camRoll--;
+                }
+
+                if(keys['e']){
+                    camRoll++;
+                }
+
+                //Run Entity Scripts
+
+
+                //Video stuff
+                    flipbuffer();
+                    //cockpit(); //and HUD display
+                    //waitblank();
         }
 
         getch();
