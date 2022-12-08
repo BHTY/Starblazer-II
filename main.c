@@ -77,7 +77,7 @@ int main(int argc, char* *argv){
         unsigned char camYaw = 0;
         unsigned char camRoll = 0;
 
-        fixed curSpeed = 65536;
+        fixed curSpeed = 256;
 
         cam.vec[2] = 30*65536;
         cam.vec[0] = 0;
@@ -91,7 +91,7 @@ int main(int argc, char* *argv){
         StarblazerEntities[0]->yaw = 0;
         StarblazerEntities[0]->roll = 0;
         StarblazerEntities[0]->pos.vec[0] = 0;
-        StarblazerEntities[0]->pos.vec[1] = 0;
+        StarblazerEntities[0]->pos.vec[1] = 1*65536;
         StarblazerEntities[0]->pos.vec[2] = 40*65536;
 
         w_starblazerinit();
@@ -100,7 +100,7 @@ int main(int argc, char* *argv){
 
 
 
-        while (1 || !kbhit()){
+        while (1){
 
                 frames++;
 
@@ -113,10 +113,29 @@ int main(int argc, char* *argv){
                 dirVec.vec[0] = 0;
                 dirVec.vec[1] = 0;
                 dirVec.vec[2] = curSpeed;
-                SL_MATMUL(SL_WORLD_ROTATION_MATRIX, dirVec, &dirVec); //add to camera pos
+                SL_MATMUL(SL_WORLD_ROTATION_MATRIX, dirVec, &dirVec);
+                cam.vec[0] += dirVec.vec[0];
+                cam.vec[1] += dirVec.vec[1];
+                cam.vec[2] += dirVec.vec[2];
 
                 //Read & handle input
                 scan_kbd();
+
+                if(keys['w']){
+                    camPitch--;
+                }
+
+                if(keys['s']){
+                    camPitch++;
+                }
+
+                if(keys['a']){
+                    camYaw++;
+                }
+
+                if(keys['d']){
+                    camYaw--;
+                }
 
                 if(keys['q']){
                     camRoll--;
@@ -124,6 +143,10 @@ int main(int argc, char* *argv){
 
                 if(keys['e']){
                     camRoll++;
+                }
+
+                if(keys['t']){
+                    break;
                 }
 
                 //Run Entity Scripts

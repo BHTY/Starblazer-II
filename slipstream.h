@@ -657,6 +657,11 @@ void SL_ZSORT(){ //Z-sort the triangle buffer
 
 }
 
+fixed ABS(fixed x){
+    fixed y = x >> 31;
+    return (x ^ y) - y;
+}
+
 void SL_VERTEX(fixed p1, fixed p2, fixed p3){
         SL_VEC3 vert;
         fixed scale;
@@ -668,7 +673,13 @@ void SL_VERTEX(fixed p1, fixed p2, fixed p3){
         SL_MATMUL(SL_WORLD_ROTATION_MATRIX, vert, &vert);
 
         //project into the vertex list
-        scale = FixedDiv(SL_FOV, vert.vec[2]);
+        if((SL_FOV >> 16) > (ABS(vert.vec[2]) >> 1)){
+            scale = 1;
+        }
+        else{
+            scale = FixedDiv(SL_FOV, vert.vec[2]);
+        }
+
         SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[0] = FixedMul(vert.vec[0], scale);
         SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[1] = FixedMul(vert.vec[1], scale);
         SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[2] = vert.vec[2];
