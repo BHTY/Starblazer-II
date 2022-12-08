@@ -8,8 +8,9 @@
 #include <math.h>
 #include "input.h"
 #include "graphics.h"
-#include "slipstream.h"
+#include "slipstr.h"
 #include "ps2.h"
+#include "sb.h"
 
 
 SL_ENTITY * StarblazerEntities[MAX_ENTITIES];
@@ -63,11 +64,14 @@ int w_starblazerinit(){
         getch();
         graphicsInit();
 }
-
+void do_nothing_script(SL_ENTITY** input){    
+    return;
+}
 int main(int argc, char* *argv){
 
         char c;
         int start;
+        int i;
 
         SL_VEC3 cam;
         SL_VEC3 dirVec;
@@ -76,8 +80,9 @@ int main(int argc, char* *argv){
         unsigned char camPitch = 0;
         unsigned char camYaw = 0;
         unsigned char camRoll = 0;
+	int oldJPress = 0;
 
-        fixed curSpeed = 256;
+        fixed curSpeed = 256*4;
 
         cam.vec[2] = 30*65536;
         cam.vec[0] = 0;
@@ -85,7 +90,7 @@ int main(int argc, char* *argv){
 
         StarblazerEntities[0] = malloc(sizeof(SL_ENTITY));
 
-        SL_LOADMODEL("star.obj", StarblazerEntities[0]);
+        SL_LOADMODEL("hyper.obj", StarblazerEntities[0]);
 
         StarblazerEntities[0]->pitch = 0;
         StarblazerEntities[0]->yaw = 0;
@@ -93,12 +98,13 @@ int main(int argc, char* *argv){
         StarblazerEntities[0]->pos.vec[0] = 0;
         StarblazerEntities[0]->pos.vec[1] = 1*65536;
         StarblazerEntities[0]->pos.vec[2] = 40*65536;
+        StarblazerEntities[0]->script = do_nothing_script;
 
         w_starblazerinit();
 
         start = *my_clock;
-
-
+	initSB();
+	loadSB("papetoon.wav", 0xf);
 
         while (1){
 
@@ -113,11 +119,16 @@ int main(int argc, char* *argv){
                 dirVec.vec[0] = 0;
                 dirVec.vec[1] = 0;
                 dirVec.vec[2] = curSpeed;
-                SL_MATMUL(SL_WORLD_ROTATION_MATRIX, dirVec, &dirVec);
+                //SL_MATMUL(SL_WORLD_ROTATION_MATRIX, dirVec, &dirVec);
                 cam.vec[0] += dirVec.vec[0];
                 cam.vec[1] += dirVec.vec[1];
                 cam.vec[2] += dirVec.vec[2];
-
+                //StarblazerEntities[0]->pitch++;
+                //StarblazerEntities[0]->yaw+=2;
+		if (updateSB()) {
+			killSB();
+			loadSB("papetoon.wav", 0xf);
+		}
                 //Read & handle input
                 scan_kbd();
 
@@ -144,20 +155,31 @@ int main(int argc, char* *argv){
                 if(keys['e']){
                     camRoll++;
                 }
-
+		if(keys['j']) {
+		   if (!oldJPress) {
+		       camYaw ^= 0x80;
+		   }
+		   oldJPress = 1;
+		} else {
+			oldJPress = 0;
+		}
                 if(keys['t']){
                     break;
                 }
 
                 //Run Entity Scripts
 
-
+ for(i = 0; i < MAX_ENTITIES; i++){
+                    if(StarblazerEntities[i]){
+                        StarblazerEntities[i]->script(&StarblazerEntities[i]);
+                    }
+                }
                 //Video stuff
                     flipbuffer();
                     //cockpit(); //and HUD display
-                    //waitblank();
+                    waitblank();
         }
-
+	killSB();
         getch();
         setmode(_textmode);
 

@@ -1,3 +1,5 @@
+#define MAX_ENTITIES 500
+
 
 #define PI 3.14159
 #define float2fixed(n)  (fixed)(n*65536)
@@ -560,7 +562,9 @@ typedef struct SL_ENTITY{
         uint8_t pitch, yaw, roll;
         int num_verts;
         int num_polys;
-        //other state stuff
+
+        int state[8];
+        void (*script)(struct SL_ENTITY**);
 } SL_ENTITY;
 
 void SL_MATMUL(SL_VEC3 matrix[3], SL_VEC3 vector, SL_VEC3* output){
@@ -640,12 +644,12 @@ void SL_END(){ //rasterizes - back-to-front, connect vertices for every triangle
 
         for (i = 0; i < SL_TRIANGLE_INDEX; i++){
                 tri = SL_TRIANGLE_BUFFER[i];
-
-                if (SL_CLIP(&SL_VERTEX_BUFFER[tri.vert1]) && SL_CLIP(&SL_VERTEX_BUFFER[tri.vert2]) && SL_CLIP(&SL_VERTEX_BUFFER[tri.vert3])){
+		if (SL_VERTEX_BUFFER[tri.vert1].vec[2] < 0 || SL_VERTEX_BUFFER[tri.vert2].vec[2] < 0 || SL_VERTEX_BUFFER[tri.vert3].vec[2] < 0) continue; // temp removing behind
+                //if (SL_CLIP(&SL_VERTEX_BUFFER[tri.vert1]) && SL_CLIP(&SL_VERTEX_BUFFER[tri.vert2]) && SL_CLIP(&SL_VERTEX_BUFFER[tri.vert3])){
                         ConnectVertices(SL_VERTEX_BUFFER[tri.vert1], SL_VERTEX_BUFFER[tri.vert2], tri.color);
                         ConnectVertices(SL_VERTEX_BUFFER[tri.vert3], SL_VERTEX_BUFFER[tri.vert2], tri.color);
                         ConnectVertices(SL_VERTEX_BUFFER[tri.vert1], SL_VERTEX_BUFFER[tri.vert3], tri.color);
-                }
+                //}
         }
 }
 
@@ -653,22 +657,33 @@ void SL_ZSORT(){ //Z-sort the triangle buffer
 
 }
 
+fixed ABS(fixed x){
+    fixed y = x >> 31;
+    return (x ^ y) - y;
+}
+
 void SL_VERTEX(fixed p1, fixed p2, fixed p3){
         SL_VEC3 vert;
         fixed scale;
         vert.vec[0] = p1 - SL_CAMERA_X;
         vert.vec[1] = p2 - SL_CAMERA_Y;
-        vert.vec[2] = p3 - SL_CAMERA_Z;
-
+        //vert.vec[2] = ((p3 - SL_CAMERA_Z) < 256) ? 256 : (p3 - SL_CAMERA_Z);
+	vert.vec[2] = p3 - SL_CAMERA_Z;
+	
         //apply scene-space rotation
         SL_MATMUL(SL_WORLD_ROTATION_MATRIX, vert, &vert);
 
         //project into the vertex list
-        scale = FixedDiv(SL_FOV, vert.vec[2]);
+        if((SL_FOV >> 16) >= (ABS(vert.vec[2]) >> 1)){
+            scale = 1;
+        }
+        else{
+            scale = FixedDiv(SL_FOV, vert.vec[2]);
+        }
+
         SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[0] = FixedMul(vert.vec[0], scale);
         SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[1] = FixedMul(vert.vec[1], scale);
         SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[2] = vert.vec[2];
-        //print_vertex(&SL_VERTEX_BUFFER[SL_VERTEX_INDEX]);
         SL_VERTEX_INDEX++;
 }
 
@@ -685,7 +700,7 @@ void SL_TRIANGLES(SL_POLY* tris, int num_tris, int vertex_offset){
         }
 }
 
-void SL_DRAWSCENE(SL_ENTITY* models, int num_models, SL_VEC3 cam_pos, uint8_t cam_pitch, uint8_t cam_yaw, uint8_t cam_roll, int zsort){ //renders everything
+void SL_DRAWSCENE(SL_ENTITY** models, SL_VEC3 cam_pos, uint8_t cam_pitch, uint8_t cam_yaw, uint8_t cam_roll, int zsort){ //renders everything
         int i, p;
         int cur_index;
         SL_VEC3 temp_vert;
@@ -696,21 +711,23 @@ void SL_DRAWSCENE(SL_ENTITY* models, int num_models, SL_VEC3 cam_pos, uint8_t ca
 
         SL_BEGIN();
 
-        for (i = 0; i < num_models; i++){
+        for (i = 0; i < MAX_ENTITIES; i++){
+                if(models[i] == 0){continue;}
+
                 cur_index = SL_VERTEX_INDEX;
 
                 //create per-model rotation matrix
-                SL_ROTATE(models[i].pitch, models[i].yaw, models[i].roll, model_rotation_matrix);
+                SL_ROTATE(models[i]->pitch, models[i]->yaw, models[i]->roll, model_rotation_matrix);
 
                 //rotate and load every vertex
-                for (p = 0; p < models[i].num_verts; p++){
-                        SL_MATMUL(model_rotation_matrix, models[i].verts[p], &temp_vert);
+                for (p = 0; p < models[i]->num_verts; p++){
+                        SL_MATMUL(model_rotation_matrix, models[i]->verts[p], &temp_vert);
 
-                        SL_VERTEX(temp_vert.vec[0] + models[i].pos.vec[0], temp_vert.vec[1] + models[i].pos.vec[1], temp_vert.vec[2] + models[i].pos.vec[2]);
+                        SL_VERTEX(temp_vert.vec[0] + models[i]->pos.vec[0], temp_vert.vec[1] + models[i]->pos.vec[1], temp_vert.vec[2] + models[i]->pos.vec[2]);
                 }
 
                 //load in tris
-                SL_TRIANGLES(models[i].mesh, models[i].num_polys, cur_index);
+                SL_TRIANGLES(models[i]->mesh, models[i]->num_polys, cur_index);
         }
 
         if (zsort){

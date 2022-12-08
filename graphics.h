@@ -59,9 +59,55 @@ void drawline(int x, int y, int x2, int y2, unsigned char color) {
 
         int yLonger=0;
         int incrementVal, endVal;
-        int shortLen=y2-y;
-        int longLen=x2-x;
-
+	
+        int shortLen;
+        int longLen;
+        if ((x < 0 || y < 0 || x > 319 || y > 199) && (x2 < 0 || y2 < 0 || x2 > 319 || y2 > 199)) return;
+        if (x2 < 0) {
+        	//y2 = 0;
+		y2 = y - ((y2 - y)*x) / (x2 - x);
+		x2 = 0;
+	}
+	if (x < 0) {
+		//y = 0;
+		y = y2 - ((y - y2)*x2) / (x - x2);
+		x = 0;
+	}
+	
+        if (x2 > 319) {
+        	//y2 = 0;
+		y2 = y + ((y2 - y)*(320 - x)) / (x2 - x);
+		x2 = 319;
+	}
+	if (x > 319) {
+		//y = 0;
+		y = y2 + ((y - y2)*(320 - x2)) / (x - x2);
+		x = 319;
+	}
+	
+	if (y2 < 0) {
+        	//y2 = 0;
+		x2 = x - ((x2 - x)*y) / (y2 - y);
+		y2 = 0;
+	}
+	if (y < 0) {
+		//y = 0;
+		x = x2 - ((x - x2)*y2) / (y - y2);
+		y = 0;
+	}
+	
+        if (y2 > 199) {
+        	//y2 = 0;
+		x2 = x + ((x2 - x)*(200 - y)) / (y2 - y);
+		y2 = 199;
+	}
+	if (y > 199) {
+		//y = 0;
+		x = x2 + ((x - x2)*(200 - y2)) / (y - y2);
+		y = 199;
+	}
+	shortLen = y2-y;
+	longLen = x2-x;
         if (abs(shortLen)>abs(longLen)) {
                 int swap=shortLen;
                 shortLen=longLen;
