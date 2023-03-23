@@ -848,7 +848,6 @@ Control system
                 //printf("Hello world\n");
         }
 	killSB();
-        getch();
         setmode(_textmode);
 
         printf("Welcome back to DOS. Average FPS: %f\n", (18.2 * frames) / (*my_clock - start));
