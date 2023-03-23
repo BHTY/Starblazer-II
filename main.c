@@ -811,7 +811,7 @@ Control system
 		if (keys['b']) {
 			boostVel = 0xf000;
 		} else {
-			boostVel = 0x1000;
+			boostVel = 0x3000;
 		}
                 //Run Entity Scripts
 
