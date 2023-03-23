@@ -543,8 +543,46 @@ fixed SL_COS[256] = {65536,
 65358,
 65457,
 65516};
+fixed SL_TAN[256];
 
+void computeTanLut() {
+	int angle;
+	for (angle = 0; angle < 256; angle++) {
+		if (SL_COS[angle]) {
+			SL_TAN[angle] = FixedDiv(SL_SIN[angle],SL_COS[angle]);
+		} else {
+			if (SL_SIN[angle] < 0) {
+				SL_TAN[angle] = 0x80000000;
+			} else {
+				SL_TAN[angle] = 0x7fffffff;
+			}
+		}
+	}
+}
 
+int sl_atan2(fixed y, fixed x) {
+	unsigned char angle = 0xc0;
+	fixed tangent;
+	if (x == 0) {
+		if (y < 0) return 0xc0;
+		return 0x40;
+	}
+	tangent = FixedDiv(y,x);
+	while (angle != 0x40) {
+		angle++;
+		if (SL_TAN[angle?angle-1:0xff] <= tangent && SL_TAN[angle] >= tangent) break; 
+	}
+	if (angle == 0xc1 || angle == 0x41) angle--;
+	if (x < 0) angle ^= 0x80;
+	return angle;
+}
+
+fixed sl_hypot(fixed x, fixed y) {
+	// TODO: use a better version, somehow
+	float xf = x / 65536.0;
+	float yf = y / 65536.0;
+	return (fixed)(65536*hypot(xf, yf));
+}
 typedef struct SL_VEC3{
         fixed vec[3];
 } SL_VEC3;
@@ -555,17 +593,50 @@ typedef struct SL_POLY{ //triangle
 } SL_POLY;
 
 
+struct SL_TEMPLATE;
+
 typedef struct SL_ENTITY{
-        SL_POLY* mesh;
-        SL_VEC3* verts;
+        struct SL_TEMPLATE* type;
         SL_VEC3 pos;
         uint8_t pitch, yaw, roll;
         int num_verts;
         int num_polys;
 
         int state[8];
-        void (*script)(struct SL_ENTITY**);
+        int health;
 } SL_ENTITY;
+
+struct SL_TEMPLATE{
+	SL_POLY* mesh;
+	SL_VEC3* verts;
+	int num_verts;
+	int num_polys;
+        void (*script)(SL_ENTITY**);
+        fixed hitboxX;
+        fixed hitboxY;
+        fixed hitboxZ;
+        int maxhp;
+        int flags; // shootable
+};
+typedef struct SL_TEMPLATE SL_TEMPLATE;
+	
+typedef struct SL_PACKET {
+	SL_VEC3 pos;
+	unsigned char pitch;
+	unsigned char yaw;
+	unsigned char roll;
+	unsigned char firing;
+} SL_PACKET;
+int SL_COLLIDE(SL_ENTITY *ent1, SL_ENTITY *ent2) {
+	if (abs(ent1->pos.vec[0] - ent2->pos.vec[0]) < ent1->type->hitboxX >> 1) {
+		if (abs(ent1->pos.vec[1] - ent2->pos.vec[1]) < ent1->type->hitboxY >> 1) {
+			if (abs(ent1->pos.vec[2] - ent2->pos.vec[2]) < ent1->type->hitboxZ >> 1) {
+				return 1;
+			}
+		}
+	}
+	return 0;
+}
 
 void SL_MATMUL(SL_VEC3 matrix[3], SL_VEC3 vector, SL_VEC3* output){
         int i, o;
@@ -615,18 +686,33 @@ void SL_ROTATE(uint8_t pitch, uint8_t yaw, uint8_t roll, SL_VEC3 matrix[3]){
         fixed cos_yaw = SL_COS[yaw];
         fixed sin_roll = SL_SIN[roll];
         fixed cos_roll = SL_COS[roll];
+        //α yaw, around z
+        //β pitch, around y
+        //γ roll, around x
 
-        matrix[0].vec[0] = (FixedMul(cos_yaw, cos_roll));
-        matrix[0].vec[1] = (FixedMul(-cos_pitch, sin_roll) + FixedMul(sin_pitch, FixedMul(sin_yaw, cos_roll)));
-        matrix[0].vec[2] = (FixedMul(sin_pitch, sin_roll) + FixedMul(cos_pitch, FixedMul(sin_yaw, cos_roll)));
+        /*matrix[0].vec[0] = (FixedMul(cos_yaw, cos_roll)); // cosβ cosα
+        matrix[0].vec[1] = (FixedMul(-cos_pitch, sin_roll) + FixedMul(sin_pitch, FixedMul(sin_yaw, cos_roll))); // sinγ sinβ cosα - cosγ sinα
+        matrix[0].vec[2] = (FixedMul(sin_pitch, sin_roll) + FixedMul(cos_pitch, FixedMul(sin_yaw, cos_roll))); // cosγ sinβ cosα + sinγ sinα
 
-        matrix[1].vec[0] = (FixedMul(cos_yaw, sin_roll));
-        matrix[1].vec[1] = (FixedMul(cos_pitch, cos_roll) + FixedMul(sin_pitch, FixedMul(sin_yaw, sin_roll)));
-        matrix[1].vec[2] = (FixedMul(-sin_pitch, cos_roll) + FixedMul(cos_pitch, FixedMul(sin_yaw, sin_roll)));
+        matrix[1].vec[0] = (FixedMul(cos_yaw, sin_roll)); // cosβ sinα
+        matrix[1].vec[1] = (FixedMul(cos_pitch, cos_roll) + FixedMul(sin_pitch, FixedMul(sin_yaw, sin_roll))); // sinγ sinβ sinα + cosγ cosα
+        matrix[1].vec[2] = (FixedMul(-sin_pitch, cos_roll) + FixedMul(cos_pitch, FixedMul(sin_yaw, sin_roll))); // cosγ sinβ sinα - sinγ cosα
 
-        matrix[2].vec[0] = (-sin_yaw);
-        matrix[2].vec[1] = (FixedMul(sin_pitch, cos_yaw));
-        matrix[2].vec[2] = (FixedMul(cos_pitch, cos_yaw));
+        matrix[2].vec[0] = (-sin_yaw); // -sinβ
+        matrix[2].vec[1] = (FixedMul(sin_pitch, cos_yaw)); // sinγ cosβ
+        matrix[2].vec[2] = (FixedMul(cos_pitch, cos_yaw)); // cosγ cosβ*/
+        
+        matrix[0].vec[0] = (FixedMul(cos_yaw, cos_pitch));
+        matrix[0].vec[1] = (FixedMul(FixedMul(cos_yaw, sin_pitch), sin_roll) - FixedMul(sin_yaw, cos_roll));
+        matrix[0].vec[2] = (FixedMul(FixedMul(cos_yaw, sin_pitch), cos_roll) + FixedMul(sin_yaw, sin_roll));
+        
+        matrix[1].vec[0] = (FixedMul(sin_yaw, cos_pitch));
+        matrix[1].vec[1] = (FixedMul(FixedMul(sin_yaw, sin_pitch), sin_roll) + FixedMul(cos_yaw, cos_roll));
+        matrix[1].vec[2] = (FixedMul(FixedMul(sin_yaw, sin_pitch), cos_roll) - FixedMul(cos_yaw, sin_roll));
+        
+        matrix[2].vec[0] = (-sin_pitch);
+        matrix[2].vec[1] = (FixedMul(cos_pitch, sin_roll));
+        matrix[2].vec[2] = (FixedMul(cos_pitch, cos_roll));
 }
 
 void SL_BEGIN(){ //clear geometry buffers
@@ -699,6 +785,23 @@ void SL_TRIANGLES(SL_POLY* tris, int num_tris, int vertex_offset){
                 SL_TRIANGLE_INDEX++;
         }
 }
+int sldx;
+int sldy;
+int spc = 255;
+void SL_PLOTPOINT(SL_VEC3 pos) {
+	// TODO: make this fit with the structure
+	int x, y;
+	SL_VERTEX(pos.vec[0], pos.vec[1], pos.vec[2]);
+	SL_VERTEX_INDEX--;
+	if (SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[2] < 0) return;
+	x = SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[0];
+	y = SL_VERTEX_BUFFER[SL_VERTEX_INDEX].vec[1];
+	//if (x > 0 && y > 0 && x < 320 && y < 200) {
+		draw_pixel(160 - fixed2float(x), 100 - fixed2float(y), spc);
+		sldx = x;
+		sldy = y;
+	//}
+}
 
 void SL_DRAWSCENE(SL_ENTITY** models, SL_VEC3 cam_pos, uint8_t cam_pitch, uint8_t cam_yaw, uint8_t cam_roll, int zsort){ //renders everything
         int i, p;
@@ -720,14 +823,14 @@ void SL_DRAWSCENE(SL_ENTITY** models, SL_VEC3 cam_pos, uint8_t cam_pitch, uint8_
                 SL_ROTATE(models[i]->pitch, models[i]->yaw, models[i]->roll, model_rotation_matrix);
 
                 //rotate and load every vertex
-                for (p = 0; p < models[i]->num_verts; p++){
-                        SL_MATMUL(model_rotation_matrix, models[i]->verts[p], &temp_vert);
+                for (p = 0; p < models[i]->type->num_verts; p++){
+                        SL_MATMUL(model_rotation_matrix, models[i]->type->verts[p], &temp_vert);
 
                         SL_VERTEX(temp_vert.vec[0] + models[i]->pos.vec[0], temp_vert.vec[1] + models[i]->pos.vec[1], temp_vert.vec[2] + models[i]->pos.vec[2]);
                 }
 
                 //load in tris
-                SL_TRIANGLES(models[i]->mesh, models[i]->num_polys, cur_index);
+                SL_TRIANGLES(models[i]->type->mesh, models[i]->type->num_polys, cur_index);
         }
 
         if (zsort){
@@ -748,7 +851,7 @@ SL_POLY formTri(int v1, int v2, int v3, unsigned char color){
         return tri;
 }
 
-SL_ENTITY formCube(unsigned short shade, int size){
+/*SL_ENTITY formCube(unsigned short shade, int size){
         SL_ENTITY temporary;
         int i;
         temporary.num_polys = 12;
@@ -795,9 +898,9 @@ SL_ENTITY formCube(unsigned short shade, int size){
 
 
         return temporary;
-}
+}*/
 
-SL_ENTITY* SL_LOADMODEL(char* filename, SL_ENTITY* entity){
+SL_TEMPLATE* SL_LOADMODEL(char* filename){
         FILE* fp = fopen(filename, "r");
         int eof = 0;
         int res;
@@ -810,6 +913,8 @@ SL_ENTITY* SL_LOADMODEL(char* filename, SL_ENTITY* entity){
 
         SL_POLY* polys = (SL_POLY*)malloc(sizeof(SL_POLY) * 200);
         SL_VEC3* verts = (SL_VEC3*)malloc(sizeof(SL_VEC3) * 200);
+        
+        SL_TEMPLATE *tpl = (SL_TEMPLATE*)malloc(sizeof(SL_TEMPLATE));
 
         while (!eof){
                 res = fscanf(fp, "%s", lineHeader);
@@ -837,10 +942,16 @@ SL_ENTITY* SL_LOADMODEL(char* filename, SL_ENTITY* entity){
                 }
         }
 
-        entity->num_polys = currentFace;
-        entity->num_verts = currentVert;
-        entity->verts = verts;
-        entity->mesh = polys;
+        tpl->num_polys = currentFace;
+        tpl->num_verts = currentVert;
+        tpl->verts = verts;
+        tpl->mesh = polys;
 
-        return entity;
+	fclose(fp);
+        return tpl;
+}
+void SL_HITBOX(SL_TEMPLATE *tpl, int x, int y, int z) {
+	tpl->hitboxX = x*65536;
+	tpl->hitboxY = y*65536;
+	tpl->hitboxZ = z*65536;
 }

@@ -20,9 +20,9 @@ void waitblank(){ //hangs execution until vertical blanking
     while (!(inp(0x3DA) & 8));
 }
 
-void flipbuffer(){ //copies the back buffer into VGA memory and then clears the back buffer for drawing
+void flipbuffer(int fillcolor){ //copies the back buffer into VGA memory and then clears the back buffer for drawing
     memcpy(VGA, backbuffer, 64000);
-    memset(backbuffer, 0, 64000);
+    memset(backbuffer, fillcolor, 64000);
 }
 
 void set_palette(char* palette){ //sets the VGA palette to the given array
@@ -106,6 +106,7 @@ void drawline(int x, int y, int x2, int y2, unsigned char color) {
 		x = x2 + ((x - x2)*(200 - y2)) / (y - y2);
 		y = 199;
 	}
+        //if (x == 160 || y == 100 || x2 == 160 || y2 == 100) return;
 	shortLen = y2-y;
 	longLen = x2-x;
         if (abs(shortLen)>abs(longLen)) {
