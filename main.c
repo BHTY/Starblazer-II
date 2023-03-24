@@ -52,6 +52,7 @@ void graphicsInit(){
 
 int playerNumber = 0;
 
+int forcesingleplayer = 0;
 int w_starblazerinit(){
 
 	char handshake[13];
@@ -70,6 +71,11 @@ int w_starblazerinit(){
         printf("\n%d %d\n", sizeof(SL_PACKET), isRecvReady());
         //_outtext("Press any key to begin.\n");
         //getch();
+        if (forcesingleplayer) {
+        	playerNumber = 1;
+        	graphicsInit();
+        	return;
+        }
 	printf("Press 1 or 2 to select player\n");
 	if (getch() == '1') {
 		playerNumber = 1;
@@ -127,11 +133,11 @@ void do_the_gun_script(SL_ENTITY** entity) {
 		(*entity)->pitch = rand() % 256;
 		(*entity)->yaw = rand() % 256;
 	}
-	(*entity)->pos.vec[0] -= FixedMul(SL_SIN[(*entity)->state[1]], 0x20000);
-	(*entity)->pos.vec[1] += FixedMul(FixedMul(SL_COS[(*entity)->state[1]], SL_SIN[(*entity)->state[2]]), 0x20000);
-	(*entity)->pos.vec[2] += FixedMul(FixedMul(SL_COS[(*entity)->state[1]], SL_COS[(*entity)->state[2]]), 0x20000);
+	(*entity)->pos.vec[0] -= FixedMul(SL_SIN[(*entity)->state[1]], 0x40000);
+	(*entity)->pos.vec[1] += FixedMul(FixedMul(SL_COS[(*entity)->state[1]], SL_SIN[(*entity)->state[2]]), 0x40000);
+	(*entity)->pos.vec[2] += FixedMul(FixedMul(SL_COS[(*entity)->state[1]], SL_COS[(*entity)->state[2]]), 0x40000);
 	(*entity)->state[0]++;
-	if ((*entity)->state[0] == 45) {
+	if ((*entity)->state[0] == 90) {
 		*entity = 0;
 	} else if (((*entity)->type->flags & 2) == 0) {
 		for(i = 0; i < MAX_ENTITIES; i++){
@@ -359,6 +365,18 @@ int gundiv1 = 0; // 0x30000
 int gundiv2 = 0; // 0x10000
 int gunrate = 2;
 int dead = 0;
+void interrupt keyirq() {
+	char scancode = inp(0x60);
+
+	    if(scancode & 0x80){ //key has been released
+		keys[kbdus[scancode - 0x80]] = 0;
+	    }
+
+	    else{ //key has been pressed
+		keys[kbdus[scancode]] = 1;
+	    }
+	outp(0x20, 0x20);
+}
 void syncserial() {
 	SL_PACKET packet;
 	int i, j;
@@ -384,7 +402,7 @@ void syncserial() {
 			} else if (packet.firing) {
 				j = spawnEntity(triOppGunObj, 0, 0, 0, packet.pos.vec[0], packet.pos.vec[1] + (packet.firing == 2 ? gundiv1 : -gundiv1), packet.pos.vec[2] + gundiv2);
 				StarblazerEntities[j]->state[1] = packet.roll;
-				StarblazerEntities[j]->state[2] = 0x100-packet.pitch;
+				StarblazerEntities[j]->state[2] = (0x100-packet.pitch)&0xff;
 				/*
 				i = spawnEntity(triGunObj, 0, 0, 0, cam.vec[0], cam.vec[1] + (gunpos ? gundiv1 : -gundiv1), cam.vec[2] + gundiv2);
 				StarblazerEntities[i]->state[1] = camPitch;
@@ -417,7 +435,7 @@ int main(int argc, char* *argv){
 
         char c;
         int start;
-        int i, j;
+        int i, j, k;
 
         SL_VEC3 dirVec;
         int frames = 0;
@@ -440,6 +458,34 @@ int main(int argc, char* *argv){
 	WormSeg worms[10];
 	int wtx, wty, w0tx, w0ty;
 	int wta;
+	int boostbar = 40;
+	int barcycle = 0;
+	int boostlock = 0;
+	int pos1, pos2, pos3, pos4;
+	void interrupt (*previous_isr)();
+        // 111 000 00
+        // 111 000 00
+        // 110 000 00
+        // 110 001 00
+        // 110 001 00
+        // 101 000 00
+        // 101 010 00
+        // 101 010 00
+        // 101 011 00
+        // 100 011 00
+        // 100 011 00
+        // 100 100 00
+        // 011 101 00
+        // 011 101 01
+        // 010 101 01
+        // 010 110 01
+        // 010 110 10
+        // 001 110 10
+        // 001 111 10
+        // 000 111 11
+        // 000 111 11
+        // 000 111 11
+	char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
 	
 	Level *level;
 	fixed boostVel = 0x0000;
@@ -528,6 +574,9 @@ int main(int argc, char* *argv){
         start = *my_clock;
 	initSB();
 	loadSB("papetoon.wav", 0xf);
+	previous_isr = _dos_getvect(9);
+	_dos_setvect(9, keyirq);
+	
 	
 	memcpy((unsigned char*)&packet, "willklees1234567", 16);
 	
@@ -602,7 +651,7 @@ int main(int argc, char* *argv){
 			loadSB("papetoon.wav", 0xf);
 		}
                 //Read & handle input
-                scan_kbd();
+                //scan_kbd();
 /*
 Control system
 
@@ -801,17 +850,26 @@ Control system
                    playerHP = 0;
                    dead = 1;
                 }
-
+                if (keys['y']){
+                	playerHP = 1;
+                }
 		if (keys['x']){
 			for (i = 0; i < MAX_ENTITIES; i++) {
 				if (StarblazerEntities[i]) StarblazerEntities[i]->health = 0;
 			}
 		}
 
-		if (keys['b']) {
+		if (keys['b'] && boostbar > 0 && !boostlock) {
 			boostVel = 0xf000;
+			if (frames % 5 == 0) boostbar--;
 		} else {
 			boostVel = 0x3000;
+                	if (frames % 15 == 0) boostbar++;
+		}
+		if (boostbar == 0) {
+			boostlock = 1;
+		} else if (boostbar > 20) {
+			boostlock = 0;
 		}
                 //Run Entity Scripts
 
@@ -832,10 +890,158 @@ Control system
                 //Video stuff
                 //	serialpd++;
                 //    if (serialpd == 3) {
-                    	syncserial();
+                    	if (!forcesingleplayer) syncserial();
                 //    	serialpd = 0;
                 //    }
                 if (playerHP == 0) break;
+                //if (frames % 15 == 0) playerHP--;
+                // draw the health bar
+                // coordinates of bar (16, 16) to (32, 184)
+                k = (playerHP * 21) / 5 + 16;
+                i = 8 + (barcycle >> 3);
+                for (j = 0; j < 22; j++) {
+                	c = barcolors[j];
+                	if (i > k) break;
+                	pos1 = 24;
+                	pos2 = i;
+                	pos3 = 8;
+                	pos4 = i+8;
+                	if (i + 8 > k) {
+                		//drawline(24, i, 8+(((i+8)-k)<<1), k, 0xe0);
+                		pos3 += (((i+8)-k)<<1);
+                		pos4 = k;
+                	}
+                	if (i < 16) {
+                		pos1 -= (16-i)<<1;
+                		pos2 = 16;
+                	}
+                	drawline(pos1, pos2, pos3, pos4, c);
+                	i += 8;
+                }
+                drawline(8, 16, 24, 16, 0xff);
+                drawline(24, 16, 24, 184, 0xff);
+                drawline(24, 184, 8, 184, 0xff);
+                drawline(8, 184, 8, 16, 0xff);
+                drawline(8, k, 24, k, 0xff);
+                
+                if (boostbar > 40) boostbar = 40;
+                
+                
+                k = (boostbar * 21) / 5 + 16;
+                i = 8 + (barcycle >> 3);
+                for (j = 0; j < 22; j++) {
+                	// 
+                	// 001 001 11
+                	c = boostlock ? 0xe7 : 0x27;
+                	if (i > k) break;
+                	pos1 = 312;
+                	pos2 = i;
+                	pos3 = 296;
+                	pos4 = i+8;
+                	if (i + 8 > k) {
+                		//drawline(24, i, 8+(((i+8)-k)<<1), k, 0xe0);
+                		pos3 += (((i+8)-k)<<1);
+                		pos4 = k;
+                	}
+                	if (i < 16) {
+                		pos1 -= (16-i)<<1;
+                		pos2 = 16;
+                	}
+                	drawline(pos1, pos2, pos3, pos4, c);
+                	i += 8;
+                }
+                drawline(296, 16, 312, 16, 0xff);
+                drawline(312, 16, 312, 184, 0xff);
+                drawline(312, 184, 296, 184, 0xff);
+                drawline(296, 184, 296, 16, 0xff);
+                drawline(296, k, 312, k, 0xff);
+                
+                // radar process
+                // for each entity, its position on the radar determined by y and z
+                // take y and z, then multiply by rotation matrix based on camera yaw angle
+                // display color based on relative x position
+                // if outside of bounds, do not plot
+                // draw player at center of radar
+                // rotation matrix: rotate by -yaw
+                // [cosyaw sinyaw; -sinyaw cosyaw]
+                // so, radarX = cosyaw * y + sinyaw * z
+                // radarY = cosyaw * z - sinyaw * y
+                
+                
+                for (i = 0; i < 60; i++) {
+                	for (j = 0; j < 60; j++) {
+                		c = 0;
+                		if (i == 0 || i == 59 || j == 0 || j == 59) c = 0xff;
+                		if (!c && (i+j) % 2) continue;
+                		draw_pixel(130+i, 10+j, c);
+                	}
+                }
+               for (j = -1; j < 2; j++) {
+			for (k = -1; k < 2; k++) {
+				draw_pixel(160 + j, 40 + k, 0xfc);
+			}
+		}
+		drawline(160, 40, 160, 44, 0xfc);
+                for(i = 0; i < MAX_ENTITIES; i++){
+			if(StarblazerEntities[i]){
+				c = 0;
+				if (StarblazerEntities[i]->type == opponentObj) {
+					pos1 = (StarblazerEntities[i]->pos.vec[0] - cam.vec[0]);
+					pos1 >>= 20;
+					pos1 += 11;
+					if (pos1 < 0) pos1 = 0;
+					if (pos1 > 21) pos1 = 21;
+					c = barcolors[pos1];
+					// use barcolors
+					// red is far below
+					// blue-green is far above
+					
+				}
+				if (StarblazerEntities[i]->type == triGunObj) c = '\x6d';
+				if (StarblazerEntities[i]->type == triOppGunObj) c = '\xed'; // 11101101
+				if (c) {
+					pos3 = StarblazerEntities[i]->pos.vec[1] - cam.vec[1];
+					pos4 = StarblazerEntities[i]->pos.vec[2] - cam.vec[2];
+					pos1 = FixedMul(SL_COS[(0x100-camYaw)&0xff], pos3) + FixedMul(SL_SIN[(0x100-camYaw)&0xff], pos4);
+					pos2 = FixedMul(SL_COS[(0x100-camYaw)&0xff], pos4) - FixedMul(SL_SIN[(0x100-camYaw)&0xff], pos3);
+					// radar coords: pos1 >> 16, pos2 >> 16
+					// radar size: radius 30 square
+					pos1 >>= 18;
+					pos2 >>= 18;
+					if (pos1 > 30) pos1 = 30;
+					if (pos1 < -30) pos1 = -30;
+					if (pos2 > 30) pos2 = 30;
+					if (pos2 < -30) pos2 = -30;
+					
+					if (StarblazerEntities[i]->type == opponentObj) {
+						for (j = -1; j < 2; j++) {
+							for (k = -1; k < 2; k++) {
+								if (40+pos2+k < 0) continue;
+								draw_pixel(160 + pos1 + j, 40 + pos2 + k, c);
+							}
+						}
+					} else {
+						draw_pixel(160 + pos1, 40 + pos2, c);
+					}
+				}
+			}
+		}
+                for (i = 0; i < 7; i++) {
+    			// operate on (140+i, 80)
+    			// (180-i, 80)
+    			bitset_pixel(150+i, 90, 0x1c);
+    			bitset_pixel(170-i, 90, 0x1c);
+    			bitset_pixel(150+i, 110, 0x1c);
+    			bitset_pixel(170-i, 110, 0x1c);
+    			bitset_pixel(150, 90+i, 0x1c);
+    			bitset_pixel(150, 110-i, 0x1c);
+    			bitset_pixel(170, 90+i, 0x1c);
+    			bitset_pixel(170, 110-i, 0x1c);
+                }
+                bitset_pixel(160, 100, 0x1c);
+                barcycle += 2;
+                if (barcycle == 64) barcycle = 0;
+                    //flipbuffer(screenflash ? 192 : (playerHP > 31 ? 0 : ((32 - playerHP) << 3) & 0xe0));
                     flipbuffer(screenflash ? 192 : 0);
                     if (screenflash) screenflash--;
                 /*if (!keys[' ']) {
@@ -847,6 +1053,7 @@ Control system
                     waitblank();
                 //printf("Hello world\n");
         }
+        _dos_setvect(9, previous_isr);
 	killSB();
         setmode(_textmode);
 

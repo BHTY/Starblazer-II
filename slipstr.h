@@ -946,7 +946,8 @@ SL_TEMPLATE* SL_LOADMODEL(char* filename){
         tpl->num_verts = currentVert;
         tpl->verts = verts;
         tpl->mesh = polys;
-
+	
+	tpl->flags = 0;
 	fclose(fp);
         return tpl;
 }

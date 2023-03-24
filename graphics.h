@@ -39,6 +39,12 @@ void draw_pixel(int x, int y, char c){
                 //backbuffer[(y<<6) + (y<<8) + x] = c;
         }
 }
+void bitset_pixel(int x, int y, char c){
+        if (x >= 0 && x < 320 && y >= 0 && y < 200){
+                backbuffer[y * 320 + x] |= c;
+                //backbuffer[(y<<6) + (y<<8) + x] = c;
+        }
+}
 
 typedef struct Object{
     long size;
