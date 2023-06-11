@@ -19,7 +19,9 @@ void title_init(){
 	quat_create(0, 0, 0, &title_cam_ori);
 
 	logo = load_model("assets\\star.obj");
-	spawn_entity(logo, 0, 0, int_fixed(10), 0, 128, 0);
+	spawn_entity(logo, 0, 0, int_fixed(15), 0, 128, 0);
+
+	SL_CENTER_Y = 40;
 }
 
 void title_module(){
@@ -27,5 +29,5 @@ void title_module(){
 
 void title_draw(){
 	draw_scene(&title_camera, &title_cam_ori, 0);
-	quat_yaw(1, &(StarblazerEntities[0]->orientation));
+	quat_yaw(16, &(StarblazerEntities[0]->orientation));
 }
