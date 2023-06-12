@@ -23,7 +23,7 @@ void put_vertex(VEC3*);
 void put_vert3f(FIXED, FIXED, FIXED);
 void put_triangles(TRI* tris, uint16 num_tris, uint16 vert_offset, uint8 color_override);
 void polygon_zsort();
-void plotpoint_3d(VEC3* pt, uint8 color);
+void plotpoint_3d(VEC3 pt, uint8 color);
 void set_fov_x(FIXED);
 void set_fov_y(FIXED);
 void render_end(bool_t); //draws geometry - true is flat shading, false is wireframe

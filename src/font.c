@@ -46,7 +46,7 @@ void _draw_glyph(glyph_t *glyph, int centerX, int centerY, char color, int scale
 	scaleY = -scaleY;
 
 	for (i = 0; i < glyph->num_strokes; i++){
-		draw_line(centerX + glyph->lines[i].p0.x * scaleX, centerY + scaleY * glyph->lines[i].p0.y, centerX + scaleX * glyph->lines[i].p1.x, centerY + scaleY * glyph->lines[i].p1.y, color);
+		drawline(centerX + glyph->lines[i].p0.x * scaleX, centerY + scaleY * glyph->lines[i].p0.y, centerX + scaleX * glyph->lines[i].p1.x, centerY + scaleY * glyph->lines[i].p1.y, color);
 	}
 }
 

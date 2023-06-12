@@ -143,6 +143,7 @@ void plotpoint_3d(VEC3 pt, uint8 color){
 		v.x = SL_CENTER_X - fixed_int(muldiv(v.x, SL_FOV_X, v.z));
 		v.y = SL_CENTER_Y - fixed_int(muldiv(v.y, SL_FOV_Y, v.z));
 		plot_pixel(v.x, v.y, color); //draw
+		//printf("(%d, %d)\n", v.x, v.y);
 	}
 }
 

@@ -75,7 +75,7 @@ void draw_line(int x, int y, int x2, int y2, unsigned char color) {
 	//if (x == 160 || y == 100 || x2 == 160 || y2 == 100) return;
 	shortLen = y2 - y;
 	longLen = x2 - x;
-	if (int_abs(shortLen)>int_abs(longLen)) {
+	if (abs(shortLen)>abs(longLen)) {
 		int swap = shortLen;
 		shortLen = longLen;
 		longLen = swap;
@@ -124,8 +124,8 @@ void drawline(short x1, short y1, short x2, short y2, char color)
 
 	dx = x2 - x1;      /* the horizontal distance of the line */
 	dy = y2 - y1;      /* the vertical distance of the line */
-	dxabs = int_abs(dx);
-	dyabs = int_abs(dy);
+	dxabs = abs(dx);
+	dyabs = abs(dy);
 	sdx = sgn(dx);
 	sdy = sgn(dy);
 	x = dyabs >> 1;
