@@ -99,7 +99,7 @@ void put_triangles(TRI* tris, uint16 num_tris, uint16 vert_offset, uint8 color_o
 		v1index = tris[i].v1 + vert_offset;
 		v2index = tris[i].v2 + vert_offset;
 
-		SL_TRIANGLES[SL_TRIANGLE_INDEX].color = color_override ? tris[i].color : color_override;
+		SL_TRIANGLES[SL_TRIANGLE_INDEX].color = color_override ? color_override : tris[i].color;
 		SL_TRIANGLES[SL_TRIANGLE_INDEX].v0 = v0index;
 		SL_TRIANGLES[SL_TRIANGLE_INDEX].v1 = v1index;
 		SL_TRIANGLES[SL_TRIANGLE_INDEX].v2 = v2index;
@@ -209,7 +209,7 @@ void render_end(bool_t shading){
 
 	for (i = 0; i < SL_TRIANGLE_INDEX; i++){
 		if (clip_polygon(&SL_TRIANGLES[i])){ //only drawing this polygon if it's onscreen!
-			c = 3;// SL_TRIANGLES[i].color;
+			c = SL_TRIANGLES[i].color;
 
 			x1 = SL_VERTS[SL_TRIANGLES[i].v0].x;
 			y1 = SL_VERTS[SL_TRIANGLES[i].v0].y;

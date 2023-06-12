@@ -30,6 +30,10 @@ int newFrame = 0;
 int window_height;
 int window_width;
 
+float mouseFactorX, mouseFactorY;
+bool_t mouseDownLeft = 0;
+bool_t mouseDownRight = 0;
+
 bool_t keys[256];
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
@@ -67,6 +71,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 		case WM_SIZE:{
 			window_width = lParam & 0xffff;
 			window_height = (lParam & 0xffff0000) >> 16;
+			mouseFactorX = 320.0 / window_width;
+			mouseFactorY = 200.0 / window_height;
+			GetWindowRect(hwnd, &rectScreen);
+			ClipCursor(&rectScreen);
 			break;
 		}
 
@@ -79,6 +87,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 			DeleteDC(hdc_bmp);
 			DeleteObject(old_bmp);
 			ReleaseDC(hWnd, hdc);
+			break;
+		}
+
+		case WM_LBUTTONDOWN:{
+			mouseDownLeft = 1;
+			break;
+		}
+
+		case WM_LBUTTONUP:{
+			mouseDownLeft = 0;
+			break;
+		}
+
+		case WM_RBUTTONDOWN:{
+			mouseDownRight = 1;
+			break;
+		}
+
+		case WM_RBUTTONUP:{
+			mouseDownRight = 0;
 			break;
 		}
 
@@ -153,6 +181,11 @@ void SG_Init(int argc, char** argv){
 
 	timeBeginPeriod(1);
 
+	mouseFactorX = 320.0 / window_width;
+	mouseFactorY = 200.0 / window_height;
+
+	ClipCursor(&rectScreen);
+
 	FBPTR = malloc(64000);
 	timeSetEvent(14, 1, (LPTIMECALLBACK)&mmproc, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
 	memset(keys, 0, 256 * sizeof(bool_t));
@@ -160,7 +193,13 @@ void SG_Init(int argc, char** argv){
 }
 
 void SG_ReadMouse(SG_mouse_t* mouse){
-
+	POINT p;
+	GetCursorPos(&p);
+	ScreenToClient(hwnd, &p);
+	mouse->x = p.x * mouseFactorX;
+	mouse->y = p.y * mouseFactorY;
+	mouse->buttons[0] = mouseDownLeft;
+	mouse->buttons[1] = mouseDownRight;
 }
 
 bool_t SG_KeyDown(uint8 key){

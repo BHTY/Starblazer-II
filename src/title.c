@@ -2,6 +2,8 @@
 #include "../headers/slipstr.h"
 #include "../headers/graphics.h"
 #include "../headers/font.h"
+#include "../headers/star_gen.h"
+#include "../headers/ui.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -32,6 +34,33 @@ void draw_stars(){
 	}
 }
 
+void create_textbox(){
+	uint32 id;
+	ui_button_t* buttonData = malloc(sizeof(ui_button_t));
+	ui_button_t* buttonData2 = malloc(sizeof(ui_button_t));
+	ui_button_t* buttonData3 = malloc(sizeof(ui_button_t));
+	buttonData->text = "CAMPAIGN";
+	buttonData->text_box.text_props.scale_x = 3;
+	buttonData->text_box.text_props.scale_y = 2;
+	buttonData->text_box.text_props.color = 28;
+	buttonData->text_box.text_props.spacing = 0;
+	buttonData->text_box.box.size_x = 100;
+	buttonData->text_box.box.size_y = 12;
+	buttonData->text_box.box.bg_color = 28;
+	buttonData->text_box.box.border_color_inactive = 255;
+	buttonData->text_box.box.border_color_active = 255;
+
+	memcpy(buttonData2, buttonData, sizeof(ui_button_t));
+	memcpy(buttonData3, buttonData, sizeof(ui_button_t));
+
+	buttonData2->text = "MULTIPLAYER";
+	buttonData3->text = "OPTIONS";
+
+	id = ui_create_widget(WIDGET_TYPE_BUTTON, 0, 110, 120, buttonData);
+	id = ui_create_widget(WIDGET_TYPE_BUTTON, 0, 110, 140, buttonData2);
+	id = ui_create_widget(WIDGET_TYPE_BUTTON, 0, 110, 160, buttonData3);
+}
+
 void title_init(){
 	title_camera.x = 0;
 	title_camera.y = 0;
@@ -41,17 +70,37 @@ void title_init(){
 	quat_create(0, 0, 0, &stars_cam_ori);
 
 	logo = load_model("assets\\star.obj");
-	spawn_entity(logo, 0, 0, int_fixed(10), 0, 128, 0);
+	spawn_entity(logo, 0, 0, int_fixed(10), 0, 128, 0); //10
 
 	SL_CENTER_Y = 45;
 
 	init_stars();
+	create_textbox();
 }
 
 void title_module(){
 }
 
+void draw_cursor(int x, int y, uint8 clr){
+	draw_line(x - 5, y - 5, x - 5, y + 5, clr);
+	draw_line(x - 5, y + 5, x + 5, y + 5, clr);
+	draw_line(x + 5, y + 5, x + 5, y - 5, clr);
+	draw_line(x + 5, y - 5, x - 5, y - 5, clr);
+}
+
 void title_draw(){
+	SG_mouse_t mouse;
+	SG_ReadMouse(&mouse);
+
+	if (mouse.buttons[0]){
+		draw_cursor(mouse.x, mouse.y, 28);
+	}
+	else{
+		draw_cursor(mouse.x, mouse.y, 255);
+	}
+
+	vputs("STARBLAZER", 0, 0, 3, 2, 39, 0);
+	vputs("    II", 0, 10, 3, 2, 252, 0);
 	vputs("BY WILL KLEES AND JOSH PIETY", 30, 100, 3, 2, 255, 0);
 
 	draw_scene(&title_camera, &title_cam_ori, 0);
@@ -62,4 +111,6 @@ void title_draw(){
 	quat_roll(8, &stars_cam_ori);
 	quat_tomat(&stars_cam_ori, &SL_CAMERA_ORIENTATION);
 	draw_stars();
+
+	ui_display_widgets();
 }
