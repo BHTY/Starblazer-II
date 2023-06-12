@@ -175,7 +175,7 @@ TEMPLATE* load_model(char* filename){
 			fscanf(fp, "%f %f %f\n", &x, &y, &z);
 			verts[currentVert].x = float_fixed(x);
 			verts[currentVert].y = float_fixed(y);
-			verts[currentVert].z = float_fixed(z / 2);
+			verts[currentVert].z = float_fixed(z);
 			currentVert++;
 		}
 
