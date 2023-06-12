@@ -52,7 +52,7 @@ void title_module(){
 }
 
 void title_draw(){
-	vputs("HELLO WORLD", 0, 0, 3, 2, 255, 0);
+	vputs("BY WILL KLEES AND JOSH PIETY", 30, 100, 3, 2, 255, 0);
 
 	draw_scene(&title_camera, &title_cam_ori, 0);
 	quat_yaw(16, &(StarblazerEntities[0]->orientation));
