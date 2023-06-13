@@ -7,14 +7,14 @@
 #include "../headers/ecs.h"
 #include "../headers/blazer2.h"
 
-SANGLE MAX_ROT = 127;
+SANGLE MAX_ROT = 31;
 ENTITY* hypercraft;
 TEMPLATE* hc_template;
 QUAT hyptest_ori;
 
 void init_hypercraft(){
 	uint32 id;
-	hc_template = load_model("assets\\hyper.obj");
+	hc_template = load_model("assets\\arwing.obj");
 
 	id = spawn_entity(hc_template, 0, 0, int_fixed(25), 0, 0, 0);
 	hypercraft = StarblazerEntities[id];
