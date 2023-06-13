@@ -14,7 +14,7 @@ QUAT hyptest_ori;
 
 void init_hypercraft(){
 	uint32 id;
-	hc_template = load_model("assets\\arwing.obj");
+	hc_template = load_model("assets\\hyper.obj");
 
 	id = spawn_entity(hc_template, 0, 0, int_fixed(25), 0, 0, 0);
 	hypercraft = StarblazerEntities[id];
