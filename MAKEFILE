@@ -4,7 +4,7 @@ all: release\star_win.exe
 
 release\star_win.exe: src\blazer.obj src\blazer2.obj src\ecs.obj src\font.obj \
     src\graphics.obj src\sl_math.obj src\slipstr.obj src\star_win.obj src\title.obj \
-	src\ui.obj \
+	src\ui.obj src\hyptest.obj \
     star.res
   $(link) $(ldebug) $(conlflags) -out:$*.exe $** $(conlibs) \
     winmm.lib user32.lib gdi32.lib wsock32.lib

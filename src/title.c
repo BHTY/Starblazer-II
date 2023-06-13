@@ -4,6 +4,7 @@
 #include "../headers/font.h"
 #include "../headers/star_gen.h"
 #include "../headers/ui.h"
+#include "../headers/hyptest.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -76,9 +77,12 @@ void title_init(){
 
 	init_stars();
 	create_textbox();
+
+	init_hypercraft();
 }
 
 void title_module(){
+	rot_hypercraft();
 }
 
 void draw_cursor(int x, int y, uint8 clr){
@@ -113,4 +117,6 @@ void title_draw(){
 	draw_stars();
 
 	ui_display_widgets();
+
+	draw_hypercraft(265, 160);
 }

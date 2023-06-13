@@ -146,7 +146,7 @@ void UI_DRAW_BUTTON(uint32 widget_handle){
 	ui_button_t *button_data = ptr->widgetData;
 
 	int text_size_x = (strlen(button_data->text)) * ((button_data->text_box.text_props.scale_x * 2) + 2 + button_data->text_box.text_props.spacing) + 6;
-	printf("%d\n", text_size_x);
+	//printf("%d\n", text_size_x);
 
 	//draw the button box itself
 	UI_DRAW_BOX(widget_handle, &(button_data->text_box.box), &(button_data->text_box.text_props), ptr->posX, ptr->posY, (button_data->text_box.box.size_x - text_size_x) >> 1, button_data->text);

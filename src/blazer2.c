@@ -7,22 +7,49 @@
 #include "../headers/blazer2.h"
 #include "../headers/star_gen.h"
 #include "../headers/blazer.h"
+#include "../headers/slipstr.h"
 
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
 
-typedef struct{
-	uint8 pitch, yaw, roll;
-	bool_t fire, radar, boost, exit;
-} joystick_t;
+SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
+	return (angle * joy_amount) >> 8;
+}
 
 void vjoy_read(joystick_t* joy){
 	//scan the mouse and joystick
 
 	//read pitch
+	if (SG_KeyDown('W')){
+		joy->pitch = 127;
+	}
+	else if (SG_KeyDown('S')){
+		joy->pitch = -127;
+	}
+	else{
+		joy->pitch = 0;
+	}
 
 	//read yaw
+	if (SG_KeyDown('A')){
+		joy->yaw = 127;
+	}
+	else if (SG_KeyDown('D')){
+		joy->yaw = -127;
+	}
+	else{
+		joy->yaw = 0;
+	}
 
 	//read roll
+	if (SG_KeyDown('Q')){
+		joy->roll = 127;
+	}
+	else if (SG_KeyDown('E')){
+		joy->roll = -127;
+	}
+	else{
+		joy->roll = 0;
+	}
 
 	//read fire
 
