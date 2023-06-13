@@ -7,7 +7,7 @@ Description: SLipstream Math functions for 3D graphics
 #include "../headers/tables.h"
 
 uint32 int_abs(uint32 x){
-	uint32 y = x >> 31;
+	uint32 y = -(x >> 31);
 	return (x ^ y) - y;
 }
 
