@@ -99,10 +99,6 @@ void blazer2_init(){
 	player_battery = 100;
 
 	//pull in all of the templates-models & AIs - that we need
-	AX5 = load_model("assets\\hyper.obj");
-	AX5->script = cam_script;
-
-	spawn_entity(AX5, 0, 0, int_fixed(10), 0, 0, 0);
 
 	//set player fighter and laser
 	player_fighter.health = cam_template.maxhp;
@@ -242,33 +238,11 @@ void blazer2_module(){
 		}
 	}
 	//radar lock
-
-	if (joy.boost){
-		velocity.z = player_fighter.speed;
-	}
-	else{
-		velocity.z = 0;
-	}
 	
 	//move me
 	quat_tomat(&(StarblazerEntities[0]->orientation), &rot_mat); //generate rotation matrix
 	mat3_mul(&rot_mat, &velocity, &pos_delta);
 	vec3_add(&pos_delta, &(StarblazerEntities[0]->pos));
-
-	printf("1");
-	tst = StarblazerEntities[0]->pos;
-	printf("2");
-	vec3_subtract(&(StarblazerEntities[1]->pos), &tst);
-	printf("3");
-	mat3_mul(&rot_mat, &tst, &tst2);
-	printf("4");
-	vec3_add(&tst2, &(StarblazerEntities[1]));
-	printf("5");
-
-	StarblazerEntities[1]->orientation = StarblazerEntities[0]->orientation;
-
-	vec3_add(&pos_delta, &(StarblazerEntities[1]->pos));
-
 	print_vec(&pos_delta);
 
 	//sync state if this is multiplayer
