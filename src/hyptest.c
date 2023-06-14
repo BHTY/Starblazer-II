@@ -12,6 +12,8 @@ ENTITY* hypercraft;
 TEMPLATE* hc_template;
 QUAT hyptest_ori;
 
+VEC3 velocity;
+
 void init_hypercraft(){
 	uint32 id;
 	hc_template = load_model("assets\\hyper.obj");
@@ -21,10 +23,15 @@ void init_hypercraft(){
 	StarblazerEntities[id] = 0;
 
 	quat_create(0, 0, 0, &hyptest_ori);
+
+	velocity.x = 0;
+	velocity.y = 0;
+	velocity.z = int_fixed(1);
 }
 
 void rot_hypercraft(){
 	VEC3 newvec;
+	MAT3 rot_mat;
 	joystick_t joy;
 	vjoy_read(&joy);
 
@@ -34,6 +41,12 @@ void rot_hypercraft(){
 	quat_yaw(angle_multiply(MAX_ROT, joy.yaw), &(hypercraft->orientation));
 	//rotate on roll
 	quat_roll(angle_multiply(MAX_ROT, joy.roll), &(hypercraft->orientation));
+
+	if (SG_KeyDown('K')){
+		quat_tomat(&(hypercraft->orientation), &rot_mat);
+		mat3_mul(&rot_mat, &velocity, &newvec);
+		vec3_add(&newvec, &(hypercraft->pos));
+	}
 }
 
 void draw_hypercraft(int centerX, int centerY){
