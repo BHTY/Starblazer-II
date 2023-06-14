@@ -103,7 +103,9 @@ void run_entity_scripts(){
 	int i;
 
 	for (i = 0; i < MAX_ENTITIES; i++){
-		StarblazerEntities[i]->type->script(&(StarblazerEntities[i]));
+		if (StarblazerEntities[i]){
+			StarblazerEntities[i]->type->script(&(StarblazerEntities[i]));
+		}
 	}
 }
 

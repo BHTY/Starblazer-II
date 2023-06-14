@@ -24,6 +24,7 @@ void init_hypercraft(){
 }
 
 void rot_hypercraft(){
+	VEC3 newvec;
 	joystick_t joy;
 	vjoy_read(&joy);
 

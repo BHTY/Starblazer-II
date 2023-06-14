@@ -22,7 +22,7 @@ typedef struct TEMPLATE{
 	void (*script)(ENTITY**);
 	VEC3 hitbox;
 	uint32 maxhp;
-	uint32 flags; //essentially, one handy-dandy flag controls shootable/targetable/appears on radar
+	uint32 flags; //essentially, one flag (2) controls radarability and the other (1) controls lockability/shootability
 } TEMPLATE;
 
 extern ENTITY* StarblazerEntities[MAX_ENTITIES];

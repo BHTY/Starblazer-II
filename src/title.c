@@ -5,6 +5,7 @@
 #include "../headers/star_gen.h"
 #include "../headers/ui.h"
 #include "../headers/hyptest.h"
+#include "../headers/blazer2.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -15,24 +16,9 @@ VEC3 title_camera;
 QUAT title_cam_ori;
 QUAT stars_cam_ori;
 
-VEC3 title_stars[500];
-
-void init_star(VEC3* star){
-	star->x = ((rand() % 1000) - 500) * 65536;
-	star->y = ((rand() % 1000) - 500) * 65536;
-	star->z = ((rand() % 1000) - 500) * 65536;
-}
-
 void init_stars(){
 	int i;
 	for (i = 0; i < 500; i++){ init_star(&(title_stars[i])); }
-}
-
-void draw_stars(){
-	int i;
-	for (i = 0; i < 500; i++){
-		plotpoint_3d(title_stars[i], 255);
-	}
 }
 
 void create_textbox(){
@@ -98,6 +84,7 @@ void title_draw(){
 
 	if (mouse.buttons[0]){
 		draw_cursor(mouse.x, mouse.y, 28);
+		blazer2_init();
 	}
 	else{
 		draw_cursor(mouse.x, mouse.y, 255);
