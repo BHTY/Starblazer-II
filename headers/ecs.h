@@ -29,7 +29,7 @@ extern ENTITY* StarblazerEntities[MAX_ENTITIES];
 
 uint32 first_open_slot(); //finds first open entity slot
 uint32 spawn_entity(TEMPLATE* type, FIXED x, FIXED y, FIXED z, ANGLE pitch, ANGLE yaw, ANGLE roll);
-void draw_scene(VEC3*, QUAT*, bool_t); //draws/rasterizes every entity in the scene graph
+void draw_scene(VEC3*, QUAT, bool_t, VEC3*, int); //draws/rasterizes every entity in the scene graph
 void run_entity_scripts(); //iterates over every entity in a loop and runs its script
 bool_t test_collisions(ENTITY*, ENTITY*);
 void create_hitbox(TEMPLATE* tpl, FIXED x, FIXED y, FIXED z);

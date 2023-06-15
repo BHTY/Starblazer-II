@@ -56,5 +56,6 @@ void quat_create(ANGLE pitch, ANGLE yaw, ANGLE roll, QUAT* dest); //create a qua
 void quat_rotate(QUAT *rot, VEC3* vec, VEC3 *output);
 void quat_mul(QUAT *q, QUAT *output); //output *= q
 void quat_slerp(QUAT *start, QUAT *end, FIXED t, QUAT *result);
+void quat_conjugate(QUAT *q);
 
 #endif

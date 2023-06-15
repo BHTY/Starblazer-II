@@ -94,7 +94,7 @@ void title_draw(){
 	vputs("    II", 0, 10, 3, 2, 252, 0);
 	vputs("BY WILL KLEES AND JOSH PIETY", 30, 100, 3, 2, 255, 0);
 
-	draw_scene(&title_camera, &title_cam_ori, 0);
+	draw_scene(&title_camera, title_cam_ori, 0, 0, 0);
 	quat_yaw(16, &(StarblazerEntities[0]->orientation));
 
 	quat_pitch(8, &stars_cam_ori);

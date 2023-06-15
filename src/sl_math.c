@@ -144,3 +144,9 @@ void quat_create(ANGLE pitch, ANGLE yaw, ANGLE roll, QUAT *a) {
 void quat_slerp(QUAT *start, QUAT *end, FIXED t, QUAT *result) {
 	// TODO!
 }
+
+void quat_conjugate(QUAT *q) {
+	q->x = -q->x;
+	q->y = -q->y;
+	q->z = -q->z;
+}

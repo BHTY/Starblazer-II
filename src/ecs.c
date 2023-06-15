@@ -59,13 +59,18 @@ uint32 spawn_entity(TEMPLATE* type, FIXED x, FIXED y, FIXED z, ANGLE pitch, ANGL
 	All of the entities in the scene graph are rendered from the camera position and orientation. (shading settings dependent on flag)
 */
 
-void draw_scene(VEC3* cam_pos, QUAT* cam_ori, bool_t shading){
+void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int num_stars){
 	int i, p, cur_index;
 	VEC3 temp_vert;
 	MAT3 model_rotation_matrix;
 
 	camera_translate(cam_pos); //translate the camera position
-	quat_tomat(cam_ori, &SL_CAMERA_ORIENTATION); //convert the camera quaternion into the slipstream rotation matrix
+	quat_conjugate(&cam_ori);
+	quat_tomat(&cam_ori, &SL_CAMERA_ORIENTATION); //convert the camera quaternion into the slipstream rotation matrix
+
+	for (i = 0; i < num_stars; i++){
+		plotpoint_3d(star_ptr[i], 255);
+	}
 
 	render_begin();
 

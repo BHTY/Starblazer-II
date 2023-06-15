@@ -281,10 +281,8 @@ void blazer2_draw(){
 	camera_translate(&(StarblazerEntities[0]->pos));
 	quat_tomat(&(StarblazerEntities[0]->orientation), &SL_CAMERA_ORIENTATION);
 
-	draw_stars();
-
 	//draw 3d scene geometry
-	draw_scene(&(StarblazerEntities[0]->pos), &(StarblazerEntities[0]->orientation), 0);
+	draw_scene(&(StarblazerEntities[0]->pos), StarblazerEntities[0]->orientation, 0, title_stars, 500);
 
 	//draw targeting reticle
 
