@@ -12,6 +12,10 @@ uint32 int_abs(uint32 x){
 }
 
 FIXED muldiv(FIXED a, FIXED b, FIXED c){
+	if (c == 0){
+		return ((a ^ b) < 0) ? -1 : 2147483647;
+	}
+
 	return ((int64)a * b) / c;
 }
 

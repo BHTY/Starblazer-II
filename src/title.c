@@ -84,6 +84,7 @@ void title_draw(){
 
 	if (mouse.buttons[0]){
 		draw_cursor(mouse.x, mouse.y, 28);
+		destroy_hypercraft();
 		blazer2_init();
 	}
 	else{

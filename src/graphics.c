@@ -17,6 +17,12 @@ void plot_pixel(uint16 x, uint16 y, uint8 color){
 	}
 }
 
+void bitset_pixel(uint16 x, uint16 y, char c){
+	if ((x < 320) && (y < 200)){
+		FBPTR[y * 320 + x] |= c;
+	}
+}
+
 void draw_line(int x, int y, int x2, int y2, unsigned char color) {
 	int j, decInc;
 	int i;

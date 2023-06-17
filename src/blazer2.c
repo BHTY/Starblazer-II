@@ -9,8 +9,10 @@
 #include "../headers/blazer.h"
 #include "../headers/slipstr.h"
 #include "../headers/stats.h"
+#include "../headers/hyptest.h"
 
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
+char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
 
 VEC3 title_stars[500];
 
@@ -18,6 +20,7 @@ bool_t multiplayer = 0;
 bool_t boost_overheating = 0;
 bool_t firing = 0;
 VEC3 velocity;
+int barcycle = 0;
 
 TEMPLATE cam_template;
 ENTITY* camera;
@@ -31,8 +34,19 @@ uint32 player_battery;
 uint32 shake_frames = 0;
 uint32 firing_cooldown = 0;
 
+MAT3 rot_mat;
+VEC3 pos_delta;
+
+VEC3 laser_velocity;
+
 void print_vec(VEC3* vec){
 	printf("(%d, %d, %d)\n", vec->x, vec->y, vec->z);
+}
+
+void step_entity(ENTITY* ent, VEC3* vel){
+	quat_tomat(&(ent->orientation), &rot_mat); //generate rotation matrix
+	mat3_mul(&rot_mat, vel, &pos_delta);
+	vec3_add(&pos_delta, &(ent->pos));
 }
 
 void draw_stars(){
@@ -51,13 +65,45 @@ void fire_laser(){
 }
 
 void cam_script(ENTITY** ptr){
-
+	step_entity(*ptr, &velocity);
 }
 
 void init_star(VEC3* star){
 	star->x = ((rand() % 1000) - 500) * 65536;
 	star->y = ((rand() % 1000) - 500) * 65536;
 	star->z = ((rand() % 1000) - 500) * 65536;
+}
+
+void laser_script(ENTITY** ptr){
+	step_entity(*ptr, &laser_velocity);
+	(*ptr)->state[0]--;
+
+	if (!(*ptr)->state[0]){
+		free(*ptr);
+		*ptr = 0;
+	}
+}
+
+void set_attributes(){
+	LASER_PLAYER->script = laser_script;
+	LASER_PLAYER->flags = 2;
+	create_hitbox(LASER_PLAYER, int_fixed(1), int_fixed(1), int_fixed(1));
+
+	player_fighter.health = 40;
+	player_fighter.turn_rate = 31;
+	player_fighter.speed = 100000;
+	player_fighter.boost_speed = 0;
+	player_fighter.boost_size = 0;
+	player_fighter.energy_tank = 0;
+
+	player_weapon.cooldown_ticks = 2;
+	player_weapon.energy_draw = 0;
+	player_weapon.damage = 0;
+	player_weapon.model = LASER_PLAYER;
+
+	laser_velocity.x = 0;
+	laser_velocity.y = 0;
+	laser_velocity.z = player_fighter.speed * 2;
 }
 
 //when you're dead, it'll forcibly zero out your velocity and your joystick inputs
@@ -70,12 +116,19 @@ The multiplayer flag is set by the calling function. If we're in multiplayer mod
 void blazer2_init(){
 	uint32 i;
 
+	//load models
+	LASER_PLAYER = load_model("assets\\bolt.obj");
+	SL_CENTER_X = 160;
+	SL_CENTER_Y = 100;
+
+	set_attributes();
+
 	cam_template.mesh = 0;
 	cam_template.verts = 0;
 	cam_template.num_verts = 0;
 	cam_template.num_tris = 0;
 	cam_template.script = cam_script;
-	cam_template.maxhp = 100;
+	cam_template.maxhp = player_fighter.health;
 	cam_template.flags = 2;
 	
 	create_hitbox(&cam_template, int_fixed(2), int_fixed(2), int_fixed(2));
@@ -95,16 +148,10 @@ void blazer2_init(){
 	i = spawn_entity(&cam_template, 0, 0, 0, 0, 0, 0);
 
 	//setup core state variables (i.e. boost meter, laser bar, etc.)
-	player_boost = 100;
-	player_battery = 100;
+	player_boost = player_fighter.boost_size;
+	player_battery = player_fighter.energy_tank;
 
 	//pull in all of the templates-models & AIs - that we need
-
-	//set player fighter and laser
-	player_fighter.health = cam_template.maxhp;
-	player_fighter.turn_rate = 31;
-	player_fighter.speed = 100000;
-	player_fighter.boost_speed = 200000;
 
 	//if this is singleplayer, spawn in asteroids & turret
 
@@ -114,7 +161,9 @@ void blazer2_init(){
 
 	velocity.x = 0;
 	velocity.y = 0;
-	velocity.z = 10000;
+	velocity.z = player_fighter.speed;
+
+	init_hypercraft();
 }
 
 SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
@@ -192,8 +241,6 @@ VEC3 tst, tst2;
 
 void blazer2_module(){
 	uint32 id;
-	VEC3 pos_delta;
-	MAT3 rot_mat;
 	joystick_t joy;
 	vjoy_read(&joy);
 
@@ -238,11 +285,6 @@ void blazer2_module(){
 		}
 	}
 	//radar lock
-	
-	//move me
-	quat_tomat(&(StarblazerEntities[0]->orientation), &rot_mat); //generate rotation matrix
-	mat3_mul(&rot_mat, &velocity, &pos_delta);
-	vec3_add(&pos_delta, &(StarblazerEntities[0]->pos));
 
 	//sync state if this is multiplayer
 	if (multiplayer){
@@ -271,10 +313,117 @@ void blazer2_screencrack(){
 	draw_line(215, 85, 200, 70, 255);
 	draw_line(200, 70, 215, 50, 255);
 	draw_line(215, 50, 319, 40, 255);
+	draw_line(160, 100, 100, 130, 255);
+	draw_line(160, 100, 215, 140, 255);
+	draw_line(160, 100, 215, 140, 255);
+	draw_line(160, 100, 215, 85, 255);
+	draw_line(120, 85, 160, 100, 255);
+	draw_line(100, 130, 80, 160, 255);
+	draw_line(80, 160, 20, 170, 255);
+	draw_line(20, 170, 0, 192, 255);
 }
+
+
+uint32 count_entities(){
+	int i;
+	int c = 0;
+
+	for (i = 0; i < MAX_ENTITIES; i++){
+		if (StarblazerEntities[i]) c++;
+	}
+
+	return c;
+}
+
+
+void draw_debug(){
+	char num[10];
+
+	//draw # of onscreen entities
+	vputs("ENT", 0, 0, 1, 1, 252, 1);
+	sprintf(num, "%d", count_entities());
+	vputs(num, 15, 0, 1, 1, 252, 1);
+	//draw # of onscreen polygons
+	vputs("TRI", 0, 7, 1, 1, 252, 1);
+	sprintf(num, "%d", SL_TRIANGLE_INDEX);
+	vputs(num, 15, 7, 1, 1, 252, 1);
+	//draw tickrate
+	vputs("FPS", 0, 14, 1, 1, 252, 1);
+	sprintf(num, "%d", 1000 / LAST_FRAME_TIME);
+	vputs(num, 15, 14, 1, 1, 252, 1);
+
+	//draw position
+	sprintf(num, "%d %d %d", fixed_int(StarblazerEntities[0]->pos.x), fixed_int(StarblazerEntities[0]->pos.y), fixed_int(StarblazerEntities[0]->pos.z));
+	vputs(num, 240, 0, 1, 1, 28, 1);
+}
+
+void draw_HPbar(){
+	int k, j, i, pos1, pos2, pos3, pos4, c;
+
+	// draw the health bar
+	// coordinates of bar (16, 16) to (32, 184)
+	k = (StarblazerEntities[0]->health * 21) / 5 + 16;
+	i = 8 + (barcycle >> 3);
+	for (j = 0; j < 22; j++) {
+		c = barcolors[j];
+		if (i > k) break;
+		pos1 = 24;
+		pos2 = i;
+		pos3 = 8;
+		pos4 = i + 8;
+		if (i + 8 > k) {
+			//drawline(24, i, 8+(((i+8)-k)<<1), k, 0xe0);
+			pos3 += (((i + 8) - k) << 1);
+			pos4 = k;
+		}
+		if (i < 16) {
+			pos1 -= (16 - i) << 1;
+			pos2 = 16;
+		}
+		drawline(pos1, pos2, pos3, pos4, c);
+		i += 8;
+	}
+	drawline(8, 16, 24, 16, 0xff);
+	drawline(24, 16, 24, 184, 0xff);
+	drawline(24, 184, 8, 184, 0xff);
+	drawline(8, 184, 8, 16, 0xff);
+	drawline(8, k, 24, k, 0xff);
+}
+
+void draw_crosshair(){
+	int i;
+	for (i = 0; i < 7; i++) {
+		// operate on (140+i, 80)
+		// (180-i, 80)
+		bitset_pixel(150 + i, 90, 0x1c);
+		bitset_pixel(170 - i, 90, 0x1c);
+		bitset_pixel(150 + i, 110, 0x1c);
+		bitset_pixel(170 - i, 110, 0x1c);
+		bitset_pixel(150, 90 + i, 0x1c);
+		bitset_pixel(150, 110 - i, 0x1c);
+		bitset_pixel(170, 90 + i, 0x1c);
+		bitset_pixel(170, 110 - i, 0x1c);
+	}
+
+	bitset_pixel(160, 100, 0x1c);
+}
+
+
+void draw_boost_bar(){
+
+}
+
 
 void blazer2_draw(){
 	//account for screenshake
+	if (shake_frames){
+		SL_CENTER_X += (rand() % 10) - 5;
+		SL_CENTER_Y += (rand() % 10) - 5;
+	}
+	else{
+		SL_CENTER_X = 160;
+		SL_CENTER_Y = 100;
+	}
 
 	//draw starfield bg
 	camera_translate(&(StarblazerEntities[0]->pos));
@@ -284,18 +433,29 @@ void blazer2_draw(){
 	draw_scene(&(StarblazerEntities[0]->pos), StarblazerEntities[0]->orientation, 0, title_stars, 500);
 
 	//draw targeting reticle
+	draw_crosshair();
 
 	//draw boost bar
+	draw_boost_bar();
 
 	//draw health bar
+	draw_HPbar();
 
     //draw radar
     //draw weapons energy tank
     //draw targeting computer lead position
     //draw screen crack
-	/*if (player_health < (player_fighter.health >> 1)){
+	if (StarblazerEntities[0]->health < (player_fighter.health >> 1)){
 		blazer2_screencrack();
-	}*/
+	}
 	//draw respawn message
 	//draw debug display
+	draw_debug();
+
+	barcycle += 2;
+	if (barcycle == 64) barcycle = 0;
+
+	//draw hypercraft
+	set_hypercraft_orientation(StarblazerEntities[0]->orientation);
+	draw_hypercraft(265, 160);
 }

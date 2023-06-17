@@ -18,7 +18,7 @@ void init_hypercraft(){
 	uint32 id;
 	hc_template = load_model("assets\\hyper.obj");
 
-	id = spawn_entity(hc_template, 0, 0, int_fixed(25), 0, 0, 0);
+	id = spawn_entity(hc_template, 0, 0, int_fixed(25), 0, 0, 0); //25
 	hypercraft = StarblazerEntities[id];
 	StarblazerEntities[id] = 0;
 
@@ -27,6 +27,10 @@ void init_hypercraft(){
 	velocity.x = 0;
 	velocity.y = 0;
 	velocity.z = int_fixed(1);
+}
+
+void set_hypercraft_orientation(QUAT quat){
+	hypercraft->orientation = quat;
 }
 
 void rot_hypercraft(){

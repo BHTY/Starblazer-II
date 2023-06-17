@@ -10,6 +10,11 @@ extern void title_module();
 int current_frame = 0;
 uint8 BG_COLOR = 0;
 
+int LAST_TICK_TIME = 14;
+int LAST_FRAME_TIME = 14;
+
+int time_at_which_last_frame_was_rendered = 0;
+
 void (*SG_Draw)();
 void (*SG_Module)();
 
@@ -22,11 +27,18 @@ void SG_PresentFrame(){
 }
 
 void SG_Tick(){
+	uint32 current_time;
+
 	SG_Module();
+
+	GAME_SETTINGS.vid_settings.frameskip = 0;
 
 	if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
 		current_frame = 0;
 		SG_PresentFrame();
+		current_time = SG_GetTicks();
+		LAST_FRAME_TIME = current_time - time_at_which_last_frame_was_rendered;
+		time_at_which_last_frame_was_rendered = current_time;
 	}
 	else{
 		current_frame++;
