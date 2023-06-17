@@ -123,10 +123,10 @@ SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
 
 void vjoy_read(joystick_t* joy){
 	//scan the mouse and joystick
-	joy->fire = 0;
+	joy->fire = SG_KeyDown('J');
 	joy->exit = 0;
-	joy->brake = 0;
-	joy->boost = 0;
+	joy->brake = SG_KeyDown('K');
+	joy->boost = SG_KeyDown('B');
 
 	if (SG_KeyDown('K')){
 		joy->boost = 1;
@@ -243,7 +243,6 @@ void blazer2_module(){
 	quat_tomat(&(StarblazerEntities[0]->orientation), &rot_mat); //generate rotation matrix
 	mat3_mul(&rot_mat, &velocity, &pos_delta);
 	vec3_add(&pos_delta, &(StarblazerEntities[0]->pos));
-	print_vec(&pos_delta);
 
 	//sync state if this is multiplayer
 	if (multiplayer){

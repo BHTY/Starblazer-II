@@ -184,7 +184,7 @@ bool_t clip_polygon(TRI* tri){
 	VEC3 v1 = SL_VERTS[tri->v1];
 	VEC3 v2 = SL_VERTS[tri->v2];
 
-	if (v0.z <= 0 && v1.z <= 0 && v2.z <= 0){ //they’re all behind the camera
+	if (v0.z <= 2048 || v1.z <= 2048 || v2.z <= 2048){ //they’re all behind the camera
 		return 0;
 	}
 
@@ -224,9 +224,9 @@ void render_end(bool_t shading){
 			else{
 				//printf("Color: %d\n", c);
 				//printf("About to draw triangle with verts (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
-				draw_line(x1, y1, x2, y2, c);
-				draw_line(x1, y1, x3, y3, c);
-				draw_line(x2, y2, x3, y3, c);
+				drawline(x1, y1, x2, y2, c);
+				drawline(x1, y1, x3, y3, c);
+				drawline(x2, y2, x3, y3, c);
 			}
 		}
 	}
