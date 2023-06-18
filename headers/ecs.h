@@ -10,7 +10,7 @@ typedef struct ENTITY{
 	VEC3 pos;
 	QUAT orientation;
 	uint32 state[16];
-	uint32 health;
+	int32 health;
 	uint8 color_override;
 	int override_frames;
 } ENTITY;

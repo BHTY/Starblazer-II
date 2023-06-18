@@ -117,6 +117,14 @@ void laser_script(ENTITY** ptr){
 }
 
 void asteroid_script(ENTITY** ptr){
+	if (test_collisions(*ptr, StarblazerEntities[0])){
+		StarblazerEntities[0]->health -= 5;
+		shake_frames = 7;
+		free(*ptr);
+		*ptr = 0;
+		return;
+	}
+
 	if ((*ptr)->health <= 0){
 		free(*ptr);
 		*ptr = 0;
@@ -130,7 +138,7 @@ void debris_script(ENTITY** ptr){
 void set_attributes(){
 	LASER_PLAYER->script = laser_script;
 	LASER_PLAYER->flags = 2;
-	create_hitbox(LASER_PLAYER, int_fixed(1), int_fixed(1), int_fixed(1));
+	create_hitbox(LASER_PLAYER, int_fixed(3), int_fixed(3), int_fixed(3));
 
 	player_fighter.health = 40;
 	player_fighter.turn_rate = 25;
