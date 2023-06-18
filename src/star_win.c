@@ -137,8 +137,8 @@ void SG_Init(int argc, char** argv){
 	//do the generic initialization
 	SG_GameInit();
 
-	window_width = 320;
-	window_height = 200;
+	window_width = 640;
+	window_height = 480;
 
 	winRect.left = 0;
 	winRect.top = 0;
