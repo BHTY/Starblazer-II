@@ -16,6 +16,7 @@ char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x
 
 VEC3 title_stars[500];
 
+int frames;
 bool_t multiplayer = 0;
 bool_t boost_overheating = 0;
 bool_t firing = 0;
@@ -90,10 +91,10 @@ void set_attributes(){
 	create_hitbox(LASER_PLAYER, int_fixed(1), int_fixed(1), int_fixed(1));
 
 	player_fighter.health = 40;
-	player_fighter.turn_rate = 31;
-	player_fighter.speed = 100000;
-	player_fighter.boost_speed = 0;
-	player_fighter.boost_size = 0;
+	player_fighter.turn_rate = 25;
+	player_fighter.speed = 0x3000;
+	player_fighter.boost_speed = 0xf000;
+	player_fighter.boost_size = 40;
 	player_fighter.energy_tank = 0;
 
 	player_weapon.cooldown_ticks = 2;
@@ -115,6 +116,8 @@ The multiplayer flag is set by the calling function. If we're in multiplayer mod
 
 void blazer2_init(){
 	uint32 i;
+
+	frames = 0;
 
 	//load models
 	LASER_PLAYER = load_model("assets\\bolt.obj");
@@ -272,16 +275,16 @@ void blazer2_module(){
 	//boost & brake - make the curves smoother?
 	if (joy.boost && !boost_overheating){
 		velocity.z = player_fighter.boost_speed;
-		player_boost--;
+		if (frames % 5 == 0) { player_boost--; }
 	}
 	else if (joy.brake && !boost_overheating){
 		velocity.z = 0;
-		player_boost--;
+		if (frames % 5 == 0) { player_boost--; }
 	}
 	else{
 		velocity.z = player_fighter.speed;
 		if (player_boost < player_fighter.boost_size){
-			player_boost++;
+			if (frames % 15 == 0) { player_boost++; }
 		}
 	}
 	//radar lock
@@ -302,6 +305,7 @@ void blazer2_module(){
 	}
 
 	//exit back to title screen if the exit key is pressed
+	frames++;
 }
 
 void blazer2_screencrack(){
@@ -410,7 +414,36 @@ void draw_crosshair(){
 
 
 void draw_boost_bar(){
+	int k, j, i, pos1, pos2, pos3, pos4, c;
 
+	// draw the health bar
+	// coordinates of bar (16, 16) to (32, 184)
+	k = (player_boost * 21) / 5 + 16;
+	i = 8 + (barcycle >> 3);
+	for (j = 0; j < 22; j++) {
+		c = boost_overheating ? 0xe7 : 0x27;
+		if (i > k) break;
+		pos1 = 312;
+		pos2 = i;
+		pos3 = 296;
+		pos4 = i + 8;
+		if (i + 8 > k) {
+			//drawline(24, i, 8+(((i+8)-k)<<1), k, 0xe0);
+			pos3 += (((i + 8) - k) << 1);
+			pos4 = k;
+		}
+		if (i < 16) {
+			pos1 -= (16 - i) << 1;
+			pos2 = 16;
+		}
+		drawline(pos1, pos2, pos3, pos4, c);
+		i += 8;
+	}
+	drawline(296, 16, 312, 16, 0xff);
+	drawline(312, 16, 312, 184, 0xff);
+	drawline(312, 184, 296, 184, 0xff);
+	drawline(296, 184, 296, 16, 0xff);
+	drawline(296, k, 312, k, 0xff);
 }
 
 void draw_radar(){
