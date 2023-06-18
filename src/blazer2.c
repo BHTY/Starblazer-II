@@ -211,7 +211,7 @@ void blazer2_init(){
 	frames = 0;
 
 	//load models
-	LASER_PLAYER = load_model("assets\\bolt.obj");
+	LASER_PLAYER = load_model("assets/bolt.obj");
 	SL_CENTER_X = 160;
 	SL_CENTER_Y = 100;
 
