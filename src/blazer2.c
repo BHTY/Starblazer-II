@@ -260,7 +260,7 @@ void blazer2_init(){
 	velocity.y = 0;
 	velocity.z = player_fighter.speed;
 
-	init_hypercraft();
+	//init_hypercraft();
 }
 
 SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
@@ -626,6 +626,6 @@ void blazer2_draw(){
 	if (barcycle == 64) barcycle = 0;
 
 	//draw hypercraft
-	set_hypercraft_orientation(StarblazerEntities[0]->orientation);
-	draw_hypercraft(265, 160);
+	//set_hypercraft_orientation(StarblazerEntities[0]->orientation);
+	//draw_hypercraft(265, 160);
 }

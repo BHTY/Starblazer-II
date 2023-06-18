@@ -968,7 +968,6 @@ EXTRN	_SL_CENTER_X:WORD
 EXTRN	_SL_CENTER_Y:WORD
 EXTRN	_SG_Draw:DWORD
 EXTRN	_SG_Module:DWORD
-EXTRN	_init_hypercraft:NEAR
 _DATA	SEGMENT
 $SG334	DB	'assets\bolt.obj', 00H
 _DATA	ENDS
@@ -1096,8 +1095,6 @@ $L343:
 ; Line 261
 	mov	eax, DWORD PTR _player_fighter+8
 	mov	DWORD PTR _velocity+8, eax
-; Line 263
-	call	_init_hypercraft
 ; Line 264
 $L332:
 	pop	edi
@@ -2429,8 +2426,6 @@ _TEXT	ENDS
 EXTRN	_SL_CAMERA_ORIENTATION:BYTE
 EXTRN	_camera_translate:NEAR
 EXTRN	_draw_scene:NEAR
-EXTRN	_draw_hypercraft:NEAR
-EXTRN	_set_hypercraft_orientation:NEAR
 _TEXT	SEGMENT
 _blazer2_draw PROC NEAR
 ; Line 583
@@ -2526,26 +2521,8 @@ $L470:
 	cmp	DWORD PTR _barcycle, 64			; 00000040H
 	jne	$L471
 	mov	DWORD PTR _barcycle, 0
-; Line 629
-$L471:
-	mov	eax, DWORD PTR _StarblazerEntities
-	add	eax, 16					; 00000010H
-	mov	ecx, DWORD PTR [eax+12]
-	push	ecx
-	mov	ecx, DWORD PTR [eax+8]
-	push	ecx
-	mov	ecx, DWORD PTR [eax+4]
-	push	ecx
-	mov	eax, DWORD PTR [eax]
-	push	eax
-	call	_set_hypercraft_orientation
-	add	esp, 16					; 00000010H
-; Line 630
-	push	160					; 000000a0H
-	push	265					; 00000109H
-	call	_draw_hypercraft
-	add	esp, 8
 ; Line 631
+$L471:
 $L467:
 	pop	edi
 	pop	esi
