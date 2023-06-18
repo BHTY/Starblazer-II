@@ -8,7 +8,7 @@ Description: 3D rendering engine for Starblazer II
 #include "../headers/graphics.h"
 #include <stdio.h>
 
-#define MAX_VERTS 1200
+#define MAX_VERTS 2500
 #define MAX_TRIS 1000
 
 uint16 SL_VERTEX_INDEX;

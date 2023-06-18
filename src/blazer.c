@@ -61,6 +61,7 @@ void SG_GameInit(){
 	SG_Module = title_module;
 
 	unpack_glyphs("starfont.fnt");
+	srand(time(NULL));
 }
 
 void SG_InitPalette(){

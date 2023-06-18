@@ -11,6 +11,8 @@
 #include "../headers/stats.h"
 #include "../headers/hyptest.h"
 
+#define NUM_SHARDS 64
+
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
 char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
 
@@ -39,6 +41,25 @@ MAT3 rot_mat;
 VEC3 pos_delta;
 
 VEC3 laser_velocity;
+
+void explode_at(VEC3* pos){
+	int i;
+	uint32 id;
+
+	for (i = 0; i < NUM_SHARDS; i++){
+		id = spawn_entity(EXPLOSION_SHARD, pos->x, pos->y, pos->z, rand() % 256, rand() % 256, rand() % 256);
+		StarblazerEntities[i]->state[1] = 3 * (rand() % 256 - 128);
+		StarblazerEntities[i]->state[2] = 3 * (rand() % 256 - 128);
+		StarblazerEntities[i]->state[3] = 3 * (rand() % 256 - 128);
+	}
+}
+
+void explode_entity(ENTITY** ptr){
+	VEC3 pos = (*ptr)->pos;
+	free(*ptr);
+	*ptr = 0;
+	explode_at(&pos);
+}
 
 void print_vec(VEC3* vec){
 	printf("(%d, %d, %d)\n", vec->x, vec->y, vec->z);
@@ -98,7 +119,7 @@ void laser_script(ENTITY** ptr){
 				if (test_collisions(*ptr, StarblazerEntities[i])){
 					printf("That's a confirmed hit!\n");
 					StarblazerEntities[i]->color_override = 224;
-					StarblazerEntities[i]->override_frames = 4;
+					StarblazerEntities[i]->override_frames = 7;
 					StarblazerEntities[i]->health -= (*ptr)->state[15];
 
 					//despawn
@@ -120,19 +141,28 @@ void asteroid_script(ENTITY** ptr){
 	if (test_collisions(*ptr, StarblazerEntities[0])){
 		StarblazerEntities[0]->health -= 5;
 		shake_frames = 7;
-		free(*ptr);
-		*ptr = 0;
+		explode_entity(ptr);
 		return;
 	}
 
 	if ((*ptr)->health <= 0){
-		free(*ptr);
-		*ptr = 0;
+		explode_entity(ptr);
 	}
 }
 
 void debris_script(ENTITY** ptr){
+	(*ptr)->pos.x += (*ptr)->state[1] * 64;
+	(*ptr)->pos.y += (*ptr)->state[2] * 64;
+	(*ptr)->pos.z += (*ptr)->state[3] * 64;
+	quat_pitch(32, &((*ptr)->orientation));
+	quat_yaw(32, &((*ptr)->orientation));
+	quat_roll(32, &((*ptr)->orientation));
 
+	if (!(rand() % 45))
+	{
+		free(*ptr);
+		*ptr = 0;
+	}
 }
 
 void set_attributes(){
@@ -148,7 +178,7 @@ void set_attributes(){
 	player_fighter.energy_tank = 40;
 
 	player_weapon.cooldown_ticks = 10;
-	player_weapon.energy_draw = 10;
+	player_weapon.energy_draw = 9;
 	player_weapon.damage = 8;
 	player_weapon.model = LASER_PLAYER;
 
@@ -553,8 +583,8 @@ void draw_battery(){
 void blazer2_draw(){
 	//account for screenshake
 	if (shake_frames){
-		SL_CENTER_X += (rand() % 10) - 5;
-		SL_CENTER_Y += (rand() % 10) - 5;
+		SL_CENTER_X += (rand() % 20) - 10;
+		SL_CENTER_Y += (rand() % 20) - 10;
 	}
 	else{
 		SL_CENTER_X = 160;
