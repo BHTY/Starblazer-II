@@ -104,7 +104,7 @@ void spawn_asteroid(){
 	pos.z = int_fixed(rand() % 500 - 250);
 
 	id = spawn_entity(ASTEROID, pos.x, pos.y, pos.z, rand() % 256, rand() % 256, rand() % 256);
-	printf("Spawned asteroid %d\n", id);
+	//printf("Spawned asteroid %d\n", id);
 }
 
 void laser_script(ENTITY** ptr){
@@ -117,7 +117,7 @@ void laser_script(ENTITY** ptr){
 		if (StarblazerEntities[i] && StarblazerEntities[i] != *ptr){
 			if (StarblazerEntities[i]->type->flags & 1){ //hittable
 				if (test_collisions(*ptr, StarblazerEntities[i])){
-					printf("That's a confirmed hit!\n");
+					//printf("That's a confirmed hit!\n");
 					StarblazerEntities[i]->color_override = 224;
 					StarblazerEntities[i]->override_frames = 7;
 					StarblazerEntities[i]->health -= (*ptr)->state[15];
@@ -186,12 +186,12 @@ void set_attributes(){
 	laser_velocity.y = 0;
 	laser_velocity.z = 0x10000;
 
-	EXPLOSION_SHARD = load_model("assets\\shard.obj");
+	EXPLOSION_SHARD = load_model("assets/shard.obj");
 	EXPLOSION_SHARD->script = debris_script;
 	EXPLOSION_SHARD->flags = 2;
 	create_hitbox(EXPLOSION_SHARD, 0, 0, 0);
 
-	ASTEROID = load_model("assets\\asteroid.obj");
+	ASTEROID = load_model("assets/asteroid.obj");
 	ASTEROID->script = asteroid_script;
 	ASTEROID->flags = 3;
 	ASTEROID->maxhp = 10;
@@ -260,7 +260,7 @@ void blazer2_init(){
 	velocity.y = 0;
 	velocity.z = player_fighter.speed;
 
-	//init_hypercraft();
+	init_hypercraft();
 }
 
 SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
@@ -626,6 +626,6 @@ void blazer2_draw(){
 	if (barcycle == 64) barcycle = 0;
 
 	//draw hypercraft
-	//set_hypercraft_orientation(StarblazerEntities[0]->orientation);
-	//draw_hypercraft(265, 160);
+	set_hypercraft_orientation(StarblazerEntities[0]->orientation);
+	draw_hypercraft(265, 160);
 }

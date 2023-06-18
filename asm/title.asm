@@ -205,7 +205,7 @@ EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 EXTRN	_init_hypercraft:NEAR
 _DATA	SEGMENT
-$SG549	DB	'assets\star.obj', 00H
+$SG549	DB	'assets/star.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _title_init PROC NEAR

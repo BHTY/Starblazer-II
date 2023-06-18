@@ -16,7 +16,7 @@ VEC3 velocity;
 
 void init_hypercraft(){
 	uint32 id;
-	hc_template = load_model("assets\\hyper.obj");
+	hc_template = load_model("assets/hyper.obj");
 
 	id = spawn_entity(hc_template, 0, 0, int_fixed(25), 0, 0, 0); //25
 	hypercraft = StarblazerEntities[id];

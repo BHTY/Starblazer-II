@@ -56,7 +56,7 @@ void title_init(){
 	quat_create(0, 0, 0, &title_cam_ori);
 	quat_create(0, 0, 0, &stars_cam_ori);
 
-	logo = load_model("assets\\star.obj");
+	logo = load_model("assets/star.obj");
 	spawn_entity(logo, 0, 0, int_fixed(10), 0, 128, 0); //10
 
 	SL_CENTER_Y = 45;
