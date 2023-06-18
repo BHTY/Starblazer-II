@@ -11,6 +11,9 @@ uint32 int_abs(uint32 x){
 	return (x ^ y) - y;
 }
 
+extern int MulDiv(int, int, int);
+extern int mulDiv(int a, int b, int c);
+
 FIXED muldiv(FIXED a, FIXED b, FIXED c){
 	int32 result;
 
@@ -23,6 +26,25 @@ FIXED muldiv(FIXED a, FIXED b, FIXED c){
 	//printf("But do we make it out?\n");
 
 	return result;
+
+	/*uint64 prod;
+	int32 result;
+	int32 sign = a ^ b ^ c;
+	if (a < 0) a = -a;
+	if (b < 0) b = -b;
+	if (c < 0) c = -c;
+
+	prod = (uint64)a * (uint64)b;
+	if ((*((uint32*)(&prod) + 1)) >= c) goto overflow;
+	result = prod / c;
+	if (result < 0) goto overflow;
+	if (sign < 0) result = -result;
+
+	return result;
+
+overflow:
+	
+	return sign < 0 ? -1 : 2147483647;*/
 }
 
 FIXED fixed_mul(FIXED a, FIXED b) {

@@ -7,7 +7,7 @@ release\star_win.exe: src\blazer.obj src\blazer2.obj src\ecs.obj src\font.obj \
 	src\ui.obj src\hyptest.obj \
     star.res
   $(link) $(ldebug) $(conlflags) -out:$*.exe $** $(conlibs) \
-    winmm.lib user32.lib gdi32.lib wsock32.lib
+    winmm.lib user32.lib gdi32.lib wsock32.lib kernel32.lib
 
 {src}.c{src}.obj:
   $(CC) /nologo $(CFLAGS) /c /Fosrc\ $<

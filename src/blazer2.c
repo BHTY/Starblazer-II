@@ -103,6 +103,7 @@ void laser_script(ENTITY** ptr){
 					//despawn
 					free(*ptr);
 					*ptr = 0;
+					return;
 				}
 			}
 		}
@@ -512,7 +513,7 @@ void draw_battery(){
 
 	for (r = 7; r >= 0; r--){
 		g = 7 - r;
-		c = (r << 5) | (g << 2);
+		c = (r << 5) | (g >> 1); //<<2
 
 		if (total_pixels >= 5){
 			block_pixels = 5;
