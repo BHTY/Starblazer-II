@@ -12,11 +12,17 @@ uint32 int_abs(uint32 x){
 }
 
 FIXED muldiv(FIXED a, FIXED b, FIXED c){
+	int32 result;
+
 	if (c == 0){
 		return ((a ^ b) < 0) ? -1 : 2147483647;
 	}
 
-	return ((int64)a * b) / c;
+	//printf("We make it in...\n");
+	result = ((int64)a * b) / c;
+	//printf("But do we make it out?\n");
+
+	return result;
 }
 
 FIXED fixed_mul(FIXED a, FIXED b) {

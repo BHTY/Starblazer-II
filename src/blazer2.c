@@ -70,19 +70,52 @@ void cam_script(ENTITY** ptr){
 }
 
 void init_star(VEC3* star){
-	star->x = ((rand() % 1000) - 500) * 65536;
-	star->y = ((rand() % 1000) - 500) * 65536;
-	star->z = ((rand() % 1000) - 500) * 65536;
+	star->x = ((rand() % 2000) - 1000) * 65536;
+	star->y = ((rand() % 2000) - 1000) * 65536;
+	star->z = ((rand() % 2000) - 1000) * 65536;
+}
+
+void spawn_asteroid(){
+	VEC3 pos;
+	uint32 id;
+	pos.x = int_fixed(rand() % 500 - 250);
+	pos.y = int_fixed(rand() % 500 - 250);
+	pos.z = int_fixed(rand() % 500 - 250);
+
+	id = spawn_entity(ASTEROID, pos.x, pos.y, pos.z, rand() % 256, rand() % 256, rand() % 256);
+	printf("Spawned asteroid %d\n", id);
 }
 
 void laser_script(ENTITY** ptr){
+	int i;
+
 	step_entity(*ptr, &laser_velocity);
 	(*ptr)->state[0]--;
+
+	for (i = 0; i < MAX_ENTITIES; i++){
+		if (StarblazerEntities[i] && StarblazerEntities[i] != *ptr){
+			if (StarblazerEntities[i]->type->flags & 1){ //hittable
+				if (test_collisions(*ptr, StarblazerEntities[i])){
+					printf("That's a confirmed hit!\n");
+					StarblazerEntities[i]->color_override = 0;
+					StarblazerEntities[i]->override_frames = 3;
+
+					//despawn
+					free(*ptr);
+					*ptr = 0;
+				}
+			}
+		}
+	}
 
 	if (!(*ptr)->state[0]){
 		free(*ptr);
 		*ptr = 0;
 	}
+}
+
+void asteroid_script(ENTITY** ptr){
+
 }
 
 void debris_script(ENTITY** ptr){
@@ -108,12 +141,18 @@ void set_attributes(){
 
 	laser_velocity.x = 0;
 	laser_velocity.y = 0;
-	laser_velocity.z = player_fighter.speed * 2;
+	laser_velocity.z = 0x10000;
 
 	EXPLOSION_SHARD = load_model("assets\\shard.obj");
 	EXPLOSION_SHARD->script = debris_script;
 	EXPLOSION_SHARD->flags = 2;
 	create_hitbox(EXPLOSION_SHARD, 0, 0, 0);
+
+	ASTEROID = load_model("assets\\asteroid.obj");
+	ASTEROID->script = asteroid_script;
+	ASTEROID->flags = 3;
+	ASTEROID->maxhp = 10;
+	create_hitbox(ASTEROID, int_fixed(3), int_fixed(3), int_fixed(3));
 }
 
 //when you're dead, it'll forcibly zero out your velocity and your joystick inputs
@@ -166,6 +205,9 @@ void blazer2_init(){
 	//pull in all of the templates-models & AIs - that we need
 
 	//if this is singleplayer, spawn in asteroids & turret
+	for (i = 0; i < 50; i++){
+		spawn_asteroid();
+	}
 
 	//set the module fn pointers
 	SG_Module = blazer2_module;

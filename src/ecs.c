@@ -48,6 +48,7 @@ uint32 spawn_entity(TEMPLATE* type, FIXED x, FIXED y, FIXED z, ANGLE pitch, ANGL
 	memset(StarblazerEntities[id]->state, 0, 16 * sizeof(uint32));
 	StarblazerEntities[id]->health = type->maxhp;
 	StarblazerEntities[id]->color_override = 0;
+	StarblazerEntities[id]->override_frames = 0;
 
 	return id;
 }
@@ -76,6 +77,13 @@ void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int
 
 	for (i = 0; i < MAX_ENTITIES; i++){
 		if (StarblazerEntities[i] == NULL){ continue; }
+
+		if (StarblazerEntities[i]->override_frames){
+			StarblazerEntities[i]->override_frames = 0;
+		}
+		else{
+			StarblazerEntities[i]->color_override = 0;
+		}
 
 		cur_index = SL_VERTEX_INDEX;
 

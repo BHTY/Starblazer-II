@@ -12,6 +12,7 @@ typedef struct ENTITY{
 	uint32 state[16];
 	uint32 health;
 	uint8 color_override;
+	int override_frames;
 } ENTITY;
 
 typedef struct TEMPLATE{
