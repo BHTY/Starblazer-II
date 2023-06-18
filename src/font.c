@@ -65,6 +65,11 @@ void draw_string(const char* str, int upperRightX, int upperRightY, int scaleX, 
 			continue;
 		}
 
+		if (*str == 47){
+			c = 47;
+			draw_glyph(c, upperRightX + 3 * scaleX / 2, upperRightY + 5 * scaleY / 2, color, scaleX, scaleY);
+		}
+
 		if (*str == 39){
 			c = 46;
 

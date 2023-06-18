@@ -3,6 +3,9 @@
 
 #include "sl_math.h"
 
+#define MAX_VERTS 2500
+#define MAX_TRIS 1500
+
 extern uint16 SL_VERTEX_INDEX;
 extern uint16 SL_TRIANGLE_INDEX;
 extern VEC3 SL_CAMERA_POS;

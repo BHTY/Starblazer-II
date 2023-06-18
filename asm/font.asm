@@ -23,7 +23,7 @@ FLAT	GROUP _DATA, CONST, _BSS
 endif
 PUBLIC	_current_glyph
 _DATA	SEGMENT
-COMM	_glyphs:DWORD:02fH
+COMM	_glyphs:DWORD:030H
 _current_glyph DD 0270fH
 _DATA	ENDS
 PUBLIC	_unpack_glyphs
@@ -119,7 +119,7 @@ _unpack_glyphs PROC NEAR
 $L342:
 	inc	DWORD PTR _i$[ebp]
 $L341:
-	cmp	DWORD PTR _i$[ebp], 47			; 0000002fH
+	cmp	DWORD PTR _i$[ebp], 48			; 00000030H
 	jge	$L343
 ; Line 33
 	mov	eax, DWORD PTR _pointer$[ebp]
@@ -304,11 +304,11 @@ $L374:
 $L376:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 39					; 00000027H
+	cmp	eax, 47					; 0000002fH
 	jne	$L377
 ; Line 69
-	mov	BYTE PTR _c$[ebp], 46			; 0000002eH
-; Line 71
+	mov	BYTE PTR _c$[ebp], 47			; 0000002fH
+; Line 70
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -335,22 +335,57 @@ $L376:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 74
+; Line 73
 $L377:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
+	cmp	eax, 39					; 00000027H
+	jne	$L378
+; Line 74
+	mov	BYTE PTR _c$[ebp], 46			; 0000002eH
+; Line 76
+	mov	eax, DWORD PTR _scaleY$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _scaleX$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _color$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _scaleY$[ebp]
+	lea	eax, DWORD PTR [eax+eax*4]
+	cdq
+	sub	eax, edx
+	sar	eax, 1
+	mov	ecx, DWORD PTR _upperRightY$[ebp]
+	add	ecx, eax
+	push	ecx
+	mov	eax, DWORD PTR _scaleX$[ebp]
+	lea	eax, DWORD PTR [eax+eax*2]
+	cdq
+	sub	eax, edx
+	sar	eax, 1
+	mov	ecx, DWORD PTR _upperRightX$[ebp]
+	add	ecx, eax
+	push	ecx
+	movsx	eax, BYTE PTR _c$[ebp]
+	push	eax
+	call	_draw_glyph
+	add	esp, 24					; 00000018H
+; Line 79
+$L378:
+	mov	eax, DWORD PTR _str$[ebp]
+	movsx	eax, BYTE PTR [eax]
 	cmp	eax, 65					; 00000041H
-	jl	$L378
+	jl	$L379
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
 	cmp	eax, 90					; 0000005aH
-	jg	$L378
-; Line 75
+	jg	$L379
+; Line 80
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
 	sub	eax, 65					; 00000041H
 	mov	BYTE PTR _c$[ebp], al
-; Line 77
+; Line 82
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -377,22 +412,22 @@ $L377:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 80
-$L378:
+; Line 85
+$L379:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
 	cmp	eax, 48					; 00000030H
-	jl	$L379
+	jl	$L380
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
 	cmp	eax, 57					; 00000039H
-	jg	$L379
-; Line 81
+	jg	$L380
+; Line 86
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
 	sub	eax, 22					; 00000016H
 	mov	BYTE PTR _c$[ebp], al
-; Line 83
+; Line 88
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -419,50 +454,15 @@ $L378:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 86
-$L379:
-	mov	eax, DWORD PTR _str$[ebp]
-	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 46					; 0000002eH
-	jne	$L380
-; Line 87
-	mov	BYTE PTR _c$[ebp], 36			; 00000024H
-; Line 89
-	mov	eax, DWORD PTR _scaleY$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _scaleX$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _color$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _scaleY$[ebp]
-	lea	eax, DWORD PTR [eax+eax*4]
-	cdq
-	sub	eax, edx
-	sar	eax, 1
-	mov	ecx, DWORD PTR _upperRightY$[ebp]
-	add	ecx, eax
-	push	ecx
-	mov	eax, DWORD PTR _scaleX$[ebp]
-	lea	eax, DWORD PTR [eax+eax*2]
-	cdq
-	sub	eax, edx
-	sar	eax, 1
-	mov	ecx, DWORD PTR _upperRightX$[ebp]
-	add	ecx, eax
-	push	ecx
-	movsx	eax, BYTE PTR _c$[ebp]
-	push	eax
-	call	_draw_glyph
-	add	esp, 24					; 00000018H
-; Line 92
+; Line 91
 $L380:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 44					; 0000002cH
+	cmp	eax, 46					; 0000002eH
 	jne	$L381
-; Line 93
-	mov	BYTE PTR _c$[ebp], 37			; 00000025H
-; Line 95
+; Line 92
+	mov	BYTE PTR _c$[ebp], 36			; 00000024H
+; Line 94
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -489,15 +489,15 @@ $L380:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 98
+; Line 97
 $L381:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 45					; 0000002dH
+	cmp	eax, 44					; 0000002cH
 	jne	$L382
-; Line 99
-	mov	BYTE PTR _c$[ebp], 38			; 00000026H
-; Line 101
+; Line 98
+	mov	BYTE PTR _c$[ebp], 37			; 00000025H
+; Line 100
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -524,15 +524,15 @@ $L381:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 104
+; Line 103
 $L382:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 63					; 0000003fH
+	cmp	eax, 45					; 0000002dH
 	jne	$L383
-; Line 105
-	mov	BYTE PTR _c$[ebp], 39			; 00000027H
-; Line 107
+; Line 104
+	mov	BYTE PTR _c$[ebp], 38			; 00000026H
+; Line 106
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -559,15 +559,15 @@ $L382:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 110
+; Line 109
 $L383:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 33					; 00000021H
+	cmp	eax, 63					; 0000003fH
 	jne	$L384
-; Line 111
-	mov	BYTE PTR _c$[ebp], 40			; 00000028H
-; Line 113
+; Line 110
+	mov	BYTE PTR _c$[ebp], 39			; 00000027H
+; Line 112
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -594,15 +594,15 @@ $L383:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 116
+; Line 115
 $L384:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 58					; 0000003aH
+	cmp	eax, 33					; 00000021H
 	jne	$L385
-; Line 117
-	mov	BYTE PTR _c$[ebp], 41			; 00000029H
-; Line 119
+; Line 116
+	mov	BYTE PTR _c$[ebp], 40			; 00000028H
+; Line 118
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -629,15 +629,15 @@ $L384:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 122
+; Line 121
 $L385:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 59					; 0000003bH
+	cmp	eax, 58					; 0000003aH
 	jne	$L386
-; Line 123
-	mov	BYTE PTR _c$[ebp], 42			; 0000002aH
-; Line 125
+; Line 122
+	mov	BYTE PTR _c$[ebp], 41			; 00000029H
+; Line 124
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -664,15 +664,15 @@ $L385:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 128
+; Line 127
 $L386:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 116				; 00000074H
+	cmp	eax, 59					; 0000003bH
 	jne	$L387
-; Line 129
-	mov	BYTE PTR _c$[ebp], 43			; 0000002bH
-; Line 131
+; Line 128
+	mov	BYTE PTR _c$[ebp], 42			; 0000002aH
+; Line 130
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -699,15 +699,15 @@ $L386:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 134
+; Line 133
 $L387:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 43					; 0000002bH
+	cmp	eax, 116				; 00000074H
 	jne	$L388
-; Line 135
-	mov	BYTE PTR _c$[ebp], 44			; 0000002cH
-; Line 137
+; Line 134
+	mov	BYTE PTR _c$[ebp], 43			; 0000002bH
+; Line 136
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -734,15 +734,15 @@ $L387:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 140
+; Line 139
 $L388:
 	mov	eax, DWORD PTR _str$[ebp]
 	movsx	eax, BYTE PTR [eax]
-	cmp	eax, 120				; 00000078H
+	cmp	eax, 43					; 0000002bH
 	jne	$L389
-; Line 141
-	mov	BYTE PTR _c$[ebp], 45			; 0000002dH
-; Line 143
+; Line 140
+	mov	BYTE PTR _c$[ebp], 44			; 0000002cH
+; Line 142
 	mov	eax, DWORD PTR _scaleY$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _scaleX$[ebp]
@@ -769,18 +769,53 @@ $L388:
 	push	eax
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
-; Line 146
+; Line 145
 $L389:
+	mov	eax, DWORD PTR _str$[ebp]
+	movsx	eax, BYTE PTR [eax]
+	cmp	eax, 120				; 00000078H
+	jne	$L390
+; Line 146
+	mov	BYTE PTR _c$[ebp], 45			; 0000002dH
+; Line 148
+	mov	eax, DWORD PTR _scaleY$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _scaleX$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _color$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _scaleY$[ebp]
+	lea	eax, DWORD PTR [eax+eax*4]
+	cdq
+	sub	eax, edx
+	sar	eax, 1
+	mov	ecx, DWORD PTR _upperRightY$[ebp]
+	add	ecx, eax
+	push	ecx
+	mov	eax, DWORD PTR _scaleX$[ebp]
+	lea	eax, DWORD PTR [eax+eax*2]
+	cdq
+	sub	eax, edx
+	sar	eax, 1
+	mov	ecx, DWORD PTR _upperRightX$[ebp]
+	add	ecx, eax
+	push	ecx
+	movsx	eax, BYTE PTR _c$[ebp]
+	push	eax
+	call	_draw_glyph
+	add	esp, 24					; 00000018H
+; Line 151
+$L390:
 	inc	DWORD PTR _str$[ebp]
-; Line 147
+; Line 152
 	mov	eax, DWORD PTR _scaleX$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	add	eax, DWORD PTR _spacing$[ebp]
 	add	DWORD PTR _upperRightX$[ebp], eax
-; Line 148
+; Line 153
 	jmp	$L374
 $L375:
-; Line 149
+; Line 154
 $L371:
 	pop	edi
 	pop	esi
@@ -799,13 +834,13 @@ _yscale$ = 24
 _color$ = 28
 _spacing$ = 32
 _vputs	PROC NEAR
-; Line 151
+; Line 156
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 152
+; Line 157
 	movsx	eax, BYTE PTR _spacing$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _color$[ebp]
@@ -822,8 +857,8 @@ _vputs	PROC NEAR
 	push	eax
 	call	_draw_string
 	add	esp, 28					; 0000001cH
-; Line 153
-$L397:
+; Line 158
+$L398:
 	pop	edi
 	pop	esi
 	pop	ebx

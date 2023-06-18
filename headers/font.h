@@ -14,7 +14,7 @@ typedef struct{
 	stroke_t lines[1];
 } glyph_t;
 
-#define NUM_GLYPHS 47
+#define NUM_GLYPHS 48
 
 void unpack_glyphs(char* filename);
 void _draw_glyph(glyph_t *glyph, int centerX, int centerY, char color, int scaleX, int scaleY);

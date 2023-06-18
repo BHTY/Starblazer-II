@@ -248,7 +248,7 @@ void blazer2_init(){
 	//pull in all of the templates-models & AIs - that we need
 
 	//if this is singleplayer, spawn in asteroids & turret
-	for (i = 0; i < 50; i++){
+	for (i = 0; i < 100; i++){
 		spawn_asteroid();
 	}
 
@@ -439,11 +439,11 @@ void draw_debug(){
 
 	//draw # of onscreen entities
 	vputs("ENT", 0, 0, 1, 1, 252, 1);
-	sprintf(num, "%d", count_entities());
+	sprintf(num, "%d / %d", count_entities(), MAX_ENTITIES);
 	vputs(num, 15, 0, 1, 1, 252, 1);
 	//draw # of onscreen polygons
 	vputs("TRI", 0, 7, 1, 1, 252, 1);
-	sprintf(num, "%d", SL_TRIANGLE_INDEX);
+	sprintf(num, "%d / %d", SL_TRIANGLE_INDEX, MAX_TRIS);
 	vputs(num, 15, 7, 1, 1, 252, 1);
 	//draw tickrate
 	vputs("FPS", 0, 14, 1, 1, 252, 1);
@@ -453,6 +453,9 @@ void draw_debug(){
 	//draw position
 	sprintf(num, "%d %d %d", fixed_int(StarblazerEntities[0]->pos.x), fixed_int(StarblazerEntities[0]->pos.y), fixed_int(StarblazerEntities[0]->pos.z));
 	vputs(num, 240, 0, 1, 1, 28, 1);
+
+	sprintf(num, "VERT %d / %d", SL_VERTEX_INDEX, MAX_VERTS);
+	vputs(num, 240, 7, 1, 1, 28, 1);
 }
 
 void draw_HPbar(){
