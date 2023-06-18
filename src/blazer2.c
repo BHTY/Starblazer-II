@@ -47,7 +47,7 @@ void explode_at(VEC3* pos){
 	uint32 id;
 
 	for (i = 0; i < NUM_SHARDS; i++){
-		id = spawn_entity(EXPLOSION_SHARD, pos->x, pos->y, pos->z, rand() % 256, rand() % 256, rand() % 256);
+		id = spawn_entity(EXPLOSION_SHARD, pos->x + (rand() % 256 - 128), pos->y + (rand() % 256 - 128), pos->z + (rand() % 256 - 128), rand() % 256, rand() % 256, rand() % 256);
 		StarblazerEntities[i]->state[1] = 3 * (rand() % 256 - 128);
 		StarblazerEntities[i]->state[2] = 3 * (rand() % 256 - 128);
 		StarblazerEntities[i]->state[3] = 3 * (rand() % 256 - 128);

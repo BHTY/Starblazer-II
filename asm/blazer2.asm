@@ -113,14 +113,38 @@ $L271:
 	xor	eax, edx
 	sub	eax, edx
 	push	eax
-	mov	eax, DWORD PTR _pos$[ebp]
-	mov	eax, DWORD PTR [eax+8]
+	call	_rand
+	cdq
+	xor	eax, edx
+	sub	eax, edx
+	and	eax, 255				; 000000ffH
+	xor	eax, edx
+	sub	eax, edx
+	sub	eax, 128				; 00000080H
+	mov	ecx, DWORD PTR _pos$[ebp]
+	add	eax, DWORD PTR [ecx+8]
 	push	eax
-	mov	eax, DWORD PTR _pos$[ebp]
-	mov	eax, DWORD PTR [eax+4]
+	call	_rand
+	cdq
+	xor	eax, edx
+	sub	eax, edx
+	and	eax, 255				; 000000ffH
+	xor	eax, edx
+	sub	eax, edx
+	sub	eax, 128				; 00000080H
+	mov	ecx, DWORD PTR _pos$[ebp]
+	add	eax, DWORD PTR [ecx+4]
 	push	eax
-	mov	eax, DWORD PTR _pos$[ebp]
-	mov	eax, DWORD PTR [eax]
+	call	_rand
+	cdq
+	xor	eax, edx
+	sub	eax, edx
+	and	eax, 255				; 000000ffH
+	xor	eax, edx
+	sub	eax, edx
+	sub	eax, 128				; 00000080H
+	mov	ecx, DWORD PTR _pos$[ebp]
+	add	eax, DWORD PTR [ecx]
 	push	eax
 	mov	eax, DWORD PTR _EXPLOSION_SHARD
 	push	eax
