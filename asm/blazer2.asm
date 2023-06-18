@@ -952,7 +952,7 @@ EXTRN	_SG_Draw:DWORD
 EXTRN	_SG_Module:DWORD
 EXTRN	_init_hypercraft:NEAR
 _DATA	SEGMENT
-$SG332	DB	'assets\bolt.obj', 00H
+$SG332	DB	'assets/bolt.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _i$ = -4
