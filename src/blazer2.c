@@ -413,6 +413,14 @@ void draw_boost_bar(){
 
 }
 
+void draw_radar(){
+
+}
+
+void draw_battery(){
+
+}
+
 
 void blazer2_draw(){
 	//account for screenshake
@@ -442,8 +450,12 @@ void blazer2_draw(){
 	draw_HPbar();
 
     //draw radar
-    //draw weapons energy tank
-    //draw targeting computer lead position
+	draw_radar();
+    
+	//draw weapons energy tank
+	draw_battery();
+    
+	//draw targeting computer lead position
     //draw screen crack
 	if (StarblazerEntities[0]->health < (player_fighter.health >> 1)){
 		blazer2_screencrack();
