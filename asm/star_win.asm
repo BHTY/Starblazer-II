@@ -353,9 +353,9 @@ _SG_Init PROC NEAR
 ; Line 138
 	call	_SG_GameInit
 ; Line 140
-	mov	DWORD PTR _window_width, 320		; 00000140H
+	mov	DWORD PTR _window_width, 640		; 00000280H
 ; Line 141
-	mov	DWORD PTR _window_height, 200		; 000000c8H
+	mov	DWORD PTR _window_height, 480		; 000001e0H
 ; Line 143
 	mov	DWORD PTR _winRect$[ebp], 0
 ; Line 144

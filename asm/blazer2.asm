@@ -1702,12 +1702,12 @@ $SG406	DB	'%d', 00H
 $SG407	DB	'%d %d %d', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
-_num$ = -12
+_num$ = -100
 _draw_debug PROC NEAR
 ; Line 437
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 12					; 0000000cH
+	sub	esp, 100				; 00000064H
 	push	ebx
 	push	esi
 	push	edi

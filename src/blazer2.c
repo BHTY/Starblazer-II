@@ -435,7 +435,7 @@ uint32 count_entities(){
 
 
 void draw_debug(){
-	char num[10];
+	char num[100];
 
 	//draw # of onscreen entities
 	vputs("ENT", 0, 0, 1, 1, 252, 1);
