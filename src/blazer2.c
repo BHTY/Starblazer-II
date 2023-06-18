@@ -405,7 +405,7 @@ void draw_debug(){
 	vputs(num, 15, 7, 1, 1, 252, 1);
 	//draw tickrate
 	vputs("FPS", 0, 14, 1, 1, 252, 1);
-	sprintf(num, "%d", 1000 / LAST_FRAME_TIME);
+	if (LAST_FRAME_TIME != 0){ sprintf(num, "%d", 1000 / LAST_FRAME_TIME); }
 	vputs(num, 15, 14, 1, 1, 252, 1);
 
 	//draw position
