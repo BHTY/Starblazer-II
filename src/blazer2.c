@@ -97,8 +97,9 @@ void laser_script(ENTITY** ptr){
 			if (StarblazerEntities[i]->type->flags & 1){ //hittable
 				if (test_collisions(*ptr, StarblazerEntities[i])){
 					printf("That's a confirmed hit!\n");
-					StarblazerEntities[i]->color_override = 0;
-					StarblazerEntities[i]->override_frames = 3;
+					StarblazerEntities[i]->color_override = 224;
+					StarblazerEntities[i]->override_frames = 4;
+					StarblazerEntities[i]->health -= (*ptr)->state[15];
 
 					//despawn
 					free(*ptr);
@@ -116,7 +117,10 @@ void laser_script(ENTITY** ptr){
 }
 
 void asteroid_script(ENTITY** ptr){
-
+	if ((*ptr)->health <= 0){
+		free(*ptr);
+		*ptr = 0;
+	}
 }
 
 void debris_script(ENTITY** ptr){
@@ -137,7 +141,7 @@ void set_attributes(){
 
 	player_weapon.cooldown_ticks = 10;
 	player_weapon.energy_draw = 10;
-	player_weapon.damage = 0;
+	player_weapon.damage = 8;
 	player_weapon.model = LASER_PLAYER;
 
 	laser_velocity.x = 0;
@@ -153,7 +157,7 @@ void set_attributes(){
 	ASTEROID->script = asteroid_script;
 	ASTEROID->flags = 3;
 	ASTEROID->maxhp = 10;
-	create_hitbox(ASTEROID, int_fixed(3), int_fixed(3), int_fixed(3));
+	create_hitbox(ASTEROID, int_fixed(5), int_fixed(5), int_fixed(5));
 }
 
 //when you're dead, it'll forcibly zero out your velocity and your joystick inputs
