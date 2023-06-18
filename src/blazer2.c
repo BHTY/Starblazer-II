@@ -48,9 +48,9 @@ void explode_at(VEC3* pos){
 
 	for (i = 0; i < NUM_SHARDS; i++){
 		id = spawn_entity(EXPLOSION_SHARD, pos->x + (rand() % 256 - 128), pos->y + (rand() % 256 - 128), pos->z + (rand() % 256 - 128), rand() % 256, rand() % 256, rand() % 256);
-		StarblazerEntities[i]->state[1] = 3 * (rand() % 256 - 128);
-		StarblazerEntities[i]->state[2] = 3 * (rand() % 256 - 128);
-		StarblazerEntities[i]->state[3] = 3 * (rand() % 256 - 128);
+		StarblazerEntities[id]->state[1] = 3 * (rand() % 256 - 128);
+		StarblazerEntities[id]->state[2] = 3 * (rand() % 256 - 128);
+		StarblazerEntities[id]->state[3] = 3 * (rand() % 256 - 128);
 	}
 }
 
@@ -151,9 +151,9 @@ void asteroid_script(ENTITY** ptr){
 }
 
 void debris_script(ENTITY** ptr){
-	(*ptr)->pos.x += (*ptr)->state[1] * 64;
-	(*ptr)->pos.y += (*ptr)->state[2] * 64;
-	(*ptr)->pos.z += (*ptr)->state[3] * 64;
+	(*ptr)->pos.x += (int32)(*ptr)->state[1] * 64;
+	(*ptr)->pos.y += (int32)(*ptr)->state[2] * 64;
+	(*ptr)->pos.z += (int32)(*ptr)->state[3] * 64;
 	quat_pitch(32, &((*ptr)->orientation));
 	quat_yaw(32, &((*ptr)->orientation));
 	quat_roll(32, &((*ptr)->orientation));
