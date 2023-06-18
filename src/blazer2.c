@@ -85,6 +85,10 @@ void laser_script(ENTITY** ptr){
 	}
 }
 
+void debris_script(ENTITY** ptr){
+
+}
+
 void set_attributes(){
 	LASER_PLAYER->script = laser_script;
 	LASER_PLAYER->flags = 2;
@@ -95,16 +99,21 @@ void set_attributes(){
 	player_fighter.speed = 0x3000;
 	player_fighter.boost_speed = 0xf000;
 	player_fighter.boost_size = 40;
-	player_fighter.energy_tank = 0;
+	player_fighter.energy_tank = 40;
 
-	player_weapon.cooldown_ticks = 2;
-	player_weapon.energy_draw = 0;
+	player_weapon.cooldown_ticks = 10;
+	player_weapon.energy_draw = 10;
 	player_weapon.damage = 0;
 	player_weapon.model = LASER_PLAYER;
 
 	laser_velocity.x = 0;
 	laser_velocity.y = 0;
 	laser_velocity.z = player_fighter.speed * 2;
+
+	EXPLOSION_SHARD = load_model("assets\\shard.obj");
+	EXPLOSION_SHARD->script = debris_script;
+	EXPLOSION_SHARD->flags = 2;
+	create_hitbox(EXPLOSION_SHARD, 0, 0, 0);
 }
 
 //when you're dead, it'll forcibly zero out your velocity and your joystick inputs
@@ -265,7 +274,7 @@ void blazer2_module(){
 	else{
 		firing = 0;
 		if (player_battery < player_fighter.energy_tank){
-			player_battery++;
+			if (frames % 15 == 0){ player_battery++; }
 		}
 		if (firing_cooldown > 0){
 			firing_cooldown--;
@@ -451,7 +460,38 @@ void draw_radar(){
 }
 
 void draw_battery(){
+	int total_pixels = player_battery;
+	int block_pixels = 0;
+	int offset = 140;
+	int i;
+	int r;
+	uint8 g;
+	uint8 c;
 
+	for (r = 7; r >= 0; r--){
+		g = 7 - r;
+		c = (r << 5) | (g << 2);
+
+		if (total_pixels >= 5){
+			block_pixels = 5;
+			total_pixels -= 5;
+		}
+		else{
+			block_pixels = total_pixels;
+			total_pixels = 0;
+		}
+
+		for (i = 0; i < block_pixels; i++){
+			drawline(offset + i, 160, offset + i, 170, c);
+		}
+
+		offset += 5;
+	}
+
+	drawline(139, 160, 180, 160, 0xff);
+	drawline(139, 170, 180, 170, 0xff);
+	drawline(139, 160, 139, 170, 0xff);
+	drawline(180, 160, 180, 170, 0xff);
 }
 
 
