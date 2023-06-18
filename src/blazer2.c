@@ -544,7 +544,33 @@ void draw_boost_bar(){
 }
 
 void draw_radar(){
+	int i, j, c, k;
+	VEC3 vector_pos, screen_coords;
 
+	//draw radar box and half-transparent mesh bg
+	for(i = 0; i < 60; i++){
+		for(j = 0; j < 60; j++){
+			c = 0;
+
+			if(i == 0  || i == 59 || j == 0 || j == 59) c = 0xff;
+			if(!c && (i+j) %2) continue;
+			plot_pixel(130+i,10+j,c);
+		}
+	}
+
+	
+	//draw the "player" indictator
+	for(j = -1; j < 2; j++){
+
+		for(k = -1; k < 2; k++){
+			plot_pixel(160 + j, 40 + k, 0xfc);
+		}
+
+	}
+
+	draw_line(160, 40, 160, 44, 0xfc);
+
+	//actually draw the radar blips
 }
 
 void draw_battery(){
