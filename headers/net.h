@@ -2,11 +2,22 @@
 #define __NET_H_
 
 #include "sl_math.h"
+#include "stats.h"
 
 //Notes
 //- The DOS version should keep track of score between the two opposing computers (each machine keeps track of its own death count)
 
 extern int player_id;
+extern int timeout;
+
+typedef struct{
+	bool_t status; //0=disconnected, 1=connected, 2=respawning
+	uint32 entity_id; //id of attached entity
+	FIGHTER* fighter;
+	LASER* laser;
+} CONNECTED_PLAYER;
+
+extern CONNECTED_PLAYER players[16];
 
 #ifdef dos
 

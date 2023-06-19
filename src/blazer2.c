@@ -268,7 +268,11 @@ SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
 }
 
 void vjoy_read(joystick_t* joy){
+	SG_mouse_t mouse;
+
 	//scan the mouse and joystick
+	SG_ReadMouse(&mouse);
+
 	joy->fire = SG_KeyDown('J');
 	joy->exit = 0;
 	joy->brake = SG_KeyDown('K');
@@ -385,7 +389,7 @@ void blazer2_module(){
 
 	//sync state if this is multiplayer
 	if (multiplayer){
-		//blazer_syncstate();
+		//net_syncstate();
 	}
 
 	run_entity_scripts();
