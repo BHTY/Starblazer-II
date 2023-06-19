@@ -160,7 +160,7 @@ $L271:
 	xor	eax, edx
 	sub	eax, edx
 	lea	eax, DWORD PTR [eax+eax*2-384]
-	mov	ecx, DWORD PTR _i$[ebp]
+	mov	ecx, DWORD PTR _id$[ebp]
 	mov	ecx, DWORD PTR _StarblazerEntities[ecx*4]
 	mov	DWORD PTR [ecx+36], eax
 ; Line 52
@@ -172,7 +172,7 @@ $L271:
 	xor	eax, edx
 	sub	eax, edx
 	lea	eax, DWORD PTR [eax+eax*2-384]
-	mov	ecx, DWORD PTR _i$[ebp]
+	mov	ecx, DWORD PTR _id$[ebp]
 	mov	ecx, DWORD PTR _StarblazerEntities[ecx*4]
 	mov	DWORD PTR [ecx+40], eax
 ; Line 53
@@ -184,7 +184,7 @@ $L271:
 	xor	eax, edx
 	sub	eax, edx
 	lea	eax, DWORD PTR [eax+eax*2-384]
-	mov	ecx, DWORD PTR _i$[ebp]
+	mov	ecx, DWORD PTR _id$[ebp]
 	mov	ecx, DWORD PTR _StarblazerEntities[ecx*4]
 	mov	DWORD PTR [ecx+44], eax
 ; Line 54
@@ -783,10 +783,7 @@ _debris_script PROC NEAR
 	shl	eax, 6
 	mov	ecx, DWORD PTR _ptr$[ebp]
 	mov	ecx, DWORD PTR [ecx]
-	add	eax, DWORD PTR [ecx+4]
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	mov	ecx, DWORD PTR [ecx]
-	mov	DWORD PTR [ecx+4], eax
+	add	DWORD PTR [ecx+4], eax
 ; Line 155
 	mov	eax, DWORD PTR _ptr$[ebp]
 	mov	eax, DWORD PTR [eax]
@@ -794,10 +791,7 @@ _debris_script PROC NEAR
 	shl	eax, 6
 	mov	ecx, DWORD PTR _ptr$[ebp]
 	mov	ecx, DWORD PTR [ecx]
-	add	eax, DWORD PTR [ecx+8]
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	mov	ecx, DWORD PTR [ecx]
-	mov	DWORD PTR [ecx+8], eax
+	add	DWORD PTR [ecx+8], eax
 ; Line 156
 	mov	eax, DWORD PTR _ptr$[ebp]
 	mov	eax, DWORD PTR [eax]
@@ -805,10 +799,7 @@ _debris_script PROC NEAR
 	shl	eax, 6
 	mov	ecx, DWORD PTR _ptr$[ebp]
 	mov	ecx, DWORD PTR [ecx]
-	add	eax, DWORD PTR [ecx+12]
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	mov	ecx, DWORD PTR [ecx]
-	mov	DWORD PTR [ecx+12], eax
+	add	DWORD PTR [ecx+12], eax
 ; Line 157
 	mov	eax, DWORD PTR _ptr$[ebp]
 	mov	eax, DWORD PTR [eax]
