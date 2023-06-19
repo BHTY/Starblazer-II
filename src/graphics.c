@@ -200,3 +200,113 @@ void swap_buffers(uint8* front_buffer, uint8 clear_color){
 	memcpy(front_buffer, FBPTR, 64000);
 	memset(FBPTR, clear_color, 64000);
 }
+#define SWAP_T(a, b) t = a; a = b; b = t
+void draw_span(int x1, int x2, int y, uint8 color) {
+	int t;
+	if (y < 0 || y >= 200) return;
+	if (x1 < 0) x1 = 0;
+	if (x1 >= 320) x1 = 319;
+	if (x2 < 0) x2 = 0;
+	if (x2 >= 320) x2 = 319;
+	if (x1 > x2) {
+		SWAP_T(x1, x2);
+	}
+	memset(FBPTR + (y * 320 + x1), color, x2 - x1);
+}
+void fill_tri(int x1, int y1, int x2, int y2, int x3, int y3, uint8 color) {
+	int t;
+	FIXED s1, s2, s3;
+	FIXED ss, se;
+	FIXED start, end;
+	int xmid;
+	int xa, xb;
+	int y;
+	if (x1 < -320 || x1 > 640 || x2 < -320 || x2 > 640 || x3 < -320 || x3 > 640 || y1 < -200 || y1 > 400 || y2 < -200 || y2 > 400 || y3 < -200 || y3 > 400) {
+		// todo: this is a little sketchy, and could become obviously so eventually
+		// figure out actually why this is necessary, and how to fix it
+		return;
+	}
+	// envision the triangle as a long side and two short sides
+	// the long side is the one from the top pt to the bottom pt
+	// the other part contains a breakpoint where the direction changes
+	// sort points first, top to bottom
+	if (y1 > y2) {
+		SWAP_T(x1, x2);
+		SWAP_T(y1, y2);
+	}
+	if (y2 > y3) {
+		SWAP_T(x2, x3);
+		SWAP_T(y2, y3);
+	}
+	if (y1 > y2) {
+		SWAP_T(x1, x2);
+		SWAP_T(y1, y2);
+	}
+	y = y1;
+	start = int_fixed(x1);
+	end = start;
+	// start and end are bounds for our slice
+	//if (y1 == y2 || y1 == y3 || y2 == y3) return;
+	if (y1 == y3) return;
+	s1 = y1 == y2 ? 0 : fixed_div(int_fixed(x2 - x1), int_fixed(y2 - y1));
+	s3 = fixed_div(int_fixed(x3 - x1), int_fixed(y3 - y1));
+	s2 = y3 == y2 ? 0 : fixed_div(int_fixed(x3 - x2), int_fixed(y3 - y2));
+	// the slopes for each segment
+	if (y1 == y2) {
+		// hardcode case
+		if (x1 < x2) {
+			start = int_fixed(x1);
+			end = int_fixed(x2);
+		} else {
+			start = int_fixed(x2);
+			end = int_fixed(x1);
+		}
+		while (y < y3) {
+			xa = fixed_int(start);
+			xb = fixed_int(end);
+			// s1 is A to B, that's bad
+			// s3 is A to C
+			// s2 is B to C
+			draw_span(xa, xb, y, color);
+			start += (x1 < x2 ? s3 : s2);
+			end += (x1 < x2 ? s2 : s3);
+			y++;
+		}
+	}
+	// xmid is the x coordinate of the long side, at the middle point
+	xmid = x1 + fixed_int(fixed_mul(s3, int_fixed(y2 - y1)));
+	
+	// if xmid is less than x2, end sees the break point
+	// else, start will see it
+	if (xmid < x2) {
+		se = s1;
+		ss = s3;
+	} else {
+		se = s3;
+		ss = s1;
+	}
+	// when we hit y = y2, we're at the break point
+	// we want to set the one that was s1 to s2
+	// that will probably change the sign
+	// though not necessarily
+	while (y < y3) {
+		if (y == y2) {
+			if (xmid < x2) {
+				se = s2;
+			} else {
+				ss = s2;
+			}
+		}
+		// fill from start to end
+		// todo: don't do as much bounds checking
+		xa = fixed_int(start);
+		xb = fixed_int(end);
+		draw_span(xa, xb, y, color);
+		start += ss;
+		end += se;
+		y++;
+	}
+	/*draw_line(x1, y1, x2, y2, 0xe0);
+	draw_line(x2, y2, x3, y3, 0xe0);
+	draw_line(x1, y1, x3, y3, 0xe0);*/
+}

@@ -202,7 +202,7 @@ bool_t clip_polygon(TRI* tri){
 void render_end(bool_t shading){
 	int i;
 	uint8 c;
-	uint16 x1, y1, x2, y2, x3, y3;
+	int x1, y1, x2, y2, x3, y3;
 
 	for (i = 0; i < SL_TRIANGLE_INDEX; i++){
 		if (clip_polygon(&SL_TRIANGLES[i])){ //only drawing this polygon if it's onscreen!
@@ -216,7 +216,7 @@ void render_end(bool_t shading){
 			y3 = SL_VERTS[SL_TRIANGLES[i].v2].y;
 
 			if (shading){
-				//fill_tri(x1, y1, x2, y2, x3, y3, c);
+				fill_tri(x1, y1, x2, y2, x3, y3, c);
 			}
 			else{
 				//printf("Color: %d\n", c);
