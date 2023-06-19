@@ -273,16 +273,15 @@ void vjoy_read(joystick_t* joy){
 	//scan the mouse and joystick
 	SG_ReadMouse(&mouse);
 
-	joy->fire = mouse.buttons[0];//SG_KeyDown('J');
+	joy->fire = SG_KeyDown('J');
 	joy->exit = 0;
 	joy->brake = SG_KeyDown('K');
-	joy->boost = mouse.buttons[1];// SG_KeyDown('B');
+	joy->boost = SG_KeyDown('B');
 
 	if (SG_KeyDown('K')){
 		joy->boost = 1;
 	}
 
-	/*
 	//read pitch
 	if (SG_KeyDown('W')){
 		joy->pitch = 127;
@@ -303,10 +302,7 @@ void vjoy_read(joystick_t* joy){
 	}
 	else{
 		joy->yaw = 0;
-	}*/
-
-	joy->pitch = (mouse.y - 100) * 127 / 100;
-	joy->yaw = (160 - mouse.x) * 127 / 160;
+	}
 
 	//read roll
 	if (SG_KeyDown('Q')){
