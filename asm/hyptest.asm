@@ -309,7 +309,7 @@ $L207:
 ; Line 74
 	call	_polygon_zsort
 ; Line 75
-	push	0
+	push	1
 	call	_render_end
 	add	esp, 4
 ; Line 77

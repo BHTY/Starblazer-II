@@ -2619,7 +2619,7 @@ $L491:
 ; Line 632
 	push	500					; 000001f4H
 	push	OFFSET FLAT:_title_stars
-	push	0
+	push	1
 	mov	eax, DWORD PTR _StarblazerEntities
 	add	eax, 16					; 00000010H
 	mov	ecx, DWORD PTR [eax+12]

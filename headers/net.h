@@ -40,6 +40,18 @@ typedef struct{
 	uint16 flags;
 } PACKET;
 
+typedef struct{
+	char str[13];
+	char player_name[16];
+	char player_pin[16];
+} AUTH_TOKEN;
+
+typedef struct{
+	bool_t connected;
+	uint8 player_num;
+	uint8 wait_die;
+} RETURNING_TOKEN;
+
 #define SENDER_ID(packet) ((packet.flags & 240) >> 4)
 #define DISCONNECTED(packet) ((packet.flags >> 12) == SENDER_ID(packet))
 #define RESPAWNING(packet) (packet.flags & 4)

@@ -35,14 +35,14 @@ typedef struct{
 } joy_cal_t;
 
 typedef struct{
-	uint8 control_type;
+	bool_t control_type;//joystick vs kbd
 	uint8 primary_control; //keyboard for axis+ if keyboard, XvsY axis for joystick or mouse
 	uint8 secondary_control; //keycode for axis- if keyboard
 } axis_control_t;
 
 typedef struct{
 	uint8 control_type;
-	uint8 code; //keycode for keyboard, mouse button for mouse, joybutton for joystick
+	uint8 code; //keycode for keyboard, joybutton for joystick
 } trigger_control_t;
 
 typedef struct{

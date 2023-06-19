@@ -629,7 +629,7 @@ void blazer2_draw(){
 	quat_tomat(&(StarblazerEntities[0]->orientation), &SL_CAMERA_ORIENTATION);
 
 	//draw 3d scene geometry
-	draw_scene(&(StarblazerEntities[0]->pos), StarblazerEntities[0]->orientation, 0, title_stars, 500);
+	draw_scene(&(StarblazerEntities[0]->pos), StarblazerEntities[0]->orientation, 1, title_stars, 500);
 
 	//draw targeting reticle
 	draw_crosshair();

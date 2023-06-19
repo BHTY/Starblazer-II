@@ -72,7 +72,7 @@ void draw_hypercraft(int centerX, int centerY){
 	put_triangles(hc_template->mesh, hc_template->num_tris, 0, 0);
 
 	polygon_zsort();
-	render_end(0);
+	render_end(1);
 
 	SL_CENTER_X = old_centerX;
 	SL_CENTER_Y = old_centerY;
