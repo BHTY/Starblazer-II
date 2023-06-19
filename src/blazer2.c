@@ -268,16 +268,21 @@ SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
 }
 
 void vjoy_read(joystick_t* joy){
+	SG_mouse_t mouse;
+
 	//scan the mouse and joystick
-	joy->fire = SG_KeyDown('J');
+	SG_ReadMouse(&mouse);
+
+	joy->fire = mouse.buttons[0];//SG_KeyDown('J');
 	joy->exit = 0;
 	joy->brake = SG_KeyDown('K');
-	joy->boost = SG_KeyDown('B');
+	joy->boost = mouse.buttons[1];// SG_KeyDown('B');
 
 	if (SG_KeyDown('K')){
 		joy->boost = 1;
 	}
 
+	/*
 	//read pitch
 	if (SG_KeyDown('W')){
 		joy->pitch = 127;
@@ -298,7 +303,10 @@ void vjoy_read(joystick_t* joy){
 	}
 	else{
 		joy->yaw = 0;
-	}
+	}*/
+
+	joy->pitch = (mouse.y - 100) * 127 / 100;
+	joy->yaw = (160 - mouse.x) * 127 / 160;
 
 	//read roll
 	if (SG_KeyDown('Q')){
@@ -385,7 +393,7 @@ void blazer2_module(){
 
 	//sync state if this is multiplayer
 	if (multiplayer){
-		//blazer_syncstate();
+		//net_syncstate();
 	}
 
 	run_entity_scripts();
