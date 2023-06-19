@@ -602,7 +602,7 @@ _load_model PROC NEAR
 	add	esp, 4
 	mov	DWORD PTR _verts$[ebp], eax
 ; Line 183
-	push	36					; 00000024H
+	push	40					; 00000028H
 	call	_malloc
 	add	esp, 4
 	mov	DWORD PTR _tpl$[ebp], eax

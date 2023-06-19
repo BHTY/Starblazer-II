@@ -168,6 +168,8 @@ void debris_script(ENTITY** ptr){
 void set_attributes(){
 	LASER_PLAYER->script = laser_script;
 	LASER_PLAYER->flags = 2;
+	LASER_PLAYER->radar_color = 31;
+	LASER_PLAYER->radar_type = 0;
 	create_hitbox(LASER_PLAYER, int_fixed(3), int_fixed(3), int_fixed(3));
 
 	player_fighter.health = 40;
@@ -189,12 +191,16 @@ void set_attributes(){
 	EXPLOSION_SHARD = load_model("assets/shard.obj");
 	EXPLOSION_SHARD->script = debris_script;
 	EXPLOSION_SHARD->flags = 2;
+	EXPLOSION_SHARD->radar_color = 240;
+	EXPLOSION_SHARD->radar_type = 0;
 	create_hitbox(EXPLOSION_SHARD, 0, 0, 0);
 
 	ASTEROID = load_model("assets/asteroid.obj");
 	ASTEROID->script = asteroid_script;
 	ASTEROID->flags = 3;
 	ASTEROID->maxhp = 10;
+	ASTEROID->radar_color = 224;
+	ASTEROID->radar_type = 0;
 	create_hitbox(ASTEROID, int_fixed(5), int_fixed(5), int_fixed(5));
 }
 
@@ -573,12 +579,10 @@ void draw_radar(){
 
 	//actually draw the radar blips
 	for (i = 1; i < MAX_ENTITIES; i++){
-		if (StarblazerEntities[i]){
+		if (StarblazerEntities[i] && (StarblazerEntities[i]->type->flags & 2)){
 			vector_pos = StarblazerEntities[i]->pos;
 			vec3_subtract(&(StarblazerEntities[0]->pos), &vector_pos);
 			mat3_mul(&SL_CAMERA_ORIENTATION, &vector_pos, &screen_coords);
-
-			c = 224;
 
 			pos1 = screen_coords.x >> 17;
 			pos2 = screen_coords.z >> 17;
@@ -588,7 +592,24 @@ void draw_radar(){
 			if (pos2 > 30) pos2 = 30;
 			if (pos2 < -30) pos2 = -30;
 
-			plot_pixel(160 + pos1, 40 + pos2, c);
+			if (StarblazerEntities[i]->type->radar_type){
+				if (screen_coords.y >= 0){
+					c = 28;
+				}
+				else{
+					c = 227;
+				}
+
+				for (j = -1; j < 2; j++) {
+					for (k = -1; k < 2; k++) {
+						if (40 + pos2 + k < 0) continue;
+						plot_pixel(160 + pos1 + j, 40 + pos2 + k, c);
+					}
+				}
+			}
+			else{
+				plot_pixel(160 + pos1, 40 + pos2, StarblazerEntities[i]->type->radar_color);
+			}
 		}
 	}
 }
