@@ -548,7 +548,7 @@ void draw_boost_bar(){
 }
 
 void draw_radar(){
-	int i, j, c, k;
+	int i, j, c, k, pos1, pos2;
 	VEC3 vector_pos, screen_coords;
 
 	//draw radar box and half-transparent mesh bg
@@ -561,20 +561,36 @@ void draw_radar(){
 			plot_pixel(130+i,10+j,c);
 		}
 	}
-
 	
 	//draw the "player" indictator
 	for(j = -1; j < 2; j++){
-
-		for(k = -1; k < 2; k++){
+		for (k = -1; k < 2; k++){
 			plot_pixel(160 + j, 40 + k, 0xfc);
 		}
-
 	}
 
 	draw_line(160, 40, 160, 44, 0xfc);
 
 	//actually draw the radar blips
+	for (i = 1; i < MAX_ENTITIES; i++){
+		if (StarblazerEntities[i]){
+			vector_pos = StarblazerEntities[i]->pos;
+			vec3_subtract(&(StarblazerEntities[0]->pos), &vector_pos);
+			mat3_mul(&SL_CAMERA_ORIENTATION, &vector_pos, &screen_coords);
+
+			c = 224;
+
+			pos1 = screen_coords.x >> 17;
+			pos2 = screen_coords.z >> 17;
+
+			if (pos1 > 30) pos1 = 30;
+			if (pos1 < -30) pos1 = -30;
+			if (pos2 > 30) pos2 = 30;
+			if (pos2 < -30) pos2 = -30;
+
+			plot_pixel(160 + pos1, 40 + pos2, c);
+		}
+	}
 }
 
 void draw_battery(){
