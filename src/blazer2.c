@@ -622,17 +622,14 @@ void draw_radar(){
 }
 
 void draw_battery(){
-	int total_pixels = player_battery;
-	int block_pixels = 0;
 	int offset = 140;
 	int i;
-	int r = 0;
+	int intensity = (player_battery * 6) >> 4;
 
 	for (i = 0; i < 40; i++){
 		if (player_battery >= i){
-			drawline(offset + i, 160, offset + i, 170, 160 | (r >> 4));
+			drawline(offset + i, 160, offset + i, 170, 160 | (intensity));
 		}
-		r += 6;
 	}
 
 	/*for (r = 7; r >= 0; r--){
