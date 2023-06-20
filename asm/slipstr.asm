@@ -823,6 +823,9 @@ _shading$ = 8
 _i$ = -32
 _c$ = -16
 _illum$ = -12
+_r$ = -8
+_g$ = -20
+_b$ = -4
 _x1$ = -24
 _y1$ = -40
 _x2$ = -28
@@ -947,10 +950,32 @@ $L487:
 	add	eax, edx
 	sar	eax, 2
 	mov	DWORD PTR _illum$[ebp], eax
+; Line 266
+	mov	eax, DWORD PTR _r$[ebp]
+	shl	eax, 2
+	lea	eax, DWORD PTR [eax+eax*8]
+	mov	ecx, DWORD PTR _g$[ebp]
+	lea	ecx, DWORD PTR [ecx+ecx*2]
+	lea	eax, DWORD PTR [eax+ecx*2]
+	add	eax, DWORD PTR _b$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y3$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x3$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y2$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x2$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	push	eax
+	call	_fill_tri
+	add	esp, 28					; 0000001cH
 ; Line 267
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
-	shl	eax, 4
 	mov	ecx, DWORD PTR _illum$[ebp]
 	sar	ecx, 12					; 0000000cH
 	or	eax, ecx
@@ -975,6 +1000,7 @@ $L491:
 ; Line 272
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
+	or	eax, 15					; 0000000fH
 	push	eax
 	mov	eax, DWORD PTR _y2$[ebp]
 	push	eax
@@ -989,6 +1015,7 @@ $L491:
 ; Line 273
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
+	or	eax, 15					; 0000000fH
 	push	eax
 	mov	eax, DWORD PTR _y3$[ebp]
 	push	eax
@@ -1003,6 +1030,7 @@ $L491:
 ; Line 274
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
+	or	eax, 15					; 0000000fH
 	push	eax
 	mov	eax, DWORD PTR _y3$[ebp]
 	push	eax

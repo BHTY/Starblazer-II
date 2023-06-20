@@ -118,7 +118,7 @@ _create_textbox PROC NEAR
 	mov	BYTE PTR [eax+1], 2
 ; Line 32
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+2], 28			; 0000001cH
+	mov	BYTE PTR [eax+2], 175			; 000000afH
 ; Line 33
 	mov	eax, DWORD PTR _buttonData$[ebp]
 	mov	BYTE PTR [eax+3], 0
@@ -130,7 +130,7 @@ _create_textbox PROC NEAR
 	mov	WORD PTR [eax+6], 12			; 0000000cH
 ; Line 36
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+8], 28			; 0000001cH
+	mov	BYTE PTR [eax+8], 175			; 000000afH
 ; Line 37
 	mov	eax, DWORD PTR _buttonData$[ebp]
 	mov	BYTE PTR [eax+9], 255			; 000000ffH
@@ -452,7 +452,7 @@ $L574:
 $L576:
 ; Line 94
 	push	0
-	push	39					; 00000027H
+	push	-97					; ffffff9fH
 	push	2
 	push	3
 	push	0
@@ -462,7 +462,7 @@ $L576:
 	add	esp, 28					; 0000001cH
 ; Line 95
 	push	0
-	push	-49					; ffffffcfH
+	push	-17					; ffffffefH
 	push	2
 	push	3
 	push	10					; 0000000aH

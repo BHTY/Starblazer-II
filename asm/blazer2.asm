@@ -653,7 +653,7 @@ $L324:
 ; Line 122
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	eax, DWORD PTR _StarblazerEntities[eax*4]
-	mov	BYTE PTR [eax+100], 224			; 000000e0H
+	mov	BYTE PTR [eax+100], 192			; 000000c0H
 ; Line 123
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	eax, DWORD PTR _StarblazerEntities[eax*4]
@@ -878,7 +878,7 @@ _set_attributes PROC NEAR
 	mov	DWORD PTR [eax+32], 2
 ; Line 172
 	mov	eax, DWORD PTR _LASER_PLAYER
-	mov	BYTE PTR [eax+36], 31			; 0000001fH
+	mov	BYTE PTR [eax+36], 191			; 000000bfH
 ; Line 173
 	mov	eax, DWORD PTR _LASER_PLAYER
 	mov	BYTE PTR [eax+37], 0
@@ -930,7 +930,7 @@ _set_attributes PROC NEAR
 	mov	DWORD PTR [eax+32], 2
 ; Line 195
 	mov	eax, DWORD PTR _EXPLOSION_SHARD
-	mov	BYTE PTR [eax+36], 240			; 000000f0H
+	mov	BYTE PTR [eax+36], 127			; 0000007fH
 ; Line 196
 	mov	eax, DWORD PTR _EXPLOSION_SHARD
 	mov	BYTE PTR [eax+37], 0
@@ -958,7 +958,7 @@ _set_attributes PROC NEAR
 	mov	DWORD PTR [eax+28], 10			; 0000000aH
 ; Line 203
 	mov	eax, DWORD PTR _ASTEROID
-	mov	BYTE PTR [eax+36], 224			; 000000e0H
+	mov	BYTE PTR [eax+36], 207			; 000000cfH
 ; Line 204
 	mov	eax, DWORD PTR _ASTEROID
 	mov	BYTE PTR [eax+37], 0
@@ -1762,7 +1762,7 @@ _draw_debug PROC NEAR
 	push	edi
 ; Line 456
 	push	1
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	push	1
 	push	1
 	push	0
@@ -1781,7 +1781,7 @@ _draw_debug PROC NEAR
 	add	esp, 16					; 00000010H
 ; Line 458
 	push	1
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	push	1
 	push	1
 	push	0
@@ -1792,7 +1792,7 @@ _draw_debug PROC NEAR
 	add	esp, 28					; 0000001cH
 ; Line 460
 	push	1
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	push	1
 	push	1
 	push	7
@@ -1812,7 +1812,7 @@ _draw_debug PROC NEAR
 	add	esp, 16					; 00000010H
 ; Line 462
 	push	1
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	push	1
 	push	1
 	push	7
@@ -1823,7 +1823,7 @@ _draw_debug PROC NEAR
 	add	esp, 28					; 0000001cH
 ; Line 464
 	push	1
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	push	1
 	push	1
 	push	14					; 0000000eH
@@ -1846,7 +1846,7 @@ _draw_debug PROC NEAR
 ; Line 466
 $L420:
 	push	1
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	push	1
 	push	1
 	push	14					; 0000000eH
@@ -1875,7 +1875,7 @@ $L420:
 	add	esp, 20					; 00000014H
 ; Line 470
 	push	1
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	push	1
 	push	1
 	push	0
@@ -1896,7 +1896,7 @@ $L420:
 	add	esp, 16					; 00000010H
 ; Line 473
 	push	1
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	push	1
 	push	1
 	push	7
@@ -2443,7 +2443,7 @@ $L487:
 	cmp	DWORD PTR _k$[ebp], 2
 	jge	$L489
 ; Line 579
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	mov	eax, DWORD PTR _k$[ebp]
 	add	eax, 40					; 00000028H
 	push	eax
@@ -2459,7 +2459,7 @@ $L489:
 	jmp	$L485
 $L486:
 ; Line 583
-	push	252					; 000000fcH
+	push	239					; 000000efH
 	push	44					; 0000002cH
 	push	160					; 000000a0H
 	push	40					; 00000028H
@@ -2550,12 +2550,12 @@ $L497:
 	cmp	DWORD PTR _screen_coords$[ebp+4], 0
 	jl	$L499
 ; Line 602
-	mov	DWORD PTR _c$[ebp], 28			; 0000001cH
+	mov	DWORD PTR _c$[ebp], 175			; 000000afH
 ; Line 604
 	jmp	$L500
 $L499:
 ; Line 605
-	mov	DWORD PTR _c$[ebp], 227			; 000000e3H
+	mov	DWORD PTR _c$[ebp], 223			; 000000dfH
 ; Line 606
 $L500:
 ; Line 608

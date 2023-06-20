@@ -29,11 +29,11 @@ void create_textbox(){
 	buttonData->text = "CAMPAIGN";
 	buttonData->text_box.text_props.scale_x = 3;
 	buttonData->text_box.text_props.scale_y = 2;
-	buttonData->text_box.text_props.color = 28;
+	buttonData->text_box.text_props.color = 175;
 	buttonData->text_box.text_props.spacing = 0;
 	buttonData->text_box.box.size_x = 100;
 	buttonData->text_box.box.size_y = 12;
-	buttonData->text_box.box.bg_color = 28;
+	buttonData->text_box.box.bg_color = 175;
 	buttonData->text_box.box.border_color_inactive = 255;
 	buttonData->text_box.box.border_color_active = 255;
 
@@ -91,8 +91,8 @@ void title_draw(){
 		draw_cursor(mouse.x, mouse.y, 255);
 	}
 
-	vputs("STARBLAZER", 0, 0, 3, 2, 39, 0);
-	vputs("    II", 0, 10, 3, 2, 207, 0); //252
+	vputs("STARBLAZER", 0, 0, 3, 2, 159, 0);
+	vputs("    II", 0, 10, 3, 2, 239, 0); //252
 	vputs("BY WILL KLEES AND JOSH PIETY", 30, 100, 3, 2, 255, 0);
 
 	draw_scene(&title_camera, title_cam_ori, 1, 0, 0);

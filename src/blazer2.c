@@ -119,7 +119,7 @@ void laser_script(ENTITY** ptr){
 			if (StarblazerEntities[i]->type->flags & 1){ //hittable
 				if (test_collisions(*ptr, StarblazerEntities[i])){
 					//printf("That's a confirmed hit!\n");
-					StarblazerEntities[i]->color_override = 224;
+					StarblazerEntities[i]->color_override = 192;
 					StarblazerEntities[i]->override_frames = 7;
 					StarblazerEntities[i]->health -= (*ptr)->state[15];
 
@@ -169,7 +169,7 @@ void debris_script(ENTITY** ptr){
 void set_attributes(){
 	LASER_PLAYER->script = laser_script;
 	LASER_PLAYER->flags = 2;
-	LASER_PLAYER->radar_color = 31;
+	LASER_PLAYER->radar_color = 191;
 	LASER_PLAYER->radar_type = 0;
 	create_hitbox(LASER_PLAYER, int_fixed(3), int_fixed(3), int_fixed(3));
 
@@ -192,7 +192,7 @@ void set_attributes(){
 	EXPLOSION_SHARD = load_model("assets/shard.obj");
 	EXPLOSION_SHARD->script = debris_script;
 	EXPLOSION_SHARD->flags = 2;
-	EXPLOSION_SHARD->radar_color = 240;
+	EXPLOSION_SHARD->radar_color = 127;
 	EXPLOSION_SHARD->radar_type = 0;
 	create_hitbox(EXPLOSION_SHARD, 0, 0, 0);
 
@@ -200,7 +200,7 @@ void set_attributes(){
 	ASTEROID->script = asteroid_script;
 	ASTEROID->flags = 3;
 	ASTEROID->maxhp = 10;
-	ASTEROID->radar_color = 224;
+	ASTEROID->radar_color = 207;
 	ASTEROID->radar_type = 0;
 	create_hitbox(ASTEROID, int_fixed(5), int_fixed(5), int_fixed(5));
 }
@@ -453,24 +453,24 @@ void draw_debug(){
 	char num[100];
 
 	//draw # of onscreen entities
-	vputs("ENT", 0, 0, 1, 1, 252, 1);
+	vputs("ENT", 0, 0, 1, 1, 239, 1);
 	sprintf(num, "%d / %d", count_entities(), MAX_ENTITIES);
-	vputs(num, 15, 0, 1, 1, 252, 1);
+	vputs(num, 15, 0, 1, 1, 239, 1);
 	//draw # of onscreen polygons
-	vputs("TRI", 0, 7, 1, 1, 252, 1);
+	vputs("TRI", 0, 7, 1, 1, 239, 1);
 	sprintf(num, "%d / %d", SL_TRIANGLE_INDEX, MAX_TRIS);
-	vputs(num, 15, 7, 1, 1, 252, 1);
+	vputs(num, 15, 7, 1, 1, 239, 1);
 	//draw tickrate
-	vputs("FPS", 0, 14, 1, 1, 252, 1);
+	vputs("FPS", 0, 14, 1, 1, 239, 1);
 	if (LAST_FRAME_TIME != 0){ sprintf(num, "%d", 1000 / LAST_FRAME_TIME); }
-	vputs(num, 15, 14, 1, 1, 252, 1);
+	vputs(num, 15, 14, 1, 1, 239, 1);
 
 	//draw position
 	sprintf(num, "%d %d %d", fixed_int(StarblazerEntities[0]->pos.x), fixed_int(StarblazerEntities[0]->pos.y), fixed_int(StarblazerEntities[0]->pos.z));
-	vputs(num, 240, 0, 1, 1, 28, 1);
+	vputs(num, 240, 0, 1, 1, 175, 1);
 
 	sprintf(num, "VERT %d / %d", SL_VERTEX_INDEX, MAX_VERTS);
-	vputs(num, 240, 7, 1, 1, 28, 1);
+	vputs(num, 240, 7, 1, 1, 175, 1);
 }
 
 void draw_HPbar(){
@@ -576,11 +576,11 @@ void draw_radar(){
 	//draw the "player" indictator
 	for(j = -1; j < 2; j++){
 		for (k = -1; k < 2; k++){
-			plot_pixel(160 + j, 40 + k, 0xfc);
+			plot_pixel(160 + j, 40 + k, 239);
 		}
 	}
 
-	draw_line(160, 40, 160, 44, 0xfc);
+	draw_line(160, 40, 160, 44, 239);
 
 	//actually draw the radar blips
 	for (i = 1; i < MAX_ENTITIES; i++){
@@ -599,10 +599,10 @@ void draw_radar(){
 
 			if (StarblazerEntities[i]->type->radar_type){
 				if (screen_coords.y >= 0){
-					c = 28;
+					c = 175;
 				}
 				else{
-					c = 227;
+					c = 223;
 				}
 
 				for (j = -1; j < 2; j++) {

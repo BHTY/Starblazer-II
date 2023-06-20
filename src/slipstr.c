@@ -258,20 +258,20 @@ void render_end(bool_t shading){
 				//g = (((c >> 2) & 7) * illum) >> 16;
 				//b = ((c & 3) * illum) >> 16;
 
-				//r = ((c / 36)) * illum >> 16;
-				//g = ((c % 36) / 6) * illum >> 16;
-				//b = (c % 6) * illum >> 16;
+				/*r = ((c / 36)) * illum >> 16;
+				g = ((c % 36) / 6) * illum >> 16;
+				b = (c % 6) * illum >> 16;*/
 
 				//fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
-				//fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
-				fill_tri(x1, y1, x2, y2, x3, y3, (c << 4) | (illum >> 12));
+				fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
+				fill_tri(x1, y1, x2, y2, x3, y3, (c) | (illum >> 12));
 			}
 			else{
 				//printf("Color: %d\n", c);
 				//printf("About to draw triangle with verts (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
-				drawline(x1, y1, x2, y2, c);
-				drawline(x1, y1, x3, y3, c);
-				drawline(x2, y2, x3, y3, c);
+				drawline(x1, y1, x2, y2, c | 15);
+				drawline(x1, y1, x3, y3, c | 15);
+				drawline(x2, y2, x3, y3, c | 15);
 			}
 		}
 	}

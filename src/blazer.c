@@ -89,12 +89,15 @@ void SG_InitPalette(){
 		g = (i & 2) ? ((i & 8) ? 16 : 8) : 0;
 		b = (i & 1) ? ((i & 8) ? 16 : 8) : 0;
 
+		//reserve a few colors for special use that do not comply with the RGBI system
+		if (i == 7){
+			r = 16;
+			g = 8;
+			b = 0;
+		}
+
 		for (p = 0; p < 16; p++){ //intensity
 			SG_SetPaletteIndex(16 * i + p, r * p, g * p, b * p);
-
-			if (i == 12){
-				printf("%d (i%d): %d %d %d\n", 16 * i + p, p, r*p, g*p, b*p);
-			}
 		}
 	}
 }
