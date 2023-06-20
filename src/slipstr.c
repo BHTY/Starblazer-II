@@ -18,6 +18,7 @@ int16 SL_CENTER_Y = 100;
 
 TRI SL_TRIANGLES[MAX_TRIS];
 VEC3 SL_VERTS[MAX_VERTS];
+VEC3 SL_ORIG_VERTS[MAX_VERTS]; // not sure if this is okay to keep
 
 FIXED SL_FOV_X = 0x640000;
 FIXED SL_FOV_Y = 0x640000;
@@ -62,6 +63,8 @@ void put_vertex(VEC3* vec){
 	SL_VERTS[SL_VERTEX_INDEX].x = SL_CENTER_X - fixed_int(muldiv(v.x, SL_FOV_X, v.z));
 	SL_VERTS[SL_VERTEX_INDEX].y = SL_CENTER_Y - fixed_int(muldiv(v.y, SL_FOV_Y, v.z));
 	SL_VERTS[SL_VERTEX_INDEX].z = v.z;
+	
+	SL_ORIG_VERTS[SL_VERTEX_INDEX] = *vec;
 
 	/*printf("v=(%f, %f, %f)\n", v.x/65536.0, v.y/65536.0, v.z/65536.0);
 	printf("Vertex onscreen coordinates: (%d, %d)\n", SL_VERTS[SL_VERTEX_INDEX].x, SL_VERTS[SL_VERTEX_INDEX].y);*/
@@ -175,17 +178,35 @@ void set_fov_y(FIXED fov){
 		b.) In adjacent offscreen quadrants (all negative x, positive offscreen X, positive offscreen Y, or negative Y)
 	then the polygon will be culled and not drawn (i.e. false will be returned). Otherwise, true will be returned
 */
+/*
+	find_illumination()
+	Parameters: VEC3 *x1, VEC3 *x2, VEC3 *x3, VEC3 *light
+	
+	Description: Finds the "illumination level" of a given polygon (from 0 to 1) from its three vertices.
+	The given light source should generally be the camera's position.
+*/
 FIXED find_illumination(VEC3 *x1, VEC3 *x2, VEC3 *x3, VEC3 *light) {
 	VEC3 look;
 	VEC3 norm;
 	VEC3 v1 = *x2;
 	VEC3 v2 = *x3;
-	vec3_subtract(&x1, &v1);
-	vec3_subtract(&x1, &v2);
+	vec3_subtract(x1, &v1);
+	vec3_subtract(x1, &v2);
 	vec3_cross(&v1, &v2, &norm);
 	vec3_normalize(&norm);
+	vec3_normalize(&norm);
+	vec3_normalize(&norm);
+	vec3_normalize(&norm);
 	look = *x1;
+	vec3_add(x2, &look);
+	vec3_add(x3, &look);
+	look.x /= 3;
+	look.y /= 3;
+	look.z /= 3;
 	vec3_subtract(light, &look);
+	vec3_normalize(&look);
+	vec3_normalize(&look);
+	vec3_normalize(&look);
 	vec3_normalize(&look);
 	return int_abs(vec3_dot(&look, &norm));
 }
@@ -230,12 +251,13 @@ void render_end(bool_t shading){
 			y3 = SL_VERTS[SL_TRIANGLES[i].v2].y;
 
 			if (shading){
-				illum = find_illumination(&(SL_VERTS[SL_TRIANGLES[i].v0]), &(SL_VERTS[SL_TRIANGLES[i].v1]), &(SL_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS));
-				r = fixed_mul(c & 224, illum + 1);
-				g = fixed_mul(c & 28, illum + 1);
-				b = fixed_mul(c & 3, illum + 1);
+				illum = (3*find_illumination(&(SL_ORIG_VERTS[SL_TRIANGLES[i].v0]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v1]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS)) + int_fixed(1)) / 4;
+				//illum = int_fixed(1);
+				r = (((c >> 5) & 7) * illum) >> 16;
+				g = (((c >> 2) & 7) * illum) >> 16;
+				b = ((c & 3) * illum) >> 16;
 
-				fill_tri(x1, y1, x2, y2, x3, y3, r | g | b);
+				fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
 			}
 			else{
 				//printf("Color: %d\n", c);

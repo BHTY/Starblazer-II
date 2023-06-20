@@ -65,7 +65,8 @@ FIXED fast_sqrt(FIXED n) {
 	FIXED x = n / 2;
 	int i;
 	// 4 iterations? is that enough? too many? idk
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 8; i++) {
+		if (x == 0) return 0;
 		x = (x + fixed_div(n, x)) / 2;
 	}
 	return x;
@@ -87,10 +88,13 @@ void vec3_cross(VEC3 *a, VEC3 *b, VEC3 *o) {
 }
 void vec3_normalize(VEC3 *x) {
 	FIXED magnitude = fast_sqrt(fixed_mul(x->x, x->x) + fixed_mul(x->y, x->y) + fixed_mul(x->z, x->z));
+	if (magnitude == 0) return;
 	x->x = fixed_div(x->x, magnitude);
 	x->y = fixed_div(x->y, magnitude);
 	x->z = fixed_div(x->z, magnitude);
 }
+
+	
 FIXED vec3_dot(VEC3 *a, VEC3 *b) {
 	return fixed_mul(a->x, b->x) + fixed_mul(a->y, b->y) + fixed_mul(a->z, b->z);
 } 

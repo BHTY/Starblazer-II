@@ -41,7 +41,7 @@ MAT3 rot_mat;
 VEC3 pos_delta;
 
 VEC3 laser_velocity;
-bool_t shading = 0;
+bool_t shading = 1;
 
 void explode_at(VEC3* pos){
 	int i;
@@ -196,7 +196,7 @@ void set_attributes(){
 	EXPLOSION_SHARD->radar_type = 0;
 	create_hitbox(EXPLOSION_SHARD, 0, 0, 0);
 
-	ASTEROID = load_model("assets/asteroid.obj");
+	ASTEROID = load_model("assets/asterold.obj");
 	ASTEROID->script = asteroid_script;
 	ASTEROID->flags = 3;
 	ASTEROID->maxhp = 10;
