@@ -35,7 +35,7 @@ EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 _DATA	SEGMENT
 	ORG $+3
-$SG204	DB	'assets/hyper.obj', 00H
+$SG204	DB	'assets/arwing.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 ; File src\hyptest.c

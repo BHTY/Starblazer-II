@@ -63,7 +63,7 @@ _firing	DB	00H
 _barcycle DD	00H
 _shake_frames DD 00H
 _firing_cooldown DD 00H
-_shading DB	00H
+_shading DB	01H
 _DATA	ENDS
 PUBLIC	_explode_at
 EXTRN	_StarblazerEntities:BYTE
@@ -860,7 +860,7 @@ _DATA	SEGMENT
 	ORG $+2
 $SG342	DB	'assets/shard.obj', 00H
 	ORG $+3
-$SG343	DB	'assets/asteroid.obj', 00H
+$SG343	DB	'assets/asterold.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _set_attributes PROC NEAR

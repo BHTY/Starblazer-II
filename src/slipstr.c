@@ -7,6 +7,7 @@ Description: 3D rendering engine for Starblazer II
 #include "../headers/slipstr.h"
 #include "../headers/graphics.h"
 #include <stdio.h>
+#include <assert.h>
 
 uint16 SL_VERTEX_INDEX;
 uint16 SL_TRIANGLE_INDEX;
@@ -253,11 +254,15 @@ void render_end(bool_t shading){
 			if (shading){
 				illum = (3*find_illumination(&(SL_ORIG_VERTS[SL_TRIANGLES[i].v0]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v1]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS)) + int_fixed(1)) / 4;
 				//illum = int_fixed(1);
-				r = (((c >> 5) & 7) * illum) >> 16;
-				g = (((c >> 2) & 7) * illum) >> 16;
-				b = ((c & 3) * illum) >> 16;
+				//r = (((c >> 5) & 7) * illum) >> 16;
+				//g = (((c >> 2) & 7) * illum) >> 16;
+				//b = ((c & 3) * illum) >> 16;
+				r = ((c / 36)) * illum >> 16;
+				g = ((c % 36) / 6) * illum >> 16;
+				b = (c % 6) * illum >> 16;
 
-				fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
+				//fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
+				fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
 			}
 			else{
 				//printf("Color: %d\n", c);

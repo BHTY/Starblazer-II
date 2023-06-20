@@ -65,15 +65,23 @@ void SG_GameInit(){
 }
 
 void SG_InitPalette(){
-	int i;
+	int i, n, p;
 	uint8 r, g, b;
 
-	for (i = 0; i < 256; i++){
+	/*for (i = 0; i < 256; i++){
 		r = i & 224;
 		g = (i & 28) << 3;
 		b = (i & 3) << 6;
 
 		SG_SetPaletteIndex(i, r, g, b);
+	}*/
+
+	for (i = 0; i < 6; i++){
+		for (n = 0; n < 6; n++){
+			for (p = 0; p < 6; p++){
+				SG_SetPaletteIndex(i * 36 + n * 6 + p, i * 51, n * 51, p * 51);
+			}
+		}
 	}
 }
 
