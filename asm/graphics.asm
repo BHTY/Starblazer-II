@@ -41,11 +41,11 @@ _plot_pixel PROC NEAR
 	mov	eax, DWORD PTR _x$[ebp]
 	and	eax, 65535				; 0000ffffH
 	cmp	eax, 320				; 00000140H
-	jge	$L241
+	jge	$L250
 	mov	eax, DWORD PTR _y$[ebp]
 	and	eax, 65535				; 0000ffffH
 	cmp	eax, 200				; 000000c8H
-	jge	$L241
+	jge	$L250
 ; Line 16
 	mov	al, BYTE PTR _color$[ebp]
 	mov	ecx, DWORD PTR _y$[ebp]
@@ -58,8 +58,8 @@ _plot_pixel PROC NEAR
 	mov	edx, DWORD PTR _FBPTR
 	mov	BYTE PTR [ecx+edx], al
 ; Line 18
-$L241:
-$L240:
+$L250:
+$L249:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -83,11 +83,11 @@ _bitset_pixel PROC NEAR
 	mov	eax, DWORD PTR _x$[ebp]
 	and	eax, 65535				; 0000ffffH
 	cmp	eax, 320				; 00000140H
-	jge	$L246
+	jge	$L255
 	mov	eax, DWORD PTR _y$[ebp]
 	and	eax, 65535				; 0000ffffH
 	cmp	eax, 200				; 000000c8H
-	jge	$L246
+	jge	$L255
 ; Line 22
 	mov	eax, DWORD PTR _y$[ebp]
 	and	eax, 65535				; 0000ffffH
@@ -110,8 +110,8 @@ _bitset_pixel PROC NEAR
 	mov	ecx, DWORD PTR _FBPTR
 	mov	BYTE PTR [eax+ecx], dl
 ; Line 24
-$L246:
-$L245:
+$L255:
+$L254:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -137,7 +137,7 @@ _incrementVal$ = -36
 _endVal$ = -16
 _shortLen$ = -8
 _longLen$ = -28
-_swap$276 = -44
+_swap$285 = -44
 _draw_line PROC NEAR
 ; Line 26
 	push	ebp
@@ -150,28 +150,28 @@ _draw_line PROC NEAR
 	mov	DWORD PTR _yLonger$[ebp], 0
 ; Line 37
 	cmp	DWORD PTR _x$[ebp], 0
-	jl	$L264
+	jl	$L273
 	cmp	DWORD PTR _y$[ebp], 0
-	jl	$L264
+	jl	$L273
 	cmp	DWORD PTR _x$[ebp], 319			; 0000013fH
-	jg	$L264
+	jg	$L273
 	cmp	DWORD PTR _y$[ebp], 199			; 000000c7H
-	jle	$L263
-$L264:
+	jle	$L272
+$L273:
 	cmp	DWORD PTR _x2$[ebp], 0
-	jl	$L265
+	jl	$L274
 	cmp	DWORD PTR _y2$[ebp], 0
-	jl	$L265
+	jl	$L274
 	cmp	DWORD PTR _x2$[ebp], 319		; 0000013fH
-	jg	$L265
+	jg	$L274
 	cmp	DWORD PTR _y2$[ebp], 199		; 000000c7H
-	jle	$L263
-$L265:
-	jmp	$L252
+	jle	$L272
+$L274:
+	jmp	$L261
 ; Line 38
-$L263:
+$L272:
 	cmp	DWORD PTR _x2$[ebp], 0
-	jge	$L266
+	jge	$L275
 ; Line 40
 	mov	ecx, DWORD PTR _y$[ebp]
 	mov	eax, DWORD PTR _y2$[ebp]
@@ -186,9 +186,9 @@ $L263:
 ; Line 41
 	mov	DWORD PTR _x2$[ebp], 0
 ; Line 43
-$L266:
+$L275:
 	cmp	DWORD PTR _x$[ebp], 0
-	jge	$L267
+	jge	$L276
 ; Line 45
 	mov	ecx, DWORD PTR _y2$[ebp]
 	mov	eax, DWORD PTR _y$[ebp]
@@ -203,9 +203,9 @@ $L266:
 ; Line 46
 	mov	DWORD PTR _x$[ebp], 0
 ; Line 49
-$L267:
+$L276:
 	cmp	DWORD PTR _x2$[ebp], 319		; 0000013fH
-	jle	$L268
+	jle	$L277
 ; Line 51
 	mov	eax, DWORD PTR _y2$[ebp]
 	sub	eax, DWORD PTR _y$[ebp]
@@ -222,9 +222,9 @@ $L267:
 ; Line 52
 	mov	DWORD PTR _x2$[ebp], 319		; 0000013fH
 ; Line 54
-$L268:
+$L277:
 	cmp	DWORD PTR _x$[ebp], 319			; 0000013fH
-	jle	$L269
+	jle	$L278
 ; Line 56
 	mov	eax, DWORD PTR _y$[ebp]
 	sub	eax, DWORD PTR _y2$[ebp]
@@ -241,9 +241,9 @@ $L268:
 ; Line 57
 	mov	DWORD PTR _x$[ebp], 319			; 0000013fH
 ; Line 60
-$L269:
+$L278:
 	cmp	DWORD PTR _y2$[ebp], 0
-	jge	$L270
+	jge	$L279
 ; Line 62
 	mov	ecx, DWORD PTR _x$[ebp]
 	mov	eax, DWORD PTR _x2$[ebp]
@@ -258,9 +258,9 @@ $L269:
 ; Line 63
 	mov	DWORD PTR _y2$[ebp], 0
 ; Line 65
-$L270:
+$L279:
 	cmp	DWORD PTR _y$[ebp], 0
-	jge	$L271
+	jge	$L280
 ; Line 67
 	mov	ecx, DWORD PTR _x2$[ebp]
 	mov	eax, DWORD PTR _x$[ebp]
@@ -275,9 +275,9 @@ $L270:
 ; Line 68
 	mov	DWORD PTR _y$[ebp], 0
 ; Line 71
-$L271:
+$L280:
 	cmp	DWORD PTR _y2$[ebp], 199		; 000000c7H
-	jle	$L272
+	jle	$L281
 ; Line 73
 	mov	eax, DWORD PTR _x2$[ebp]
 	sub	eax, DWORD PTR _x$[ebp]
@@ -294,9 +294,9 @@ $L271:
 ; Line 74
 	mov	DWORD PTR _y2$[ebp], 199		; 000000c7H
 ; Line 76
-$L272:
+$L281:
 	cmp	DWORD PTR _y$[ebp], 199			; 000000c7H
-	jle	$L273
+	jle	$L282
 ; Line 78
 	mov	eax, DWORD PTR _x$[ebp]
 	sub	eax, DWORD PTR _x2$[ebp]
@@ -313,7 +313,7 @@ $L272:
 ; Line 79
 	mov	DWORD PTR _y$[ebp], 199			; 000000c7H
 ; Line 82
-$L273:
+$L282:
 	mov	eax, DWORD PTR _y2$[ebp]
 	sub	eax, DWORD PTR _y$[ebp]
 	mov	DWORD PTR _shortLen$[ebp], eax
@@ -322,35 +322,35 @@ $L273:
 	sub	eax, DWORD PTR _x$[ebp]
 	mov	DWORD PTR _longLen$[ebp], eax
 ; Line 84
-	mov	eax, DWORD PTR _longLen$[ebp]
+	mov	eax, DWORD PTR _shortLen$[ebp]
 	push	eax
 	call	_abs
 	add	esp, 4
 	mov	ebx, eax
-	mov	eax, DWORD PTR _shortLen$[ebp]
+	mov	eax, DWORD PTR _longLen$[ebp]
 	push	eax
 	call	_abs
 	add	esp, 4
 	cmp	ebx, eax
-	jge	$L275
+	jle	$L284
 ; Line 85
 	mov	eax, DWORD PTR _shortLen$[ebp]
-	mov	DWORD PTR _swap$276[ebp], eax
+	mov	DWORD PTR _swap$285[ebp], eax
 ; Line 86
 	mov	eax, DWORD PTR _longLen$[ebp]
 	mov	DWORD PTR _shortLen$[ebp], eax
 ; Line 87
-	mov	eax, DWORD PTR _swap$276[ebp]
+	mov	eax, DWORD PTR _swap$285[ebp]
 	mov	DWORD PTR _longLen$[ebp], eax
 ; Line 88
 	mov	DWORD PTR _yLonger$[ebp], 1
 ; Line 90
-$L275:
+$L284:
 	mov	eax, DWORD PTR _longLen$[ebp]
 	mov	DWORD PTR _endVal$[ebp], eax
 ; Line 91
 	cmp	DWORD PTR _longLen$[ebp], 0
-	jge	$L277
+	jge	$L286
 ; Line 92
 	mov	DWORD PTR _incrementVal$[ebp], -1
 ; Line 93
@@ -360,27 +360,27 @@ $L275:
 	neg	eax
 	mov	DWORD PTR _longLen$[ebp], eax
 ; Line 96
-	jmp	$L278
-$L277:
+	jmp	$L287
+$L286:
 ; Line 97
 	mov	DWORD PTR _incrementVal$[ebp], 1
 ; Line 98
 	mov	DWORD PTR _addrInc$[ebp], 320		; 00000140H
 ; Line 99
-$L278:
+$L287:
 ; Line 100
 	cmp	DWORD PTR _longLen$[ebp], 0
-	jne	$L279
+	jne	$L288
 	mov	DWORD PTR _decInc$[ebp], 0
 ; Line 101
-	jmp	$L280
-$L279:
+	jmp	$L289
+$L288:
 	mov	eax, DWORD PTR _shortLen$[ebp]
 	shl	eax, 16					; 00000010H
 	cdq
 	idiv	DWORD PTR _longLen$[ebp]
 	mov	DWORD PTR _decInc$[ebp], eax
-$L280:
+$L289:
 ; Line 102
 	mov	DWORD PTR _j$[ebp], 0
 ; Line 103
@@ -392,19 +392,19 @@ $L280:
 	mov	DWORD PTR _address$[ebp], eax
 ; Line 105
 	cmp	DWORD PTR _yLonger$[ebp], 0
-	je	$L281
+	je	$L290
 ; Line 107
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L282
-$L283:
+	jmp	$L291
+$L292:
 	mov	eax, DWORD PTR _incrementVal$[ebp]
 	add	DWORD PTR _i$[ebp], eax
 	mov	eax, DWORD PTR _addrInc$[ebp]
 	add	DWORD PTR _address$[ebp], eax
-$L282:
+$L291:
 	mov	eax, DWORD PTR _i$[ebp]
 	cmp	DWORD PTR _endVal$[ebp], eax
-	je	$L284
+	je	$L293
 ; Line 109
 	mov	al, BYTE PTR _color$[ebp]
 	mov	ecx, DWORD PTR _j$[ebp]
@@ -415,23 +415,23 @@ $L282:
 	mov	eax, DWORD PTR _decInc$[ebp]
 	add	DWORD PTR _j$[ebp], eax
 ; Line 112
-	jmp	$L283
-$L284:
+	jmp	$L292
+$L293:
 ; Line 114
-	jmp	$L285
-$L281:
+	jmp	$L294
+$L290:
 ; Line 115
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L286
-$L287:
+	jmp	$L295
+$L296:
 	mov	eax, DWORD PTR _incrementVal$[ebp]
 	add	DWORD PTR _i$[ebp], eax
 	mov	eax, DWORD PTR _incrementVal$[ebp]
 	add	DWORD PTR _address$[ebp], eax
-$L286:
+$L295:
 	mov	eax, DWORD PTR _i$[ebp]
 	cmp	DWORD PTR _endVal$[ebp], eax
-	je	$L288
+	je	$L297
 ; Line 116
 	mov	al, BYTE PTR _color$[ebp]
 	mov	ecx, DWORD PTR _j$[ebp]
@@ -444,12 +444,12 @@ $L286:
 	mov	eax, DWORD PTR _decInc$[ebp]
 	add	DWORD PTR _j$[ebp], eax
 ; Line 120
-	jmp	$L287
-$L288:
+	jmp	$L296
+$L297:
 ; Line 121
-$L285:
+$L294:
 ; Line 124
-$L252:
+$L261:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -509,35 +509,35 @@ _drawline PROC NEAR
 ; Line 135
 	movsx	eax, WORD PTR _dx$[ebp]
 	test	eax, eax
-	jl	$L382
+	jl	$L391
 	movsx	eax, WORD PTR _dx$[ebp]
 	test	eax, eax
-	jle	$L384
+	jle	$L393
 	mov	WORD PTR _sdx$[ebp], 1
-	jmp	$L385
-$L384:
+	jmp	$L394
+$L393:
 	mov	WORD PTR _sdx$[ebp], 0
-$L385:
-	jmp	$L383
-$L382:
+$L394:
+	jmp	$L392
+$L391:
 	mov	WORD PTR _sdx$[ebp], -1
-$L383:
+$L392:
 ; Line 136
 	movsx	eax, WORD PTR _dy$[ebp]
 	test	eax, eax
-	jl	$L386
+	jl	$L395
 	movsx	eax, WORD PTR _dy$[ebp]
 	test	eax, eax
-	jle	$L388
+	jle	$L397
 	mov	WORD PTR _sdy$[ebp], 1
-	jmp	$L389
-$L388:
+	jmp	$L398
+$L397:
 	mov	WORD PTR _sdy$[ebp], 0
-$L389:
-	jmp	$L387
-$L386:
+$L398:
+	jmp	$L396
+$L395:
 	mov	WORD PTR _sdy$[ebp], -1
-$L387:
+$L396:
 ; Line 137
 	movsx	eax, WORD PTR _dyabs$[ebp]
 	sar	eax, 1
@@ -555,25 +555,25 @@ $L387:
 ; Line 142
 	movsx	eax, WORD PTR _px$[ebp]
 	test	eax, eax
-	jl	$L309
+	jl	$L318
 	movsx	eax, WORD PTR _px$[ebp]
 	cmp	eax, 319				; 0000013fH
-	jg	$L309
+	jg	$L318
 	movsx	eax, WORD PTR _py$[ebp]
 	test	eax, eax
-	jl	$L309
+	jl	$L318
 	movsx	eax, WORD PTR _py$[ebp]
 	cmp	eax, 199				; 000000c7H
-	jle	$L308
-$L309:
+	jle	$L317
+$L318:
 ; Line 143
-	jmp	$L295
+	jmp	$L304
 ; Line 146
-$L308:
+$L317:
 	movsx	eax, WORD PTR _py$[ebp]
-	shl	eax, 8
+	shl	eax, 6
 	movsx	ecx, WORD PTR _py$[ebp]
-	shl	ecx, 6
+	shl	ecx, 8
 	add	eax, ecx
 	movsx	ecx, WORD PTR _px$[ebp]
 	add	eax, ecx
@@ -591,17 +591,17 @@ $L308:
 	movsx	eax, WORD PTR _dyabs$[ebp]
 	movsx	ecx, WORD PTR _dxabs$[ebp]
 	cmp	eax, ecx
-	jg	$L310
+	jg	$L319
 ; Line 155
 	mov	WORD PTR _i$[ebp], 0
-	jmp	$L311
-$L312:
+	jmp	$L320
+$L321:
 	inc	WORD PTR _i$[ebp]
-$L311:
-	movsx	eax, WORD PTR _dxabs$[ebp]
-	movsx	ecx, WORD PTR _i$[ebp]
+$L320:
+	movsx	eax, WORD PTR _i$[ebp]
+	movsx	ecx, WORD PTR _dxabs$[ebp]
 	cmp	eax, ecx
-	jle	$L313
+	jge	$L322
 ; Line 157
 	movsx	eax, WORD PTR _y$[ebp]
 	movsx	ecx, WORD PTR _dyabs$[ebp]
@@ -611,7 +611,7 @@ $L311:
 	movsx	eax, WORD PTR _y$[ebp]
 	movsx	ecx, WORD PTR _dxabs$[ebp]
 	cmp	eax, ecx
-	jl	$L314
+	jl	$L323
 ; Line 160
 	movsx	eax, WORD PTR _y$[ebp]
 	movsx	ecx, WORD PTR _dxabs$[ebp]
@@ -630,7 +630,7 @@ $L311:
 	add	eax, ecx
 	mov	WORD PTR _address$[ebp], ax
 ; Line 164
-$L314:
+$L323:
 	movsx	eax, WORD PTR _px$[ebp]
 	movsx	ecx, WORD PTR _sdx$[ebp]
 	add	eax, ecx
@@ -638,23 +638,23 @@ $L314:
 ; Line 166
 	movsx	eax, WORD PTR _px$[ebp]
 	test	eax, eax
-	jl	$L316
+	jl	$L325
 	movsx	eax, WORD PTR _px$[ebp]
 	cmp	eax, 319				; 0000013fH
-	jg	$L316
+	jg	$L325
 	movsx	eax, WORD PTR _py$[ebp]
 	test	eax, eax
-	jl	$L316
+	jl	$L325
 	movsx	eax, WORD PTR _py$[ebp]
 	cmp	eax, 199				; 000000c7H
-	jle	$L315
-$L316:
+	jle	$L324
+$L325:
 ; Line 167
-	jmp	$L295
+	jmp	$L304
 ; Line 170
-$L315:
-	movsx	eax, WORD PTR _sdx$[ebp]
-	movsx	ecx, WORD PTR _address$[ebp]
+$L324:
+	movsx	eax, WORD PTR _address$[ebp]
+	movsx	ecx, WORD PTR _sdx$[ebp]
 	add	eax, ecx
 	mov	WORD PTR _address$[ebp], ax
 ; Line 171
@@ -667,21 +667,21 @@ $L315:
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
 ; Line 172
-	jmp	$L312
-$L313:
+	jmp	$L321
+$L322:
 ; Line 174
-	jmp	$L317
-$L310:
+	jmp	$L326
+$L319:
 ; Line 176
 	mov	WORD PTR _i$[ebp], 0
-	jmp	$L318
-$L319:
+	jmp	$L327
+$L328:
 	inc	WORD PTR _i$[ebp]
-$L318:
-	movsx	eax, WORD PTR _dyabs$[ebp]
-	movsx	ecx, WORD PTR _i$[ebp]
+$L327:
+	movsx	eax, WORD PTR _i$[ebp]
+	movsx	ecx, WORD PTR _dyabs$[ebp]
 	cmp	eax, ecx
-	jle	$L320
+	jge	$L329
 ; Line 178
 	movsx	eax, WORD PTR _x$[ebp]
 	movsx	ecx, WORD PTR _dxabs$[ebp]
@@ -691,7 +691,7 @@ $L318:
 	movsx	eax, WORD PTR _x$[ebp]
 	movsx	ecx, WORD PTR _dyabs$[ebp]
 	cmp	eax, ecx
-	jl	$L321
+	jl	$L330
 ; Line 181
 	movsx	eax, WORD PTR _x$[ebp]
 	movsx	ecx, WORD PTR _dyabs$[ebp]
@@ -703,12 +703,12 @@ $L318:
 	add	eax, ecx
 	mov	WORD PTR _px$[ebp], ax
 ; Line 183
-	movsx	eax, WORD PTR _sdx$[ebp]
-	movsx	ecx, WORD PTR _address$[ebp]
+	movsx	eax, WORD PTR _address$[ebp]
+	movsx	ecx, WORD PTR _sdx$[ebp]
 	add	eax, ecx
 	mov	WORD PTR _address$[ebp], ax
 ; Line 185
-$L321:
+$L330:
 	movsx	eax, WORD PTR _py$[ebp]
 	movsx	ecx, WORD PTR _sdy$[ebp]
 	add	eax, ecx
@@ -716,21 +716,21 @@ $L321:
 ; Line 187
 	movsx	eax, WORD PTR _px$[ebp]
 	test	eax, eax
-	jl	$L323
+	jl	$L332
 	movsx	eax, WORD PTR _px$[ebp]
 	cmp	eax, 319				; 0000013fH
-	jg	$L323
+	jg	$L332
 	movsx	eax, WORD PTR _py$[ebp]
 	test	eax, eax
-	jl	$L323
+	jl	$L332
 	movsx	eax, WORD PTR _py$[ebp]
 	cmp	eax, 199				; 000000c7H
-	jle	$L322
-$L323:
+	jle	$L331
+$L332:
 ; Line 188
-	jmp	$L295
+	jmp	$L304
 ; Line 191
-$L322:
+$L331:
 	movsx	eax, WORD PTR _sdy$[ebp]
 	lea	eax, DWORD PTR [eax+eax*4]
 	shl	eax, 6
@@ -747,12 +747,12 @@ $L322:
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
 ; Line 194
-	jmp	$L319
-$L320:
+	jmp	$L328
+$L329:
 ; Line 195
-$L317:
+$L326:
 ; Line 196
-$L295:
+$L304:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -791,7 +791,7 @@ _swap_buffers PROC NEAR
 	call	_memset
 	add	esp, 12					; 0000000cH
 ; Line 202
-$L326:
+$L335:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -816,36 +816,36 @@ _draw_span PROC NEAR
 	push	edi
 ; Line 206
 	cmp	DWORD PTR _y$[ebp], 0
-	jl	$L334
+	jl	$L343
 	cmp	DWORD PTR _y$[ebp], 200			; 000000c8H
-	jl	$L333
-$L334:
-	jmp	$L331
+	jl	$L342
+$L343:
+	jmp	$L340
 ; Line 207
-$L333:
+$L342:
 	cmp	DWORD PTR _x1$[ebp], 0
-	jge	$L335
+	jge	$L344
 	mov	DWORD PTR _x1$[ebp], 0
 ; Line 208
-$L335:
+$L344:
 	cmp	DWORD PTR _x1$[ebp], 320		; 00000140H
-	jl	$L336
+	jl	$L345
 	mov	DWORD PTR _x1$[ebp], 319		; 0000013fH
 ; Line 209
-$L336:
+$L345:
 	cmp	DWORD PTR _x2$[ebp], 0
-	jge	$L337
+	jge	$L346
 	mov	DWORD PTR _x2$[ebp], 0
 ; Line 210
-$L337:
+$L346:
 	cmp	DWORD PTR _x2$[ebp], 320		; 00000140H
-	jl	$L338
+	jl	$L347
 	mov	DWORD PTR _x2$[ebp], 319		; 0000013fH
 ; Line 211
-$L338:
+$L347:
 	mov	eax, DWORD PTR _x1$[ebp]
 	cmp	DWORD PTR _x2$[ebp], eax
-	jge	$L339
+	jge	$L348
 ; Line 212
 	mov	eax, DWORD PTR _x1$[ebp]
 	mov	DWORD PTR _t$[ebp], eax
@@ -854,7 +854,7 @@ $L338:
 	mov	eax, DWORD PTR _t$[ebp]
 	mov	DWORD PTR _x2$[ebp], eax
 ; Line 214
-$L339:
+$L348:
 	mov	eax, DWORD PTR _x2$[ebp]
 	sub	eax, DWORD PTR _x1$[ebp]
 	push	eax
@@ -870,7 +870,7 @@ $L339:
 	call	_memset
 	add	esp, 12					; 0000000cH
 ; Line 215
-$L331:
+$L340:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -911,37 +911,37 @@ _fill_tri PROC NEAR
 	push	edi
 ; Line 224
 	cmp	DWORD PTR _x1$[ebp], -320		; fffffec0H
-	jl	$L361
+	jl	$L370
 	cmp	DWORD PTR _x1$[ebp], 640		; 00000280H
-	jg	$L361
+	jg	$L370
 	cmp	DWORD PTR _x2$[ebp], -320		; fffffec0H
-	jl	$L361
+	jl	$L370
 	cmp	DWORD PTR _x2$[ebp], 640		; 00000280H
-	jg	$L361
+	jg	$L370
 	cmp	DWORD PTR _x3$[ebp], -320		; fffffec0H
-	jl	$L361
+	jl	$L370
 	cmp	DWORD PTR _x3$[ebp], 640		; 00000280H
-	jg	$L361
+	jg	$L370
 	cmp	DWORD PTR _y1$[ebp], -200		; ffffff38H
-	jl	$L361
+	jl	$L370
 	cmp	DWORD PTR _y1$[ebp], 400		; 00000190H
-	jg	$L361
+	jg	$L370
 	cmp	DWORD PTR _y2$[ebp], -200		; ffffff38H
-	jl	$L361
+	jl	$L370
 	cmp	DWORD PTR _y2$[ebp], 400		; 00000190H
-	jg	$L361
+	jg	$L370
 	cmp	DWORD PTR _y3$[ebp], -200		; ffffff38H
-	jl	$L361
+	jl	$L370
 	cmp	DWORD PTR _y3$[ebp], 400		; 00000190H
-	jle	$L360
-$L361:
+	jle	$L369
+$L370:
 ; Line 227
-	jmp	$L347
+	jmp	$L356
 ; Line 233
-$L360:
+$L369:
 	mov	eax, DWORD PTR _y1$[ebp]
 	cmp	DWORD PTR _y2$[ebp], eax
-	jge	$L362
+	jge	$L371
 ; Line 234
 	mov	eax, DWORD PTR _x1$[ebp]
 	mov	DWORD PTR _t$[ebp], eax
@@ -957,10 +957,10 @@ $L360:
 	mov	eax, DWORD PTR _t$[ebp]
 	mov	DWORD PTR _y2$[ebp], eax
 ; Line 237
-$L362:
+$L371:
 	mov	eax, DWORD PTR _y2$[ebp]
 	cmp	DWORD PTR _y3$[ebp], eax
-	jge	$L363
+	jge	$L372
 ; Line 238
 	mov	eax, DWORD PTR _x2$[ebp]
 	mov	DWORD PTR _t$[ebp], eax
@@ -976,10 +976,10 @@ $L362:
 	mov	eax, DWORD PTR _t$[ebp]
 	mov	DWORD PTR _y3$[ebp], eax
 ; Line 241
-$L363:
+$L372:
 	mov	eax, DWORD PTR _y1$[ebp]
 	cmp	DWORD PTR _y2$[ebp], eax
-	jge	$L364
+	jge	$L373
 ; Line 242
 	mov	eax, DWORD PTR _x1$[ebp]
 	mov	DWORD PTR _t$[ebp], eax
@@ -995,7 +995,7 @@ $L363:
 	mov	eax, DWORD PTR _t$[ebp]
 	mov	DWORD PTR _y2$[ebp], eax
 ; Line 245
-$L364:
+$L373:
 	mov	eax, DWORD PTR _y1$[ebp]
 	mov	DWORD PTR _y$[ebp], eax
 ; Line 246
@@ -1008,16 +1008,16 @@ $L364:
 ; Line 250
 	mov	eax, DWORD PTR _y1$[ebp]
 	cmp	DWORD PTR _y3$[ebp], eax
-	jne	$L365
-	jmp	$L347
+	jne	$L374
+	jmp	$L356
 ; Line 251
-$L365:
+$L374:
 	mov	eax, DWORD PTR _y1$[ebp]
 	cmp	DWORD PTR _y2$[ebp], eax
-	jne	$L390
+	jne	$L399
 	mov	DWORD PTR _s1$[ebp], 0
-	jmp	$L391
-$L390:
+	jmp	$L400
+$L399:
 	mov	eax, DWORD PTR _y2$[ebp]
 	sub	eax, DWORD PTR _y1$[ebp]
 	shl	eax, 16					; 00000010H
@@ -1029,7 +1029,7 @@ $L390:
 	call	_fixed_div
 	add	esp, 8
 	mov	DWORD PTR _s1$[ebp], eax
-$L391:
+$L400:
 ; Line 252
 	mov	eax, DWORD PTR _y3$[ebp]
 	sub	eax, DWORD PTR _y1$[ebp]
@@ -1045,10 +1045,10 @@ $L391:
 ; Line 253
 	mov	eax, DWORD PTR _y2$[ebp]
 	cmp	DWORD PTR _y3$[ebp], eax
-	jne	$L392
+	jne	$L401
 	mov	DWORD PTR _s2$[ebp], 0
-	jmp	$L393
-$L392:
+	jmp	$L402
+$L401:
 	mov	eax, DWORD PTR _y3$[ebp]
 	sub	eax, DWORD PTR _y2$[ebp]
 	shl	eax, 16					; 00000010H
@@ -1060,15 +1060,15 @@ $L392:
 	call	_fixed_div
 	add	esp, 8
 	mov	DWORD PTR _s2$[ebp], eax
-$L393:
+$L402:
 ; Line 255
 	mov	eax, DWORD PTR _y1$[ebp]
 	cmp	DWORD PTR _y2$[ebp], eax
-	jne	$L366
+	jne	$L375
 ; Line 257
 	mov	eax, DWORD PTR _x1$[ebp]
 	cmp	DWORD PTR _x2$[ebp], eax
-	jle	$L367
+	jle	$L376
 ; Line 258
 	mov	eax, DWORD PTR _x1$[ebp]
 	shl	eax, 16					; 00000010H
@@ -1078,8 +1078,8 @@ $L393:
 	shl	eax, 16					; 00000010H
 	mov	DWORD PTR _end$[ebp], eax
 ; Line 260
-	jmp	$L368
-$L367:
+	jmp	$L377
+$L376:
 ; Line 261
 	mov	eax, DWORD PTR _x2$[ebp]
 	shl	eax, 16					; 00000010H
@@ -1089,12 +1089,12 @@ $L367:
 	shl	eax, 16					; 00000010H
 	mov	DWORD PTR _end$[ebp], eax
 ; Line 263
-$L368:
+$L377:
 ; Line 264
-$L370:
+$L379:
 	mov	eax, DWORD PTR _y$[ebp]
 	cmp	DWORD PTR _y3$[ebp], eax
-	jle	$L371
+	jle	$L380
 ; Line 265
 	mov	eax, DWORD PTR _start$[ebp]
 	sar	eax, 16					; 00000010H
@@ -1117,32 +1117,32 @@ $L370:
 ; Line 271
 	mov	eax, DWORD PTR _x1$[ebp]
 	cmp	DWORD PTR _x2$[ebp], eax
-	jg	$L394
+	jg	$L403
 	mov	eax, DWORD PTR _s2$[ebp]
 	add	DWORD PTR _start$[ebp], eax
-	jmp	$L395
-$L394:
+	jmp	$L404
+$L403:
 	mov	eax, DWORD PTR _s3$[ebp]
 	add	DWORD PTR _start$[ebp], eax
-$L395:
+$L404:
 ; Line 272
 	mov	eax, DWORD PTR _x1$[ebp]
 	cmp	DWORD PTR _x2$[ebp], eax
-	jg	$L396
+	jg	$L405
 	mov	eax, DWORD PTR _s3$[ebp]
 	add	DWORD PTR _end$[ebp], eax
-	jmp	$L397
-$L396:
+	jmp	$L406
+$L405:
 	mov	eax, DWORD PTR _s2$[ebp]
 	add	DWORD PTR _end$[ebp], eax
-$L397:
+$L406:
 ; Line 273
 	inc	DWORD PTR _y$[ebp]
 ; Line 274
-	jmp	$L370
-$L371:
+	jmp	$L379
+$L380:
 ; Line 277
-$L366:
+$L375:
 	mov	eax, DWORD PTR _y2$[ebp]
 	sub	eax, DWORD PTR _y1$[ebp]
 	shl	eax, 16					; 00000010H
@@ -1155,9 +1155,9 @@ $L366:
 	add	eax, DWORD PTR _x1$[ebp]
 	mov	DWORD PTR _xmid$[ebp], eax
 ; Line 281
-	mov	eax, DWORD PTR _x2$[ebp]
-	cmp	DWORD PTR _xmid$[ebp], eax
-	jge	$L372
+	mov	eax, DWORD PTR _xmid$[ebp]
+	cmp	DWORD PTR _x2$[ebp], eax
+	jle	$L381
 ; Line 282
 	mov	eax, DWORD PTR _s1$[ebp]
 	mov	DWORD PTR _se$[ebp], eax
@@ -1165,8 +1165,8 @@ $L366:
 	mov	eax, DWORD PTR _s3$[ebp]
 	mov	DWORD PTR _ss$[ebp], eax
 ; Line 284
-	jmp	$L373
-$L372:
+	jmp	$L382
+$L381:
 ; Line 285
 	mov	eax, DWORD PTR _s3$[ebp]
 	mov	DWORD PTR _se$[ebp], eax
@@ -1174,33 +1174,33 @@ $L372:
 	mov	eax, DWORD PTR _s1$[ebp]
 	mov	DWORD PTR _ss$[ebp], eax
 ; Line 287
-$L373:
+$L382:
 ; Line 292
-$L375:
+$L384:
 	mov	eax, DWORD PTR _y$[ebp]
 	cmp	DWORD PTR _y3$[ebp], eax
-	jle	$L376
+	jle	$L385
 ; Line 293
 	mov	eax, DWORD PTR _y$[ebp]
 	cmp	DWORD PTR _y2$[ebp], eax
-	jne	$L377
+	jne	$L386
 ; Line 294
-	mov	eax, DWORD PTR _x2$[ebp]
-	cmp	DWORD PTR _xmid$[ebp], eax
-	jge	$L378
+	mov	eax, DWORD PTR _xmid$[ebp]
+	cmp	DWORD PTR _x2$[ebp], eax
+	jle	$L387
 ; Line 295
 	mov	eax, DWORD PTR _s2$[ebp]
 	mov	DWORD PTR _se$[ebp], eax
 ; Line 296
-	jmp	$L379
-$L378:
+	jmp	$L388
+$L387:
 ; Line 297
 	mov	eax, DWORD PTR _s2$[ebp]
 	mov	DWORD PTR _ss$[ebp], eax
 ; Line 298
-$L379:
+$L388:
 ; Line 302
-$L377:
+$L386:
 	mov	eax, DWORD PTR _start$[ebp]
 	sar	eax, 16					; 00000010H
 	mov	DWORD PTR _xa$[ebp], eax
@@ -1228,10 +1228,10 @@ $L377:
 ; Line 307
 	inc	DWORD PTR _y$[ebp]
 ; Line 308
-	jmp	$L375
-$L376:
+	jmp	$L384
+$L385:
 ; Line 312
-$L347:
+$L356:
 	pop	edi
 	pop	esi
 	pop	ebx

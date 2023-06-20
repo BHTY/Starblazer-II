@@ -178,16 +178,16 @@ void set_fov_y(FIXED fov){
 FIXED find_illumination(VEC3 *x1, VEC3 *x2, VEC3 *x3, VEC3 *light) {
 	VEC3 look;
 	VEC3 norm;
-	VEC3 v1 = x2;
-	VEC3 v2 = x3;
-	vec3_sub(x1, v1);
-	vec3_sub(x1, v2);
-	vec3_cross(v1, v2, norm);
-	vec3_normalize(norm);
-	look = x1;
-	vec3_sub(light, look);
-	vec3_normalize(look);
-	return int_abs(vec3_dot(look, norm));
+	VEC3 v1 = *x2;
+	VEC3 v2 = *x3;
+	vec3_subtract(&x1, &v1);
+	vec3_subtract(&x1, &v2);
+	vec3_cross(&v1, &v2, &norm);
+	vec3_normalize(&norm);
+	look = *x1;
+	vec3_subtract(light, &look);
+	vec3_normalize(&look);
+	return int_abs(vec3_dot(&look, &norm));
 }
 bool_t clip_polygon(TRI* tri){
 	VEC3 v0 = SL_VERTS[tri->v0];
@@ -215,6 +215,7 @@ bool_t clip_polygon(TRI* tri){
 void render_end(bool_t shading){
 	int i;
 	uint8 c;
+	FIXED illum, r, g, b;
 	int x1, y1, x2, y2, x3, y3;
 
 	for (i = 0; i < SL_TRIANGLE_INDEX; i++){
@@ -229,7 +230,12 @@ void render_end(bool_t shading){
 			y3 = SL_VERTS[SL_TRIANGLES[i].v2].y;
 
 			if (shading){
-				fill_tri(x1, y1, x2, y2, x3, y3, c);
+				illum = find_illumination(&(SL_VERTS[SL_TRIANGLES[i].v0]), &(SL_VERTS[SL_TRIANGLES[i].v1]), &(SL_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS));
+				r = fixed_mul(c & 224, illum + 1);
+				g = fixed_mul(c & 28, illum + 1);
+				b = fixed_mul(c & 3, illum + 1);
+
+				fill_tri(x1, y1, x2, y2, x3, y3, r | g | b);
 			}
 			else{
 				//printf("Color: %d\n", c);

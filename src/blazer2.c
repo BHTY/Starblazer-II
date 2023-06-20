@@ -41,6 +41,7 @@ MAT3 rot_mat;
 VEC3 pos_delta;
 
 VEC3 laser_velocity;
+bool_t shading = 0;
 
 void explode_at(VEC3* pos){
 	int i;
@@ -360,6 +361,10 @@ void blazer2_module(){
 	quat_yaw(angle_multiply(player_fighter.turn_rate, joy.yaw), &(StarblazerEntities[0]->orientation));
 	quat_roll(angle_multiply(player_fighter.turn_rate, joy.roll), &(StarblazerEntities[0]->orientation));
 
+	if (SG_KeyDown('P')){
+		shading = !shading;
+	}
+
 	//shoot
 	if (joy.fire && (player_battery >= player_weapon.energy_draw) && firing_cooldown == 0){
 		player_battery -= player_weapon.energy_draw;
@@ -666,7 +671,7 @@ void blazer2_draw(){
 	quat_tomat(&(StarblazerEntities[0]->orientation), &SL_CAMERA_ORIENTATION);
 
 	//draw 3d scene geometry
-	draw_scene(&(StarblazerEntities[0]->pos), StarblazerEntities[0]->orientation, 1, title_stars, 500);
+	draw_scene(&(StarblazerEntities[0]->pos), StarblazerEntities[0]->orientation, shading, title_stars, 500);
 
 	//draw targeting reticle
 	draw_crosshair();
