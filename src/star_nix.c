@@ -25,7 +25,9 @@ int window_width;
 
 SDL_Window *window;
 SDL_Renderer *renderer;
+SDL_Surface *surface;
 SDL_Texture *texture;
+SDL_Palette *palette;
 
 float mouseFactorX, mouseFactorY;
 bool_t mouseDownLeft = 0;
@@ -54,10 +56,13 @@ void SG_Init(int argc, char** argv){
 	
 	mouseFactorX = 320.0 / window_width;
 	mouseFactorY = 200.0 / window_height;
-	texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, 320, 200);
+	//texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, 320, 200);
+	surface = SDL_CreateRGBSurfaceWithFormat(0, 320, 200, 8, SDL_PIXELFORMAT_INDEX8);
+	palette = SDL_AllocPalette(256);
 	int *p;
 	FBPTR = malloc(320*200);
-	SDL_LockTexture(texture, NULL, (void**)&frontbuffer, &p);
+	//SDL_LockTexture(texture, NULL, (void**)&frontbuffer, &p);
+	frontbuffer = surface->pixels;
 	memset(keys, 0, 256 * sizeof(bool_t));
 	//joystick stuff...
 }
@@ -79,16 +84,20 @@ bool_t SG_KeyDown(char key){
 }
 
 void SG_DrawFrame(){
-	SDL_UnlockTexture(texture);
+	//SDL_UnlockTexture(texture);
+	texture = SDL_CreateTextureFromSurface(renderer, surface);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
 	SDL_RenderPresent(renderer);
+	SDL_DestroyTexture(texture);
 	int *p;
-	SDL_LockTexture(texture, NULL, (void**)&frontbuffer, &p);
+	//SDL_LockTexture(texture, NULL, (void**)&frontbuffer, &p);
 	memset(FBPTR, 0, 320*200);
 }
 
 void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){ //do the windows RealizePalette nonsense
-	
+	SDL_Color col = {r, g, b};
+	SDL_SetPaletteColors(palette, &col, index, 1);
+	SDL_SetSurfacePalette(surface, palette);
 }
 
 uint32 SG_GetTicks(){
