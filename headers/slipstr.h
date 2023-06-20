@@ -29,6 +29,7 @@ void polygon_zsort();
 void plotpoint_3d(VEC3 pt, uint8 color);
 void set_fov_x(FIXED);
 void set_fov_y(FIXED);
+FIXED find_illumination(VEC3 *x1, VEC3 *x2, VEC3 *x3, VEC3 *light); 
 void render_end(bool_t); //draws geometry - true is flat shading, false is wireframe
 
 #endif

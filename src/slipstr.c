@@ -175,7 +175,20 @@ void set_fov_y(FIXED fov){
 		b.) In adjacent offscreen quadrants (all negative x, positive offscreen X, positive offscreen Y, or negative Y)
 	then the polygon will be culled and not drawn (i.e. false will be returned). Otherwise, true will be returned
 */
-
+FIXED find_illumination(VEC3 *x1, VEC3 *x2, VEC3 *x3, VEC3 *light) {
+	VEC3 look;
+	VEC3 norm;
+	VEC3 v1 = x2;
+	VEC3 v2 = x3;
+	vec3_sub(x1, v1);
+	vec3_sub(x1, v2);
+	vec3_cross(v1, v2, norm);
+	vec3_normalize(norm);
+	look = x1;
+	vec3_sub(light, look);
+	vec3_normalize(look);
+	return int_abs(vec3_dot(look, norm));
+}
 bool_t clip_polygon(TRI* tri){
 	VEC3 v0 = SL_VERTS[tri->v0];
 	VEC3 v1 = SL_VERTS[tri->v1];

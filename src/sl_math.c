@@ -61,6 +61,15 @@ ANGLE angle_atan2(FIXED y, FIXED x) {
 	// TODO!
 	return 0;
 }
+FIXED fast_sqrt(FIXED n) {
+	FIXED x = n / 2;
+	int i;
+	// 4 iterations? is that enough? too many? idk
+	for (i = 0; i < 4; i++) {
+		x = (x + fixed_div(n, x)) / 2;
+	}
+	return x;
+}
 void vec3_add(VEC3 *a, VEC3 *b) {
 	b->x += a->x;
 	b->y += a->y;
@@ -71,6 +80,20 @@ void vec3_subtract(VEC3 *a, VEC3 *b) {
 	b->y -= a->y;
 	b->z -= a->z;
 }
+void vec3_cross(VEC3 *a, VEC3 *b, VEC3 *o) {
+	o->x = fixed_mul(a->y, b->z) - fixed_mul(a->z, b->y);
+	o->y = fixed_mul(a->z, b->x) - fixed_mul(a->x, b->z);
+	o->z = fixed_mul(a->x, b->y) - fixed_mul(a->y, b->x);
+}
+void vec3_normalize(VEC3 *x) {
+	FIXED magnitude = fast_sqrt(fixed_mul(x->x, x->x) + fixed_mul(x->y, x->y) + fixed_mul(x->z, x->z));
+	x->x = fixed_div(x->x, magnitude);
+	x->y = fixed_div(x->y, magnitude);
+	x->z = fixed_div(x->z, magnitude);
+}
+FIXED vec3_dot(VEC3 *a, VEC3 *b) {
+	return fixed_mul(a->x, b->x) + fixed_mul(a->y, b->y) + fixed_mul(a->z, b->z);
+} 
 void mat3_mul(MAT3 *a, VEC3 *b, VEC3 *dest) {
 	dest->x = fixed_mul(a->r[0].x, b->x) + fixed_mul(a->r[0].y, b->y) + fixed_mul(a->r[0].z, b->z);
 	dest->y = fixed_mul(a->r[1].x, b->x) + fixed_mul(a->r[1].y, b->y) + fixed_mul(a->r[1].z, b->z);

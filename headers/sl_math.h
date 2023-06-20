@@ -45,6 +45,9 @@ ANGLE angle_atan2(FIXED y, FIXED x);
 FIXED fast_sqrt(FIXED n);
 void vec3_add(VEC3 *a, VEC3 *b); //b += a
 void vec3_subtract(VEC3 *a, VEC3 *b); //b -= a
+void vec3_cross(VEC3 *a, VEC3 *b, VEC3 *o);
+void vec3_normalize(VEC3 *x);
+FIXED vec3_dot(VEC3 *a, VEC3 *b);
 void mat3_mul(MAT3* mat, VEC3* vec, VEC3* dest);
 void mat3_inv(MAT3* mat);
 void quat_pitch(SANGLE theta, QUAT* quat);
