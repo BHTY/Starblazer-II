@@ -207,10 +207,17 @@ _SG_GameInit ENDP
 _TEXT	ENDS
 PUBLIC	_SG_InitPalette
 EXTRN	_SG_SetPaletteIndex:NEAR
+EXTRN	_printf:NEAR
+_DATA	SEGMENT
+	ORG $+3
+$SG313	DB	'%d (i%d): %d %d %d', 0aH, 00H
+_DATA	ENDS
 _TEXT	SEGMENT
 _i$ = -20
-_n$ = -24
 _p$ = -4
+_r$ = -12
+_g$ = -16
+_b$ = -8
 _SG_InitPalette PROC NEAR
 ; Line 67
 	push	ebp
@@ -219,69 +226,116 @@ _SG_InitPalette PROC NEAR
 	push	ebx
 	push	esi
 	push	edi
-; Line 79
+; Line 87
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	$L306
 $L307:
 	inc	DWORD PTR _i$[ebp]
 $L306:
-	cmp	DWORD PTR _i$[ebp], 6
+	cmp	DWORD PTR _i$[ebp], 16			; 00000010H
 	jge	$L308
-; Line 80
-	mov	DWORD PTR _n$[ebp], 0
+; Line 88
+	test	BYTE PTR _i$[ebp], 4
+	je	$L322
+	test	BYTE PTR _i$[ebp], 8
+	je	$L324
+	mov	BYTE PTR _r$[ebp], 16			; 00000010H
+	jmp	$L325
+$L324:
+	mov	BYTE PTR _r$[ebp], 8
+$L325:
+	jmp	$L323
+$L322:
+	mov	BYTE PTR _r$[ebp], 0
+$L323:
+; Line 89
+	test	BYTE PTR _i$[ebp], 2
+	je	$L326
+	test	BYTE PTR _i$[ebp], 8
+	je	$L328
+	mov	BYTE PTR _g$[ebp], 16			; 00000010H
+	jmp	$L329
+$L328:
+	mov	BYTE PTR _g$[ebp], 8
+$L329:
+	jmp	$L327
+$L326:
+	mov	BYTE PTR _g$[ebp], 0
+$L327:
+; Line 90
+	test	BYTE PTR _i$[ebp], 1
+	je	$L330
+	test	BYTE PTR _i$[ebp], 8
+	je	$L332
+	mov	BYTE PTR _b$[ebp], 16			; 00000010H
+	jmp	$L333
+$L332:
+	mov	BYTE PTR _b$[ebp], 8
+$L333:
+	jmp	$L331
+$L330:
+	mov	BYTE PTR _b$[ebp], 0
+$L331:
+; Line 92
+	mov	DWORD PTR _p$[ebp], 0
 	jmp	$L309
 $L310:
-	inc	DWORD PTR _n$[ebp]
-$L309:
-	cmp	DWORD PTR _n$[ebp], 6
-	jge	$L311
-; Line 81
-	mov	DWORD PTR _p$[ebp], 0
-	jmp	$L312
-$L313:
 	inc	DWORD PTR _p$[ebp]
-$L312:
-	cmp	DWORD PTR _p$[ebp], 6
-	jge	$L314
-; Line 82
-	mov	eax, DWORD PTR _p$[ebp]
-	mov	ecx, eax
-	lea	eax, DWORD PTR [eax+eax*4]
-	lea	eax, DWORD PTR [eax+eax*4]
-	lea	eax, DWORD PTR [ecx+eax*2]
+$L309:
+	cmp	DWORD PTR _p$[ebp], 16			; 00000010H
+	jge	$L311
+; Line 93
+	xor	eax, eax
+	mov	al, BYTE PTR _b$[ebp]
+	imul	eax, DWORD PTR _p$[ebp]
 	push	eax
-	mov	eax, DWORD PTR _n$[ebp]
-	mov	ecx, eax
-	lea	eax, DWORD PTR [eax+eax*4]
-	lea	eax, DWORD PTR [eax+eax*4]
-	lea	eax, DWORD PTR [ecx+eax*2]
+	xor	eax, eax
+	mov	al, BYTE PTR _g$[ebp]
+	imul	eax, DWORD PTR _p$[ebp]
 	push	eax
-	mov	eax, DWORD PTR _i$[ebp]
-	mov	ecx, eax
-	lea	eax, DWORD PTR [eax+eax*4]
-	lea	eax, DWORD PTR [eax+eax*4]
-	lea	eax, DWORD PTR [ecx+eax*2]
+	xor	eax, eax
+	mov	al, BYTE PTR _r$[ebp]
+	imul	eax, DWORD PTR _p$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _i$[ebp]
-	shl	eax, 2
-	lea	eax, DWORD PTR [eax+eax*8]
-	mov	ecx, DWORD PTR _n$[ebp]
-	lea	ecx, DWORD PTR [ecx+ecx*2]
-	lea	eax, DWORD PTR [eax+ecx*2]
+	shl	eax, 4
 	add	eax, DWORD PTR _p$[ebp]
 	push	eax
 	call	_SG_SetPaletteIndex
 	add	esp, 16					; 00000010H
-; Line 83
-	jmp	$L313
-$L314:
-; Line 84
+; Line 95
+	cmp	DWORD PTR _i$[ebp], 12			; 0000000cH
+	jne	$L312
+; Line 96
+	xor	eax, eax
+	mov	al, BYTE PTR _b$[ebp]
+	imul	eax, DWORD PTR _p$[ebp]
+	push	eax
+	xor	eax, eax
+	mov	al, BYTE PTR _g$[ebp]
+	imul	eax, DWORD PTR _p$[ebp]
+	push	eax
+	xor	eax, eax
+	mov	al, BYTE PTR _r$[ebp]
+	imul	eax, DWORD PTR _p$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _p$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _i$[ebp]
+	shl	eax, 4
+	add	eax, DWORD PTR _p$[ebp]
+	push	eax
+	push	OFFSET FLAT:$SG313
+	call	_printf
+	add	esp, 24					; 00000018H
+; Line 98
+$L312:
 	jmp	$L310
 $L311:
-; Line 85
+; Line 99
 	jmp	$L307
 $L308:
-; Line 86
+; Line 100
 $L299:
 	pop	edi
 	pop	esi
@@ -291,42 +345,40 @@ $L299:
 _SG_InitPalette ENDP
 _TEXT	ENDS
 PUBLIC	_SG_WelcomeMessage
-EXTRN	_printf:NEAR
 _DATA	SEGMENT
+$SG315	DB	'Starblazer II Beta Version', 0aH, 00H
+$SG316	DB	'14:54:03', 00H
 	ORG $+3
-$SG316	DB	'Starblazer II Beta Version', 0aH, 00H
-$SG317	DB	'14:25:15', 00H
-	ORG $+3
-$SG318	DB	'Jun 20 2023', 00H
-$SG319	DB	'Build Time: %s %s', 0aH, 00H
+$SG317	DB	'Jun 20 2023', 00H
+$SG318	DB	'Build Time: %s %s', 0aH, 00H
 	ORG $+1
-$SG320	DB	'By Will Klees (Captain Will Starblazer) and Josh "Fixer"'
+$SG319	DB	'By Will Klees (Captain Will Starblazer) and Josh "Fixer"'
 	DB	' Piety', 0aH, 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _SG_WelcomeMessage PROC NEAR
-; Line 88
+; Line 102
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 89
-	push	OFFSET FLAT:$SG316
+; Line 103
+	push	OFFSET FLAT:$SG315
 	call	_printf
 	add	esp, 4
-; Line 90
+; Line 104
+	push	OFFSET FLAT:$SG316
 	push	OFFSET FLAT:$SG317
 	push	OFFSET FLAT:$SG318
-	push	OFFSET FLAT:$SG319
 	call	_printf
 	add	esp, 12					; 0000000cH
-; Line 91
-	push	OFFSET FLAT:$SG320
+; Line 105
+	push	OFFSET FLAT:$SG319
 	call	_printf
 	add	esp, 4
-; Line 92
-$L315:
+; Line 106
+$L314:
 	pop	edi
 	pop	esi
 	pop	ebx

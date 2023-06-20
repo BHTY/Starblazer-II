@@ -92,7 +92,7 @@ void title_draw(){
 	}
 
 	vputs("STARBLAZER", 0, 0, 3, 2, 39, 0);
-	vputs("    II", 0, 10, 3, 2, 252, 0);
+	vputs("    II", 0, 10, 3, 2, 207, 0); //252
 	vputs("BY WILL KLEES AND JOSH PIETY", 30, 100, 3, 2, 255, 0);
 
 	draw_scene(&title_camera, title_cam_ori, 1, 0, 0);

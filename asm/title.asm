@@ -462,7 +462,7 @@ $L576:
 	add	esp, 28					; 0000001cH
 ; Line 95
 	push	0
-	push	-4					; fffffffcH
+	push	-49					; ffffffcfH
 	push	2
 	push	3
 	push	10					; 0000000aH

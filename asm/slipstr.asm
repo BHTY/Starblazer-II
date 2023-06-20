@@ -823,9 +823,6 @@ _shading$ = 8
 _i$ = -32
 _c$ = -16
 _illum$ = -12
-_r$ = -8
-_g$ = -20
-_b$ = -4
 _x1$ = -24
 _y1$ = -40
 _x2$ = -28
@@ -950,46 +947,13 @@ $L487:
 	add	eax, edx
 	sar	eax, 2
 	mov	DWORD PTR _illum$[ebp], eax
-; Line 260
+; Line 267
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
-	mov	ecx, 36					; 00000024H
-	cdq
-	idiv	ecx
-	imul	eax, DWORD PTR _illum$[ebp]
-	sar	eax, 16					; 00000010H
-	mov	DWORD PTR _r$[ebp], eax
-; Line 261
-	xor	eax, eax
-	mov	al, BYTE PTR _c$[ebp]
-	mov	ecx, 36					; 00000024H
-	cdq
-	idiv	ecx
-	mov	ecx, 6
-	mov	eax, edx
-	cdq
-	idiv	ecx
-	imul	eax, DWORD PTR _illum$[ebp]
-	sar	eax, 16					; 00000010H
-	mov	DWORD PTR _g$[ebp], eax
-; Line 262
-	xor	eax, eax
-	mov	al, BYTE PTR _c$[ebp]
-	mov	ecx, 6
-	cdq
-	idiv	ecx
-	mov	eax, edx
-	imul	eax, DWORD PTR _illum$[ebp]
-	sar	eax, 16					; 00000010H
-	mov	DWORD PTR _b$[ebp], eax
-; Line 265
-	mov	eax, DWORD PTR _r$[ebp]
-	shl	eax, 2
-	lea	eax, DWORD PTR [eax+eax*8]
-	mov	ecx, DWORD PTR _g$[ebp]
-	lea	ecx, DWORD PTR [ecx+ecx*2]
-	lea	eax, DWORD PTR [eax+ecx*2]
-	add	eax, DWORD PTR _b$[ebp]
+	shl	eax, 4
+	mov	ecx, DWORD PTR _illum$[ebp]
+	sar	ecx, 12					; 0000000cH
+	or	eax, ecx
 	push	eax
 	mov	eax, DWORD PTR _y3$[ebp]
 	push	eax
@@ -1005,41 +969,41 @@ $L487:
 	push	eax
 	call	_fill_tri
 	add	esp, 28					; 0000001cH
-; Line 267
+; Line 269
 	jmp	$L492
 $L491:
-; Line 270
-	xor	eax, eax
-	mov	al, BYTE PTR _c$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y2$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x2$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y1$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x1$[ebp]
-	push	eax
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 271
-	xor	eax, eax
-	mov	al, BYTE PTR _c$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y3$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x3$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y1$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x1$[ebp]
-	push	eax
-	call	_drawline
-	add	esp, 20					; 00000014H
 ; Line 272
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
 	push	eax
+	mov	eax, DWORD PTR _y2$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x2$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	push	eax
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 273
+	xor	eax, eax
+	mov	al, BYTE PTR _c$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y3$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x3$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	push	eax
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 274
+	xor	eax, eax
+	mov	al, BYTE PTR _c$[ebp]
+	push	eax
 	mov	eax, DWORD PTR _y3$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _x3$[ebp]
@@ -1050,13 +1014,13 @@ $L491:
 	push	eax
 	call	_drawline
 	add	esp, 20					; 00000014H
-; Line 273
-$L492:
 ; Line 275
+$L492:
+; Line 277
 $L490:
 	jmp	$L488
 $L489:
-; Line 276
+; Line 278
 $L474:
 	pop	edi
 	pop	esi
