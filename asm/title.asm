@@ -483,7 +483,7 @@ $L576:
 ; Line 98
 	push	0
 	push	0
-	push	1
+	push	0
 	mov	eax, DWORD PTR _title_cam_ori+12
 	push	eax
 	mov	eax, DWORD PTR _title_cam_ori+8

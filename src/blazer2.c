@@ -14,7 +14,9 @@
 #define NUM_SHARDS 64
 
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
-char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
+//char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
+  char barcolors[22] = "\xe8\xe8\xc8\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
+	                                //|
 
 VEC3 title_stars[500];
 
@@ -624,11 +626,16 @@ void draw_battery(){
 	int block_pixels = 0;
 	int offset = 140;
 	int i;
-	int r;
-	uint8 g;
-	uint8 c;
+	int r = 0;
 
-	for (r = 7; r >= 0; r--){
+	for (i = 0; i < 40; i++){
+		if (player_battery >= i){
+			drawline(offset + i, 160, offset + i, 170, 160 | (r >> 4));
+		}
+		r += 6;
+	}
+
+	/*for (r = 7; r >= 0; r--){
 		g = 7 - r;
 		c = (r << 5) | (g >> 1); //<<2
 
@@ -646,7 +653,7 @@ void draw_battery(){
 		}
 
 		offset += 5;
-	}
+	}*/
 
 	drawline(139, 160, 180, 160, 0xff);
 	drawline(139, 170, 180, 170, 0xff);
