@@ -68,7 +68,7 @@ void title_init(){
 }
 
 void title_module(){
-	rot_hypercraft();
+	//rot_hypercraft();
 }
 
 void draw_cursor(int x, int y, uint8 clr){
@@ -106,5 +106,5 @@ void title_draw(){
 
 	ui_display_widgets();
 
-	draw_hypercraft(265, 160);
+	//draw_hypercraft(265, 160);
 }

@@ -51,8 +51,9 @@ COMM	_pos_delta:BYTE:0cH
 COMM	_laser_velocity:BYTE:0cH
 COMM	_tst:BYTE:0cH
 COMM	_tst2:BYTE:0cH
-_barcolors DB	0e8H, 0e8H, 0c8H, 0c4H, 0c4H, 0a0H, 0a8H, 0a8H, 0acH, 08cH
-	DB	08cH, 090H, 'tuUYZ:>', 01fH, 01fH, 01fH
+_barcolors DB	0e8H, 0e8H, 0c8H, 0ccH, 0ccH, 0caH, 0e8H, 0e8H, 0e8H, 0e8H
+	DB	0e8H, 0e8H, 0e8H, 0e8H, 0f8H, 0f8H, 0b8H, 0b8H, 0bcH, 0bfH, 0bfH
+	DB	0bfH
 	ORG $+2
 _multiplayer DB	00H
 	ORG $+3

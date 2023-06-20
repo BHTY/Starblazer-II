@@ -20,7 +20,7 @@ void unpack_glyphs(char* filename){
 
 	fseek(fp, 0, SEEK_END);
 	sz = ftell(fp);
-	printf("File Size: %d bytes\n", sz);
+	//printf("File Size: %d bytes\n", sz);
 	fseek(fp, 0, SEEK_SET);
 
 	pointer = malloc(sz);

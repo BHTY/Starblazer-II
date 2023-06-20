@@ -269,7 +269,6 @@ $L562:
 _title_init ENDP
 _TEXT	ENDS
 PUBLIC	_title_module
-EXTRN	_rot_hypercraft:NEAR
 _TEXT	SEGMENT
 _title_module PROC NEAR
 ; Line 70
@@ -278,8 +277,6 @@ _title_module PROC NEAR
 	push	ebx
 	push	esi
 	push	edi
-; Line 71
-	call	_rot_hypercraft
 ; Line 72
 $L565:
 	pop	edi
@@ -390,7 +387,6 @@ EXTRN	_draw_scene:NEAR
 EXTRN	_vputs:NEAR
 EXTRN	_SG_ReadMouse:NEAR
 EXTRN	_ui_display_widgets:NEAR
-EXTRN	_draw_hypercraft:NEAR
 EXTRN	_destroy_hypercraft:NEAR
 EXTRN	_draw_stars:NEAR
 EXTRN	_blazer2_init:NEAR
@@ -526,11 +522,6 @@ $L576:
 	call	_draw_stars
 ; Line 107
 	call	_ui_display_widgets
-; Line 109
-	push	160					; 000000a0H
-	push	265					; 00000109H
-	call	_draw_hypercraft
-	add	esp, 8
 ; Line 110
 $L572:
 	pop	edi
