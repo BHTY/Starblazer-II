@@ -2097,7 +2097,7 @@ $L444:
 	cmp	DWORD PTR _i$[ebp], 7
 	jge	$L446
 ; Line 514
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	push	90					; 0000005aH
 	mov	eax, DWORD PTR _i$[ebp]
 	add	eax, 150				; 00000096H
@@ -2105,7 +2105,7 @@ $L444:
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
 ; Line 515
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	push	90					; 0000005aH
 	mov	eax, 170				; 000000aaH
 	sub	eax, DWORD PTR _i$[ebp]
@@ -2113,7 +2113,7 @@ $L444:
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
 ; Line 516
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	push	110					; 0000006eH
 	mov	eax, DWORD PTR _i$[ebp]
 	add	eax, 150				; 00000096H
@@ -2121,7 +2121,7 @@ $L444:
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
 ; Line 517
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	push	110					; 0000006eH
 	mov	eax, 170				; 000000aaH
 	sub	eax, DWORD PTR _i$[ebp]
@@ -2129,7 +2129,7 @@ $L444:
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
 ; Line 518
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	mov	eax, DWORD PTR _i$[ebp]
 	add	eax, 90					; 0000005aH
 	push	eax
@@ -2137,7 +2137,7 @@ $L444:
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
 ; Line 519
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	mov	eax, 110				; 0000006eH
 	sub	eax, DWORD PTR _i$[ebp]
 	push	eax
@@ -2145,7 +2145,7 @@ $L444:
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
 ; Line 520
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	mov	eax, DWORD PTR _i$[ebp]
 	add	eax, 90					; 0000005aH
 	push	eax
@@ -2153,7 +2153,7 @@ $L444:
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
 ; Line 521
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	mov	eax, 110				; 0000006eH
 	sub	eax, DWORD PTR _i$[ebp]
 	push	eax
@@ -2164,7 +2164,7 @@ $L444:
 	jmp	$L445
 $L446:
 ; Line 524
-	push	28					; 0000001cH
+	push	175					; 000000afH
 	push	100					; 00000064H
 	push	160					; 000000a0H
 	call	_bitset_pixel
@@ -2224,10 +2224,10 @@ $L458:
 	mov	al, BYTE PTR _boost_overheating
 	test	eax, eax
 	je	$L535
-	mov	DWORD PTR _c$[ebp], 231			; 000000e7H
+	mov	DWORD PTR _c$[ebp], 223			; 000000dfH
 	jmp	$L536
 $L535:
-	mov	DWORD PTR _c$[ebp], 39			; 00000027H
+	mov	DWORD PTR _c$[ebp], 159			; 0000009fH
 $L536:
 ; Line 537
 	mov	eax, DWORD PTR _k$[ebp]

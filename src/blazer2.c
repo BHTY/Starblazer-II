@@ -511,17 +511,17 @@ void draw_crosshair(){
 	for (i = 0; i < 7; i++) {
 		// operate on (140+i, 80)
 		// (180-i, 80)
-		bitset_pixel(150 + i, 90, 0x1c);
-		bitset_pixel(170 - i, 90, 0x1c);
-		bitset_pixel(150 + i, 110, 0x1c);
-		bitset_pixel(170 - i, 110, 0x1c);
-		bitset_pixel(150, 90 + i, 0x1c);
-		bitset_pixel(150, 110 - i, 0x1c);
-		bitset_pixel(170, 90 + i, 0x1c);
-		bitset_pixel(170, 110 - i, 0x1c);
+		bitset_pixel(150 + i, 90, 0xaf);
+		bitset_pixel(170 - i, 90, 0xaf);
+		bitset_pixel(150 + i, 110, 0xaf);
+		bitset_pixel(170 - i, 110, 0xaf);
+		bitset_pixel(150, 90 + i, 0xaf);
+		bitset_pixel(150, 110 - i, 0xaf);
+		bitset_pixel(170, 90 + i, 0xaf);
+		bitset_pixel(170, 110 - i, 0xaf);
 	}
 
-	bitset_pixel(160, 100, 0x1c);
+	bitset_pixel(160, 100, 0xaf);
 }
 
 
@@ -533,7 +533,7 @@ void draw_boost_bar(){
 	k = (player_boost * 21) / 5 + 16;
 	i = 8 + (barcycle >> 3);
 	for (j = 0; j < 22; j++) {
-		c = boost_overheating ? 0xe7 : 0x27;
+		c = boost_overheating ? 223 : 159;
 		if (i > k) break;
 		pos1 = 312;
 		pos2 = i;
