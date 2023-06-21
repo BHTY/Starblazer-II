@@ -9,6 +9,8 @@ Description: 3D rendering engine for Starblazer II
 #include <stdio.h>
 #include <assert.h>
 
+typedef int (*sorter)(const void*, const void*);
+
 uint16 SL_VERTEX_INDEX;
 uint16 SL_TRIANGLE_INDEX;
 VEC3 SL_CAMERA_POS;
@@ -122,7 +124,7 @@ int compare_tris(TRI* tri1, TRI* tri2){
 */
 
 void polygon_zsort(){
-	qsort(SL_TRIANGLES, SL_TRIANGLE_INDEX, sizeof(TRI), compare_tris);
+	qsort(SL_TRIANGLES, SL_TRIANGLE_INDEX, sizeof(TRI), (sorter)compare_tris);
 }
 
 /*

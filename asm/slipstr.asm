@@ -44,18 +44,18 @@ PUBLIC	_render_begin
 _TEXT	SEGMENT
 ; File src\slipstr.c
 _render_begin PROC NEAR
-; Line 34
+; Line 36
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 35
-	mov	WORD PTR _SL_VERTEX_INDEX, 0
-; Line 36
-	mov	WORD PTR _SL_TRIANGLE_INDEX, 0
 ; Line 37
-$L414:
+	mov	WORD PTR _SL_VERTEX_INDEX, 0
+; Line 38
+	mov	WORD PTR _SL_TRIANGLE_INDEX, 0
+; Line 39
+$L415:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -67,13 +67,13 @@ PUBLIC	_camera_translate
 _TEXT	SEGMENT
 _v$ = 8
 _camera_translate PROC NEAR
-; Line 46
+; Line 48
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 47
+; Line 49
 	mov	eax, DWORD PTR _v$[ebp]
 	mov	ecx, OFFSET FLAT:_SL_CAMERA_POS
 	mov	edx, DWORD PTR [eax]
@@ -82,8 +82,8 @@ _camera_translate PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 48
-$L416:
+; Line 50
+$L417:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -99,20 +99,20 @@ _TEXT	SEGMENT
 _vec$ = 8
 _v$ = -12
 _put_vertex PROC NEAR
-; Line 57
+; Line 59
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 12					; 0000000cH
 	push	ebx
 	push	esi
 	push	edi
-; Line 60
+; Line 62
 	mov	eax, DWORD PTR _vec$[ebp]
 	push	eax
 	push	OFFSET FLAT:_SL_CAMERA_POS
 	call	_vec3_subtract
 	add	esp, 8
-; Line 61
+; Line 63
 	lea	eax, DWORD PTR _v$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _vec$[ebp]
@@ -120,7 +120,7 @@ _put_vertex PROC NEAR
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	call	_mat3_mul
 	add	esp, 12					; 0000000cH
-; Line 64
+; Line 66
 	movsx	ebx, WORD PTR _SL_CENTER_X
 	mov	eax, DWORD PTR _v$[ebp+8]
 	push	eax
@@ -136,7 +136,7 @@ _put_vertex PROC NEAR
 	mov	ax, WORD PTR _SL_VERTEX_INDEX
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	DWORD PTR _SL_VERTS[eax*4], ebx
-; Line 65
+; Line 67
 	movsx	ebx, WORD PTR _SL_CENTER_Y
 	mov	eax, DWORD PTR _v$[ebp+8]
 	push	eax
@@ -152,13 +152,13 @@ _put_vertex PROC NEAR
 	mov	ax, WORD PTR _SL_VERTEX_INDEX
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	DWORD PTR _SL_VERTS[eax*4+4], ebx
-; Line 66
+; Line 68
 	mov	eax, DWORD PTR _v$[ebp+8]
 	xor	ecx, ecx
 	mov	cx, WORD PTR _SL_VERTEX_INDEX
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	mov	DWORD PTR _SL_VERTS[ecx*4+8], eax
-; Line 68
+; Line 70
 	mov	eax, DWORD PTR _vec$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR _SL_VERTEX_INDEX
@@ -170,10 +170,10 @@ _put_vertex PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 73
+; Line 75
 	inc	WORD PTR _SL_VERTEX_INDEX
-; Line 74
-$L418:
+; Line 76
+$L419:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -188,29 +188,29 @@ _y$ = 12
 _z$ = 16
 _v$ = -12
 _put_vert3f PROC NEAR
-; Line 77
+; Line 79
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 12					; 0000000cH
 	push	ebx
 	push	esi
 	push	edi
-; Line 80
+; Line 82
 	mov	eax, DWORD PTR _x$[ebp]
 	mov	DWORD PTR _v$[ebp], eax
-; Line 81
+; Line 83
 	mov	eax, DWORD PTR _y$[ebp]
 	mov	DWORD PTR _v$[ebp+4], eax
-; Line 82
+; Line 84
 	mov	eax, DWORD PTR _z$[ebp]
 	mov	DWORD PTR _v$[ebp+8], eax
-; Line 84
+; Line 86
 	lea	eax, DWORD PTR _v$[ebp]
 	push	eax
 	call	_put_vertex
 	add	esp, 4
-; Line 85
-$L423:
+; Line 87
+$L424:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -229,24 +229,24 @@ _v0index$ = -12
 _v1index$ = -8
 _v2index$ = -4
 _put_triangles PROC NEAR
-; Line 94
+; Line 96
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 16					; 00000010H
 	push	ebx
 	push	esi
 	push	edi
-; Line 98
+; Line 100
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L434
-$L435:
+	jmp	$L435
+$L436:
 	inc	DWORD PTR _i$[ebp]
-$L434:
+$L435:
 	mov	eax, DWORD PTR _num_tris$[ebp]
 	and	eax, 65535				; 0000ffffH
 	cmp	eax, DWORD PTR _i$[ebp]
-	jle	$L436
-; Line 99
+	jle	$L437
+; Line 101
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	ecx, DWORD PTR _tris$[ebp]
@@ -256,7 +256,7 @@ $L434:
 	and	eax, 65535				; 0000ffffH
 	add	edx, eax
 	mov	WORD PTR _v0index$[ebp], dx
-; Line 100
+; Line 102
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	ecx, DWORD PTR _tris$[ebp]
@@ -266,7 +266,7 @@ $L434:
 	and	eax, 65535				; 0000ffffH
 	add	edx, eax
 	mov	WORD PTR _v1index$[ebp], dx
-; Line 101
+; Line 103
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	ecx, DWORD PTR _tris$[ebp]
@@ -276,18 +276,18 @@ $L434:
 	and	eax, 65535				; 0000ffffH
 	add	edx, eax
 	mov	WORD PTR _v2index$[ebp], dx
-; Line 103
+; Line 105
 	xor	eax, eax
 	mov	al, BYTE PTR _color_override$[ebp]
 	test	eax, eax
-	je	$L496
+	je	$L497
 	mov	al, BYTE PTR _color_override$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR _SL_TRIANGLE_INDEX
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	mov	BYTE PTR _SL_TRIANGLES[ecx*4+6], al
-	jmp	$L497
-$L496:
+	jmp	$L498
+$L497:
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	ecx, DWORD PTR _tris$[ebp]
@@ -296,27 +296,27 @@ $L496:
 	mov	cx, WORD PTR _SL_TRIANGLE_INDEX
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	mov	BYTE PTR _SL_TRIANGLES[ecx*4+6], al
-$L497:
-; Line 104
+$L498:
+; Line 106
 	mov	ax, WORD PTR _v0index$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR _SL_TRIANGLE_INDEX
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	mov	WORD PTR _SL_TRIANGLES[ecx*4], ax
-; Line 105
+; Line 107
 	mov	ax, WORD PTR _v1index$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR _SL_TRIANGLE_INDEX
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	mov	WORD PTR _SL_TRIANGLES[ecx*4+2], ax
-; Line 106
+; Line 108
 	mov	ax, WORD PTR _v2index$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR _SL_TRIANGLE_INDEX
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	mov	WORD PTR _SL_TRIANGLES[ecx*4+4], ax
-; Line 107
-	mov	eax, DWORD PTR _v2index$[ebp]
+; Line 109
+	mov	eax, DWORD PTR _v0index$[ebp]
 	and	eax, 65535				; 0000ffffH
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	eax, DWORD PTR _SL_VERTS[eax*4+8]
@@ -324,7 +324,7 @@ $L497:
 	and	ecx, 65535				; 0000ffffH
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	add	eax, DWORD PTR _SL_VERTS[ecx*4+8]
-	mov	ecx, DWORD PTR _v0index$[ebp]
+	mov	ecx, DWORD PTR _v2index$[ebp]
 	and	ecx, 65535				; 0000ffffH
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	add	eax, DWORD PTR _SL_VERTS[ecx*4+8]
@@ -335,13 +335,13 @@ $L497:
 	mov	cx, WORD PTR _SL_TRIANGLE_INDEX
 	lea	ecx, DWORD PTR [ecx+ecx*2]
 	mov	DWORD PTR _SL_TRIANGLES[ecx*4+8], eax
-; Line 109
-	inc	WORD PTR _SL_TRIANGLE_INDEX
-; Line 110
-	jmp	$L435
-$L436:
 ; Line 111
-$L429:
+	inc	WORD PTR _SL_TRIANGLE_INDEX
+; Line 112
+	jmp	$L436
+$L437:
+; Line 113
+$L430:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -354,13 +354,13 @@ _TEXT	SEGMENT
 _tri1$ = 8
 _tri2$ = 12
 _compare_tris PROC NEAR
-; Line 113
+; Line 115
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 114
+; Line 116
 	mov	eax, DWORD PTR _tri2$[ebp]
 	mov	ecx, DWORD PTR _tri1$[ebp]
 	mov	ecx, DWORD PTR [ecx+8]
@@ -375,9 +375,9 @@ _compare_tris PROC NEAR
 	setl	bl
 	sub	edx, ebx
 	mov	eax, edx
-	jmp	$L440
-; Line 115
-$L440:
+	jmp	$L441
+; Line 117
+$L441:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -389,13 +389,13 @@ PUBLIC	_polygon_zsort
 EXTRN	_qsort:NEAR
 _TEXT	SEGMENT
 _polygon_zsort PROC NEAR
-; Line 124
+; Line 126
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 125
+; Line 127
 	push	OFFSET FLAT:_compare_tris
 	push	12					; 0000000cH
 	xor	eax, eax
@@ -404,8 +404,8 @@ _polygon_zsort PROC NEAR
 	push	OFFSET FLAT:_SL_TRIANGLES
 	call	_qsort
 	add	esp, 16					; 00000010H
-; Line 126
-$L441:
+; Line 128
+$L442:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -420,20 +420,20 @@ _pt$ = 8
 _color$ = 20
 _v$ = -12
 _plotpoint_3d PROC NEAR
-; Line 135
+; Line 137
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 12					; 0000000cH
 	push	ebx
 	push	esi
 	push	edi
-; Line 139
+; Line 141
 	lea	eax, DWORD PTR _pt$[ebp]
 	push	eax
 	push	OFFSET FLAT:_SL_CAMERA_POS
 	call	_vec3_subtract
 	add	esp, 8
-; Line 141
+; Line 143
 	lea	eax, DWORD PTR _v$[ebp]
 	push	eax
 	lea	eax, DWORD PTR _pt$[ebp]
@@ -441,10 +441,10 @@ _plotpoint_3d PROC NEAR
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	call	_mat3_mul
 	add	esp, 12					; 0000000cH
-; Line 143
+; Line 145
 	cmp	DWORD PTR _v$[ebp+8], 0
-	jle	$L446
-; Line 144
+	jle	$L447
+; Line 146
 	movsx	ebx, WORD PTR _SL_CENTER_X
 	mov	eax, DWORD PTR _v$[ebp+8]
 	push	eax
@@ -457,7 +457,7 @@ _plotpoint_3d PROC NEAR
 	sar	eax, 16					; 00000010H
 	sub	ebx, eax
 	mov	DWORD PTR _v$[ebp], ebx
-; Line 145
+; Line 147
 	movsx	ebx, WORD PTR _SL_CENTER_Y
 	mov	eax, DWORD PTR _v$[ebp+8]
 	push	eax
@@ -470,7 +470,7 @@ _plotpoint_3d PROC NEAR
 	sar	eax, 16					; 00000010H
 	sub	ebx, eax
 	mov	DWORD PTR _v$[ebp+4], ebx
-; Line 146
+; Line 148
 	mov	eax, DWORD PTR _color$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _v$[ebp+4]
@@ -479,9 +479,9 @@ _plotpoint_3d PROC NEAR
 	push	eax
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
-; Line 149
-$L446:
-$L444:
+; Line 151
+$L447:
+$L445:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -493,17 +493,17 @@ PUBLIC	_set_fov_x
 _TEXT	SEGMENT
 _fov$ = 8
 _set_fov_x PROC NEAR
-; Line 158
+; Line 160
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 159
+; Line 161
 	mov	eax, DWORD PTR _fov$[ebp]
 	mov	DWORD PTR _SL_FOV_X, eax
-; Line 160
-$L448:
+; Line 162
+$L449:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -515,17 +515,17 @@ PUBLIC	_set_fov_y
 _TEXT	SEGMENT
 _fov$ = 8
 _set_fov_y PROC NEAR
-; Line 169
+; Line 171
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 170
+; Line 172
 	mov	eax, DWORD PTR _fov$[ebp]
 	mov	DWORD PTR _SL_FOV_Y, eax
-; Line 171
-$L450:
+; Line 173
+$L451:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -549,14 +549,14 @@ _norm$ = -36
 _v1$ = -12
 _v2$ = -24
 _find_illumination PROC NEAR
-; Line 189
+; Line 191
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 48					; 00000030H
 	push	ebx
 	push	esi
 	push	edi
-; Line 192
+; Line 194
 	mov	eax, DWORD PTR _x2$[ebp]
 	lea	ecx, DWORD PTR _v1$[ebp]
 	mov	edx, DWORD PTR [eax]
@@ -565,7 +565,7 @@ _find_illumination PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 193
+; Line 195
 	mov	eax, DWORD PTR _x3$[ebp]
 	lea	ecx, DWORD PTR _v2$[ebp]
 	mov	edx, DWORD PTR [eax]
@@ -574,21 +574,21 @@ _find_illumination PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 194
+; Line 196
 	lea	eax, DWORD PTR _v1$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _x1$[ebp]
 	push	eax
 	call	_vec3_subtract
 	add	esp, 8
-; Line 195
+; Line 197
 	lea	eax, DWORD PTR _v2$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _x1$[ebp]
 	push	eax
 	call	_vec3_subtract
 	add	esp, 8
-; Line 196
+; Line 198
 	lea	eax, DWORD PTR _norm$[ebp]
 	push	eax
 	lea	eax, DWORD PTR _v2$[ebp]
@@ -597,16 +597,6 @@ _find_illumination PROC NEAR
 	push	eax
 	call	_vec3_cross
 	add	esp, 12					; 0000000cH
-; Line 197
-	lea	eax, DWORD PTR _norm$[ebp]
-	push	eax
-	call	_vec3_normalize
-	add	esp, 4
-; Line 198
-	lea	eax, DWORD PTR _norm$[ebp]
-	push	eax
-	call	_vec3_normalize
-	add	esp, 4
 ; Line 199
 	lea	eax, DWORD PTR _norm$[ebp]
 	push	eax
@@ -618,6 +608,16 @@ _find_illumination PROC NEAR
 	call	_vec3_normalize
 	add	esp, 4
 ; Line 201
+	lea	eax, DWORD PTR _norm$[ebp]
+	push	eax
+	call	_vec3_normalize
+	add	esp, 4
+; Line 202
+	lea	eax, DWORD PTR _norm$[ebp]
+	push	eax
+	call	_vec3_normalize
+	add	esp, 4
+; Line 203
 	mov	eax, DWORD PTR _x1$[ebp]
 	lea	ecx, DWORD PTR _look$[ebp]
 	mov	edx, DWORD PTR [eax]
@@ -626,55 +626,45 @@ _find_illumination PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 202
+; Line 204
 	lea	eax, DWORD PTR _look$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _x2$[ebp]
 	push	eax
 	call	_vec3_add
 	add	esp, 8
-; Line 203
+; Line 205
 	lea	eax, DWORD PTR _look$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _x3$[ebp]
 	push	eax
 	call	_vec3_add
 	add	esp, 8
-; Line 204
+; Line 206
 	mov	ecx, 3
 	mov	eax, DWORD PTR _look$[ebp]
 	cdq
 	idiv	ecx
 	mov	DWORD PTR _look$[ebp], eax
-; Line 205
+; Line 207
 	mov	ecx, 3
 	mov	eax, DWORD PTR _look$[ebp+4]
 	cdq
 	idiv	ecx
 	mov	DWORD PTR _look$[ebp+4], eax
-; Line 206
+; Line 208
 	mov	ecx, 3
 	mov	eax, DWORD PTR _look$[ebp+8]
 	cdq
 	idiv	ecx
 	mov	DWORD PTR _look$[ebp+8], eax
-; Line 207
+; Line 209
 	lea	eax, DWORD PTR _look$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _light$[ebp]
 	push	eax
 	call	_vec3_subtract
 	add	esp, 8
-; Line 208
-	lea	eax, DWORD PTR _look$[ebp]
-	push	eax
-	call	_vec3_normalize
-	add	esp, 4
-; Line 209
-	lea	eax, DWORD PTR _look$[ebp]
-	push	eax
-	call	_vec3_normalize
-	add	esp, 4
 ; Line 210
 	lea	eax, DWORD PTR _look$[ebp]
 	push	eax
@@ -686,6 +676,16 @@ _find_illumination PROC NEAR
 	call	_vec3_normalize
 	add	esp, 4
 ; Line 212
+	lea	eax, DWORD PTR _look$[ebp]
+	push	eax
+	call	_vec3_normalize
+	add	esp, 4
+; Line 213
+	lea	eax, DWORD PTR _look$[ebp]
+	push	eax
+	call	_vec3_normalize
+	add	esp, 4
+; Line 214
 	lea	eax, DWORD PTR _norm$[ebp]
 	push	eax
 	lea	eax, DWORD PTR _look$[ebp]
@@ -695,9 +695,9 @@ _find_illumination PROC NEAR
 	push	eax
 	call	_int_abs
 	add	esp, 4
-	jmp	$L455
-; Line 213
-$L455:
+	jmp	$L456
+; Line 215
+$L456:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -712,14 +712,14 @@ _v0$ = -36
 _v1$ = -12
 _v2$ = -24
 _clip_polygon PROC NEAR
-; Line 214
+; Line 216
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 36					; 00000024H
 	push	ebx
 	push	esi
 	push	edi
-; Line 215
+; Line 217
 	mov	eax, DWORD PTR _tri$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax]
@@ -732,7 +732,7 @@ _clip_polygon PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 216
+; Line 218
 	mov	eax, DWORD PTR _tri$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+2]
@@ -745,7 +745,7 @@ _clip_polygon PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 217
+; Line 219
 	mov	eax, DWORD PTR _tri$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+4]
@@ -758,56 +758,56 @@ _clip_polygon PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 219
+; Line 221
 	cmp	DWORD PTR _v0$[ebp+8], 2048		; 00000800H
-	jle	$L467
+	jle	$L468
 	cmp	DWORD PTR _v1$[ebp+8], 2048		; 00000800H
-	jle	$L467
+	jle	$L468
 	cmp	DWORD PTR _v2$[ebp+8], 2048		; 00000800H
-	jg	$L466
-$L467:
-; Line 220
+	jg	$L467
+$L468:
+; Line 222
 	xor	al, al
-	jmp	$L462
-; Line 223
-$L466:
+	jmp	$L463
+; Line 225
+$L467:
 	cmp	DWORD PTR _v0$[ebp], 320		; 00000140H
-	jl	$L470
+	jl	$L471
 	cmp	DWORD PTR _v1$[ebp], 320		; 00000140H
-	jl	$L470
+	jl	$L471
 	cmp	DWORD PTR _v2$[ebp], 320		; 00000140H
+	jge	$L470
+$L471:
+	cmp	DWORD PTR _v0$[ebp], 0
+	jge	$L472
+	cmp	DWORD PTR _v1$[ebp], 0
+	jge	$L472
+	cmp	DWORD PTR _v2$[ebp], 0
+	jl	$L470
+$L472:
+	cmp	DWORD PTR _v0$[ebp+4], 200		; 000000c8H
+	jl	$L473
+	cmp	DWORD PTR _v1$[ebp+4], 200		; 000000c8H
+	jl	$L473
+	cmp	DWORD PTR _v2$[ebp+4], 200		; 000000c8H
+	jge	$L470
+$L473:
+	cmp	DWORD PTR _v0$[ebp+4], 0
+	jge	$L469
+	cmp	DWORD PTR _v1$[ebp+4], 0
+	jge	$L469
+	cmp	DWORD PTR _v2$[ebp+4], 0
 	jge	$L469
 $L470:
-	cmp	DWORD PTR _v0$[ebp], 0
-	jge	$L471
-	cmp	DWORD PTR _v1$[ebp], 0
-	jge	$L471
-	cmp	DWORD PTR _v2$[ebp], 0
-	jl	$L469
-$L471:
-	cmp	DWORD PTR _v0$[ebp+4], 200		; 000000c8H
-	jl	$L472
-	cmp	DWORD PTR _v1$[ebp+4], 200		; 000000c8H
-	jl	$L472
-	cmp	DWORD PTR _v2$[ebp+4], 200		; 000000c8H
-	jge	$L469
-$L472:
-	cmp	DWORD PTR _v0$[ebp+4], 0
-	jge	$L468
-	cmp	DWORD PTR _v1$[ebp+4], 0
-	jge	$L468
-	cmp	DWORD PTR _v2$[ebp+4], 0
-	jge	$L468
-$L469:
-; Line 224
+; Line 226
 	xor	al, al
-	jmp	$L462
-; Line 227
-$L468:
+	jmp	$L463
+; Line 229
+$L469:
 	mov	al, 1
-	jmp	$L462
-; Line 228
-$L462:
+	jmp	$L463
+; Line 230
+$L463:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -833,24 +833,24 @@ _y2$ = -44
 _x3$ = -36
 _y3$ = -48
 _render_end PROC NEAR
-; Line 237
+; Line 239
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 48					; 00000030H
 	push	ebx
 	push	esi
 	push	edi
-; Line 243
+; Line 245
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L487
-$L488:
+	jmp	$L488
+$L489:
 	inc	DWORD PTR _i$[ebp]
-$L487:
+$L488:
 	xor	eax, eax
 	mov	ax, WORD PTR _SL_TRIANGLE_INDEX
 	cmp	eax, DWORD PTR _i$[ebp]
-	jle	$L489
-; Line 244
+	jle	$L490
+; Line 246
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	lea	eax, DWORD PTR _SL_TRIANGLES[eax*4]
@@ -860,13 +860,13 @@ $L487:
 	xor	ecx, ecx
 	mov	cl, al
 	test	ecx, ecx
-	je	$L490
-; Line 245
+	je	$L491
+; Line 247
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	mov	al, BYTE PTR _SL_TRIANGLES[eax*4+6]
 	mov	BYTE PTR _c$[ebp], al
-; Line 247
+; Line 249
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	xor	ecx, ecx
@@ -874,7 +874,7 @@ $L487:
 	lea	eax, DWORD PTR [ecx+ecx*2]
 	mov	eax, DWORD PTR _SL_VERTS[eax*4]
 	mov	DWORD PTR _x1$[ebp], eax
-; Line 248
+; Line 250
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	xor	ecx, ecx
@@ -882,7 +882,7 @@ $L487:
 	lea	eax, DWORD PTR [ecx+ecx*2]
 	mov	eax, DWORD PTR _SL_VERTS[eax*4+4]
 	mov	DWORD PTR _y1$[ebp], eax
-; Line 249
+; Line 251
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	xor	ecx, ecx
@@ -890,7 +890,7 @@ $L487:
 	lea	eax, DWORD PTR [ecx+ecx*2]
 	mov	eax, DWORD PTR _SL_VERTS[eax*4]
 	mov	DWORD PTR _x2$[ebp], eax
-; Line 250
+; Line 252
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	xor	ecx, ecx
@@ -898,7 +898,7 @@ $L487:
 	lea	eax, DWORD PTR [ecx+ecx*2]
 	mov	eax, DWORD PTR _SL_VERTS[eax*4+4]
 	mov	DWORD PTR _y2$[ebp], eax
-; Line 251
+; Line 253
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	xor	ecx, ecx
@@ -906,7 +906,7 @@ $L487:
 	lea	eax, DWORD PTR [ecx+ecx*2]
 	mov	eax, DWORD PTR _SL_VERTS[eax*4]
 	mov	DWORD PTR _x3$[ebp], eax
-; Line 252
+; Line 254
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	xor	ecx, ecx
@@ -914,12 +914,12 @@ $L487:
 	lea	eax, DWORD PTR [ecx+ecx*2]
 	mov	eax, DWORD PTR _SL_VERTS[eax*4+4]
 	mov	DWORD PTR _y3$[ebp], eax
-; Line 254
+; Line 256
 	xor	eax, eax
 	mov	al, BYTE PTR _shading$[ebp]
 	test	eax, eax
-	je	$L491
-; Line 255
+	je	$L492
+; Line 257
 	push	OFFSET FLAT:_SL_CAMERA_POS
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
@@ -950,7 +950,7 @@ $L487:
 	add	eax, edx
 	sar	eax, 2
 	mov	DWORD PTR _illum$[ebp], eax
-; Line 266
+; Line 268
 	mov	eax, DWORD PTR _r$[ebp]
 	shl	eax, 2
 	lea	eax, DWORD PTR [eax+eax*8]
@@ -973,7 +973,7 @@ $L487:
 	push	eax
 	call	_fill_tri
 	add	esp, 28					; 0000001cH
-; Line 267
+; Line 269
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
 	mov	ecx, DWORD PTR _illum$[ebp]
@@ -994,44 +994,44 @@ $L487:
 	push	eax
 	call	_fill_tri
 	add	esp, 28					; 0000001cH
-; Line 269
-	jmp	$L492
-$L491:
-; Line 272
-	xor	eax, eax
-	mov	al, BYTE PTR _c$[ebp]
-	or	eax, 15					; 0000000fH
-	push	eax
-	mov	eax, DWORD PTR _y2$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x2$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y1$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x1$[ebp]
-	push	eax
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 273
-	xor	eax, eax
-	mov	al, BYTE PTR _c$[ebp]
-	or	eax, 15					; 0000000fH
-	push	eax
-	mov	eax, DWORD PTR _y3$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x3$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y1$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _x1$[ebp]
-	push	eax
-	call	_drawline
-	add	esp, 20					; 00000014H
+; Line 271
+	jmp	$L493
+$L492:
 ; Line 274
 	xor	eax, eax
 	mov	al, BYTE PTR _c$[ebp]
 	or	eax, 15					; 0000000fH
 	push	eax
+	mov	eax, DWORD PTR _y2$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x2$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	push	eax
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 275
+	xor	eax, eax
+	mov	al, BYTE PTR _c$[ebp]
+	or	eax, 15					; 0000000fH
+	push	eax
+	mov	eax, DWORD PTR _y3$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x3$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	push	eax
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 276
+	xor	eax, eax
+	mov	al, BYTE PTR _c$[ebp]
+	or	eax, 15					; 0000000fH
+	push	eax
 	mov	eax, DWORD PTR _y3$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _x3$[ebp]
@@ -1042,14 +1042,14 @@ $L491:
 	push	eax
 	call	_drawline
 	add	esp, 20					; 00000014H
-; Line 275
-$L492:
 ; Line 277
+$L493:
+; Line 279
+$L491:
+	jmp	$L489
 $L490:
-	jmp	$L488
-$L489:
-; Line 278
-$L474:
+; Line 280
+$L475:
 	pop	edi
 	pop	esi
 	pop	ebx
