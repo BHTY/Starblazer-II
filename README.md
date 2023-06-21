@@ -1,6 +1,7 @@
 # Starblazer-II
 To-do List
 - make the game
+- tweak compiler settings
 
 Unfinished Subsystems (July 15 demo)
 - UI
