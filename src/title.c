@@ -69,6 +69,11 @@ void title_init(){
 
 void title_module(){
 	//rot_hypercraft();
+	quat_yaw(16, &(StarblazerEntities[0]->orientation));
+
+	quat_pitch(8, &stars_cam_ori);
+	quat_yaw(8, &stars_cam_ori);
+	quat_roll(8, &stars_cam_ori);
 }
 
 void draw_cursor(int x, int y, uint8 clr){
@@ -96,11 +101,11 @@ void title_draw(){
 	vputs("BY WILL KLEES AND JOSH PIETY", 30, 100, 3, 2, 255, 0);
 
 	draw_scene(&title_camera, title_cam_ori, 0, 0, 0);
-	quat_yaw(16, &(StarblazerEntities[0]->orientation));
+	/*quat_yaw(16, &(StarblazerEntities[0]->orientation));
 
 	quat_pitch(8, &stars_cam_ori);
 	quat_yaw(8, &stars_cam_ori);
-	quat_roll(8, &stars_cam_ori);
+	quat_roll(8, &stars_cam_ori);*/
 	quat_tomat(&stars_cam_ori, &SL_CAMERA_ORIENTATION);
 	draw_stars();
 

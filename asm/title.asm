@@ -269,6 +269,10 @@ $L562:
 _title_init ENDP
 _TEXT	ENDS
 PUBLIC	_title_module
+EXTRN	_quat_pitch:NEAR
+EXTRN	_quat_yaw:NEAR
+EXTRN	_quat_roll:NEAR
+EXTRN	_StarblazerEntities:BYTE
 _TEXT	SEGMENT
 _title_module PROC NEAR
 ; Line 70
@@ -278,6 +282,28 @@ _title_module PROC NEAR
 	push	esi
 	push	edi
 ; Line 72
+	mov	eax, DWORD PTR _StarblazerEntities
+	add	eax, 16					; 00000010H
+	push	eax
+	push	16					; 00000010H
+	call	_quat_yaw
+	add	esp, 8
+; Line 74
+	push	OFFSET FLAT:_stars_cam_ori
+	push	8
+	call	_quat_pitch
+	add	esp, 8
+; Line 75
+	push	OFFSET FLAT:_stars_cam_ori
+	push	8
+	call	_quat_yaw
+	add	esp, 8
+; Line 76
+	push	OFFSET FLAT:_stars_cam_ori
+	push	8
+	call	_quat_roll
+	add	esp, 8
+; Line 77
 $L565:
 	pop	edi
 	pop	esi
@@ -293,13 +319,13 @@ _x$ = 8
 _y$ = 12
 _clr$ = 16
 _draw_cursor PROC NEAR
-; Line 74
+; Line 79
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 75
+; Line 80
 	mov	eax, DWORD PTR _clr$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _y$[ebp]
@@ -316,7 +342,7 @@ _draw_cursor PROC NEAR
 	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 76
+; Line 81
 	mov	eax, DWORD PTR _clr$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _y$[ebp]
@@ -333,7 +359,7 @@ _draw_cursor PROC NEAR
 	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 77
+; Line 82
 	mov	eax, DWORD PTR _clr$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _y$[ebp]
@@ -350,7 +376,7 @@ _draw_cursor PROC NEAR
 	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 78
+; Line 83
 	mov	eax, DWORD PTR _clr$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _y$[ebp]
@@ -367,7 +393,7 @@ _draw_cursor PROC NEAR
 	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 79
+; Line 84
 $L570:
 	pop	edi
 	pop	esi
@@ -377,12 +403,8 @@ $L570:
 _draw_cursor ENDP
 _TEXT	ENDS
 PUBLIC	_title_draw
-EXTRN	_quat_pitch:NEAR
-EXTRN	_quat_yaw:NEAR
-EXTRN	_quat_roll:NEAR
 EXTRN	_quat_tomat:NEAR
 EXTRN	_SL_CAMERA_ORIENTATION:BYTE
-EXTRN	_StarblazerEntities:BYTE
 EXTRN	_draw_scene:NEAR
 EXTRN	_vputs:NEAR
 EXTRN	_SG_ReadMouse:NEAR
@@ -400,24 +422,24 @@ _DATA	ENDS
 _TEXT	SEGMENT
 _mouse$ = -8
 _title_draw PROC NEAR
-; Line 81
+; Line 86
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
 	push	ebx
 	push	esi
 	push	edi
-; Line 83
+; Line 88
 	lea	eax, DWORD PTR _mouse$[ebp]
 	push	eax
 	call	_SG_ReadMouse
 	add	esp, 4
-; Line 85
+; Line 90
 	xor	eax, eax
 	mov	al, BYTE PTR _mouse$[ebp+4]
 	test	eax, eax
 	je	$L574
-; Line 86
+; Line 91
 	push	28					; 0000001cH
 	xor	eax, eax
 	mov	ax, WORD PTR _mouse$[ebp+2]
@@ -427,14 +449,14 @@ _title_draw PROC NEAR
 	push	eax
 	call	_draw_cursor
 	add	esp, 12					; 0000000cH
-; Line 87
+; Line 92
 	call	_destroy_hypercraft
-; Line 88
+; Line 93
 	call	_blazer2_init
-; Line 90
+; Line 95
 	jmp	$L576
 $L574:
-; Line 91
+; Line 96
 	push	255					; 000000ffH
 	xor	eax, eax
 	mov	ax, WORD PTR _mouse$[ebp+2]
@@ -444,9 +466,9 @@ $L574:
 	push	eax
 	call	_draw_cursor
 	add	esp, 12					; 0000000cH
-; Line 92
+; Line 97
 $L576:
-; Line 94
+; Line 99
 	push	0
 	push	-97					; ffffff9fH
 	push	2
@@ -456,7 +478,7 @@ $L576:
 	push	OFFSET FLAT:$SG577
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 95
+; Line 100
 	push	0
 	push	-17					; ffffffefH
 	push	2
@@ -466,7 +488,7 @@ $L576:
 	push	OFFSET FLAT:$SG578
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 96
+; Line 101
 	push	0
 	push	-1
 	push	2
@@ -476,7 +498,7 @@ $L576:
 	push	OFFSET FLAT:$SG579
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 98
+; Line 103
 	push	0
 	push	0
 	push	0
@@ -491,38 +513,16 @@ $L576:
 	push	OFFSET FLAT:_title_camera
 	call	_draw_scene
 	add	esp, 32					; 00000020H
-; Line 99
-	mov	eax, DWORD PTR _StarblazerEntities
-	add	eax, 16					; 00000010H
-	push	eax
-	push	16					; 00000010H
-	call	_quat_yaw
-	add	esp, 8
-; Line 101
-	push	OFFSET FLAT:_stars_cam_ori
-	push	8
-	call	_quat_pitch
-	add	esp, 8
-; Line 102
-	push	OFFSET FLAT:_stars_cam_ori
-	push	8
-	call	_quat_yaw
-	add	esp, 8
-; Line 103
-	push	OFFSET FLAT:_stars_cam_ori
-	push	8
-	call	_quat_roll
-	add	esp, 8
-; Line 104
+; Line 109
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	push	OFFSET FLAT:_stars_cam_ori
 	call	_quat_tomat
 	add	esp, 8
-; Line 105
-	call	_draw_stars
-; Line 107
-	call	_ui_display_widgets
 ; Line 110
+	call	_draw_stars
+; Line 112
+	call	_ui_display_widgets
+; Line 115
 $L572:
 	pop	edi
 	pop	esi
