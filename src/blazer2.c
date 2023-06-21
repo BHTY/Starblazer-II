@@ -287,10 +287,6 @@ void vjoy_read(joystick_t* joy){
 	joy->brake = SG_KeyDown('K');
 	joy->boost = SG_KeyDown('B');
 
-	if (SG_KeyDown('K')){
-		joy->boost = 1;
-	}
-
 	//read pitch
 	if (SG_KeyDown('W')){
 		joy->pitch = 127;

@@ -86,7 +86,7 @@ _SG_Tick PROC NEAR
 ; Line 32
 	call	DWORD PTR _SG_Module
 ; Line 34
-	mov	BYTE PTR _GAME_SETTINGS+4, 0
+	mov	BYTE PTR _GAME_SETTINGS+4, 4
 ; Line 36
 	xor	eax, eax
 	mov	al, BYTE PTR _GAME_SETTINGS+4
@@ -328,9 +328,9 @@ EXTRN	_printf:NEAR
 _DATA	SEGMENT
 	ORG $+3
 $SG314	DB	'Starblazer II Beta Version', 0aH, 00H
-$SG315	DB	'21:28:35', 00H
+$SG315	DB	'11:02:18', 00H
 	ORG $+3
-$SG316	DB	'Jun 20 2023', 00H
+$SG316	DB	'Jun 21 2023', 00H
 $SG317	DB	'Build Time: %s %s', 0aH, 00H
 	ORG $+1
 $SG318	DB	'By Will Klees (Captain Will Starblazer) and Josh "Fixer"'
