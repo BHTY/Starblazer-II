@@ -6,8 +6,8 @@
 
 **Main Loop**
 - If there's a packet available...
--   If it's a connection request packet
--   If it's a normal packet, refer it to all of the other players
+- - If it's a connection request packet
+- - If it's a normal packet, refer it to all of the other players
 -     oo
 - Sync leaderboard (fill in TBD)
 - Loop through all of the connected players. If the time between now and their last packet is greater than or equal to the timeout constant, remove them from the connected players list and send a packet indicating their disconnection to the other players
