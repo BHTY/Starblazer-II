@@ -13,7 +13,7 @@ extern int timeout;
 typedef struct{
 	bool_t status; //0=disconnected, 1=connected, 2=respawning
 	uint32 entity_id; //id of attached entity
-	FIGHTER* fighter;
+	TEMPLATE* fighter;
 	LASER* laser;
 } CONNECTED_PLAYER;
 
