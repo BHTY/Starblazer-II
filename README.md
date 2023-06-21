@@ -2,6 +2,7 @@
 To-do List
 - make the game
 - tweak compiler settings
+- optimizations
 
 Unfinished Subsystems (July 15 demo -- 3.5 weeks remaining)
 - UI
