@@ -8,3 +8,7 @@ Unfinished Subsystems (July 15 demo)
 - Networking
 - Sound
 - Port to MS-DOS
+
+Netplay steps
+1.) Communication with server
+2.) Moving around on each other's screens
