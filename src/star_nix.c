@@ -53,6 +53,7 @@ void SG_Init(int argc, char** argv){
 
 
 	SDL_CreateWindowAndRenderer(window_width, window_height, 0, &window, &renderer);
+	SDL_SetWindowTitle(window, SG_title);
 	
 	mouseFactorX = 320.0 / window_width;
 	mouseFactorY = 200.0 / window_height;
