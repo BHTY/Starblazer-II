@@ -8,7 +8,7 @@
 - If there's a packet available...
   - If it's a connection request packet, authenticate it
     - If the name is something we haven't seen before, create a new profile for them with 0K/0D and whatever pin they give us
-    - If it's an existing profile, check if the PIN matches with what we have on file. If so, connect them. If not, fuck em
+    - If it's an existing profile, check if the PIN matches with what we have on file. If so, connect them (open a transmitting socket, send them their stuff, put em in the table). If not, fuck em
   - If it's a normal packet, refer it to all of the other players
     - If the death flag is set, increase the D number of the player that sent it and the K number of the player that they say killed them
 - Sync leaderboard
