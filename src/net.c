@@ -44,6 +44,8 @@ void net_syncstate(){
 	packet.rot = StarblazerEntities[0]->orientation;
 	SG_SendPacket(&packet, sizeof(PACKET));
 
+	//we need to handle fire control, triggering my own respawning & timer, telling the server who killed me (their laser entity was marked)
+
 	//recieve status
 	while (SG_RecievePacket(&packet, sizeof(PACKET))){ //respond to each packet
 		if (SENDER_ID(packet) == player_id) continue; //except my own echoed back to me
