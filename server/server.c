@@ -64,7 +64,9 @@ void sort_leaderboard(){ //sorts in descending order
 }
 
 void save_leaderboard(){
-
+	FILE* fp = fopen("leader.bin", "wb");
+	fwrite(&leaderboard, sizeof(LEADERBOARD), 1, fp);
+	fclose(fp);
 }
 
 void write_leaderboard_csv(){
@@ -72,7 +74,22 @@ void write_leaderboard_csv(){
 }
 
 void write_leaderboard_html(){
+	int i;
+	FILE* fp = fopen("leader.html", "w");
 
+	fprintf(fp, "<title>Leaderboard</title>");
+	fprintf(fp, "<body style=\"background-color:black;color:white;\">");
+	fprintf(fp, "<style>table, th, td{ border:1px solid white;}</style>");
+	fprintf(fp, "<h2>Leaderboard</h2>");
+
+	fprintf(fp, "<table>\n<tr><th>Place</th><th>Name</th><th>Kills</th><th>Deaths</th></tr>\n");
+
+	for (i = 0; i < leaderboard.number_records; i++){
+		fprintf(fp, "<tr> <td>%d</td> <td>%s</td> <td>%d</td> <td>%d</td>  </tr>\n", i + 1, leaderboard.records[i].player_name, leaderboard.records[i].K, leaderboard.records[i].D);
+	}
+
+	fprintf(fp, "</table></body>");
+	fclose(fp);
 }
 
 /*
