@@ -110,6 +110,10 @@ void spawn_asteroid(){
 	//printf("Spawned asteroid %d\n", id);
 }
 
+void ax5_script(ENTITY** ptr){
+
+}
+
 void laser_script(ENTITY** ptr){
 	int i;
 
@@ -205,6 +209,13 @@ void set_attributes(){
 	ASTEROID->radar_color = 207;
 	ASTEROID->radar_type = 0;
 	create_hitbox(ASTEROID, int_fixed(5), int_fixed(5), int_fixed(5));
+
+	AX5 = load_model("assets/rwing.obj");
+	AX5->script = ax5_script;
+	AX5->flags = 3;
+	AX5->maxhp = 0;
+	AX5->radar_type = 1;
+	create_hitbox(AX5, int_fixed(2), int_fixed(2), int_fixed(2));
 }
 
 //when you're dead, it'll forcibly zero out your velocity and your joystick inputs
@@ -248,7 +259,7 @@ void blazer2_init(){
 	}
 
 	//spawn the camera entity & certain pos and angle
-	i = spawn_entity(&cam_template, 0, 0, 0, 0, 0, 0);
+	i = spawn_entity(&cam_template, int_fixed(rand() % 100 - 50), int_fixed(rand() % 100 - 50), int_fixed(rand() % 100 - 50), 0, 0, 0);
 
 	//setup core state variables (i.e. boost meter, laser bar, etc.)
 	player_boost = player_fighter.boost_size;

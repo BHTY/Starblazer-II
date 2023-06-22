@@ -70,9 +70,43 @@ void net_syncstate(){
 	//send my own status
 	packet.pos = StarblazerEntities[0]->pos;
 	packet.rot = StarblazerEntities[0]->orientation;
+	packet.flags = (player_id << 4);
 	SG_SendPacket(&packet, sizeof(PACKET));
 
 	//we need to handle fire control, triggering my own respawning & timer, telling the server who killed me (their laser entity was marked)
+
+	//recieve status
+	while (SG_RecievePacket(&packet, sizeof(PACKET))){ //respond to each
+		if (SENDER_ID(packet) == player_id) continue; //except my own echoed back to me
+
+		if (DISCONNECTED(packet)){
+
+		}
+		else if (RESPAWNING(packet)){
+
+		}
+		else{ //connected normally, no fnny business
+			if (players[SENDER_ID(packet)].status != 1){ //they either just respawned or just connected
+				printf("Spawning in an entity for player %d\n", SENDER_ID(packet));
+				players[SENDER_ID(packet)].fighter = AX5;
+				players[SENDER_ID(packet)].laser = 0; //FILL THIS IN
+				players[SENDER_ID(packet)].entity_id = spawn_entity(players[SENDER_ID(packet)].fighter, 0, 0, 0, 0, 0, 0);
+				players[SENDER_ID(packet)].status = 1;
+			}
+
+			//otherwise, they've been here for a bit and there's no funny business, so set the appropriate state
+			StarblazerEntities[players[SENDER_ID(packet)].entity_id]->pos = packet.pos;
+			StarblazerEntities[players[SENDER_ID(packet)].entity_id]->orientation = packet.rot;
+
+			if (SHOOTING(packet)){ //fire a laser from their position if they did
+
+			}
+			if (DIED(packet)){ //explode em if they died, set their status to respawning
+				explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));
+				players[SENDER_ID(packet)].status = 2;
+			}
+		}
+	}
 
 	//recieve status
 	/*while (SG_RecievePacket(&packet, sizeof(PACKET))){ //respond to each packet
@@ -93,26 +127,6 @@ void net_syncstate(){
 			else if (players[SENDER_ID(packet)].status == 0){ //they just connected, but in the middle of respawning
 			}
 			players[SENDER_ID(packet)].status = 2;
-		}
-		else{ //connected normally, no funny business
-			if (players[SENDER_ID(packet)].status != 1){ //they either just respawned or just connected
-				players[SENDER_ID(packet)].fighter = 0;
-				players[SENDER_ID(packet)].laser = 0;
-				players[SENDER_ID(packet)].entity_id = spawn_entity(players[SENDER_ID(packet)].fighter, 0, 0, 0, 0, 0, 0);
-				players[SENDER_ID(packet)].status = 1;
-			}
-			
-			//otherwise, they've been here for a bit and there's no funny business, so set the appropriate state
-			StarblazerEntities[players[SENDER_ID(packet)].entity_id]->pos = packet.pos;
-			StarblazerEntities[players[SENDER_ID(packet)].entity_id]->orientation = packet.rot;
-			
-			if (SHOOTING(packet)){ //fire a laser from their position if they did
-
-			}
-			if (DIED(packet)){ //explode em if they died, set their status to respawning
-				explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));
-				players[SENDER_ID(packet)].status = 2;
-			}
 		}
 	}*/
 }

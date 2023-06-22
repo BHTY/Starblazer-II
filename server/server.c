@@ -213,7 +213,7 @@ int main(){
 					leaderboard.records[players[KILLER_ID(*packet)].index].K++;
 				}
 			}
-
+			
 			//handle timeout logic
 
 		}

@@ -45,22 +45,22 @@ _init_stars PROC NEAR
 	push	edi
 ; Line 21
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L552
-$L553:
+	jmp	$L559
+$L560:
 	inc	DWORD PTR _i$[ebp]
-$L552:
+$L559:
 	cmp	DWORD PTR _i$[ebp], 500			; 000001f4H
-	jge	$L554
+	jge	$L561
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	lea	eax, DWORD PTR _title_stars[eax*4]
 	push	eax
 	call	_init_star
 	add	esp, 4
-	jmp	$L553
-$L554:
+	jmp	$L560
+$L561:
 ; Line 22
-$L550:
+$L557:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -78,7 +78,7 @@ _options_button PROC NEAR
 	push	esi
 	push	edi
 ; Line 26
-$L557:
+$L564:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -87,6 +87,7 @@ $L557:
 _options_button ENDP
 _TEXT	ENDS
 PUBLIC	_multiplayer_button
+EXTRN	_mplayer_addr:DWORD
 EXTRN	_destroy_hypercraft:NEAR
 EXTRN	_multiplayer:BYTE
 EXTRN	_net_connect:NEAR
@@ -100,11 +101,12 @@ _multiplayer_button PROC NEAR
 	push	esi
 	push	edi
 ; Line 29
-	push	16777343				; 0100007fH
+	mov	eax, DWORD PTR _mplayer_addr
+	push	eax
 	call	_net_connect
 	add	esp, 4
 	test	eax, eax
-	jne	$L562
+	jne	$L569
 ; Line 30
 	mov	BYTE PTR _multiplayer, 1
 ; Line 31
@@ -112,8 +114,8 @@ _multiplayer_button PROC NEAR
 ; Line 32
 	call	_blazer2_init
 ; Line 34
-$L562:
-$L560:
+$L569:
+$L567:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -135,7 +137,7 @@ _campaign_button PROC NEAR
 ; Line 38
 	call	_blazer2_init
 ; Line 39
-$L566:
+$L573:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -149,10 +151,10 @@ EXTRN	_memcpy:NEAR
 EXTRN	_malloc:NEAR
 _DATA	SEGMENT
 	ORG $+3
-$SG574	DB	'CAMPAIGN', 00H
+$SG581	DB	'CAMPAIGN', 00H
 	ORG $+3
-$SG575	DB	'MULTIPLAYER', 00H
-$SG576	DB	'OPTIONS', 00H
+$SG582	DB	'MULTIPLAYER', 00H
+$SG583	DB	'OPTIONS', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _id$ = -12
@@ -184,7 +186,7 @@ _create_buttons PROC NEAR
 	mov	DWORD PTR _buttonData3$[ebp], eax
 ; Line 46
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG574
+	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG581
 ; Line 47
 	mov	eax, DWORD PTR _buttonData$[ebp]
 	mov	BYTE PTR [eax], 3
@@ -230,10 +232,10 @@ _create_buttons PROC NEAR
 	add	esp, 12					; 0000000cH
 ; Line 60
 	mov	eax, DWORD PTR _buttonData2$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG575
+	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG582
 ; Line 61
 	mov	eax, DWORD PTR _buttonData3$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG576
+	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG583
 ; Line 63
 	mov	eax, DWORD PTR _buttonData$[ebp]
 	mov	DWORD PTR [eax+16], OFFSET FLAT:_campaign_button
@@ -274,7 +276,7 @@ _create_buttons PROC NEAR
 	add	esp, 20					; 00000014H
 	mov	DWORD PTR _id$[ebp], eax
 ; Line 70
-$L568:
+$L575:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -289,7 +291,7 @@ EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 EXTRN	_init_hypercraft:NEAR
 _DATA	SEGMENT
-$SG579	DB	'assets/star.obj', 00H
+$SG586	DB	'assets/star.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _title_init PROC NEAR
@@ -320,7 +322,7 @@ _title_init PROC NEAR
 	call	_quat_create
 	add	esp, 16					; 00000010H
 ; Line 80
-	push	OFFSET FLAT:$SG579
+	push	OFFSET FLAT:$SG586
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _logo, eax
@@ -344,7 +346,7 @@ _title_init PROC NEAR
 ; Line 88
 	call	_init_hypercraft
 ; Line 89
-$L578:
+$L585:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -391,7 +393,7 @@ _title_module PROC NEAR
 ; Line 99
 	call	_ui_process_widgets
 ; Line 100
-$L581:
+$L588:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -481,7 +483,7 @@ _draw_cursor PROC NEAR
 	call	_draw_line
 	add	esp, 20					; 00000014H
 ; Line 107
-$L586:
+$L593:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -498,11 +500,11 @@ EXTRN	_SG_ReadMouse:NEAR
 EXTRN	_ui_display_widgets:NEAR
 EXTRN	_draw_stars:NEAR
 _DATA	SEGMENT
-$SG592	DB	'STARBLAZER', 00H
+$SG599	DB	'STARBLAZER', 00H
 	ORG $+1
-$SG593	DB	'    II', 00H
+$SG600	DB	'    II', 00H
 	ORG $+1
-$SG594	DB	'BY WILL KLEES AND JOSH PIETY', 00H
+$SG601	DB	'BY WILL KLEES AND JOSH PIETY', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _mouse$ = -8
@@ -523,12 +525,12 @@ _title_draw PROC NEAR
 	xor	eax, eax
 	mov	al, BYTE PTR _mouse$[ebp+4]
 	test	eax, eax
-	je	$L590
+	je	$L597
 ; Line 121
-	jmp	$L591
-$L590:
+	jmp	$L598
+$L597:
 ; Line 123
-$L591:
+$L598:
 ; Line 125
 	push	0
 	push	-97					; ffffff9fH
@@ -536,7 +538,7 @@ $L591:
 	push	3
 	push	0
 	push	0
-	push	OFFSET FLAT:$SG592
+	push	OFFSET FLAT:$SG599
 	call	_vputs
 	add	esp, 28					; 0000001cH
 ; Line 126
@@ -546,7 +548,7 @@ $L591:
 	push	3
 	push	10					; 0000000aH
 	push	0
-	push	OFFSET FLAT:$SG593
+	push	OFFSET FLAT:$SG600
 	call	_vputs
 	add	esp, 28					; 0000001cH
 ; Line 127
@@ -556,7 +558,7 @@ $L591:
 	push	3
 	push	100					; 00000064H
 	push	30					; 0000001eH
-	push	OFFSET FLAT:$SG594
+	push	OFFSET FLAT:$SG601
 	call	_vputs
 	add	esp, 28					; 0000001cH
 ; Line 129
@@ -584,7 +586,7 @@ $L591:
 ; Line 138
 	call	_ui_display_widgets
 ; Line 141
-$L588:
+$L595:
 	pop	edi
 	pop	esi
 	pop	ebx
