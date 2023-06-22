@@ -9,7 +9,7 @@ typedef struct{
 } QUAT;
 
 typedef struct{
-	uint32 index;
+	uint32 index; //index into the leaderboard (-1 if not connected)
 	//address
 } CONNECTED_PLAYER;
 

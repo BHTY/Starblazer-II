@@ -328,9 +328,9 @@ EXTRN	_printf:NEAR
 _DATA	SEGMENT
 	ORG $+3
 $SG314	DB	'Starblazer II Beta Version', 0aH, 00H
-$SG315	DB	'23:36:17', 00H
+$SG315	DB	'02:36:10', 00H
 	ORG $+3
-$SG316	DB	'Jun 21 2023', 00H
+$SG316	DB	'Jun 22 2023', 00H
 $SG317	DB	'Build Time: %s %s', 0aH, 00H
 	ORG $+1
 $SG318	DB	'By Will Klees (Captain Will Starblazer) and Josh "Fixer"'
