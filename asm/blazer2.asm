@@ -1452,7 +1452,7 @@ $L400:
 	je	$L403
 ; Line 385
 	mov	eax, DWORD PTR _joy$[ebp]
-	mov	BYTE PTR [eax+2], 127			; 0000007fH
+	mov	BYTE PTR [eax+2], -127			; ffffff81H
 ; Line 387
 	jmp	$L404
 $L403:
@@ -1465,7 +1465,7 @@ $L403:
 	je	$L405
 ; Line 388
 	mov	eax, DWORD PTR _joy$[ebp]
-	mov	BYTE PTR [eax+2], -127			; ffffff81H
+	mov	BYTE PTR [eax+2], 127			; 0000007fH
 ; Line 390
 	jmp	$L406
 $L405:

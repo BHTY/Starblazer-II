@@ -382,10 +382,10 @@ void vjoy_read(joystick_t* joy){
 
 	//read roll
 	if (SG_KeyDown('Q')){
-		joy->roll = 127;
+		joy->roll = -127;
 	}
 	else if (SG_KeyDown('E')){
-		joy->roll = -127;
+		joy->roll = 127;
 	}
 	else{
 		joy->roll = 0;
@@ -479,7 +479,7 @@ void blazer2_module(){
 			firing_cooldown--;
 		}
 	}
-
+	
 	//boost & brake - make the curves smoother?
 	if (joy.boost && !boost_overheating){
 		velocity.z = player_fighter.boost_speed;
