@@ -14,3 +14,5 @@
 - Sync leaderboard
   - Sort the leaderboard by KD ratio and then create an HTML and CSV file out of it with a four-column table (place, player name, K, and D)
 - Loop through all of the connected players. If the time between now and their last packet is greater than or equal to the timeout constant, remove them from the connected players list and send a packet indicating their disconnection to the other players
+
+The netcode is deceptively simple. (famous last words)
