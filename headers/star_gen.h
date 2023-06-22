@@ -5,6 +5,7 @@
 
 extern uint8* frontbuffer;
 extern char* SG_platform;
+extern uint32 mplayer_addr;
 
 typedef struct{
 	uint16 x, y;

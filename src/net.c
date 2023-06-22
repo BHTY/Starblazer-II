@@ -47,17 +47,21 @@ bool_t net_connect(uint32 addr){
 	while (!SG_RecievePacket(&ret_token, sizeof(RETURNING_TOKEN))){
 		if ((SG_GetTicks() - time_started) > TIMEOUT){
 			printf("NET: Server timed out.\n");
+			SG_CloseConnection();
 			return 1;
 		}
 	}
 
 	if (!(ret_token.connected)){
 		printf("NET: Authentication failed.\n");
+		SG_CloseConnection();
 		return 2;
 	}
 
 	timeout = ret_token.wait_die;
 	player_id = ret_token.player_num;
+	printf("NET: Successful connection.\n");
+	return 0;
 }
 
 void net_syncstate(){

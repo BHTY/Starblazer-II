@@ -32,15 +32,18 @@ EXTRN	_SG_GetTicks:NEAR
 EXTRN	_SG_OpenConnection:NEAR
 EXTRN	_SG_RecievePacket:NEAR
 EXTRN	_SG_SendPacket:NEAR
+EXTRN	_SG_CloseConnection:NEAR
 EXTRN	_strcpy:NEAR
 EXTRN	_printf:NEAR
 _DATA	SEGMENT
-$SG271	DB	'STARBLAZER', 00H
+$SG272	DB	'STARBLAZER', 00H
 	ORG $+1
-$SG274	DB	'NET: Connection failed.', 0aH, 00H
+$SG275	DB	'NET: Connection failed.', 0aH, 00H
 	ORG $+3
-$SG279	DB	'NET: Server timed out.', 0aH, 00H
-$SG281	DB	'NET: Authentication failed.', 0aH, 00H
+$SG280	DB	'NET: Server timed out.', 0aH, 00H
+$SG282	DB	'NET: Authentication failed.', 0aH, 00H
+	ORG $+3
+$SG283	DB	'NET: Successful connection.', 0aH, 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 ; File src\net.c
@@ -60,7 +63,7 @@ _net_connect PROC NEAR
 	call	_SG_GetTicks
 	mov	DWORD PTR _time_started$[ebp], eax
 ; Line 34
-	push	OFFSET FLAT:$SG271
+	push	OFFSET FLAT:$SG272
 	lea	eax, DWORD PTR _auth_token$[ebp]
 	push	eax
 	call	_strcpy
@@ -89,69 +92,80 @@ _net_connect PROC NEAR
 	xor	ecx, ecx
 	mov	cl, al
 	test	ecx, ecx
-	jne	$L272
+	jne	$L273
 ; Line 41
-	push	OFFSET FLAT:$SG274
+	push	OFFSET FLAT:$SG275
 	call	_printf
 	add	esp, 4
 ; Line 42
 	mov	al, 1
-	jmp	$L266
+	jmp	$L267
 ; Line 45
-$L272:
+$L273:
 	push	45					; 0000002dH
 	lea	eax, DWORD PTR _auth_token$[ebp]
 	push	eax
 	call	_SG_SendPacket
 	add	esp, 8
 ; Line 47
-$L276:
+$L277:
 	push	3
 	lea	eax, DWORD PTR _ret_token$[ebp]
 	push	eax
 	call	_SG_RecievePacket
 	add	esp, 8
 	test	eax, eax
-	jne	$L277
+	jne	$L278
 ; Line 48
 	call	_SG_GetTicks
 	sub	eax, DWORD PTR _time_started$[ebp]
 	cmp	eax, 3000				; 00000bb8H
-	jbe	$L278
+	jbe	$L279
 ; Line 49
-	push	OFFSET FLAT:$SG279
+	push	OFFSET FLAT:$SG280
 	call	_printf
 	add	esp, 4
 ; Line 50
+	call	_SG_CloseConnection
+; Line 51
 	mov	al, 1
-	jmp	$L266
-; Line 52
+	jmp	$L267
+; Line 53
+$L279:
+	jmp	$L277
 $L278:
-	jmp	$L276
-$L277:
-; Line 54
+; Line 55
 	xor	eax, eax
 	mov	al, BYTE PTR _ret_token$[ebp]
 	test	eax, eax
-	jne	$L280
-; Line 55
-	push	OFFSET FLAT:$SG281
+	jne	$L281
+; Line 56
+	push	OFFSET FLAT:$SG282
 	call	_printf
 	add	esp, 4
-; Line 56
+; Line 57
+	call	_SG_CloseConnection
+; Line 58
 	mov	al, 2
-	jmp	$L266
-; Line 59
-$L280:
+	jmp	$L267
+; Line 61
+$L281:
 	xor	eax, eax
 	mov	al, BYTE PTR _ret_token$[ebp+2]
 	mov	DWORD PTR _timeout, eax
-; Line 60
+; Line 62
 	xor	eax, eax
 	mov	al, BYTE PTR _ret_token$[ebp+1]
 	mov	DWORD PTR _player_id, eax
-; Line 61
-$L266:
+; Line 63
+	push	OFFSET FLAT:$SG283
+	call	_printf
+	add	esp, 4
+; Line 64
+	xor	al, al
+	jmp	$L267
+; Line 65
+$L267:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -164,14 +178,14 @@ EXTRN	_StarblazerEntities:BYTE
 _TEXT	SEGMENT
 _packet$ = -32
 _net_syncstate PROC NEAR
-; Line 63
+; Line 67
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 32					; 00000020H
 	push	ebx
 	push	esi
 	push	edi
-; Line 67
+; Line 71
 	mov	eax, DWORD PTR _StarblazerEntities
 	add	eax, 4
 	lea	ecx, DWORD PTR _packet$[ebp]
@@ -181,7 +195,7 @@ _net_syncstate PROC NEAR
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 68
+; Line 72
 	mov	eax, DWORD PTR _StarblazerEntities
 	add	eax, 16					; 00000010H
 	lea	ecx, DWORD PTR _packet$[ebp+12]
@@ -193,14 +207,14 @@ _net_syncstate PROC NEAR
 	mov	DWORD PTR [ecx+8], edx
 	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR [ecx+12], eax
-; Line 69
+; Line 73
 	push	32					; 00000020H
 	lea	eax, DWORD PTR _packet$[ebp]
 	push	eax
 	call	_SG_SendPacket
 	add	esp, 8
-; Line 114
-$L282:
+; Line 118
+$L284:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -211,14 +225,14 @@ _TEXT	ENDS
 PUBLIC	_net_disconnect
 _TEXT	SEGMENT
 _net_disconnect PROC NEAR
-; Line 116
+; Line 120
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 118
-$L284:
+; Line 122
+$L286:
 	pop	edi
 	pop	esi
 	pop	ebx

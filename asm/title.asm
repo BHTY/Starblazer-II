@@ -45,22 +45,22 @@ _init_stars PROC NEAR
 	push	edi
 ; Line 21
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L551
-$L552:
+	jmp	$L552
+$L553:
 	inc	DWORD PTR _i$[ebp]
-$L551:
+$L552:
 	cmp	DWORD PTR _i$[ebp], 500			; 000001f4H
-	jge	$L553
+	jge	$L554
 	mov	eax, DWORD PTR _i$[ebp]
 	lea	eax, DWORD PTR [eax+eax*2]
 	lea	eax, DWORD PTR _title_stars[eax*4]
 	push	eax
 	call	_init_star
 	add	esp, 4
-	jmp	$L552
-$L553:
+	jmp	$L553
+$L554:
 ; Line 22
-$L549:
+$L550:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -78,7 +78,7 @@ _options_button PROC NEAR
 	push	esi
 	push	edi
 ; Line 26
-$L556:
+$L557:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -89,6 +89,7 @@ _TEXT	ENDS
 PUBLIC	_multiplayer_button
 EXTRN	_destroy_hypercraft:NEAR
 EXTRN	_multiplayer:BYTE
+EXTRN	_net_connect:NEAR
 EXTRN	_blazer2_init:NEAR
 _TEXT	SEGMENT
 _multiplayer_button PROC NEAR
@@ -99,13 +100,20 @@ _multiplayer_button PROC NEAR
 	push	esi
 	push	edi
 ; Line 29
-	mov	BYTE PTR _multiplayer, 1
+	push	16777343				; 0100007fH
+	call	_net_connect
+	add	esp, 4
+	test	eax, eax
+	jne	$L562
 ; Line 30
-	call	_destroy_hypercraft
+	mov	BYTE PTR _multiplayer, 1
 ; Line 31
-	call	_blazer2_init
+	call	_destroy_hypercraft
 ; Line 32
-$L559:
+	call	_blazer2_init
+; Line 34
+$L562:
+$L560:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -116,18 +124,18 @@ _TEXT	ENDS
 PUBLIC	_campaign_button
 _TEXT	SEGMENT
 _campaign_button PROC NEAR
-; Line 34
+; Line 36
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 35
-	call	_destroy_hypercraft
-; Line 36
-	call	_blazer2_init
 ; Line 37
-$L563:
+	call	_destroy_hypercraft
+; Line 38
+	call	_blazer2_init
+; Line 39
+$L566:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -141,10 +149,10 @@ EXTRN	_memcpy:NEAR
 EXTRN	_malloc:NEAR
 _DATA	SEGMENT
 	ORG $+3
-$SG571	DB	'CAMPAIGN', 00H
+$SG574	DB	'CAMPAIGN', 00H
 	ORG $+3
-$SG572	DB	'MULTIPLAYER', 00H
-$SG573	DB	'OPTIONS', 00H
+$SG575	DB	'MULTIPLAYER', 00H
+$SG576	DB	'OPTIONS', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _id$ = -12
@@ -152,90 +160,90 @@ _buttonData$ = -4
 _buttonData2$ = -8
 _buttonData3$ = -16
 _create_buttons PROC NEAR
-; Line 39
+; Line 41
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 16					; 00000010H
 	push	ebx
 	push	esi
 	push	edi
-; Line 41
-	push	20					; 00000014H
-	call	_malloc
-	add	esp, 4
-	mov	DWORD PTR _buttonData$[ebp], eax
-; Line 42
-	push	20					; 00000014H
-	call	_malloc
-	add	esp, 4
-	mov	DWORD PTR _buttonData2$[ebp], eax
 ; Line 43
 	push	20					; 00000014H
 	call	_malloc
 	add	esp, 4
-	mov	DWORD PTR _buttonData3$[ebp], eax
+	mov	DWORD PTR _buttonData$[ebp], eax
 ; Line 44
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG571
+	push	20					; 00000014H
+	call	_malloc
+	add	esp, 4
+	mov	DWORD PTR _buttonData2$[ebp], eax
 ; Line 45
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax], 3
+	push	20					; 00000014H
+	call	_malloc
+	add	esp, 4
+	mov	DWORD PTR _buttonData3$[ebp], eax
 ; Line 46
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+1], 2
+	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG574
 ; Line 47
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+2], 175			; 000000afH
+	mov	BYTE PTR [eax], 3
 ; Line 48
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+3], 0
+	mov	BYTE PTR [eax+1], 2
 ; Line 49
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	WORD PTR [eax+4], 100			; 00000064H
+	mov	BYTE PTR [eax+2], 175			; 000000afH
 ; Line 50
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	WORD PTR [eax+6], 12			; 0000000cH
+	mov	BYTE PTR [eax+3], 0
 ; Line 51
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+8], 175			; 000000afH
+	mov	WORD PTR [eax+4], 100			; 00000064H
 ; Line 52
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+9], 255			; 000000ffH
+	mov	WORD PTR [eax+6], 12			; 0000000cH
 ; Line 53
 	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+10], 255			; 000000ffH
+	mov	BYTE PTR [eax+8], 175			; 000000afH
+; Line 54
+	mov	eax, DWORD PTR _buttonData$[ebp]
+	mov	BYTE PTR [eax+9], 255			; 000000ffH
 ; Line 55
+	mov	eax, DWORD PTR _buttonData$[ebp]
+	mov	BYTE PTR [eax+10], 255			; 000000ffH
+; Line 57
 	push	20					; 00000014H
 	mov	eax, DWORD PTR _buttonData$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _buttonData2$[ebp]
-	push	eax
-	call	_memcpy
-	add	esp, 12					; 0000000cH
-; Line 56
-	push	20					; 00000014H
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _buttonData3$[ebp]
 	push	eax
 	call	_memcpy
 	add	esp, 12					; 0000000cH
 ; Line 58
-	mov	eax, DWORD PTR _buttonData2$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG572
-; Line 59
+	push	20					; 00000014H
+	mov	eax, DWORD PTR _buttonData$[ebp]
+	push	eax
 	mov	eax, DWORD PTR _buttonData3$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG573
+	push	eax
+	call	_memcpy
+	add	esp, 12					; 0000000cH
+; Line 60
+	mov	eax, DWORD PTR _buttonData2$[ebp]
+	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG575
 ; Line 61
+	mov	eax, DWORD PTR _buttonData3$[ebp]
+	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG576
+; Line 63
 	mov	eax, DWORD PTR _buttonData$[ebp]
 	mov	DWORD PTR [eax+16], OFFSET FLAT:_campaign_button
-; Line 62
+; Line 64
 	mov	eax, DWORD PTR _buttonData2$[ebp]
 	mov	DWORD PTR [eax+16], OFFSET FLAT:_multiplayer_button
-; Line 63
+; Line 65
 	mov	eax, DWORD PTR _buttonData3$[ebp]
 	mov	DWORD PTR [eax+16], OFFSET FLAT:_options_button
-; Line 65
+; Line 67
 	mov	eax, DWORD PTR _buttonData$[ebp]
 	push	eax
 	push	120					; 00000078H
@@ -245,7 +253,7 @@ _create_buttons PROC NEAR
 	call	_ui_create_widget
 	add	esp, 20					; 00000014H
 	mov	DWORD PTR _id$[ebp], eax
-; Line 66
+; Line 68
 	mov	eax, DWORD PTR _buttonData2$[ebp]
 	push	eax
 	push	140					; 0000008cH
@@ -255,7 +263,7 @@ _create_buttons PROC NEAR
 	call	_ui_create_widget
 	add	esp, 20					; 00000014H
 	mov	DWORD PTR _id$[ebp], eax
-; Line 67
+; Line 69
 	mov	eax, DWORD PTR _buttonData3$[ebp]
 	push	eax
 	push	160					; 000000a0H
@@ -265,8 +273,8 @@ _create_buttons PROC NEAR
 	call	_ui_create_widget
 	add	esp, 20					; 00000014H
 	mov	DWORD PTR _id$[ebp], eax
-; Line 68
-$L565:
+; Line 70
+$L568:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -281,42 +289,42 @@ EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 EXTRN	_init_hypercraft:NEAR
 _DATA	SEGMENT
-$SG576	DB	'assets/star.obj', 00H
+$SG579	DB	'assets/star.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _title_init PROC NEAR
-; Line 70
+; Line 72
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 71
-	mov	DWORD PTR _title_camera, 0
-; Line 72
-	mov	DWORD PTR _title_camera+4, 0
 ; Line 73
-	mov	DWORD PTR _title_camera+8, 0
+	mov	DWORD PTR _title_camera, 0
+; Line 74
+	mov	DWORD PTR _title_camera+4, 0
 ; Line 75
+	mov	DWORD PTR _title_camera+8, 0
+; Line 77
 	push	OFFSET FLAT:_title_cam_ori
 	push	0
 	push	0
 	push	0
 	call	_quat_create
 	add	esp, 16					; 00000010H
-; Line 76
+; Line 78
 	push	OFFSET FLAT:_stars_cam_ori
 	push	0
 	push	0
 	push	0
 	call	_quat_create
 	add	esp, 16					; 00000010H
-; Line 78
-	push	OFFSET FLAT:$SG576
+; Line 80
+	push	OFFSET FLAT:$SG579
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _logo, eax
-; Line 79
+; Line 81
 	push	0
 	push	128					; 00000080H
 	push	0
@@ -327,16 +335,16 @@ _title_init PROC NEAR
 	push	eax
 	call	_spawn_entity
 	add	esp, 28					; 0000001cH
-; Line 81
-	mov	WORD PTR _SL_CENTER_Y, 45		; 0000002dH
 ; Line 83
+	mov	WORD PTR _SL_CENTER_Y, 45		; 0000002dH
+; Line 85
 	call	_init_stars
-; Line 84
-	call	_create_buttons
 ; Line 86
+	call	_create_buttons
+; Line 88
 	call	_init_hypercraft
-; Line 87
-$L575:
+; Line 89
+$L578:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -352,38 +360,38 @@ EXTRN	_StarblazerEntities:BYTE
 EXTRN	_ui_process_widgets:NEAR
 _TEXT	SEGMENT
 _title_module PROC NEAR
-; Line 89
+; Line 91
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 91
+; Line 93
 	mov	eax, DWORD PTR _StarblazerEntities
 	add	eax, 16					; 00000010H
 	push	eax
 	push	16					; 00000010H
 	call	_quat_yaw
 	add	esp, 8
-; Line 93
+; Line 95
 	push	OFFSET FLAT:_stars_cam_ori
 	push	8
 	call	_quat_pitch
 	add	esp, 8
-; Line 94
+; Line 96
 	push	OFFSET FLAT:_stars_cam_ori
 	push	8
 	call	_quat_yaw
 	add	esp, 8
-; Line 95
+; Line 97
 	push	OFFSET FLAT:_stars_cam_ori
 	push	8
 	call	_quat_roll
 	add	esp, 8
-; Line 97
+; Line 99
 	call	_ui_process_widgets
-; Line 98
-$L578:
+; Line 100
+$L581:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -398,60 +406,26 @@ _x$ = 8
 _y$ = 12
 _clr$ = 16
 _draw_cursor PROC NEAR
-; Line 100
+; Line 102
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 101
-	mov	eax, DWORD PTR _clr$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y$[ebp]
-	add	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _x$[ebp]
-	sub	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _y$[ebp]
-	sub	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _x$[ebp]
-	sub	eax, 5
-	push	eax
-	call	_draw_line
-	add	esp, 20					; 00000014H
-; Line 102
-	mov	eax, DWORD PTR _clr$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _y$[ebp]
-	add	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _x$[ebp]
-	add	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _y$[ebp]
-	add	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _x$[ebp]
-	sub	eax, 5
-	push	eax
-	call	_draw_line
-	add	esp, 20					; 00000014H
 ; Line 103
 	mov	eax, DWORD PTR _clr$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _y$[ebp]
+	add	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _x$[ebp]
+	sub	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _y$[ebp]
 	sub	eax, 5
 	push	eax
 	mov	eax, DWORD PTR _x$[ebp]
-	add	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _y$[ebp]
-	add	eax, 5
-	push	eax
-	mov	eax, DWORD PTR _x$[ebp]
-	add	eax, 5
+	sub	eax, 5
 	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
@@ -459,6 +433,40 @@ _draw_cursor PROC NEAR
 	mov	eax, DWORD PTR _clr$[ebp]
 	push	eax
 	mov	eax, DWORD PTR _y$[ebp]
+	add	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _x$[ebp]
+	add	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _y$[ebp]
+	add	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _x$[ebp]
+	sub	eax, 5
+	push	eax
+	call	_draw_line
+	add	esp, 20					; 00000014H
+; Line 105
+	mov	eax, DWORD PTR _clr$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y$[ebp]
+	sub	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _x$[ebp]
+	add	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _y$[ebp]
+	add	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _x$[ebp]
+	add	eax, 5
+	push	eax
+	call	_draw_line
+	add	esp, 20					; 00000014H
+; Line 106
+	mov	eax, DWORD PTR _clr$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y$[ebp]
 	sub	eax, 5
 	push	eax
 	mov	eax, DWORD PTR _x$[ebp]
@@ -472,8 +480,8 @@ _draw_cursor PROC NEAR
 	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 105
-$L583:
+; Line 107
+$L586:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -490,68 +498,68 @@ EXTRN	_SG_ReadMouse:NEAR
 EXTRN	_ui_display_widgets:NEAR
 EXTRN	_draw_stars:NEAR
 _DATA	SEGMENT
-$SG589	DB	'STARBLAZER', 00H
+$SG592	DB	'STARBLAZER', 00H
 	ORG $+1
-$SG590	DB	'    II', 00H
+$SG593	DB	'    II', 00H
 	ORG $+1
-$SG591	DB	'BY WILL KLEES AND JOSH PIETY', 00H
+$SG594	DB	'BY WILL KLEES AND JOSH PIETY', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _mouse$ = -8
 _title_draw PROC NEAR
-; Line 107
+; Line 109
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
 	push	ebx
 	push	esi
 	push	edi
-; Line 109
+; Line 111
 	lea	eax, DWORD PTR _mouse$[ebp]
 	push	eax
 	call	_SG_ReadMouse
 	add	esp, 4
-; Line 111
+; Line 113
 	xor	eax, eax
 	mov	al, BYTE PTR _mouse$[ebp+4]
 	test	eax, eax
-	je	$L587
-; Line 119
-	jmp	$L588
-$L587:
+	je	$L590
 ; Line 121
-$L588:
+	jmp	$L591
+$L590:
 ; Line 123
+$L591:
+; Line 125
 	push	0
 	push	-97					; ffffff9fH
 	push	2
 	push	3
 	push	0
 	push	0
-	push	OFFSET FLAT:$SG589
+	push	OFFSET FLAT:$SG592
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 124
+; Line 126
 	push	0
 	push	-17					; ffffffefH
 	push	2
 	push	3
 	push	10					; 0000000aH
 	push	0
-	push	OFFSET FLAT:$SG590
+	push	OFFSET FLAT:$SG593
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 125
+; Line 127
 	push	0
 	push	-1
 	push	2
 	push	3
 	push	100					; 00000064H
 	push	30					; 0000001eH
-	push	OFFSET FLAT:$SG591
+	push	OFFSET FLAT:$SG594
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 127
+; Line 129
 	push	0
 	push	0
 	push	0
@@ -566,17 +574,17 @@ $L588:
 	push	OFFSET FLAT:_title_camera
 	call	_draw_scene
 	add	esp, 32					; 00000020H
-; Line 133
+; Line 135
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	push	OFFSET FLAT:_stars_cam_ori
 	call	_quat_tomat
 	add	esp, 8
-; Line 134
-	call	_draw_stars
 ; Line 136
+	call	_draw_stars
+; Line 138
 	call	_ui_display_widgets
-; Line 139
-$L585:
+; Line 141
+$L588:
 	pop	edi
 	pop	esi
 	pop	ebx

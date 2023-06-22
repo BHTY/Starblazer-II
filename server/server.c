@@ -182,7 +182,7 @@ int main(){
 							ret_token.wait_die = RESPAWN_TIME;
 							send_packet(&(players[slot].socket), &ret_token, sizeof(RETURNING_TOKEN));
 							cur_players++;
-							sprintf(text, "Starblazer II Game Server (%d players)", cur_players);
+							sprintf(text, "Starblazer II Game Server (%d inbound connections)", cur_players);
 							SetConsoleTitle(text);
 						}
 						else{ //not enough room
@@ -223,7 +223,7 @@ int main(){
 						packet->flags = 2 | (i << 4) | (i << 12); //set it such that they despawn
 						cur_players--;
 
-						sprintf(text, "Starblazer II Game Server (%d players)", cur_players);
+						sprintf(text, "Starblazer II Game Server (%d inbound connections)", cur_players);
 						SetConsoleTitle(text);
 
 						for (j = 0; j < 16; j++){ //give everyone else the news

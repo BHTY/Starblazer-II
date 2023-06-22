@@ -26,9 +26,11 @@ void options_button(uint32 unimportant){
 }
 
 void multiplayer_button(uint32 unimportant){
-	multiplayer = 1;
-	destroy_hypercraft();
-	blazer2_init();
+	if (net_connect(16777343) == 0){
+		multiplayer = 1;
+		destroy_hypercraft();
+		blazer2_init();
+	}
 }
 
 void campaign_button(uint32 unimportant){

@@ -62,7 +62,7 @@ _SG_PresentFrame PROC NEAR
 ; Line 26
 	call	_SG_DrawFrame
 ; Line 27
-$L285:
+$L286:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -91,7 +91,7 @@ _SG_Tick PROC NEAR
 	xor	eax, eax
 	mov	al, BYTE PTR _GAME_SETTINGS+4
 	cmp	eax, DWORD PTR _current_frame
-	jne	$L288
+	jne	$L289
 ; Line 37
 	mov	DWORD PTR _current_frame, 0
 ; Line 38
@@ -107,16 +107,16 @@ _SG_Tick PROC NEAR
 	mov	eax, DWORD PTR _current_time$[ebp]
 	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
 ; Line 43
-	jmp	$L289
-$L288:
+	jmp	$L290
+$L289:
 ; Line 44
 	inc	DWORD PTR _current_frame
 ; Line 45
-$L289:
+$L290:
 ; Line 47
 	call	_SG_WaitBlank
 ; Line 48
-$L286:
+$L287:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -134,7 +134,7 @@ _SG_LoadConfig PROC NEAR
 	push	esi
 	push	edi
 ; Line 52
-$L291:
+$L292:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -152,7 +152,7 @@ _SG_SaveConfig PROC NEAR
 	push	esi
 	push	edi
 ; Line 56
-$L293:
+$L294:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -167,7 +167,7 @@ EXTRN	_title_module:NEAR
 EXTRN	_srand:NEAR
 EXTRN	_time:NEAR
 _DATA	SEGMENT
-$SG295	DB	'starfont.fnt', 00H
+$SG296	DB	'starfont.fnt', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _SG_GameInit PROC NEAR
@@ -186,7 +186,7 @@ _SG_GameInit PROC NEAR
 ; Line 61
 	mov	DWORD PTR _SG_Module, OFFSET FLAT:_title_module
 ; Line 63
-	push	OFFSET FLAT:$SG295
+	push	OFFSET FLAT:$SG296
 	call	_unpack_glyphs
 	add	esp, 4
 ; Line 64
@@ -197,7 +197,7 @@ _SG_GameInit PROC NEAR
 	call	_srand
 	add	esp, 4
 ; Line 65
-$L294:
+$L295:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -223,57 +223,57 @@ _SG_InitPalette PROC NEAR
 	push	edi
 ; Line 87
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L306
-$L307:
+	jmp	$L307
+$L308:
 	inc	DWORD PTR _i$[ebp]
-$L306:
+$L307:
 	cmp	DWORD PTR _i$[ebp], 16			; 00000010H
-	jge	$L308
+	jge	$L309
 ; Line 88
 	test	BYTE PTR _i$[ebp], 4
-	je	$L321
+	je	$L322
 	test	BYTE PTR _i$[ebp], 8
-	je	$L323
+	je	$L324
 	mov	BYTE PTR _r$[ebp], 16			; 00000010H
-	jmp	$L324
-$L323:
-	mov	BYTE PTR _r$[ebp], 8
+	jmp	$L325
 $L324:
-	jmp	$L322
-$L321:
-	mov	BYTE PTR _r$[ebp], 0
+	mov	BYTE PTR _r$[ebp], 8
+$L325:
+	jmp	$L323
 $L322:
+	mov	BYTE PTR _r$[ebp], 0
+$L323:
 ; Line 89
 	test	BYTE PTR _i$[ebp], 2
-	je	$L325
+	je	$L326
 	test	BYTE PTR _i$[ebp], 8
-	je	$L327
+	je	$L328
 	mov	BYTE PTR _g$[ebp], 16			; 00000010H
-	jmp	$L328
-$L327:
-	mov	BYTE PTR _g$[ebp], 8
+	jmp	$L329
 $L328:
-	jmp	$L326
-$L325:
-	mov	BYTE PTR _g$[ebp], 0
+	mov	BYTE PTR _g$[ebp], 8
+$L329:
+	jmp	$L327
 $L326:
+	mov	BYTE PTR _g$[ebp], 0
+$L327:
 ; Line 90
 	test	BYTE PTR _i$[ebp], 1
-	je	$L329
+	je	$L330
 	test	BYTE PTR _i$[ebp], 8
-	je	$L331
+	je	$L332
 	mov	BYTE PTR _b$[ebp], 16			; 00000010H
-	jmp	$L332
-$L331:
-	mov	BYTE PTR _b$[ebp], 8
+	jmp	$L333
 $L332:
-	jmp	$L330
-$L329:
-	mov	BYTE PTR _b$[ebp], 0
+	mov	BYTE PTR _b$[ebp], 8
+$L333:
+	jmp	$L331
 $L330:
+	mov	BYTE PTR _b$[ebp], 0
+$L331:
 ; Line 93
 	cmp	DWORD PTR _i$[ebp], 7
-	jne	$L309
+	jne	$L310
 ; Line 94
 	mov	BYTE PTR _r$[ebp], 16			; 00000010H
 ; Line 95
@@ -281,14 +281,14 @@ $L330:
 ; Line 96
 	mov	BYTE PTR _b$[ebp], 0
 ; Line 99
-$L309:
-	mov	DWORD PTR _p$[ebp], 0
-	jmp	$L310
-$L311:
-	inc	DWORD PTR _p$[ebp]
 $L310:
+	mov	DWORD PTR _p$[ebp], 0
+	jmp	$L311
+$L312:
+	inc	DWORD PTR _p$[ebp]
+$L311:
 	cmp	DWORD PTR _p$[ebp], 16			; 00000010H
-	jge	$L312
+	jge	$L313
 ; Line 100
 	xor	eax, eax
 	mov	al, BYTE PTR _b$[ebp]
@@ -309,13 +309,13 @@ $L310:
 	call	_SG_SetPaletteIndex
 	add	esp, 16					; 00000010H
 ; Line 101
-	jmp	$L311
-$L312:
+	jmp	$L312
+$L313:
 ; Line 102
-	jmp	$L307
-$L308:
+	jmp	$L308
+$L309:
 ; Line 103
-$L299:
+$L300:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -327,13 +327,13 @@ PUBLIC	_SG_WelcomeMessage
 EXTRN	_printf:NEAR
 _DATA	SEGMENT
 	ORG $+3
-$SG314	DB	'Starblazer II Beta Version', 0aH, 00H
-$SG315	DB	'11:55:43', 00H
+$SG315	DB	'Starblazer II Beta Version', 0aH, 00H
+$SG316	DB	'12:21:15', 00H
 	ORG $+3
-$SG316	DB	'Jun 22 2023', 00H
-$SG317	DB	'Build Time: %s %s', 0aH, 00H
+$SG317	DB	'Jun 22 2023', 00H
+$SG318	DB	'Build Time: %s %s', 0aH, 00H
 	ORG $+1
-$SG318	DB	'By Will Klees (Captain Will Starblazer) and Josh "Fixer"'
+$SG319	DB	'By Will Klees (Captain Will Starblazer) and Josh "Fixer"'
 	DB	' Piety', 0aH, 00H
 _DATA	ENDS
 _TEXT	SEGMENT
@@ -345,21 +345,21 @@ _SG_WelcomeMessage PROC NEAR
 	push	esi
 	push	edi
 ; Line 106
-	push	OFFSET FLAT:$SG314
+	push	OFFSET FLAT:$SG315
 	call	_printf
 	add	esp, 4
 ; Line 107
-	push	OFFSET FLAT:$SG315
 	push	OFFSET FLAT:$SG316
 	push	OFFSET FLAT:$SG317
+	push	OFFSET FLAT:$SG318
 	call	_printf
 	add	esp, 12					; 0000000cH
 ; Line 108
-	push	OFFSET FLAT:$SG318
+	push	OFFSET FLAT:$SG319
 	call	_printf
 	add	esp, 4
 ; Line 109
-$L313:
+$L314:
 	pop	edi
 	pop	esi
 	pop	ebx

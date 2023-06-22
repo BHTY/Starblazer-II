@@ -28,6 +28,8 @@ HPALETTE hPalette;
 RECT rectScreen;
 int newFrame = 0;
 
+uint32 mplayer_addr;
+
 int window_height;
 int window_width;
 
@@ -44,18 +46,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
 	switch (msg){
 		case WM_DESTROY:{
-			PostQuitMessage(0);
+							PostQuitMessage(0);
+							SG_CloseConnection();
 			break;
 		}
 
 		case WM_CLOSE:{
 			DestroyWindow(hWnd);
 			ExitProcess(0);
+			SG_CloseConnection();
 			break;
 		}
 
 		case WM_QUIT:{
 			ExitProcess(0);
+			SG_CloseConnection();
 			break;
 		}
 
@@ -243,7 +248,24 @@ void SG_SendPacket(void* buf, int num_bytes){
 }
 
 void SG_CloseConnection(){
+	close_connection(&out_socket);
+	close_connection(&server_connection);
+}
 
+void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, char* name, char* pin){
+	char taddr[50];
+
+	FILE* fp = fopen("config.ini", "r");
+	fscanf(fp, "addr= %s\n", taddr);
+	fscanf(fp, "port= %d\n", port);
+	fscanf(fp, "otherport= %d\n", otherport);
+	fscanf(fp, "name= %s\n", name);
+	fscanf(fp, "pin= %s\n", pin);
+	fscanf(fp, "x= %d\n", x);
+	fscanf(fp, "y= %d\n", y);
+	fclose(fp);
+
+	*addr = inet_addr(taddr);
 }
 
 /*
@@ -261,10 +283,12 @@ void SG_Init(int argc, char** argv){
 	//do the generic initialization
 	SG_GameInit();
 
+	SG_TempLoadConfig(&mplayer_addr, &window_width, &window_height, &PORT, &OTHER_PORT, GAME_SETTINGS.com_settings.player_name, GAME_SETTINGS.com_settings.player_pin);
+
 	init_networking();
 
-	window_width = 640;
-	window_height = 480;
+	/*window_width = 640;
+	window_height = 480;*/
 
 	winRect.left = 0;
 	winRect.top = 0;
