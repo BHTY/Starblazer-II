@@ -9,12 +9,15 @@
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
-#include <winsock.h>
 #include <windows.h>
+#include <mmsystem.h>
 #include "svrtypes.h"
+
+int PORT, OTHER_PORT;
 
 LEADERBOARD leaderboard;
 CONNECTED_PLAYER players[16];
+connection_t in_socket;
 
 /*
 - Loads the leaderboard file if it exists
@@ -29,6 +32,7 @@ void load_leaderboard(){
 	}
 	else{ //file does exist, load it in
 		fread(&leaderboard, sizeof(LEADERBOARD), 1, fp);
+		fclose(fp);
 	}
 }
 
@@ -72,6 +76,33 @@ int authenticate(char* player_name, char* pin){
 	return leaderboard.number_records - 1;
 }
 
-int main(){
+void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, DWORD* dwUser, DWORD* dw, DWORD* dw2){
+	printf("Syncing leaderboard\n");
+	sync_leaderboard();
+}
+
+/*
+- Sets console title
+- Loads leaderboard
+- Zeros out connected players list
+- Opens socket
+- Sets multimedia timer to sync leaderboard
+*/
+
+void init_server(){
+	printf("Starblazer II Game Server Version 0.5\nBuilt %s %s\n", __DATE__, __TIME__);
 	SetConsoleTitle("Starblazer II Game Server");
+	load_leaderboard();
+	memset(players, 0, sizeof(players));
+	init_networking();
+	in_socket = open_listening_connection(PORT, INADDR_ANY);
+	timeSetEvent(60000, 100, (LPTIMECALLBACK)&mmproc, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
+}
+
+int main(){
+	init_server();
+
+	while (1){
+
+	}
 }
