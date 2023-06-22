@@ -116,8 +116,37 @@ void ax5_script(ENTITY** ptr){
 }
 
 void enemy_laser_script(ENTITY** ptr){
+	int i;
 	step_entity(*ptr, &laser_velocity);
 	(*ptr)->state[0]--;
+
+	//test collision with camera
+	if (test_collisions(*ptr, StarblazerEntities[0])){
+		StarblazerEntities[0]->health -= 5;
+		shake_frames = 7;
+		free(*ptr);
+		*ptr = 0;
+		return;
+	}
+
+	//test collision with other entities
+	/*for (i = 1; i < MAX_ENTITIES; i++){
+		if (StarblazerEntities[i] && StarblazerEntities[i] != *ptr){
+			if (StarblazerEntities[i]->type->flags & 1){ //hittable
+				if (test_collisions(*ptr, StarblazerEntities[i])){
+					//printf("That's a confirmed hit!\n");
+					StarblazerEntities[i]->color_override = 192;
+					StarblazerEntities[i]->override_frames = 7;
+					StarblazerEntities[i]->health -= (*ptr)->state[15];
+
+					//despawn
+					free(*ptr);
+					*ptr = 0;
+					return;
+				}
+			}
+		}
+	}*/
 
 	if (!(*ptr)->state[0]){
 		free(*ptr);
@@ -186,7 +215,7 @@ void debris_script(ENTITY** ptr){
 void set_attributes(){
 	ENEMY_LASER.model = load_model("assets/boltem.obj");
 	ENEMY_LASER.model->script = enemy_laser_script;
-	ENEMY_LASER.model->radar_color = 224;
+	ENEMY_LASER.model->radar_color = 239;
 	ENEMY_LASER.model->radar_type = 0;
 	ENEMY_LASER.model->flags = 2;
 	create_hitbox(ENEMY_LASER.model, int_fixed(3), int_fixed(3), int_fixed(3));
@@ -229,12 +258,12 @@ void set_attributes(){
 	ASTEROID->radar_type = 0;
 	create_hitbox(ASTEROID, int_fixed(5), int_fixed(5), int_fixed(5));
 
-	AX5 = load_model("assets/rwing.obj");
+	AX5 = load_model("assets/hyper.obj");
 	AX5->script = ax5_script;
 	AX5->flags = 3;
 	AX5->maxhp = 0;
 	AX5->radar_type = 1;
-	create_hitbox(AX5, int_fixed(2), int_fixed(2), int_fixed(2));
+	create_hitbox(AX5, int_fixed(3), int_fixed(2), int_fixed(7)); //2x2x2
 }
 
 //when you're dead, it'll forcibly zero out your velocity and your joystick inputs
@@ -264,7 +293,7 @@ void blazer2_init(){
 	cam_template.maxhp = player_fighter.health;
 	cam_template.flags = 2;
 	
-	create_hitbox(&cam_template, int_fixed(2), int_fixed(2), int_fixed(2));
+	create_hitbox(&cam_template, int_fixed(3), int_fixed(2), int_fixed(7)); //2x2x2
 
 	//spawn stars
 	for (i = 0; i < 500; i++){
