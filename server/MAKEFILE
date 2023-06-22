@@ -1,0 +1,14 @@
+!include <ntwin32.mak>
+
+all: server32.exe
+
+server32.exe: server.obj \
+    ..\star.res
+  $(link) $(ldebug) $(conlflags) -out:$*.exe $** $(conlibs) \
+    winmm.lib user32.lib gdi32.lib wsock32.lib kernel32.lib
+
+{src}.c{src}.obj:
+  $(CC) /Zi /FA /nologo $(CFLAGS) /c /Fosrc\ $<
+
+star.res: star.rc star.ico
+    $(rc) $(rcvars) -r -fo $*.res $*.rc
