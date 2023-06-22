@@ -5,6 +5,7 @@
 	admittedly, a big chunk of this code is probably portable to other platforms
 */
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
@@ -21,7 +22,14 @@ CONNECTED_PLAYER players[16];
 */
 
 void load_leaderboard(){
+	FILE* fp = fopen("leader.bin", "rb");
 
+	if (!fp){ //file doesn't exist
+		memset(&leaderboard, 0, sizeof(LEADERBOARD));
+	}
+	else{ //file does exist, load it in
+		fread(&leaderboard, sizeof(LEADERBOARD), 1, fp);
+	}
 }
 
 /*
@@ -60,6 +68,8 @@ int authenticate(char* player_name, char* pin){
 	strcpy(leaderboard.records[leaderboard.number_records].player_name, player_name);
 	strcpy(leaderboard.records[leaderboard.number_records].player_pin, pin);
 	leaderboard.number_records++;
+
+	return leaderboard.number_records - 1;
 }
 
 int main(){
