@@ -112,7 +112,11 @@ void spawn_asteroid(){
 }
 
 void ax5_script(ENTITY** ptr){
-
+	/*if (test_collisions(*ptr, StarblazerEntities[0])){
+		StarblazerEntities[0]->health -= 5;
+		shake_frames = 7;
+		return;
+	}*/
 }
 
 void enemy_laser_script(ENTITY** ptr){
