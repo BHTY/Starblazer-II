@@ -10,6 +10,7 @@
 #include "../headers/slipstr.h"
 #include "../headers/stats.h"
 #include "../headers/hyptest.h"
+#include "../headers/net.h"
 
 #define NUM_SHARDS 64
 
@@ -21,6 +22,10 @@ TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET
 
 VEC3 title_stars[500];
 
+uint32 frames_respawning = 0;
+bool_t dying;
+
+uint32 impact_id;
 int frames;
 bool_t multiplayer = 0;
 bool_t boost_overheating = 0;
@@ -128,6 +133,7 @@ void enemy_laser_script(ENTITY** ptr){
 	if (test_collisions(*ptr, StarblazerEntities[0])){
 		StarblazerEntities[0]->health -= 5;
 		shake_frames = 7;
+		impact_id = (*ptr)->state[13];
 		free(*ptr);
 		*ptr = 0;
 		return;
@@ -410,10 +416,40 @@ The given entity is despawned and an explosion of the given shards number spawne
 
 VEC3 tst, tst2;
 
+void respawn_player(){
+	StarblazerEntities[0]->health = player_fighter.health;
+	StarblazerEntities[0]->pos.x = int_fixed(rand() % 100 - 50);
+	StarblazerEntities[0]->pos.y = int_fixed(rand() % 100 - 50);
+	StarblazerEntities[0]->pos.z = int_fixed(rand() % 100 - 50);
+}
+
 void blazer2_module(){
 	uint32 id;
 	joystick_t joy;
 	vjoy_read(&joy);
+
+	if (frames_respawning == 0){
+		BG_COLOR = 0;
+	}
+
+	if (StarblazerEntities[0]->health <= 0 && frames_respawning == 0){
+		dying = 1;
+		frames_respawning = timeout;
+		BG_COLOR = 127;
+
+		if (timeout == 0){
+			respawn_player();
+		}
+	}
+
+	if (frames_respawning){ //disable controls if we're respawning
+		memset(&joy, 0, sizeof(joystick_t));
+		frames_respawning--;
+
+		if (frames_respawning == 0){
+			respawn_player();
+		}
+	}
 
 	if (shake_frames){
 		shake_frames--;
@@ -454,7 +490,12 @@ void blazer2_module(){
 		if (frames % 5 == 0) { player_boost--; }
 	}
 	else{
-		velocity.z = player_fighter.speed;
+		if (!frames_respawning){
+			velocity.z = player_fighter.speed;
+		}
+		else{
+			velocity.z = 0;
+		}
 		if (player_boost < player_fighter.boost_size){
 			if (frames % 15 == 0) { player_boost++; }
 		}
@@ -721,6 +762,8 @@ void draw_battery(){
 
 
 void blazer2_draw(){
+	char text[80];
+
 	//account for screenshake
 	if (shake_frames){
 		SL_CENTER_X += (rand() % 20) - 10;
@@ -739,7 +782,7 @@ void blazer2_draw(){
 	draw_scene(&(StarblazerEntities[0]->pos), StarblazerEntities[0]->orientation, shading, title_stars, 500);
 
 	//draw targeting reticle
-	draw_crosshair();
+	if (frames_respawning == 0){ draw_crosshair(); }
 
 	//draw boost bar
 	draw_boost_bar();
@@ -759,6 +802,12 @@ void blazer2_draw(){
 		blazer2_screencrack();
 	}
 	//draw respawn message
+	if (frames_respawning){
+		vputs("RESPAWNING", 130, 80, 3, 2, 159, 1);
+		sprintf(text, "IN %d SEC", frames_respawning / 70);
+		vputs(text, 130, 90, 3, 2, 159, 1);
+	}
+
 	//draw debug display
 	draw_debug();
 

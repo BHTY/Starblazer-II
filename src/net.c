@@ -69,7 +69,7 @@ bool_t net_connect(uint32 addr){
 		return 2;
 	}
 
-	timeout = ret_token.wait_die;
+	timeout = ret_token.wait_die * 70;
 	player_id = ret_token.player_num;
 	printf("NET: Successful connection.\n");
 	return 0;
@@ -82,6 +82,15 @@ void net_syncstate(){
 	packet.pos = StarblazerEntities[0]->pos;
 	packet.rot = StarblazerEntities[0]->orientation;
 	packet.flags = (player_id << 4) | firing;
+
+	if (dying){
+		packet.flags |= 2;
+		packet.flags |= (impact_id << 12);
+		dying = 0;
+	}if (frames_respawning){
+		packet.flags |= 4;
+	}
+
 	SG_SendPacket(&packet, sizeof(PACKET));
 
 	//we need to handle fire control, triggering my own respawning & timer, telling the server who killed me (their laser entity was marked)
@@ -95,7 +104,10 @@ void net_syncstate(){
 			players[SENDER_ID(packet)].status = 0;
 		}
 		else if (RESPAWNING(packet)){
-			
+			if (players[SENDER_ID(packet)].status == 1){ //explode em if they just died
+				explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));
+			}
+			players[SENDER_ID(packet)].status = 2;
 		}
 		else{ //connected normally, no fnny business
 
@@ -107,17 +119,20 @@ void net_syncstate(){
 				players[SENDER_ID(packet)].status = 1;
 			}
 
-			//otherwise, they've been here for a bit and there's no funny business, so set the appropriate state
-			StarblazerEntities[players[SENDER_ID(packet)].entity_id]->pos = packet.pos;
-			StarblazerEntities[players[SENDER_ID(packet)].entity_id]->orientation = packet.rot;
-
-			if (SHOOTING(packet)){ //fire a laser from their position if they did
-				spawn_enemy_laser(SENDER_ID(packet));
-			}
 			if (DIED(packet)){ //explode em if they died, set their status to respawning
 				explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));
 				players[SENDER_ID(packet)].status = 2;
 			}
+			else{
+				//otherwise, they've been here for a bit and there's no funny business, so set the appropriate state
+				StarblazerEntities[players[SENDER_ID(packet)].entity_id]->pos = packet.pos;
+				StarblazerEntities[players[SENDER_ID(packet)].entity_id]->orientation = packet.rot;
+
+				if (SHOOTING(packet)){ //fire a laser from their position if they did
+					spawn_enemy_laser(SENDER_ID(packet));
+				}
+			}
+			
 		}
 	}
 

@@ -172,7 +172,7 @@ int main(){
 
 						if (slot != -1){
 							printf("Player %d (%s) connected from %d.%d.%d.%d with %d kills and %d deaths\n", slot, token->player_name, desc.addr.S_un.S_un_b.s_b1, desc.addr.S_un.S_un_b.s_b2, desc.addr.S_un.S_un_b.s_b3, desc.addr.S_un.S_un_b.s_b4, leaderboard.records[index].K, leaderboard.records[index].D);
-							players[slot].socket = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr);
+							players[slot].socket = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr); 
 							players[slot].index = index;
 							players[slot].timestamp_last_packet = timeGetTime();
 
@@ -211,6 +211,7 @@ int main(){
 				if (DIED(*packet)){
 					leaderboard.records[players[SENDER_ID(*packet)].index].D++;
 					leaderboard.records[players[KILLER_ID(*packet)].index].K++;
+					printf("Player %d has killed player %d.\n", KILLER_ID(*packet), SENDER_ID(*packet));
 				}
 			}
 			

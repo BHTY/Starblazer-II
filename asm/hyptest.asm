@@ -35,7 +35,7 @@ EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 _DATA	SEGMENT
 	ORG $+3
-$SG219	DB	'assets/hyper.obj', 00H
+$SG222	DB	'assets/hyper.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 ; File src\hyptest.c
@@ -49,7 +49,7 @@ _init_hypercraft PROC NEAR
 	push	esi
 	push	edi
 ; Line 17
-	push	OFFSET FLAT:$SG219
+	push	OFFSET FLAT:$SG222
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _hc_template, eax
@@ -80,7 +80,7 @@ _init_hypercraft PROC NEAR
 	call	_quat_create
 	add	esp, 16					; 00000010H
 ; Line 24
-$L217:
+$L220:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -111,7 +111,7 @@ _set_hypercraft_orientation PROC NEAR
 	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR [ecx+12], eax
 ; Line 28
-$L221:
+$L224:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -180,7 +180,7 @@ _rot_hypercraft PROC NEAR
 	call	_quat_roll
 	add	esp, 8
 ; Line 42
-$L222:
+$L225:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -257,15 +257,15 @@ _draw_hypercraft PROC NEAR
 	add	esp, 4
 ; Line 66
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L234
-$L235:
+	jmp	$L237
+$L238:
 	inc	DWORD PTR _i$[ebp]
-$L234:
+$L237:
 	mov	eax, DWORD PTR _hc_template
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+8]
 	cmp	ecx, DWORD PTR _i$[ebp]
-	jle	$L236
+	jle	$L239
 ; Line 67
 	lea	eax, DWORD PTR _vec$[ebp]
 	push	eax
@@ -293,8 +293,8 @@ $L234:
 	call	_put_vertex
 	add	esp, 4
 ; Line 70
-	jmp	$L235
-$L236:
+	jmp	$L238
+$L239:
 ; Line 72
 	push	0
 	push	0
@@ -319,7 +319,7 @@ $L236:
 	mov	eax, DWORD PTR _old_centerY$[ebp]
 	mov	WORD PTR _SL_CENTER_Y, ax
 ; Line 79
-$L228:
+$L231:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -360,7 +360,7 @@ _destroy_hypercraft PROC NEAR
 	call	_free
 	add	esp, 4
 ; Line 86
-$L237:
+$L240:
 	pop	edi
 	pop	esi
 	pop	ebx
