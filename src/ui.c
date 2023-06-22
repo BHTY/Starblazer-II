@@ -258,6 +258,38 @@ void ui_display_widgets(){
 
 
 
+void UI_GET_RECT(uint32 id, UI_SELECTION_RECT* rect){
+	ui_button_t* button_data = widgets[id]->widgetData;
+
+	rect->x1 = widgets[id]->posX;
+	rect->y1 = widgets[id]->posY;
+
+	switch (widgets[id]->widgetType){
+		case WIDGET_TYPE_BUTTON:{
+									rect->x2 = rect->x1 + button_data->text_box.box.size_x;
+									rect->y2 = rect->y1 + button_data->text_box.box.size_y;
+									break;
+		}
+		default:
+		{
+				   break;
+		}
+	}
+}
+
+
+void UI_HANDLE_CLICK(uint32 id){
+	switch (widgets[id]->widgetType){
+		case WIDGET_TYPE_BUTTON:{
+									((ui_button_t*)widgets[id]->widgetData)->callback(id);
+									break;
+		}
+		default:{
+					break;
+		}
+	}
+}
+
 
 
 ///HANDLING MOUSE/JOYSTICK INPUT
@@ -282,6 +314,21 @@ void ui_display_widgets(){
 //If the current widget is a textbox, insert a character at the appropriate location and adjust the focused_textbox_ptr accordingly
 
 void ui_process_widgets(){
+	int i;
 	SG_mouse_t mouse;
+	UI_SELECTION_RECT rect;
 	SG_ReadMouse(&mouse);
+
+	if (mouse.buttons[0]){
+		for (i = 1; i < MAX_WIDGETS; i++){
+			if (!widgets[i]) continue;
+
+			UI_GET_RECT(i, &rect);
+
+			if (mouse.x >= rect.x1 && mouse.x <= rect.x2 && mouse.y >= rect.y1 && mouse.y <= rect.y2){
+				UI_HANDLE_CLICK(i);
+				return;
+			}
+		}
+	}
 }

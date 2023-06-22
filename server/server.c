@@ -155,7 +155,7 @@ int main(){
 	while (1){
 		desc = recv_packet(&in_socket, raw_data, 50);
 
-		if (desc.data_available){
+		if (desc.data_available){	
 
 			if (desc.bytes == sizeof(AUTH_TOKEN)){
 				if (strcmp(token->str, "STARBLAZER") == 0){

@@ -13,6 +13,10 @@
 #define WIDGET_TYPE_BUTTON 6
 
 typedef struct{
+	int x1, x2, y1, y2;
+} UI_SELECTION_RECT;
+
+typedef struct{
 	uint8 widgetType;
 	uint32 widgetID;
 	uint16 posX, posY;
@@ -58,7 +62,7 @@ typedef struct{
 
 typedef struct{
 	ui_naked_text_t text;
-	void(*callback)(uint32);
+	void (*callback)(uint32);
 } ui_checkbox_t;
 
 typedef struct{

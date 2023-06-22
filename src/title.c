@@ -21,7 +21,22 @@ void init_stars(){
 	for (i = 0; i < 500; i++){ init_star(&(title_stars[i])); }
 }
 
-void create_textbox(){
+void options_button(uint32 unimportant){
+	
+}
+
+void multiplayer_button(uint32 unimportant){
+	multiplayer = 1;
+	destroy_hypercraft();
+	blazer2_init();
+}
+
+void campaign_button(uint32 unimportant){
+	destroy_hypercraft();
+	blazer2_init();
+}
+
+void create_buttons(){
 	uint32 id;
 	ui_button_t* buttonData = malloc(sizeof(ui_button_t));
 	ui_button_t* buttonData2 = malloc(sizeof(ui_button_t));
@@ -43,6 +58,10 @@ void create_textbox(){
 	buttonData2->text = "MULTIPLAYER";
 	buttonData3->text = "OPTIONS";
 
+	buttonData->callback = campaign_button;
+	buttonData2->callback = multiplayer_button;
+	buttonData3->callback = options_button;
+
 	id = ui_create_widget(WIDGET_TYPE_BUTTON, 0, 110, 120, buttonData);
 	id = ui_create_widget(WIDGET_TYPE_BUTTON, 0, 110, 140, buttonData2);
 	id = ui_create_widget(WIDGET_TYPE_BUTTON, 0, 110, 160, buttonData3);
@@ -62,7 +81,7 @@ void title_init(){
 	SL_CENTER_Y = 45;
 
 	init_stars();
-	create_textbox();
+	create_buttons();
 
 	init_hypercraft();
 }
@@ -74,6 +93,8 @@ void title_module(){
 	quat_pitch(8, &stars_cam_ori);
 	quat_yaw(8, &stars_cam_ori);
 	quat_roll(8, &stars_cam_ori);
+
+	ui_process_widgets();
 }
 
 void draw_cursor(int x, int y, uint8 clr){
@@ -88,15 +109,15 @@ void title_draw(){
 	SG_ReadMouse(&mouse);
 
 	if (mouse.buttons[0]){
-		draw_cursor(mouse.x, mouse.y, 28);
+		/*draw_cursor(mouse.x, mouse.y, 28);
 		destroy_hypercraft();
 
 		printf("%d\n", net_connect(16777343));
 
-		blazer2_init();
+		blazer2_init();*/
 	}
 	else{
-		draw_cursor(mouse.x, mouse.y, 255);
+		//draw_cursor(mouse.x, mouse.y, 255);
 	}
 
 	vputs("STARBLAZER", 0, 0, 3, 2, 159, 0);
