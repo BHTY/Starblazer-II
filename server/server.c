@@ -196,6 +196,8 @@ int main(){
 				}
 			}
 			else if (desc.bytes == sizeof(PACKET)){
+				//printf("Player %d is located at (%d, %d, %d)\n", SENDER_ID(*packet), packet->pos.x >> 16, packet->pos.y >> 16, packet->pos.z >> 16);
+
 				players[SENDER_ID(*packet)].timestamp_last_packet = timeGetTime();
 
 				//relay to all players (except the sender, of course)

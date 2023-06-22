@@ -400,7 +400,7 @@ void blazer2_module(){
 
 	//sync state if this is multiplayer
 	if (multiplayer){
-		//net_syncstate();
+		net_syncstate();
 	}
 
 	run_entity_scripts();
