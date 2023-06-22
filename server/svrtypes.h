@@ -55,12 +55,13 @@ typedef struct{
 	uint8 wait_die;
 } RETURNING_TOKEN;
 
-#define SENDER_ID(packet) ((packet.flags & 240) >> 4)
-#define DISCONNECTED(packet) ((packet.flags >> 12) == SENDER_ID(packet))
-#define RESPAWNING(packet) (packet.flags & 4)
-#define RADAR_LOCK(packet) (player_id == ((packet.flags & 3840) >> 8))
-#define DIED(packet) (packet.flags & 2)
-#define SHOOTING(packet) (packet.flags & 1)
+#define SENDER_ID(packet) (((packet).flags & 240) >> 4)
+#define DISCONNECTED(packet) (((packet).flags >> 12) == SENDER_ID(packet))
+#define RESPAWNING(packet) ((packet).flags & 4)
+#define RADAR_LOCK(packet) (player_id == (((packet).flags & 3840) >> 8))
+#define DIED(packet) ((packet).flags & 2)
+#define SHOOTING(packet) ((packet).flags & 1)
+#define KILLER_ID(packet) ((packet).flags >> 12)
 
 WSADATA init_networking(){
 	WORD winsock_version = 0x202;

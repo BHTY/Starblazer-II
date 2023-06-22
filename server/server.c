@@ -59,13 +59,19 @@ void load_leaderboard(){
 	}
 }
 
-/*
-- Sorts the leaderboard in descending score order
-- Saves it back to the file
-- Generates the HTML and CSV versions
-*/
+void sort_leaderboard(){ //sorts in descending order
 
-void sync_leaderboard(){
+}
+
+void save_leaderboard(){
+
+}
+
+void write_leaderboard_csv(){
+
+}
+
+void write_leaderboard_html(){
 
 }
 
@@ -101,7 +107,10 @@ int authenticate(char* player_name, char* pin){
 
 void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, DWORD* dwUser, DWORD* dw, DWORD* dw2){
 	printf("Syncing leaderboard\n");
-	sync_leaderboard();
+	sort_leaderboard();
+	save_leaderboard();
+	write_leaderboard_csv();
+	write_leaderboard_html();
 }
 
 /*
@@ -136,8 +145,10 @@ int main(){
 	PACKET* packet = raw_data;
 	AUTH_TOKEN* token = raw_data;
 	recv_desc_t desc;
-	int index, i, slot;
+	int index, i, slot, j;
 	connection_t temp_connection;
+	char text[80];
+	int cur_players = 0;
 
 	init_server();
 
@@ -160,7 +171,7 @@ int main(){
 						slot = find_open_slot();
 
 						if (slot != -1){
-							printf("Player %d (%s) connected from %d.%d.%d.%d", slot, token->player_name, desc.addr.S_un.S_un_b.s_b1, desc.addr.S_un.S_un_b.s_b2, desc.addr.S_un.S_un_b.s_b3, desc.addr.S_un.S_un_b.s_b4);
+							printf("Player %d (%s) connected from %d.%d.%d.%d with %d kills and %d deaths\n", slot, token->player_name, desc.addr.S_un.S_un_b.s_b1, desc.addr.S_un.S_un_b.s_b2, desc.addr.S_un.S_un_b.s_b3, desc.addr.S_un.S_un_b.s_b4, leaderboard.records[index].K, leaderboard.records[index].D);
 							players[slot].socket = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr);
 							players[slot].index = index;
 							players[slot].timestamp_last_packet = timeGetTime();
@@ -170,6 +181,9 @@ int main(){
 							ret_token.player_num = slot;
 							ret_token.wait_die = RESPAWN_TIME;
 							send_packet(&(players[slot].socket), &ret_token, sizeof(RETURNING_TOKEN));
+							cur_players++;
+							sprintf(text, "Starblazer II Game Server (%d players)", cur_players);
+							SetConsoleTitle(text);
 						}
 						else{ //not enough room
 							temp_connection = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr);
@@ -182,13 +196,43 @@ int main(){
 				}
 			}
 			else if (desc.bytes == sizeof(PACKET)){
+				players[SENDER_ID(*packet)].timestamp_last_packet = timeGetTime();
+
 				//relay to all players (except the sender, of course)
+				for (i = 0; i < 16; i++){
+					if (players[i].index != -1 && i != SENDER_ID(*packet)){
+						send_packet(&(players[i].socket), packet, sizeof(PACKET));
+					}
+				}
+
 				//if the death flag is set, K/D value
+				if (DIED(*packet)){
+					leaderboard.records[players[SENDER_ID(*packet)].index].D++;
+					leaderboard.records[players[KILLER_ID(*packet)].index].K++;
+				}
 			}
 
 			//handle timeout logic
 			for (i = 0; i < 16; i++){
+				if (players[i].index != -1){ //if they're connected
+					if (timeGetTime() - players[i].timestamp_last_packet > TIMEOUT){ //you're out, bitch
+						players[i].index = -1;
+						close_connection(&(players[i].socket));
+						//increase deaths by one
 
+						packet->flags = 2 | (i << 4) | (i << 12); //set it such that they despawn
+						cur_players--;
+
+						sprintf(text, "Starblazer II Game Server (%d players)", cur_players);
+						SetConsoleTitle(text);
+
+						for (j = 0; j < 16; j++){ //give everyone else the news
+							if (players[j].index != -1){
+								send_packet(&(players[j].socket), packet, sizeof(PACKET));
+							}
+						}
+					}
+				}
 			}
 
 		}
