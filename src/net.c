@@ -13,6 +13,17 @@ int timeout;
 
 CONNECTED_PLAYER players[16];
 
+void spawn_enemy_laser(uint32 index){ //index= index into connected players table
+	VEC3 pos = StarblazerEntities[players[index].entity_id]->pos;
+	QUAT ori = StarblazerEntities[players[index].entity_id]->orientation;
+	uint32 id = spawn_entity(players[index].laser->model, pos.x, pos.y, pos.z, 0, 0, 0);
+
+	StarblazerEntities[id]->orientation = ori;
+	StarblazerEntities[id]->state[15] = players[index].laser->damage;
+	StarblazerEntities[id]->state[0] = 280;
+	StarblazerEntities[id]->state[13] = index;
+}
+
 /*
 Steps
 - Open physical connection
@@ -70,7 +81,7 @@ void net_syncstate(){
 	//send my own status
 	packet.pos = StarblazerEntities[0]->pos;
 	packet.rot = StarblazerEntities[0]->orientation;
-	packet.flags = (player_id << 4);
+	packet.flags = (player_id << 4) | firing;
 	SG_SendPacket(&packet, sizeof(PACKET));
 
 	//we need to handle fire control, triggering my own respawning & timer, telling the server who killed me (their laser entity was marked)
@@ -91,7 +102,7 @@ void net_syncstate(){
 			if (players[SENDER_ID(packet)].status != 1){ //they either just respawned or just connected
 				//printf("Spawning in an entity for player %d\n", SENDER_ID(packet));
 				players[SENDER_ID(packet)].fighter = AX5;
-				players[SENDER_ID(packet)].laser = 0; //FILL THIS IN
+				players[SENDER_ID(packet)].laser = &ENEMY_LASER;
 				players[SENDER_ID(packet)].entity_id = spawn_entity(players[SENDER_ID(packet)].fighter, 0, 0, 0, 0, 0, 0);
 				players[SENDER_ID(packet)].status = 1;
 			}
@@ -101,7 +112,7 @@ void net_syncstate(){
 			StarblazerEntities[players[SENDER_ID(packet)].entity_id]->orientation = packet.rot;
 
 			if (SHOOTING(packet)){ //fire a laser from their position if they did
-
+				spawn_enemy_laser(SENDER_ID(packet));
 			}
 			if (DIED(packet)){ //explode em if they died, set their status to respawning
 				explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));

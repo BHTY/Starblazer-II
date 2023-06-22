@@ -1,8 +1,9 @@
 #ifndef __BLAZER_2_H_
 #define __BLAZER_2_H_
 
-#include "ecs.h"
 #include "sl_math.h"
+#include "ecs.h"
+#include "stats.h"
 
 typedef struct{
 	int8 pitch, yaw, roll;
@@ -10,8 +11,9 @@ typedef struct{
 } joystick_t;
 
 extern VEC3 title_stars[500];
-extern bool_t multiplayer;
+extern bool_t multiplayer, firing;
 extern TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
+extern LASER ENEMY_LASER;
 
 void explode_at(VEC3*);
 void explode_entity(ENTITY**); //frees the entity and spawns an explosion there

@@ -13,6 +13,7 @@
 
 #define NUM_SHARDS 64
 
+LASER ENEMY_LASER;
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
 //char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
   char barcolors[22] = "\xe8\xe8\xc8\xcc\xcc\xca\xe8\xe8\xe8\xe8\xe8\xe8\xe8\xe8\xf8\xf8\xb8\xb8\xbc\xbf\xbf\xbf";
@@ -114,6 +115,16 @@ void ax5_script(ENTITY** ptr){
 
 }
 
+void enemy_laser_script(ENTITY** ptr){
+	step_entity(*ptr, &laser_velocity);
+	(*ptr)->state[0]--;
+
+	if (!(*ptr)->state[0]){
+		free(*ptr);
+		*ptr = 0;
+	}
+}
+
 void laser_script(ENTITY** ptr){
 	int i;
 
@@ -173,6 +184,14 @@ void debris_script(ENTITY** ptr){
 }
 
 void set_attributes(){
+	ENEMY_LASER.model = load_model("assets/boltem.obj");
+	ENEMY_LASER.model->script = enemy_laser_script;
+	ENEMY_LASER.model->radar_color = 224;
+	ENEMY_LASER.model->radar_type = 0;
+	ENEMY_LASER.model->flags = 2;
+	create_hitbox(ENEMY_LASER.model, int_fixed(3), int_fixed(3), int_fixed(3));
+	ENEMY_LASER.damage = 8;
+
 	LASER_PLAYER->script = laser_script;
 	LASER_PLAYER->flags = 2;
 	LASER_PLAYER->radar_color = 191;
