@@ -12,6 +12,6 @@ Unfinished Subsystems (July 15 demo -- 3.5 weeks remaining)
 - Port to MS-DOS
 
 Netplay steps
-- 1: Communication with server
-- 2: Moving around on each other's screens
-- 3: All-out war
+- Port forwarding fix for multiplayer blazer
+- Serverside code for managing leaderboard
+- Release **Starblazer II Multiplayer Test Release (star2mtr.zip)**
