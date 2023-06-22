@@ -14,3 +14,4 @@ Unfinished Subsystems (July 15 demo -- 3.5 weeks remaining)
 Netplay steps
 - 1: Communication with server
 - 2: Moving around on each other's screens
+- 3: All-out war
