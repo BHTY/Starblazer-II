@@ -3,6 +3,7 @@
 
 #include "sl_math.h"
 #include "stats.h"
+#include "ecs.h"
 
 //Notes
 //- The DOS version should keep track of score between the two opposing computers (each machine keeps track of its own death count)

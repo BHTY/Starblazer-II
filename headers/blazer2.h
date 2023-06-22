@@ -10,6 +10,7 @@ typedef struct{
 } joystick_t;
 
 extern VEC3 title_stars[500];
+extern bool_t multiplayer;
 
 void explode_at(VEC3*);
 void explode_entity(ENTITY**); //frees the entity and spawns an explosion there

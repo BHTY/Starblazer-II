@@ -1,3 +1,5 @@
+#include "ecs.h"
+
 typedef struct FIGHTER{
     uint32 health;
     SANGLE turn_rate; //max turning per tick

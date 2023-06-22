@@ -121,8 +121,8 @@ void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, unsigned int* dw
 	newFrame = 1;
 }
 
-int PORT;
-int OTHER_PORT;
+int PORT = 9999;
+int OTHER_PORT = 23456;
 
 typedef struct{
 	SOCKET sock;
@@ -232,11 +232,14 @@ bool_t SG_OpenConnection(uint32 addr){
 }
 
 int SG_RecievePacket(void* buf, int num_bytes){
+	recv_desc_t desc = recv_packet(&server_connection, buf, num_bytes);
 
+	if (!desc.data_available) return 0;
+	return desc.bytes;
 }
 
 void SG_SendPacket(void* buf, int num_bytes){
-
+	send_packet(&out_socket, buf, num_bytes);
 }
 
 void SG_CloseConnection(){
@@ -257,6 +260,8 @@ void SG_Init(int argc, char** argv){
 
 	//do the generic initialization
 	SG_GameInit();
+
+	init_networking();
 
 	window_width = 640;
 	window_height = 480;

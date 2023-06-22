@@ -35,7 +35,7 @@ EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 _DATA	SEGMENT
 	ORG $+3
-$SG204	DB	'assets/rwing.obj', 00H
+$SG205	DB	'assets/rwing.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 ; File src\hyptest.c
@@ -49,7 +49,7 @@ _init_hypercraft PROC NEAR
 	push	esi
 	push	edi
 ; Line 17
-	push	OFFSET FLAT:$SG204
+	push	OFFSET FLAT:$SG205
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _hc_template, eax
@@ -80,7 +80,7 @@ _init_hypercraft PROC NEAR
 	call	_quat_create
 	add	esp, 16					; 00000010H
 ; Line 24
-$L202:
+$L203:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -111,7 +111,7 @@ _set_hypercraft_orientation PROC NEAR
 	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR [ecx+12], eax
 ; Line 28
-$L206:
+$L207:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -180,7 +180,7 @@ _rot_hypercraft PROC NEAR
 	call	_quat_roll
 	add	esp, 8
 ; Line 42
-$L207:
+$L208:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -257,15 +257,15 @@ _draw_hypercraft PROC NEAR
 	add	esp, 4
 ; Line 66
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L219
-$L220:
+	jmp	$L220
+$L221:
 	inc	DWORD PTR _i$[ebp]
-$L219:
+$L220:
 	mov	eax, DWORD PTR _hc_template
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+8]
 	cmp	ecx, DWORD PTR _i$[ebp]
-	jle	$L221
+	jle	$L222
 ; Line 67
 	lea	eax, DWORD PTR _vec$[ebp]
 	push	eax
@@ -293,8 +293,8 @@ $L219:
 	call	_put_vertex
 	add	esp, 4
 ; Line 70
-	jmp	$L220
-$L221:
+	jmp	$L221
+$L222:
 ; Line 72
 	push	0
 	push	0
@@ -319,7 +319,7 @@ $L221:
 	mov	eax, DWORD PTR _old_centerY$[ebp]
 	mov	WORD PTR _SL_CENTER_Y, ax
 ; Line 79
-$L213:
+$L214:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -360,7 +360,7 @@ _destroy_hypercraft PROC NEAR
 	call	_free
 	add	esp, 4
 ; Line 86
-$L222:
+$L223:
 	pop	edi
 	pop	esi
 	pop	ebx

@@ -4,6 +4,8 @@
 #include "../headers/blazer2.h"
 #include "../headers/star_gen.h"
 
+#define TIMEOUT 3000
+
 //we need a different laser model & script
 
 int player_id;
@@ -25,15 +27,37 @@ What does the appropriate token hold?
 */
 
 bool_t net_connect(uint32 addr){
+	AUTH_TOKEN auth_token;
+	RETURNING_TOKEN ret_token;
+	uint32 time_started = SG_GetTicks();
+
+	strcpy(auth_token.str, "STARBLAZER");
+	strcpy(auth_token.player_name, GAME_SETTINGS.com_settings.player_name);
+	strcpy(auth_token.player_pin, GAME_SETTINGS.com_settings.player_pin);
+
 	//zero out connected players table
 
 	if (!SG_OpenConnection(addr)){
+		printf("NET: Connection failed.\n");
 		return 1;
 	}
 
-#ifdef dos
-#else
-#endif
+	SG_SendPacket(&auth_token, sizeof(AUTH_TOKEN));
+
+	while (!SG_RecievePacket(&ret_token, sizeof(RETURNING_TOKEN))){
+		if ((SG_GetTicks() - time_started) > TIMEOUT){
+			printf("NET: Server timed out.\n");
+			return 1;
+		}
+	}
+
+	if (!(ret_token.connected)){
+		printf("NET: Authentication failed.\n");
+		return 2;
+	}
+
+	timeout = ret_token.wait_die;
+	player_id = ret_token.player_num;
 }
 
 void net_syncstate(){
@@ -47,7 +71,7 @@ void net_syncstate(){
 	//we need to handle fire control, triggering my own respawning & timer, telling the server who killed me (their laser entity was marked)
 
 	//recieve status
-	while (SG_RecievePacket(&packet, sizeof(PACKET))){ //respond to each packet
+	/*while (SG_RecievePacket(&packet, sizeof(PACKET))){ //respond to each packet
 		if (SENDER_ID(packet) == player_id) continue; //except my own echoed back to me
 
 		if (DISCONNECTED(packet)){
@@ -86,7 +110,7 @@ void net_syncstate(){
 				players[SENDER_ID(packet)].status = 2;
 			}
 		}
-	}
+	}*/
 }
 
 void net_disconnect(){

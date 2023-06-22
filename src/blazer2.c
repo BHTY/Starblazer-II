@@ -257,8 +257,10 @@ void blazer2_init(){
 	//pull in all of the templates-models & AIs - that we need
 
 	//if this is singleplayer, spawn in asteroids & turret
-	for (i = 0; i < 100; i++){
-		spawn_asteroid();
+	if (!multiplayer){
+		for (i = 0; i < 100; i++){
+			spawn_asteroid();
+		}
 	}
 
 	//set the module fn pointers

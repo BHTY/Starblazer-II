@@ -129,9 +129,9 @@ void init_server(){
 	load_leaderboard();
 	memset(players, 0, sizeof(players));
 	init_networking();
-	in_socket = open_listening_connection(PORT, INADDR_ANY);
 	timeSetEvent(60000, 100, (LPTIMECALLBACK)&mmproc, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
 	load_cfg();
+	in_socket = open_listening_connection(PORT, INADDR_ANY);
 	printf("Transmitting Port: %d\nListening/Recieving Port: %d\n", OTHER_PORT, PORT);
 
 	for (i = 0; i < 16; i++){
