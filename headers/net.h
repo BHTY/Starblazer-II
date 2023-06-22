@@ -64,7 +64,16 @@ typedef struct{
 
 #endif
 
-
+/*
+Flags (4 bits)
+	Bit 0: Shooting
+	Bit 1: Dead
+	Bit 2: Respawning
+	Bit 3: Unused
+Bits 7-4: Sender ID
+Bits 11-8: ID of who I'm locked onto (equal to sender ID if I'm not locked onto anyone)
+Bits 15-12: Killer ID
+*/
 
 bool_t net_connect(uint32);
 void net_syncstate();
