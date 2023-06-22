@@ -28,6 +28,8 @@ typedef struct{
 	uint8 flags;
 } PACKET;
 
+#define DIED(packet) (packet.flags & 2)
+#define SHOOTING(packet) (packet.flags & 1)
 #define SENDER_ID(packet) (!player_id)
 #define DISCONNECTED(packet) 0
 #define RESPAWNING(packet) 0
@@ -53,15 +55,16 @@ typedef struct{
 	uint8 wait_die;
 } RETURNING_TOKEN;
 
+#define DIED(packet) (packet.flags & 2)
+#define SHOOTING(packet) (packet.flags & 1)
 #define SENDER_ID(packet) ((packet.flags & 240) >> 4)
-#define DISCONNECTED(packet) ((packet.flags >> 12) == SENDER_ID(packet))
+#define DISCONNECTED(packet) (((packet.flags >> 12) == SENDER_ID(packet)) && DIED(packet))
 #define RESPAWNING(packet) (packet.flags & 4)
 #define RADAR_LOCK(packet) (player_id == ((packet.flags & 3840) >> 8))
 
 #endif
 
-#define DIED(packet) (packet.flags & 2)
-#define SHOOTING(packet) (packet.flags & 1)
+
 
 bool_t net_connect(uint32);
 void net_syncstate();

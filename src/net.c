@@ -77,17 +77,19 @@ void net_syncstate(){
 
 	//recieve status
 	while (SG_RecievePacket(&packet, sizeof(PACKET))){ //respond to each
-		if (SENDER_ID(packet) == player_id) continue; //except my own echoed back to me
+		//if (SENDER_ID(packet) == player_id) continue; //except my own echoed back to me
 
-		if (DISCONNECTED(packet)){
-
+		if (DISCONNECTED(packet)){ //they just disconnected, explode em
+			explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));
+			players[SENDER_ID(packet)].status = 0;
 		}
 		else if (RESPAWNING(packet)){
-
+			
 		}
 		else{ //connected normally, no fnny business
+
 			if (players[SENDER_ID(packet)].status != 1){ //they either just respawned or just connected
-				printf("Spawning in an entity for player %d\n", SENDER_ID(packet));
+				//printf("Spawning in an entity for player %d\n", SENDER_ID(packet));
 				players[SENDER_ID(packet)].fighter = AX5;
 				players[SENDER_ID(packet)].laser = 0; //FILL THIS IN
 				players[SENDER_ID(packet)].entity_id = spawn_entity(players[SENDER_ID(packet)].fighter, 0, 0, 0, 0, 0, 0);
