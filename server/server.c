@@ -155,7 +155,7 @@ int main(){
 	while (1){
 		desc = recv_packet(&in_socket, raw_data, 50);
 
-		if (desc.data_available){	
+		if (desc.data_available){
 
 			if (desc.bytes == sizeof(AUTH_TOKEN)){
 				if (strcmp(token->str, "STARBLAZER") == 0){
@@ -190,7 +190,7 @@ int main(){
 							ret_token.connected = 0;
 							send_packet(&temp_connection, &ret_token, sizeof(RETURNING_TOKEN));
 							close_connection(&temp_connection);
-						}			
+						}
 					}
 
 				}
@@ -213,28 +213,32 @@ int main(){
 			}
 
 			//handle timeout logic
-			for (i = 0; i < 16; i++){
-				if (players[i].index != -1){ //if they're connected
-					if (timeGetTime() - players[i].timestamp_last_packet > TIMEOUT){ //you're out, bitch
-						players[i].index = -1;
-						close_connection(&(players[i].socket));
-						//increase deaths by one
 
-						packet->flags = 2 | (i << 4) | (i << 12); //set it such that they despawn
-						cur_players--;
+		}
 
-						sprintf(text, "Starblazer II Game Server (%d inbound connections)", cur_players);
-						SetConsoleTitle(text);
+		for (i = 0; i < 16; i++){
 
-						for (j = 0; j < 16; j++){ //give everyone else the news
-							if (players[j].index != -1){
-								send_packet(&(players[j].socket), packet, sizeof(PACKET));
-							}
+			if (players[i].index != -1){ //if they're connected
+				if (timeGetTime() - players[i].timestamp_last_packet > TIMEOUT){ //you're out, bitch
+					players[i].index = -1;
+					close_connection(&(players[i].socket));
+					//increase deaths by one
+
+					packet->flags = 2 | (i << 4) | (i << 12); //set it such that they despawn
+					cur_players--;
+
+					sprintf(text, "Starblazer II Game Server (%d inbound connections)", cur_players);
+					SetConsoleTitle(text);
+
+					printf("Player %d has timed out.\n", i);
+
+					for (j = 0; j < 16; j++){ //give everyone else the news
+						if (players[j].index != -1){
+							send_packet(&(players[j].socket), packet, sizeof(PACKET));
 						}
 					}
 				}
 			}
-
 		}
 	}
 }
