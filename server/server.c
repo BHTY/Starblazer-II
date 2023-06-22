@@ -59,8 +59,15 @@ void load_leaderboard(){
 	}
 }
 
-void sort_leaderboard(){ //sorts in descending order
+int compare_records(RECORD* r1, RECORD* r2){
+	int delta1 = r1->K - r1->D;
+	int delta2 = r2->K - r2->D;
 
+	return delta2 - delta1;
+}
+
+void sort_leaderboard(){ //sorts in descending order
+	qsort(leaderboard.records, leaderboard.number_records, sizeof(RECORD), compare_records);
 }
 
 void save_leaderboard(){
@@ -126,7 +133,6 @@ void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, DWORD* dwUser, D
 	printf("Syncing leaderboard\n");
 	sort_leaderboard();
 	save_leaderboard();
-	write_leaderboard_csv();
 	write_leaderboard_html();
 }
 
