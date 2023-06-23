@@ -214,6 +214,7 @@ int main(){
 	int index, i, slot, j;
 	char text[80];
 	int cur_players = 0;
+	ULONG iMode = 1;
 
 	SOCKADDR_IN addr;
 	SOCKADDR_IN from;
@@ -227,6 +228,7 @@ int main(){
 
 	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 	bind(s, &addr, sizeof(addr));
+	ioctlsocket(s, FIONBIO, &iMode);
 
 	while (1){
 		saddr_size = sizeof(from);
@@ -263,7 +265,7 @@ int main(){
 							printf("Player %d (%s) connected from %d.%d.%d.%d with %d kills and %d deaths\n", slot, token->player_name, desc.origin.sin_addr.S_un.S_un_b.s_b1, desc.origin.sin_addr.S_un.S_un_b.s_b2, desc.origin.sin_addr.S_un.S_un_b.s_b3, desc.origin.sin_addr.S_un.S_un_b.s_b4, leaderboard.records[index].K, leaderboard.records[index].D);
 							players[slot].socket = desc.origin;//open_transmitting_connection(OTHER_PORT, desc.addr.s_addr); //OTHER_PORT
 							players[slot].index = index;
-							players[slot].timestamp_last_packet = timeGetTime();
+							players[slot].timestamp_last_packet = GetTickCount();
 							
 							//send them a complementary response packet
 							ret_token.connected = 1;
@@ -289,7 +291,7 @@ int main(){
 			else if (desc.num_bytes == sizeof(PACKET)){
 				//printf("Player %d is located at (%d, %d, %d)\n", SENDER_ID(*packet), packet->pos.x >> 16, packet->pos.y >> 16, packet->pos.z >> 16);
 
-				players[SENDER_ID(*packet)].timestamp_last_packet = timeGetTime();
+				players[SENDER_ID(*packet)].timestamp_last_packet = GetTickCount();
 
 				//relay to all players (except the sender, of course)
 				for (i = 0; i < 16; i++){
@@ -314,7 +316,8 @@ int main(){
 		for (i = 0; i < 16; i++){
 
 			if (players[i].index != -1){ //if they're connected
-				if (timeGetTime() - players[i].timestamp_last_packet > TIMEOUT){ //you're out, bitch
+
+				if ((GetTickCount() - players[i].timestamp_last_packet) > TIMEOUT){ //you're out, bitch
 					players[i].index = -1;
 					//increase deaths by one
 
