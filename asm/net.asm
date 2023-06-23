@@ -21,10 +21,11 @@ _TLS	ENDS
 FLAT	GROUP _DATA, CONST, _BSS
 	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
 endif
+PUBLIC	_timeout
 _DATA	SEGMENT
 COMM	_player_id:DWORD
-COMM	_timeout:DWORD
 COMM	_players:BYTE:0100H
+_timeout DD	0afH
 _DATA	ENDS
 PUBLIC	_spawn_enemy_laser
 EXTRN	_StarblazerEntities:BYTE

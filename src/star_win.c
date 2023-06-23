@@ -126,20 +126,6 @@ void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, unsigned int* dw
 	newFrame = 1;
 }
 
-int PORT = 9999;
-int OTHER_PORT = 23456;
-
-typedef struct{
-	SOCKET sock;
-	SOCKADDR_IN addr;
-} connection_t;
-
-typedef struct{
-	IN_ADDR addr;
-	int bytes;
-	int data_available;
-} recv_desc_t;
-
 WSADATA init_networking(){
 	WORD winsock_version = 0x202;
 	WSADATA winsock_data;
@@ -150,120 +136,53 @@ WSADATA init_networking(){
 		exit(0);
 	}
 
-	timeBeginPeriod(1);
-
 	return winsock_data;
 }
 
-connection_t open_transmitting_connection(USHORT port, ULONG addr){
-	ULONG iMode = 1;
-	connection_t con;
-	con.sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
-	if (con.sock == INVALID_SOCKET)
-	{
-		printf("socket failed: %d", WSAGetLastError());
-		exit(0);
-	}
-
-	con.addr.sin_family = AF_INET;
-	con.addr.sin_port = htons(port);
-	con.addr.sin_addr.s_addr = addr;
-	ioctlsocket(con.sock, FIONBIO, &iMode);
-
-	return con;
-}
-
-connection_t open_listening_connection(USHORT port, ULONG addr){
-	connection_t con = open_transmitting_connection(port, addr);
-
-	if (bind(con.sock, (SOCKADDR*)&(con.addr), sizeof(con.addr)) == SOCKET_ERROR)
-	{
-		printf("bind failed: %d", WSAGetLastError());
-		exit(0);
-	}
-
-	return con;
-}
-
-void close_connection(connection_t* con){
-	closesocket(con->sock);
-}
-
-int send_packet(connection_t* con, void* buf, int len){
-	if (sendto(con->sock, buf, len, 0, (SOCKADDR*)&(con->addr), sizeof(con->addr)) == SOCKET_ERROR)
-	{
-		printf("sendto failed: %d", WSAGetLastError());
-		exit(0);
-	}
-}
-
-int send_packet_good(connection_t* con, connection_t* aux, void* buf, int len){
-	if (sendto(con->sock, buf, len, 0, (SOCKADDR*)&(aux->addr), sizeof(aux->addr)) == SOCKET_ERROR)
-	{
-		printf("sendto failed: %d", WSAGetLastError());
-		exit(0);
-	}
-}
-
-recv_desc_t recv_packet(connection_t *con, void *buf, int size){
-	int error_code;
-	recv_desc_t descriptor = { 0 };
-	SOCKADDR_IN from = { 0 };
-	int from_size = sizeof(SOCKADDR_IN);
-	descriptor.bytes = recvfrom(con->sock, buf, size, 0, (SOCKADDR*)&from, &from_size);
-	descriptor.data_available = 1;
-
-	if (descriptor.bytes == SOCKET_ERROR)
-	{
-		error_code = WSAGetLastError();
-
-		if (error_code == WSAEWOULDBLOCK){
-			descriptor.data_available = 0;
-		}
-
-		else{
-			printf("recvfrom returned SOCKET_ERROR, WSAGetLastError() %d", WSAGetLastError());
-			exit(0);
-		}
-	}
-
-	descriptor.addr = from.sin_addr;
-
-	return descriptor;
-}
-connection_t out_socket;
-connection_t server_connection;
+int PORT = 9999;
+int OTHER_PORT = 23456;
+SOCKET server_connection;
+SOCKADDR_IN server_addr;
+int size_response;
 
 //WEIRDASS WINDOWS STUFF ENDS HERE (well, not really, but aspirationally - this place just exists to quarantine variables needed for Windows bs)
 
 bool_t SG_OpenConnection(uint32 addr){
-	out_socket = open_transmitting_connection(PORT, addr);
-	server_connection = open_listening_connection(OTHER_PORT, addr);
-	
-	/*server_connection = open_listening_connection(PORT, addr);
-	out_socket.addr.sin_family = AF_INET;
-	out_socket.addr.sin_port = htons(PORT);
-	out_socket.addr.sin_addr.s_addr = addr;*/
+	ULONG iMode = 1;
+
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(PORT);
+	server_addr.sin_addr.s_addr = mplayer_addr;
+		
+	server_connection = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+	if (server_connection == INVALID_SOCKET){
+		return 0;
+	}
+
+	ioctlsocket(server_connection, FIONBIO, &iMode);
 
 	return 1;
 }
 
 int SG_RecievePacket(void* buf, int num_bytes){
-	recv_desc_t desc = recv_packet(&server_connection, buf, num_bytes);
+	int return_value = recvfrom(server_connection, buf, num_bytes, 0, 0, 0);
 
-	if (!desc.data_available) return 0;
-	return desc.bytes;
+	if (return_value == -1){
+		return 0;
+	}
+	else{
+		return return_value;
+	}
 }
 
 void SG_SendPacket(void* buf, int num_bytes){
-	send_packet(&out_socket, buf, num_bytes);
-	//send_packet_good(&server_connection, &out_socket, buf, num_bytes);
+	sendto(server_connection, buf, num_bytes, 0, &server_addr, sizeof(server_addr));
 }
 
 void SG_CloseConnection(){
-	close_connection(&out_socket);
-	//close_connection(&server_connection);
+	closesocket(server_connection);
 }
 
 void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, char* name, char* pin){
@@ -272,7 +191,6 @@ void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, 
 	FILE* fp = fopen("config.ini", "r");
 	fscanf(fp, "addr= %s\n", taddr);
 	fscanf(fp, "port= %d\n", port);
-	fscanf(fp, "otherport= %d\n", otherport);
 	fscanf(fp, "name= %s\n", name);
 	fscanf(fp, "pin= %s\n", pin);
 	fscanf(fp, "x= %d\n", x);

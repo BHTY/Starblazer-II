@@ -18,12 +18,10 @@ int PORT, OTHER_PORT, RESPAWN_TIME, TIMEOUT; //all of these settings are read fr
 
 LEADERBOARD leaderboard;
 CONNECTED_PLAYER players[16];
-connection_t in_socket;
 
 void load_cfg(){
 	FILE* fp = fopen("config.ini", "r");
 	fscanf(fp, "port= %d\n", &PORT);
-	fscanf(fp, "otherport= %d\n", &OTHER_PORT);
 	fscanf(fp, "respawn= %d\n", &RESPAWN_TIME);
 	fscanf(fp, "timeout= %d\n", &TIMEOUT);
 	fclose(fp);
@@ -144,6 +142,51 @@ void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, DWORD* dwUser, D
 - Sets multimedia timer to sync leaderboard
 */
 
+SOCKET s;
+SOCKET in_socket;
+SOCKADDR_IN addr;
+SOCKADDR_IN from;
+int saddr_size;
+
+typedef struct{
+	int num_bytes;
+	SOCKADDR_IN origin;
+} recv_desc_t;
+
+void download_data(recv_desc_t* desc, void* buf, int size){
+	int bytes = recvfrom(in_socket, buf, size, 0, 0, 0);// &(desc->origin), &saddr_size);
+
+	if (bytes == -1){
+		if (WSAGetLastError() != WSAEWOULDBLOCK){
+			printf("Error %d\n", WSAGetLastError());
+		}
+
+		desc->num_bytes = 0;
+		return;
+	}
+
+	desc->num_bytes = bytes;
+	return;
+}
+
+void send_packet(void* buf, int size, SOCKADDR_IN* dest){
+	sendto(s, buf, size, 0, dest, sizeof(SOCKADDR_IN));
+}
+
+void open_connection(){
+	ULONG iMode = 1;
+
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(9999);
+	addr.sin_addr.s_addr = INADDR_ANY;
+
+	in_socket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+	ioctlsocket(in_socket, FIONBIO, &iMode);
+
+	bind(in_socket, &addr, sizeof(addr));
+}
+
 void init_server(){
 	int i;
 
@@ -154,56 +197,71 @@ void init_server(){
 	init_networking();
 	timeSetEvent(60000, 100, (LPTIMECALLBACK)&mmproc, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
 	load_cfg();
-	in_socket = open_listening_connection(PORT, INADDR_ANY);
-	printf("Transmitting Port: %d\nListening/Recieving Port: %d\n", OTHER_PORT, PORT);
+	//open_connection();
+	printf("Port: %d\n", PORT);
 
 	for (i = 0; i < 16; i++){
 		players[i].index = -1;
 	}
 }
 
-int send_packet_good(connection_t* con, connection_t* aux, void* buf, int len){
-	if (sendto(con->sock, buf, len, 0, (SOCKADDR*)&(aux->addr), sizeof(aux->addr)) == SOCKET_ERROR)
-	{
-		printf("sendto failed: %d", WSAGetLastError());
-		exit(0);
-	}
-}
-
 int main(){
+	recv_desc_t desc;
 	RETURNING_TOKEN ret_token;
 	char raw_data[50];
 	PACKET* packet = raw_data;
 	AUTH_TOKEN* token = raw_data;
-	recv_desc_t desc;
 	int index, i, slot, j;
-	connection_t temp_connection;
 	char text[80];
 	int cur_players = 0;
 
+	SOCKADDR_IN addr;
+	SOCKADDR_IN from;
+	int bytes;
+
 	init_server();
 
-	while (1){
-		desc = recv_packet(&in_socket, raw_data, 50);
-		
-		if (desc.data_available){
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(PORT);
+	addr.sin_addr.s_addr = INADDR_ANY;
 
-			if (desc.bytes == sizeof(AUTH_TOKEN)){
+	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	bind(s, &addr, sizeof(addr));
+
+	while (1){
+		saddr_size = sizeof(from);
+		bytes = recvfrom(s, raw_data, 50, 0, &from, &saddr_size);
+
+		if (bytes == -1){
+			desc.num_bytes = 0;
+		}
+		else{
+			//printf("Packet recieved.\nSize: %d\n", bytes);
+			desc.num_bytes = bytes;
+			desc.origin = from;
+		}
+
+		//desc = recv_packet(&in_socket, raw_data, 50);
+		//download_data(&desc, raw_data, 50);
+		
+		if (desc.num_bytes != 0){
+
+			if (desc.num_bytes == sizeof(AUTH_TOKEN)){
 				if (strcmp(token->str, "STARBLAZER") == 0){
 					index = authenticate(token->player_name, token->player_pin);
 
 					if (index == -1){ //reject em
-						temp_connection = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr);
+						/*temp_connection = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr);
 						ret_token.connected = 0;
 						send_packet(&temp_connection, &ret_token, sizeof(RETURNING_TOKEN));
-						close_connection(&temp_connection);
+						close_connection(&temp_connection);*/
 					}
 					else{ //they check out, connect em!
 						slot = find_open_slot();
 
 						if (slot != -1){
-							printf("Player %d (%s) connected from %d.%d.%d.%d with %d kills and %d deaths\n", slot, token->player_name, desc.addr.S_un.S_un_b.s_b1, desc.addr.S_un.S_un_b.s_b2, desc.addr.S_un.S_un_b.s_b3, desc.addr.S_un.S_un_b.s_b4, leaderboard.records[index].K, leaderboard.records[index].D);
-							players[slot].socket = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr); //OTHER_PORT
+							printf("Player %d (%s) connected from %d.%d.%d.%d with %d kills and %d deaths\n", slot, token->player_name, desc.origin.sin_addr.S_un.S_un_b.s_b1, desc.origin.sin_addr.S_un.S_un_b.s_b2, desc.origin.sin_addr.S_un.S_un_b.s_b3, desc.origin.sin_addr.S_un.S_un_b.s_b4, leaderboard.records[index].K, leaderboard.records[index].D);
+							players[slot].socket = desc.origin;//open_transmitting_connection(OTHER_PORT, desc.addr.s_addr); //OTHER_PORT
 							players[slot].index = index;
 							players[slot].timestamp_last_packet = timeGetTime();
 							
@@ -211,22 +269,24 @@ int main(){
 							ret_token.connected = 1;
 							ret_token.player_num = slot;
 							ret_token.wait_die = RESPAWN_TIME;
-							send_packet(&(players[slot].socket), &ret_token, sizeof(RETURNING_TOKEN));
+							//send_packet(&(players[slot].socket), &ret_token, sizeof(RETURNING_TOKEN));
+							send_packet(&ret_token, sizeof(RETURNING_TOKEN), &(players[slot].socket));
 							cur_players++;
 							sprintf(text, "Starblazer II Game Server (%d inbound connections)", cur_players);
 							SetConsoleTitle(text);
 						}
 						else{ //not enough room
-							temp_connection = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr);
+							/*temp_connection = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr);
 							ret_token.connected = 0;
 							send_packet(&temp_connection, &ret_token, sizeof(RETURNING_TOKEN));
-							close_connection(&temp_connection);
+							close_connection(&temp_connection);*/
+							//just let em time out
 						}
 					}
 
 				}
 			}
-			else if (desc.bytes == sizeof(PACKET)){
+			else if (desc.num_bytes == sizeof(PACKET)){
 				//printf("Player %d is located at (%d, %d, %d)\n", SENDER_ID(*packet), packet->pos.x >> 16, packet->pos.y >> 16, packet->pos.z >> 16);
 
 				players[SENDER_ID(*packet)].timestamp_last_packet = timeGetTime();
@@ -234,7 +294,8 @@ int main(){
 				//relay to all players (except the sender, of course)
 				for (i = 0; i < 16; i++){
 					if (players[i].index != -1 && i != SENDER_ID(*packet)){
-						send_packet(&(players[i].socket), packet, sizeof(PACKET));
+						//send_packet(&(players[i].socket), packet, sizeof(PACKET));
+						send_packet(packet, sizeof(PACKET), &(players[i].socket));
 					}
 				}
 
@@ -255,7 +316,6 @@ int main(){
 			if (players[i].index != -1){ //if they're connected
 				if (timeGetTime() - players[i].timestamp_last_packet > TIMEOUT){ //you're out, bitch
 					players[i].index = -1;
-					close_connection(&(players[i].socket));
 					//increase deaths by one
 
 					packet->flags = 2 | (i << 4) | (i << 12); //set it such that they despawn
@@ -268,7 +328,8 @@ int main(){
 
 					for (j = 0; j < 16; j++){ //give everyone else the news
 						if (players[j].index != -1){
-							send_packet(&(players[j].socket), packet, sizeof(PACKET));
+							//send_packet(&(players[j].socket), packet, sizeof(PACKET));
+							send_packet(packet, sizeof(PACKET), &(players[j].socket));
 						}
 					}
 				}

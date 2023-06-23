@@ -9,7 +9,7 @@
 //we need a different laser model & script
 
 int player_id;
-int timeout;
+int timeout = 175;
 
 CONNECTED_PLAYER players[16];
 
