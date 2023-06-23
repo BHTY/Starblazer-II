@@ -38,6 +38,7 @@ What does the appropriate token hold?
 */
 
 bool_t net_connect(uint32 addr){
+	char data[1000];
 	AUTH_TOKEN auth_token;
 	RETURNING_TOKEN ret_token;
 	uint32 time_started = SG_GetTicks();

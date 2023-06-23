@@ -198,6 +198,14 @@ int send_packet(connection_t* con, void* buf, int len){
 	}
 }
 
+int send_packet_good(connection_t* con, connection_t* aux, void* buf, int len){
+	if (sendto(con->sock, buf, len, 0, (SOCKADDR*)&(aux->addr), sizeof(aux->addr)) == SOCKET_ERROR)
+	{
+		printf("sendto failed: %d", WSAGetLastError());
+		exit(0);
+	}
+}
+
 recv_desc_t recv_packet(connection_t *con, void *buf, int size){
 	int error_code;
 	recv_desc_t descriptor = { 0 };
@@ -231,7 +239,12 @@ connection_t server_connection;
 
 bool_t SG_OpenConnection(uint32 addr){
 	out_socket = open_transmitting_connection(PORT, addr);
-	server_connection = open_listening_connection(OTHER_PORT, INADDR_ANY);
+	server_connection = open_listening_connection(OTHER_PORT, addr);
+	
+	/*server_connection = open_listening_connection(PORT, addr);
+	out_socket.addr.sin_family = AF_INET;
+	out_socket.addr.sin_port = htons(PORT);
+	out_socket.addr.sin_addr.s_addr = addr;*/
 
 	return 1;
 }
@@ -245,11 +258,12 @@ int SG_RecievePacket(void* buf, int num_bytes){
 
 void SG_SendPacket(void* buf, int num_bytes){
 	send_packet(&out_socket, buf, num_bytes);
+	//send_packet_good(&server_connection, &out_socket, buf, num_bytes);
 }
 
 void SG_CloseConnection(){
 	close_connection(&out_socket);
-	close_connection(&server_connection);
+	//close_connection(&server_connection);
 }
 
 void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, char* name, char* pin){

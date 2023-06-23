@@ -804,7 +804,7 @@ void blazer2_draw(){
 	//draw respawn message
 	if (frames_respawning){
 		vputs("RESPAWNING", 130, 80, 3, 2, 159, 1);
-		sprintf(text, "IN %d SEC", frames_respawning / 70);
+		sprintf(text, " IN %d SEC", frames_respawning / 70);
 		vputs(text, 130, 90, 3, 2, 159, 1);
 	}
 

@@ -162,6 +162,14 @@ void init_server(){
 	}
 }
 
+int send_packet_good(connection_t* con, connection_t* aux, void* buf, int len){
+	if (sendto(con->sock, buf, len, 0, (SOCKADDR*)&(aux->addr), sizeof(aux->addr)) == SOCKET_ERROR)
+	{
+		printf("sendto failed: %d", WSAGetLastError());
+		exit(0);
+	}
+}
+
 int main(){
 	RETURNING_TOKEN ret_token;
 	char raw_data[50];
@@ -177,7 +185,7 @@ int main(){
 
 	while (1){
 		desc = recv_packet(&in_socket, raw_data, 50);
-
+		
 		if (desc.data_available){
 
 			if (desc.bytes == sizeof(AUTH_TOKEN)){
@@ -195,10 +203,10 @@ int main(){
 
 						if (slot != -1){
 							printf("Player %d (%s) connected from %d.%d.%d.%d with %d kills and %d deaths\n", slot, token->player_name, desc.addr.S_un.S_un_b.s_b1, desc.addr.S_un.S_un_b.s_b2, desc.addr.S_un.S_un_b.s_b3, desc.addr.S_un.S_un_b.s_b4, leaderboard.records[index].K, leaderboard.records[index].D);
-							players[slot].socket = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr); 
+							players[slot].socket = open_transmitting_connection(OTHER_PORT, desc.addr.s_addr); //OTHER_PORT
 							players[slot].index = index;
 							players[slot].timestamp_last_packet = timeGetTime();
-
+							
 							//send them a complementary response packet
 							ret_token.connected = 1;
 							ret_token.player_num = slot;

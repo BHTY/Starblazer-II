@@ -97,6 +97,16 @@ connection_t open_transmitting_connection(USHORT port, ULONG addr){
 	return con;
 }
 
+connection_t open_fake_connection(USHORT port, ULONG addr){
+	connection_t con;
+
+	con.addr.sin_family = AF_INET;
+	con.addr.sin_port = htons(port);
+	con.addr.sin_addr.s_addr = addr;
+
+	return con;
+}
+
 connection_t open_listening_connection(USHORT port, ULONG addr){
 	connection_t con = open_transmitting_connection(port, addr);
 
