@@ -36,6 +36,22 @@ bool_t mouseDownRight = 0;
 bool_t keys[256];
 
 
+bool_t SG_OpenConnection(uint32 addr){
+	return 0;
+}
+
+int SG_RecievePacket(void* buf, int num_bytes){
+	return 0;
+}
+
+void SG_SendPacket(void* buf, int num_bytes){
+	
+}
+
+void SG_CloseConnection(){
+	
+}
+
 /*
 What SG_Init needs to do
 - Create window

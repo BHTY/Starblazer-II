@@ -1,0 +1,111 @@
+Open Watcom C/C++ x86 32-bit Compile and Link Utility
+Version 2.0 beta Jan  6 2023 01:02:30 (16-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1988-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+	wcc386 BLAZER.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+BLAZER.C: 109 lines, included 1053, 17 warnings, 0 errors
+	wcc386 GRAPHICS.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+GRAPHICS.C: 313 lines, included 709, 7 warnings, 0 errors
+	wcc386 TITLE.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+TITLE.C: 141 lines, included 1884, 35 warnings, 0 errors
+	wcc386 SL_MATH.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+SL_MATH.C: 212 lines, included 149, 4 warnings, 0 errors
+	wcc386 FONT.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+FONT.C: 158 lines, included 1505, 10 warnings, 0 errors
+	wcc386 UI.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+UI.C: 335 lines, included 311, 20 warnings, 0 errors
+	wcc386 BLAZER2.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+BLAZER2.C: 821 lines, included 942, 40 warnings, 0 errors
+	wcc386 SLIPSTR.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+SLIPSTR.C: 281 lines, included 1682, 7 warnings, 0 errors
+	wcc386 ECS.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+ECS.C: 226 lines, included 1934, 5 warnings, 0 errors
+	wcc386 HYPTEST.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+HYPTEST.C: 86 lines, included 501, 16 warnings, 0 errors
+	wcc386 NET_DOS.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+NET_DOS.C: 14 lines, included 77, 3 warnings, 0 errors
+	wcc386 STAR_DOS.C 
+Open Watcom C x86 32-bit Optimizing Compiler
+Version 2.0 beta Jan  6 2023 00:56:00 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1984-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+STAR_DOS.C: 135 lines, included 2589, 15 warnings, 0 errors
+	wlink @__wcl_00.lnk
+Open Watcom Linker Version 2.0 beta Jan  6 2023 00:52:38 (32-bit)
+Copyright (c) 2002-2023 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1985-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+loading object files
+searching libraries
+creating a DOS/4G executable

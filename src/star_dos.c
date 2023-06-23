@@ -94,7 +94,7 @@ void SG_ReadStick(SG_joystick_t* joy){
 void SG_ReadMouse(SG_mouse_t* mouse){
 	memset(mouse, 0, sizeof(SG_mouse_t));
 	mouse->x = 160;
-	mouse->y = 100;
+	mouse->y = 120;
 	mouse->buttons[0] = SG_KeyDown(' ');
 }
 
