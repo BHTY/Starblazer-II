@@ -17,7 +17,7 @@ char* SG_platform = "nix";
 char* SG_title = "Starblazer II for SDL2";
 uint8* frontbuffer;
 
-
+uint32 mplayer_addr;
 int newFrame = 0;
 
 int window_height;
