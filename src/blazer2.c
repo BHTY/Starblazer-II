@@ -802,10 +802,10 @@ void blazer2_draw(){
 		blazer2_screencrack();
 	}
 	//draw respawn message
-	if (frames_respawning){
-		vputs("RESPAWNING", 130, 80, 3, 2, 159, 1);
+	if (frames_respawning || SG_KeyDown('P')){
+		vputs("RESPAWNING", 115, 85, 3, 2, 159, 1);
 		sprintf(text, " IN %d SEC", frames_respawning / 70);
-		vputs(text, 130, 90, 3, 2, 159, 1);
+		vputs(text, 115, 95, 3, 2, 159, 1);
 	}
 
 	//draw debug display

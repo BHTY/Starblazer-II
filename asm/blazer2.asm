@@ -1656,12 +1656,12 @@ $L420:
 	xor	eax, eax
 	mov	al, BYTE PTR _shading
 	test	eax, eax
-	jne	$L571
+	jne	$L572
 	mov	BYTE PTR _shading, 1
-	jmp	$L572
-$L571:
-	mov	BYTE PTR _shading, 0
+	jmp	$L573
 $L572:
+	mov	BYTE PTR _shading, 0
+$L573:
 ; Line 468
 $L421:
 	xor	eax, eax
@@ -2506,12 +2506,12 @@ $L499:
 	xor	eax, eax
 	mov	al, BYTE PTR _boost_overheating
 	test	eax, eax
-	je	$L573
+	je	$L574
 	mov	DWORD PTR _c$[ebp], 223			; 000000dfH
-	jmp	$L574
-$L573:
-	mov	DWORD PTR _c$[ebp], 159			; 0000009fH
+	jmp	$L575
 $L574:
+	mov	DWORD PTR _c$[ebp], 159			; 0000009fH
+$L575:
 ; Line 641
 	mov	eax, DWORD PTR _i$[ebp]
 	cmp	DWORD PTR _k$[ebp], eax
@@ -3014,9 +3014,9 @@ EXTRN	_draw_hypercraft:NEAR
 EXTRN	_set_hypercraft_orientation:NEAR
 _DATA	SEGMENT
 	ORG $+3
-$SG566	DB	'RESPAWNING', 00H
+$SG567	DB	'RESPAWNING', 00H
 	ORG $+1
-$SG567	DB	' IN %d SEC', 00H
+$SG568	DB	' IN %d SEC', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _text$ = -80
@@ -3113,15 +3113,23 @@ $L563:
 ; Line 805
 $L564:
 	cmp	DWORD PTR _frames_respawning, 0
+	jne	$L566
+	push	80					; 00000050H
+	call	_SG_KeyDown
+	add	esp, 4
+	xor	ecx, ecx
+	mov	cl, al
+	test	ecx, ecx
 	je	$L565
+$L566:
 ; Line 806
 	push	1
 	push	159					; 0000009fH
 	push	2
 	push	3
-	push	80					; 00000050H
-	push	130					; 00000082H
-	push	OFFSET FLAT:$SG566
+	push	85					; 00000055H
+	push	115					; 00000073H
+	push	OFFSET FLAT:$SG567
 	call	_vputs
 	add	esp, 28					; 0000001cH
 ; Line 807
@@ -3130,7 +3138,7 @@ $L564:
 	sub	edx, edx
 	div	ecx
 	push	eax
-	push	OFFSET FLAT:$SG567
+	push	OFFSET FLAT:$SG568
 	lea	eax, DWORD PTR _text$[ebp]
 	push	eax
 	call	_sprintf
@@ -3140,8 +3148,8 @@ $L564:
 	push	159					; 0000009fH
 	push	2
 	push	3
-	push	90					; 0000005aH
-	push	130					; 00000082H
+	push	95					; 0000005fH
+	push	115					; 00000073H
 	lea	eax, DWORD PTR _text$[ebp]
 	push	eax
 	call	_vputs
@@ -3153,10 +3161,10 @@ $L565:
 	add	DWORD PTR _barcycle, 2
 ; Line 815
 	cmp	DWORD PTR _barcycle, 64			; 00000040H
-	jne	$L568
+	jne	$L569
 	mov	DWORD PTR _barcycle, 0
 ; Line 818
-$L568:
+$L569:
 	mov	eax, DWORD PTR _StarblazerEntities
 	add	eax, 16					; 00000010H
 	mov	ecx, DWORD PTR [eax+12]
