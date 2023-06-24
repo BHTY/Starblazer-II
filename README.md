@@ -10,7 +10,6 @@ In detail (fix hitboxes) -- LINUX NETWORKING!!!!
   - Fix text spacing
 - Correctly load/save/use the options file
 - Add the options screens & multiplayer selection screen
-- New Starblazer II logo
 - Sound engine
 - Joystick support
 - Laser turrets (single player)
