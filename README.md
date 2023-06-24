@@ -8,7 +8,6 @@ In detail (fix hitboxes) -- LINUX NETWORKING!!!!
 - Finish UI subsystem
   - Add other UI controls
   - Fix text spacing
-- Radar lock-on
 - Correctly load/save/use the options file
 - Add the options screens & multiplayer selection screen
 - New Starblazer II logo
