@@ -4,7 +4,7 @@ To-do List
 - tweak compiler settings
 - optimizations
 
-In detail (fix hitboxes)
+In detail (fix hitboxes) -- LINUX NETWORKING!!!!
 - Finish UI subsystem
   - Add other UI controls
   - Fix text spacing
@@ -15,6 +15,7 @@ In detail (fix hitboxes)
 - Sound engine
 - Joystick support
 - Laser turrets (single player)
+- Make the DOS port less barebones
 - Optimization
 
 Unfinished Subsystems (July 15 demo -- 3.5 weeks remaining)
