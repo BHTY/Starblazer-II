@@ -388,24 +388,35 @@ $L308:
 	mov	ecx, eax
 	add	eax, eax
 	sub	eax, ecx
-	mov	eax, DWORD PTR _players[eax+4]
-	lea	eax, DWORD PTR _StarblazerEntities[eax*4]
-	push	eax
-	call	_explode_entity
-	add	esp, 4
+	xor	ecx, ecx
+	mov	cl, BYTE PTR _players[eax]
+	cmp	ecx, 1
+	jne	$L311
 ; Line 105
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
 	add	eax, eax
 	sub	eax, ecx
-	mov	BYTE PTR _players[eax], 0
+	mov	eax, DWORD PTR _players[eax+4]
+	lea	eax, DWORD PTR _StarblazerEntities[eax*4]
+	push	eax
+	call	_explode_entity
+	add	esp, 4
 ; Line 107
-	jmp	$L311
+$L311:
+	mov	eax, DWORD PTR _packet$[ebp+28]
+	and	eax, 240				; 000000f0H
+	mov	ecx, eax
+	add	eax, eax
+	sub	eax, ecx
+	mov	BYTE PTR _players[eax], 0
+; Line 109
+	jmp	$L312
 $L310:
 	test	BYTE PTR _packet$[ebp+28], 4
-	je	$L312
-; Line 108
+	je	$L313
+; Line 110
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
@@ -414,8 +425,8 @@ $L310:
 	xor	ecx, ecx
 	mov	cl, BYTE PTR _players[eax]
 	cmp	ecx, 1
-	jne	$L313
-; Line 109
+	jne	$L314
+; Line 111
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
@@ -426,18 +437,18 @@ $L310:
 	push	eax
 	call	_explode_entity
 	add	esp, 4
-; Line 111
-$L313:
+; Line 113
+$L314:
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
 	add	eax, eax
 	sub	eax, ecx
 	mov	BYTE PTR _players[eax], 2
-; Line 113
-	jmp	$L314
-$L312:
 ; Line 115
+	jmp	$L315
+$L313:
+; Line 117
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
@@ -446,8 +457,8 @@ $L312:
 	xor	ecx, ecx
 	mov	cl, BYTE PTR _players[eax]
 	cmp	ecx, 1
-	je	$L315
-; Line 117
+	je	$L316
+; Line 119
 	mov	eax, DWORD PTR _AX5
 	mov	ecx, DWORD PTR _packet$[ebp+28]
 	and	ecx, 240				; 000000f0H
@@ -455,14 +466,14 @@ $L312:
 	add	ecx, ecx
 	sub	ecx, edx
 	mov	DWORD PTR _players[ecx+8], eax
-; Line 118
+; Line 120
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
 	add	eax, eax
 	sub	eax, ecx
 	mov	DWORD PTR _players[eax+12], OFFSET FLAT:_ENEMY_LASER
-; Line 119
+; Line 121
 	push	0
 	push	0
 	push	0
@@ -484,18 +495,18 @@ $L312:
 	add	ecx, ecx
 	sub	ecx, edx
 	mov	DWORD PTR _players[ecx+4], eax
-; Line 120
+; Line 122
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
 	add	eax, eax
 	sub	eax, ecx
 	mov	BYTE PTR _players[eax], 1
-; Line 123
-$L315:
+; Line 125
+$L316:
 	test	BYTE PTR _packet$[ebp+28], 2
-	je	$L316
-; Line 124
+	je	$L317
+; Line 126
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
@@ -506,17 +517,17 @@ $L315:
 	push	eax
 	call	_explode_entity
 	add	esp, 4
-; Line 125
+; Line 127
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	mov	ecx, eax
 	add	eax, eax
 	sub	eax, ecx
 	mov	BYTE PTR _players[eax], 2
-; Line 127
-	jmp	$L317
-$L316:
 ; Line 129
+	jmp	$L318
+$L317:
+; Line 131
 	lea	eax, DWORD PTR _packet$[ebp]
 	mov	ecx, DWORD PTR _packet$[ebp+28]
 	and	ecx, 240				; 000000f0H
@@ -532,7 +543,7 @@ $L316:
 	mov	DWORD PTR [ecx+4], edx
 	mov	eax, DWORD PTR [eax+8]
 	mov	DWORD PTR [ecx+8], eax
-; Line 130
+; Line 132
 	lea	eax, DWORD PTR _packet$[ebp+12]
 	mov	ecx, DWORD PTR _packet$[ebp+28]
 	and	ecx, 240				; 000000f0H
@@ -550,26 +561,26 @@ $L316:
 	mov	DWORD PTR [ecx+8], edx
 	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR [ecx+12], eax
-; Line 132
+; Line 134
 	test	BYTE PTR _packet$[ebp+28], 1
-	je	$L318
-; Line 133
+	je	$L319
+; Line 135
 	mov	eax, DWORD PTR _packet$[ebp+28]
 	and	eax, 240				; 000000f0H
 	shr	eax, 4
 	push	eax
 	call	_spawn_enemy_laser
 	add	esp, 4
-; Line 135
-$L318:
-$L317:
 ; Line 137
-$L314:
-$L311:
-; Line 138
+$L319:
+$L318:
+; Line 139
+$L315:
+$L312:
+; Line 140
 	jmp	$L308
 $L309:
-; Line 161
+; Line 163
 $L303:
 	pop	edi
 	pop	esi
@@ -581,14 +592,14 @@ _TEXT	ENDS
 PUBLIC	_net_disconnect
 _TEXT	SEGMENT
 _net_disconnect PROC NEAR
-; Line 163
+; Line 165
 	push	ebp
 	mov	ebp, esp
 	push	ebx
 	push	esi
 	push	edi
-; Line 165
-$L319:
+; Line 167
+$L320:
 	pop	edi
 	pop	esi
 	pop	ebx
