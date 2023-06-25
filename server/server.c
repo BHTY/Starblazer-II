@@ -305,7 +305,7 @@ int main(){
 				if (DIED(*packet)){
 					leaderboard.records[players[SENDER_ID(*packet)].index].D++;
 					leaderboard.records[players[KILLER_ID(*packet)].index].K++;
-					printf("Player %d has killed player %d.\n", KILLER_ID(*packet), SENDER_ID(*packet));
+					printf("Player %d (%d->%d) has killed player %d (%d->%d).\n", KILLER_ID(*packet), leaderboard.records[players[KILLER_ID(*packet)].index].K - 1, leaderboard.records[players[KILLER_ID(*packet)].index].K, SENDER_ID(*packet), leaderboard.records[players[SENDER_ID(*packet)].index].D - 1, leaderboard.records[players[SENDER_ID(*packet)].index].D);
 				}
 			}
 			
