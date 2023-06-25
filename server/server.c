@@ -307,9 +307,7 @@ int main(){
 				if (DIED(*packet)){
 					leaderboard.records[players[SENDER_ID(*packet)].index].D++;
 					leaderboard.records[players[KILLER_ID(*packet)].index].K++;
-					printf("Player %d has killed player %d.\n", KILLER_ID(*packet), SENDER_ID(*packet));
-					printf("%s kills: %d->%d\n", leaderboard.records[players[KILLER_ID(*packet)].index].player_name, leaderboard.records[players[KILLER_ID(*packet)].index].K - 1, leaderboard.records[players[KILLER_ID(*packet)].index].K);
-					printf("%s deaths: %d->%d\n", leaderboard.records[players[SENDER_ID(*packet)].index].player_name, leaderboard.records[players[SENDER_ID(*packet)].index].D - 1, leaderboard.records[players[SENDER_ID(*packet)].index].K);
+					printf("Player %s (%d->%d) has killed player %s (%d->%d).\n", leaderboard.records[players[KILLER_ID(*packet)].index].player_name, leaderboard.records[players[KILLER_ID(*packet)].index].K - 1, leaderboard.records[players[KILLER_ID(*packet)].index].K, leaderboard.records[players[SENDER_ID(*packet)].index].player_name, leaderboard.records[players[SENDER_ID(*packet)].index].D - 1, leaderboard.records[players[SENDER_ID(*packet)].index].D);
 				}
 			}
 			
