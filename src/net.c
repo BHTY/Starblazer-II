@@ -101,7 +101,9 @@ void net_syncstate(){
 		//if (SENDER_ID(packet) == player_id) continue; //except my own echoed back to me
 
 		if (DISCONNECTED(packet)){ //they just disconnected, explode em
-			explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));
+			if (players[SENDER_ID(packet)].status == 1){
+				explode_entity(&(StarblazerEntities[players[SENDER_ID(packet)].entity_id]));
+			}
 			players[SENDER_ID(packet)].status = 0;
 		}
 		else if (RESPAWNING(packet)){
