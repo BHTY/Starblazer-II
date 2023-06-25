@@ -17,6 +17,7 @@
 int PORT, OTHER_PORT, RESPAWN_TIME, TIMEOUT; //all of these settings are read from the ini file
 
 LEADERBOARD leaderboard;
+LEADERBOARD temp_leaderboard;
 CONNECTED_PLAYER players[16];
 
 void load_cfg(){
@@ -65,7 +66,8 @@ int compare_records(RECORD* r1, RECORD* r2){
 }
 
 void sort_leaderboard(){ //sorts in descending order
-	qsort(leaderboard.records, leaderboard.number_records, sizeof(RECORD), compare_records);
+	temp_leaderboard = leaderboard;
+	qsort(temp_leaderboard.records, leaderboard.number_records, sizeof(RECORD), compare_records);
 }
 
 void save_leaderboard(){
@@ -89,8 +91,8 @@ void write_leaderboard_html(){
 
 	fprintf(fp, "<table>\n<tr><th>Place</th><th>Name</th><th>Kills</th><th>Deaths</th></tr>\n");
 
-	for (i = 0; i < leaderboard.number_records; i++){
-		fprintf(fp, "<tr> <td>%d</td> <td>%s</td> <td>%d</td> <td>%d</td>  </tr>\n", i + 1, leaderboard.records[i].player_name, leaderboard.records[i].K, leaderboard.records[i].D);
+	for (i = 0; i < temp_leaderboard.number_records; i++){
+		fprintf(fp, "<tr> <td>%d</td> <td>%s</td> <td>%d</td> <td>%d</td>  </tr>\n", i + 1, temp_leaderboard.records[i].player_name, temp_leaderboard.records[i].K, temp_leaderboard.records[i].D);
 	}
 
 	fprintf(fp, "</table></body>");
