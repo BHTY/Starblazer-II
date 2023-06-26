@@ -8,6 +8,7 @@
 #include "../headers/blazer2.h"
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 uint8 color = 0;
 

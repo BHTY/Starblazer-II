@@ -15,6 +15,8 @@ UI Todo List
 #include "../headers/font.h"
 #include "../headers/graphics.h"
 #include "../headers/star_gen.h"
+#include <stdlib.h>
+#include <string.h>
 
 bool_t widget_can_focus[7] = { 0, 0, 1, 1, 1, 1, 1 };
 
