@@ -156,7 +156,7 @@ typedef struct{
 } recv_desc_t;
 
 void download_data(recv_desc_t* desc, void* buf, int size){
-	int bytes = recvfrom(in_socket, buf, size, 0, 0, 0);// &(desc->origin), &saddr_size);
+	int bytes = recvfrom(in_socket, buf, size, 0, &(desc->origin), &saddr_size);// &(desc->origin), &saddr_size);
 
 	if (bytes == -1){
 		if (WSAGetLastError() != WSAEWOULDBLOCK){
@@ -292,22 +292,26 @@ int main(){
 			}
 			else if (desc.num_bytes == sizeof(PACKET)){
 				//printf("Player %d is located at (%d, %d, %d)\n", SENDER_ID(*packet), packet->pos.x >> 16, packet->pos.y >> 16, packet->pos.z >> 16);
+				if (players[SENDER_ID(*packet)].index != -1){
 
-				players[SENDER_ID(*packet)].timestamp_last_packet = GetTickCount();
+					players[SENDER_ID(*packet)].timestamp_last_packet = GetTickCount();
+					//printf("Packet received from player %d from %d.%d.%d.%d\n", SENDER_ID(*packet), desc.origin.sin_addr.S_un.S_un_b.s_b1, desc.origin.sin_addr.S_un.S_un_b.s_b2, desc.origin.sin_addr.S_un.S_un_b.s_b3, desc.origin.sin_addr.S_un.S_un_b.s_b4);
 
-				//relay to all players (except the sender, of course)
-				for (i = 0; i < 16; i++){
-					if (players[i].index != -1 && i != SENDER_ID(*packet)){
-						//send_packet(&(players[i].socket), packet, sizeof(PACKET));
-						send_packet(packet, sizeof(PACKET), &(players[i].socket));
+					//relay to all players (except the sender, of course)
+					for (i = 0; i < 16; i++){
+						if (players[i].index != -1 && i != SENDER_ID(*packet)){
+							//send_packet(&(players[i].socket), packet, sizeof(PACKET));
+							send_packet(packet, sizeof(PACKET), &(players[i].socket));
+						}
 					}
-				}
 
-				//if the death flag is set, K/D value
-				if (DIED(*packet)){
-					leaderboard.records[players[SENDER_ID(*packet)].index].D++;
-					leaderboard.records[players[KILLER_ID(*packet)].index].K++;
-					printf("Player %s (%d->%d) has killed player %s (%d->%d).\n", leaderboard.records[players[KILLER_ID(*packet)].index].player_name, leaderboard.records[players[KILLER_ID(*packet)].index].K - 1, leaderboard.records[players[KILLER_ID(*packet)].index].K, leaderboard.records[players[SENDER_ID(*packet)].index].player_name, leaderboard.records[players[SENDER_ID(*packet)].index].D - 1, leaderboard.records[players[SENDER_ID(*packet)].index].D);
+					//if the death flag is set, K/D value
+					if (DIED(*packet)){
+						leaderboard.records[players[SENDER_ID(*packet)].index].D++;
+						leaderboard.records[players[KILLER_ID(*packet)].index].K++;
+						printf("Player %s (%d->%d) has killed player %s (%d->%d).\n", leaderboard.records[players[KILLER_ID(*packet)].index].player_name, leaderboard.records[players[KILLER_ID(*packet)].index].K - 1, leaderboard.records[players[KILLER_ID(*packet)].index].K, leaderboard.records[players[SENDER_ID(*packet)].index].player_name, leaderboard.records[players[SENDER_ID(*packet)].index].D - 1, leaderboard.records[players[SENDER_ID(*packet)].index].D);
+					}
+
 				}
 			}
 			
