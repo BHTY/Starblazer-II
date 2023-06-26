@@ -265,7 +265,7 @@ void render_end(bool_t shading){
 				b = (c % 6) * illum >> 16;*/
 
 				//fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
-				fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
+				//fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
 				fill_tri(x1, y1, x2, y2, x3, y3, (c) | (illum >> 12));
 			}
 			else{
