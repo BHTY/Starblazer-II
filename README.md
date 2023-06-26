@@ -4,13 +4,15 @@ To-do List
 - tweak compiler settings
 - optimizations
 
+Multiplayer enhancements - colors & names above ships
+
 In detail (fix hitboxes) -- LINUX NETWORKING!!!!
 - Finish UI subsystem
   - Add other UI controls
   - Fix text spacing
 - Correctly load/save/use the options file
 - Add the options screens & multiplayer selection screen
-- Sound engine
+- **Sound engine**
 - Joystick support
 - Laser turrets (single player)
 - Make the DOS port less barebones
