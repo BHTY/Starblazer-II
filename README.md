@@ -12,7 +12,6 @@ In detail (fix hitboxes) -- LINUX NETWORKING!!!!
   - Fix text spacing
 - Correctly load/save/use the options file
 - Add the options screens & multiplayer selection screen
-- **Sound engine**
 - Joystick support
 - Laser turrets (single player)
 - Make the DOS port less barebones
