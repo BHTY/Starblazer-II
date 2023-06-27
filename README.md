@@ -4,7 +4,7 @@ To-do List
 - tweak compiler settings
 - optimizations
 
-Multiplayer enhancements - colors & names above ships?
+Multiplayer enhancements - colors & names above ships? - different lasers?
 
 In detail (fix hitboxes) -- attempt Win32s port?
 - Finish UI subsystem
