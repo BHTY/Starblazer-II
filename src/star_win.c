@@ -15,6 +15,7 @@ Description: Starblazer II for Windows 95/NT
 #include "../headers/star_gen.h"
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
+#include "../headers/sndmixer.h"
 
 char* SG_platform = "win32";
 char* SG_title = "Starblazer II for Windows 95/NT";
@@ -126,6 +127,25 @@ void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, unsigned int* dw
 	newFrame = 1;
 }
 
+VOID initWaveHeader(WAVEHDR* wvHdr, char* lpData, DWORD dwBufferLength, DWORD dwBytesRecorded, DWORD dwUser, DWORD dwFlags, DWORD dwLoops){
+    wvHdr->lpData = lpData;
+    wvHdr->dwBufferLength = dwBufferLength;
+    wvHdr->dwBytesRecorded = dwBytesRecorded;
+    wvHdr->dwUser = dwUser;
+    wvHdr->dwFlags = dwFlags;
+    wvHdr->dwLoops = dwLoops;
+}
+
+void initWave(WAVEFORMATEX *wave, WORD wFormatTag, WORD nChannels, DWORD nSamplesPerSec, DWORD nAvgBytesPerSec, WORD nBlockAlign, WORD wBitsPerSample, WORD cbSize){
+    wave->wFormatTag = wFormatTag;
+    wave->nChannels = nChannels;
+    wave->nSamplesPerSec = nSamplesPerSec;
+    wave->nAvgBytesPerSec = nAvgBytesPerSec;
+    wave->nBlockAlign = nBlockAlign;
+    wave->wBitsPerSample = wBitsPerSample;
+    wave->cbSize = cbSize;
+}
+
 WSADATA init_networking(){
 	WORD winsock_version = 0x202;
 	WSADATA winsock_data;
@@ -145,6 +165,34 @@ int OTHER_PORT = 23456;
 SOCKET server_connection;
 SOCKADDR_IN server_addr;
 int size_response;
+
+WAVEHDR waveHdrA;
+WAVEHDR waveHdrB;
+WAVEFORMATEX global_wave;
+HWAVEOUT global_hWaveOut = 0;
+
+void win_initialize_wave(WAVEHDR* wvHdr, uint8* buf){
+	initWaveHeader(wvHdr, buf, BUFFER_SIZE, 0, 0, 0, 0);
+	waveOutPrepareHeader(global_hWaveOut, wvHdr, sizeof(WAVEHDR));
+	waveOutWrite(global_hWaveOut, wvHdr, sizeof(WAVEHDR));
+	waveOutUnprepareHeader(global_hWaveOut, wvHdr, sizeof(WAVEHDR));
+}
+
+void __stdcall sound_callback(HWAVEOUT hwo, UINT msg, DWORD* dwInstance, DWORD dwParam1, DWORD dwParam2){
+	if(msg == WOM_OPEN){
+		return;
+	}
+	
+	if(current_buffer == 0){ //A just finished, resubmit & remix A
+		win_initialize_wave(&waveHdrA, buffer1);
+	}else{ //B just finished, resubmit & remix B
+		win_initialize_wave(&waveHdrB, buffer2);
+	}
+	
+	mix();
+	current_buffer = !current_buffer;
+	//printf("Refilling buffer.\n");
+}
 
 //WEIRDASS WINDOWS STUFF ENDS HERE (well, not really, but aspirationally - this place just exists to quarantine variables needed for Windows bs)
 
@@ -208,6 +256,7 @@ What SG_Init needs to do
 */
 
 void SG_Init(int argc, char** argv){
+	int num_devs;
 	RECT winRect;
 	HDC hdcScreen;
 	WNDCLASS wc;
@@ -272,6 +321,18 @@ void SG_Init(int argc, char** argv){
 	timeSetEvent(14, 1, (LPTIMECALLBACK)&mmproc, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
 	memset(keys, 0, 256 * sizeof(bool_t));
 	//joystick stuff...
+
+	//setup sound code
+	init_sound();
+	num_devs = waveOutGetNumDevs();
+	initWave(&global_wave, WAVE_FORMAT_PCM, 1, 22050, 22050, 1, 8, 0);
+
+	if(num_devs){
+		while(waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION) != MMSYSERR_NOERROR);
+	}
+
+	win_initialize_wave(&waveHdrA, buffer1);
+	win_initialize_wave(&waveHdrB, buffer2);
 }
 
 void SG_ReadMouse(SG_mouse_t* mouse){

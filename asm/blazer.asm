@@ -30,43 +30,41 @@ _DATA	SEGMENT
 COMM	_SG_Draw:DWORD
 COMM	_SG_Module:DWORD
 COMM	_GAME_SETTINGS:BYTE:058H
-_current_frame DD 00H
-_BG_COLOR DB	00H
-	ORG $+3
+_DATA	ENDS
+_BSS	SEGMENT
+_BG_COLOR DB	01H DUP (?)
+	ALIGN	4
+
+_current_frame DD 01H DUP (?)
+_time_at_which_last_frame_was_rendered DD 01H DUP (?)
+_BSS	ENDS
+_DATA	SEGMENT
 _LAST_TICK_TIME DD 0eH
 _LAST_FRAME_TIME DD 0eH
-_time_at_which_last_frame_was_rendered DD 00H
 _DATA	ENDS
 PUBLIC	_SG_PresentFrame
 EXTRN	_frontbuffer:DWORD
 EXTRN	_SG_DrawFrame:NEAR
 EXTRN	_swap_buffers:NEAR
 _TEXT	SEGMENT
-; File src\blazer.c
 _SG_PresentFrame PROC NEAR
+; File src\blazer.c
 ; Line 23
 	push	ebp
 	mov	ebp, esp
-	push	ebx
-	push	esi
-	push	edi
 ; Line 24
 	call	DWORD PTR _SG_Draw
 ; Line 25
 	mov	al, BYTE PTR _BG_COLOR
 	push	eax
-	mov	eax, DWORD PTR _frontbuffer
-	push	eax
+	mov	ecx, DWORD PTR _frontbuffer
+	push	ecx
 	call	_swap_buffers
 	add	esp, 8
 ; Line 26
 	call	_SG_DrawFrame
 ; Line 27
-$L286:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	pop	ebp
 	ret	0
 _SG_PresentFrame ENDP
 _TEXT	ENDS
@@ -79,10 +77,7 @@ _SG_Tick PROC NEAR
 ; Line 29
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 4
-	push	ebx
-	push	esi
-	push	edi
+	push	ecx
 ; Line 32
 	call	DWORD PTR _SG_Module
 ; Line 34
@@ -90,8 +85,8 @@ _SG_Tick PROC NEAR
 ; Line 36
 	xor	eax, eax
 	mov	al, BYTE PTR _GAME_SETTINGS+4
-	cmp	eax, DWORD PTR _current_frame
-	jne	$L289
+	cmp	DWORD PTR _current_frame, eax
+	jne	SHORT $L289
 ; Line 37
 	mov	DWORD PTR _current_frame, 0
 ; Line 38
@@ -100,27 +95,25 @@ _SG_Tick PROC NEAR
 	call	_SG_GetTicks
 	mov	DWORD PTR _current_time$[ebp], eax
 ; Line 40
-	mov	eax, DWORD PTR _current_time$[ebp]
-	sub	eax, DWORD PTR _time_at_which_last_frame_was_rendered
-	mov	DWORD PTR _LAST_FRAME_TIME, eax
+	mov	ecx, DWORD PTR _current_time$[ebp]
+	sub	ecx, DWORD PTR _time_at_which_last_frame_was_rendered
+	mov	DWORD PTR _LAST_FRAME_TIME, ecx
 ; Line 41
-	mov	eax, DWORD PTR _current_time$[ebp]
-	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
+	mov	edx, DWORD PTR _current_time$[ebp]
+	mov	DWORD PTR _time_at_which_last_frame_was_rendered, edx
 ; Line 43
-	jmp	$L290
+	jmp	SHORT $L290
 $L289:
 ; Line 44
-	inc	DWORD PTR _current_frame
-; Line 45
+	mov	eax, DWORD PTR _current_frame
+	add	eax, 1
+	mov	DWORD PTR _current_frame, eax
 $L290:
 ; Line 47
 	call	_SG_WaitBlank
 ; Line 48
-$L287:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	mov	esp, ebp
+	pop	ebp
 	ret	0
 _SG_Tick ENDP
 _TEXT	ENDS
@@ -130,15 +123,8 @@ _SG_LoadConfig PROC NEAR
 ; Line 50
 	push	ebp
 	mov	ebp, esp
-	push	ebx
-	push	esi
-	push	edi
 ; Line 52
-$L292:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	pop	ebp
 	ret	0
 _SG_LoadConfig ENDP
 _TEXT	ENDS
@@ -148,15 +134,8 @@ _SG_SaveConfig PROC NEAR
 ; Line 54
 	push	ebp
 	mov	ebp, esp
-	push	ebx
-	push	esi
-	push	edi
 ; Line 56
-$L294:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	pop	ebp
 	ret	0
 _SG_SaveConfig ENDP
 _TEXT	ENDS
@@ -174,9 +153,6 @@ _SG_GameInit PROC NEAR
 ; Line 58
 	push	ebp
 	mov	ebp, esp
-	push	ebx
-	push	esi
-	push	edi
 ; Line 59
 	push	OFFSET FLAT:_GAME_SETTINGS
 	call	_SG_LoadConfig
@@ -197,11 +173,7 @@ _SG_GameInit PROC NEAR
 	call	_srand
 	add	esp, 4
 ; Line 65
-$L295:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	pop	ebp
 	ret	0
 _SG_GameInit ENDP
 _TEXT	ENDS
@@ -217,109 +189,119 @@ _SG_InitPalette PROC NEAR
 ; Line 67
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 24					; 00000018H
-	push	ebx
-	push	esi
-	push	edi
+	sub	esp, 36					; 00000024H
 ; Line 87
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L307
+	jmp	SHORT $L307
 $L308:
-	inc	DWORD PTR _i$[ebp]
+	mov	eax, DWORD PTR _i$[ebp]
+	add	eax, 1
+	mov	DWORD PTR _i$[ebp], eax
 $L307:
 	cmp	DWORD PTR _i$[ebp], 16			; 00000010H
 	jge	$L309
 ; Line 88
-	test	BYTE PTR _i$[ebp], 4
-	je	$L322
-	test	BYTE PTR _i$[ebp], 8
-	je	$L324
-	mov	BYTE PTR _r$[ebp], 16			; 00000010H
-	jmp	$L325
-$L324:
-	mov	BYTE PTR _r$[ebp], 8
-$L325:
-	jmp	$L323
-$L322:
-	mov	BYTE PTR _r$[ebp], 0
-$L323:
-; Line 89
-	test	BYTE PTR _i$[ebp], 2
-	je	$L326
-	test	BYTE PTR _i$[ebp], 8
-	je	$L328
-	mov	BYTE PTR _g$[ebp], 16			; 00000010H
-	jmp	$L329
+	mov	ecx, DWORD PTR _i$[ebp]
+	and	ecx, 4
+	test	ecx, ecx
+	je	SHORT $L328
+	mov	edx, DWORD PTR _i$[ebp]
+	and	edx, 8
+	neg	edx
+	sbb	edx, edx
+	and	edx, 8
+	add	edx, 8
+	mov	DWORD PTR -28+[ebp], edx
+	jmp	SHORT $L329
 $L328:
-	mov	BYTE PTR _g$[ebp], 8
+	mov	DWORD PTR -28+[ebp], 0
 $L329:
-	jmp	$L327
-$L326:
-	mov	BYTE PTR _g$[ebp], 0
-$L327:
-; Line 90
-	test	BYTE PTR _i$[ebp], 1
-	je	$L330
-	test	BYTE PTR _i$[ebp], 8
-	je	$L332
-	mov	BYTE PTR _b$[ebp], 16			; 00000010H
-	jmp	$L333
-$L332:
-	mov	BYTE PTR _b$[ebp], 8
-$L333:
-	jmp	$L331
+	mov	al, BYTE PTR -28+[ebp]
+	mov	BYTE PTR _r$[ebp], al
+; Line 89
+	mov	ecx, DWORD PTR _i$[ebp]
+	and	ecx, 2
+	test	ecx, ecx
+	je	SHORT $L330
+	mov	edx, DWORD PTR _i$[ebp]
+	and	edx, 8
+	neg	edx
+	sbb	edx, edx
+	and	edx, 8
+	add	edx, 8
+	mov	DWORD PTR -32+[ebp], edx
+	jmp	SHORT $L331
 $L330:
-	mov	BYTE PTR _b$[ebp], 0
+	mov	DWORD PTR -32+[ebp], 0
 $L331:
+	mov	al, BYTE PTR -32+[ebp]
+	mov	BYTE PTR _g$[ebp], al
+; Line 90
+	mov	ecx, DWORD PTR _i$[ebp]
+	and	ecx, 1
+	test	ecx, ecx
+	je	SHORT $L332
+	mov	edx, DWORD PTR _i$[ebp]
+	and	edx, 8
+	neg	edx
+	sbb	edx, edx
+	and	edx, 8
+	add	edx, 8
+	mov	DWORD PTR -36+[ebp], edx
+	jmp	SHORT $L333
+$L332:
+	mov	DWORD PTR -36+[ebp], 0
+$L333:
+	mov	al, BYTE PTR -36+[ebp]
+	mov	BYTE PTR _b$[ebp], al
 ; Line 93
 	cmp	DWORD PTR _i$[ebp], 7
-	jne	$L310
+	jne	SHORT $L310
 ; Line 94
 	mov	BYTE PTR _r$[ebp], 16			; 00000010H
 ; Line 95
 	mov	BYTE PTR _g$[ebp], 8
 ; Line 96
 	mov	BYTE PTR _b$[ebp], 0
-; Line 99
 $L310:
+; Line 99
 	mov	DWORD PTR _p$[ebp], 0
-	jmp	$L311
+	jmp	SHORT $L311
 $L312:
-	inc	DWORD PTR _p$[ebp]
+	mov	ecx, DWORD PTR _p$[ebp]
+	add	ecx, 1
+	mov	DWORD PTR _p$[ebp], ecx
 $L311:
 	cmp	DWORD PTR _p$[ebp], 16			; 00000010H
-	jge	$L313
+	jge	SHORT $L313
 ; Line 100
-	xor	eax, eax
-	mov	al, BYTE PTR _b$[ebp]
+	mov	edx, DWORD PTR _b$[ebp]
+	and	edx, 255				; 000000ffH
+	imul	edx, DWORD PTR _p$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _g$[ebp]
+	and	eax, 255				; 000000ffH
 	imul	eax, DWORD PTR _p$[ebp]
 	push	eax
-	xor	eax, eax
-	mov	al, BYTE PTR _g$[ebp]
-	imul	eax, DWORD PTR _p$[ebp]
-	push	eax
-	xor	eax, eax
-	mov	al, BYTE PTR _r$[ebp]
-	imul	eax, DWORD PTR _p$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _i$[ebp]
-	shl	eax, 4
-	add	eax, DWORD PTR _p$[ebp]
-	push	eax
+	mov	ecx, DWORD PTR _r$[ebp]
+	and	ecx, 255				; 000000ffH
+	imul	ecx, DWORD PTR _p$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _i$[ebp]
+	shl	edx, 4
+	add	edx, DWORD PTR _p$[ebp]
+	push	edx
 	call	_SG_SetPaletteIndex
 	add	esp, 16					; 00000010H
 ; Line 101
-	jmp	$L312
+	jmp	SHORT $L312
 $L313:
 ; Line 102
 	jmp	$L308
 $L309:
 ; Line 103
-$L300:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	mov	esp, ebp
+	pop	ebp
 	ret	0
 _SG_InitPalette ENDP
 _TEXT	ENDS
@@ -328,9 +310,9 @@ EXTRN	_printf:NEAR
 _DATA	SEGMENT
 	ORG $+3
 $SG315	DB	'Starblazer II Beta Version', 0aH, 00H
-$SG316	DB	'02:05:43', 00H
+$SG316	DB	'00:56:41', 00H
 	ORG $+3
-$SG317	DB	'Jun 26 2023', 00H
+$SG317	DB	'Jun 27 2023', 00H
 $SG318	DB	'Build Time: %s %s', 0aH, 00H
 	ORG $+1
 $SG319	DB	'By Will Klees (Captain Will Starblazer) and Josh "Fixer"'
@@ -341,9 +323,6 @@ _SG_WelcomeMessage PROC NEAR
 ; Line 105
 	push	ebp
 	mov	ebp, esp
-	push	ebx
-	push	esi
-	push	edi
 ; Line 106
 	push	OFFSET FLAT:$SG315
 	call	_printf
@@ -359,11 +338,7 @@ _SG_WelcomeMessage PROC NEAR
 	call	_printf
 	add	esp, 4
 ; Line 109
-$L314:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	pop	ebp
 	ret	0
 _SG_WelcomeMessage ENDP
 _TEXT	ENDS

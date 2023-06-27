@@ -14,6 +14,8 @@
 
 #define NUM_SHARDS 64
 
+uint32 SND_EXPLODE, SND_HIT, SND_LASER, SND_LASER_ENEMY;
+
 LASER ENEMY_LASER;
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
 //char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
@@ -61,6 +63,8 @@ void explode_at(VEC3* pos){
 		StarblazerEntities[id]->state[2] = 3 * (rand() % 256 - 128);
 		StarblazerEntities[id]->state[3] = 3 * (rand() % 256 - 128);
 	}
+
+	play_soundfx(SND_EXPLODE);
 }
 
 void explode_entity(ENTITY** ptr){
@@ -93,6 +97,7 @@ void fire_laser(){
 	StarblazerEntities[id]->state[15] = player_weapon.damage; //damage
 	StarblazerEntities[id]->orientation = StarblazerEntities[0]->orientation;
 	firing = 1;
+	play_soundfx(SND_LASER);
 }
 
 void cam_script(ENTITY** ptr){
@@ -287,6 +292,14 @@ void blazer2_init(){
 	uint32 i;
 
 	frames = 0;
+
+	// sfx/music
+	stop_music();
+	play_music("sfx/net.wav");
+	SND_EXPLODE = load_soundfx("sfx/explode.wav", 1, 0);
+	SND_LASER = load_soundfx("sfx/laser.wav", 2, 0);
+	SND_LASER_ENEMY = load_soundfx("sfx/laser.wav", 3, 0);
+	SND_HIT = load_soundfx("sfx/hit.wav", 1, 0);
 
 	//load models
 	LASER_PLAYER = load_model("assets/bolt.obj");

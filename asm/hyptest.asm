@@ -38,16 +38,13 @@ _DATA	SEGMENT
 $SG222	DB	'assets/hyper.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
-; File src\hyptest.c
 _id$ = -4
 _init_hypercraft PROC NEAR
+; File src\hyptest.c
 ; Line 15
 	push	ebp
 	mov	ebp, esp
-	sub	esp, 4
-	push	ebx
-	push	esi
-	push	edi
+	push	ecx
 ; Line 17
 	push	OFFSET FLAT:$SG222
 	call	_load_model
@@ -66,9 +63,9 @@ _init_hypercraft PROC NEAR
 	add	esp, 28					; 0000001cH
 	mov	DWORD PTR _id$[ebp], eax
 ; Line 20
-	mov	eax, DWORD PTR _id$[ebp]
-	mov	eax, DWORD PTR _StarblazerEntities[eax*4]
-	mov	DWORD PTR _hypercraft, eax
+	mov	ecx, DWORD PTR _id$[ebp]
+	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
+	mov	DWORD PTR _hypercraft, edx
 ; Line 21
 	mov	eax, DWORD PTR _id$[ebp]
 	mov	DWORD PTR _StarblazerEntities[eax*4], 0
@@ -80,11 +77,8 @@ _init_hypercraft PROC NEAR
 	call	_quat_create
 	add	esp, 16					; 00000010H
 ; Line 24
-$L220:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	mov	esp, ebp
+	pop	ebp
 	ret	0
 _init_hypercraft ENDP
 _TEXT	ENDS
@@ -95,27 +89,19 @@ _set_hypercraft_orientation PROC NEAR
 ; Line 26
 	push	ebp
 	mov	ebp, esp
-	push	ebx
-	push	esi
-	push	edi
 ; Line 27
-	lea	eax, DWORD PTR _quat$[ebp]
-	mov	ecx, DWORD PTR _hypercraft
-	add	ecx, 16					; 00000010H
-	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR [ecx], edx
-	mov	edx, DWORD PTR [eax+4]
-	mov	DWORD PTR [ecx+4], edx
-	mov	edx, DWORD PTR [eax+8]
-	mov	DWORD PTR [ecx+8], edx
-	mov	eax, DWORD PTR [eax+12]
-	mov	DWORD PTR [ecx+12], eax
+	mov	eax, DWORD PTR _hypercraft
+	add	eax, 16					; 00000010H
+	mov	ecx, DWORD PTR _quat$[ebp]
+	mov	DWORD PTR [eax], ecx
+	mov	edx, DWORD PTR _quat$[ebp+4]
+	mov	DWORD PTR [eax+4], edx
+	mov	ecx, DWORD PTR _quat$[ebp+8]
+	mov	DWORD PTR [eax+8], ecx
+	mov	edx, DWORD PTR _quat$[ebp+12]
+	mov	DWORD PTR [eax+12], edx
 ; Line 28
-$L224:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	pop	ebp
 	ret	0
 _set_hypercraft_orientation ENDP
 _TEXT	ENDS
@@ -132,20 +118,17 @@ _rot_hypercraft PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 56					; 00000038H
-	push	ebx
-	push	esi
-	push	edi
 ; Line 34
 	lea	eax, DWORD PTR _joy$[ebp]
 	push	eax
 	call	_vjoy_read
 	add	esp, 4
 ; Line 37
-	mov	eax, DWORD PTR _hypercraft
-	add	eax, 16					; 00000010H
-	push	eax
-	mov	eax, DWORD PTR _joy$[ebp]
-	push	eax
+	mov	ecx, DWORD PTR _hypercraft
+	add	ecx, 16					; 00000010H
+	push	ecx
+	mov	dl, BYTE PTR _joy$[ebp]
+	push	edx
 	mov	al, BYTE PTR _MAX_ROT
 	push	eax
 	call	_angle_multiply
@@ -154,11 +137,11 @@ _rot_hypercraft PROC NEAR
 	call	_quat_pitch
 	add	esp, 8
 ; Line 39
-	mov	eax, DWORD PTR _hypercraft
-	add	eax, 16					; 00000010H
-	push	eax
-	mov	eax, DWORD PTR _joy$[ebp+1]
-	push	eax
+	mov	ecx, DWORD PTR _hypercraft
+	add	ecx, 16					; 00000010H
+	push	ecx
+	mov	dl, BYTE PTR _joy$[ebp+1]
+	push	edx
 	mov	al, BYTE PTR _MAX_ROT
 	push	eax
 	call	_angle_multiply
@@ -167,11 +150,11 @@ _rot_hypercraft PROC NEAR
 	call	_quat_yaw
 	add	esp, 8
 ; Line 41
-	mov	eax, DWORD PTR _hypercraft
-	add	eax, 16					; 00000010H
-	push	eax
-	mov	eax, DWORD PTR _joy$[ebp+2]
-	push	eax
+	mov	ecx, DWORD PTR _hypercraft
+	add	ecx, 16					; 00000010H
+	push	ecx
+	mov	dl, BYTE PTR _joy$[ebp+2]
+	push	edx
 	mov	al, BYTE PTR _MAX_ROT
 	push	eax
 	call	_angle_multiply
@@ -180,11 +163,8 @@ _rot_hypercraft PROC NEAR
 	call	_quat_roll
 	add	esp, 8
 ; Line 42
-$L225:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	mov	esp, ebp
+	pop	ebp
 	ret	0
 _rot_hypercraft ENDP
 _TEXT	ENDS
@@ -214,18 +194,15 @@ _draw_hypercraft PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 60					; 0000003cH
-	push	ebx
-	push	esi
-	push	edi
 ; Line 49
 	movsx	eax, WORD PTR _SL_CENTER_X
 	mov	DWORD PTR _old_centerX$[ebp], eax
 ; Line 50
-	movsx	eax, WORD PTR _SL_CENTER_Y
-	mov	DWORD PTR _old_centerY$[ebp], eax
+	movsx	ecx, WORD PTR _SL_CENTER_Y
+	mov	DWORD PTR _old_centerY$[ebp], ecx
 ; Line 52
-	lea	eax, DWORD PTR _mat$[ebp]
-	push	eax
+	lea	edx, DWORD PTR _mat$[ebp]
+	push	edx
 	mov	eax, DWORD PTR _hypercraft
 	add	eax, 16					; 00000010H
 	push	eax
@@ -238,11 +215,11 @@ _draw_hypercraft PROC NEAR
 ; Line 56
 	mov	DWORD PTR _vec$[ebp+8], 0
 ; Line 58
-	mov	eax, DWORD PTR _centerX$[ebp]
-	mov	WORD PTR _SL_CENTER_X, ax
+	mov	cx, WORD PTR _centerX$[ebp]
+	mov	WORD PTR _SL_CENTER_X, cx
 ; Line 59
-	mov	eax, DWORD PTR _centerY$[ebp]
-	mov	WORD PTR _SL_CENTER_Y, ax
+	mov	dx, WORD PTR _centerY$[ebp]
+	mov	WORD PTR _SL_CENTER_Y, dx
 ; Line 62
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	push	OFFSET FLAT:_hyptest_ori
@@ -257,52 +234,54 @@ _draw_hypercraft PROC NEAR
 	add	esp, 4
 ; Line 66
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	$L237
+	jmp	SHORT $L237
 $L238:
-	inc	DWORD PTR _i$[ebp]
-$L237:
-	mov	eax, DWORD PTR _hc_template
-	xor	ecx, ecx
-	mov	cx, WORD PTR [eax+8]
-	cmp	ecx, DWORD PTR _i$[ebp]
-	jle	$L239
-; Line 67
-	lea	eax, DWORD PTR _vec$[ebp]
-	push	eax
-	mov	eax, DWORD PTR _hc_template
-	mov	eax, DWORD PTR [eax+4]
 	mov	ecx, DWORD PTR _i$[ebp]
-	lea	ecx, DWORD PTR [ecx+ecx*2]
-	lea	eax, DWORD PTR [eax+ecx*4]
-	push	eax
-	lea	eax, DWORD PTR _mat$[ebp]
-	push	eax
+	add	ecx, 1
+	mov	DWORD PTR _i$[ebp], ecx
+$L237:
+	mov	edx, DWORD PTR _hc_template
+	xor	eax, eax
+	mov	ax, WORD PTR [edx+8]
+	cmp	DWORD PTR _i$[ebp], eax
+	jge	SHORT $L239
+; Line 67
+	lea	ecx, DWORD PTR _vec$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _i$[ebp]
+	imul	edx, 12					; 0000000cH
+	mov	eax, DWORD PTR _hc_template
+	mov	ecx, DWORD PTR [eax+4]
+	add	ecx, edx
+	push	ecx
+	lea	edx, DWORD PTR _mat$[ebp]
+	push	edx
 	call	_mat3_mul
 	add	esp, 12					; 0000000cH
 ; Line 68
 	lea	eax, DWORD PTR _vec$[ebp]
 	push	eax
-	mov	eax, DWORD PTR _hypercraft
-	add	eax, 4
-	push	eax
+	mov	ecx, DWORD PTR _hypercraft
+	add	ecx, 4
+	push	ecx
 	call	_vec3_add
 	add	esp, 8
 ; Line 69
-	lea	eax, DWORD PTR _vec$[ebp]
-	push	eax
+	lea	edx, DWORD PTR _vec$[ebp]
+	push	edx
 	call	_put_vertex
 	add	esp, 4
 ; Line 70
-	jmp	$L238
+	jmp	SHORT $L238
 $L239:
 ; Line 72
 	push	0
 	push	0
 	mov	eax, DWORD PTR _hc_template
-	mov	ax, WORD PTR [eax+10]
-	push	eax
-	mov	eax, DWORD PTR _hc_template
-	mov	eax, DWORD PTR [eax]
+	mov	cx, WORD PTR [eax+10]
+	push	ecx
+	mov	edx, DWORD PTR _hc_template
+	mov	eax, DWORD PTR [edx]
 	push	eax
 	call	_put_triangles
 	add	esp, 16					; 00000010H
@@ -313,17 +292,14 @@ $L239:
 	call	_render_end
 	add	esp, 4
 ; Line 77
-	mov	eax, DWORD PTR _old_centerX$[ebp]
-	mov	WORD PTR _SL_CENTER_X, ax
+	mov	cx, WORD PTR _old_centerX$[ebp]
+	mov	WORD PTR _SL_CENTER_X, cx
 ; Line 78
-	mov	eax, DWORD PTR _old_centerY$[ebp]
-	mov	WORD PTR _SL_CENTER_Y, ax
+	mov	dx, WORD PTR _old_centerY$[ebp]
+	mov	WORD PTR _SL_CENTER_Y, dx
 ; Line 79
-$L231:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	mov	esp, ebp
+	pop	ebp
 	ret	0
 _draw_hypercraft ENDP
 _TEXT	ENDS
@@ -334,37 +310,30 @@ _destroy_hypercraft PROC NEAR
 ; Line 81
 	push	ebp
 	mov	ebp, esp
-	push	ebx
-	push	esi
-	push	edi
 ; Line 82
 	mov	eax, DWORD PTR _hypercraft
 	push	eax
 	call	_free
 	add	esp, 4
 ; Line 83
-	mov	eax, DWORD PTR _hc_template
-	mov	eax, DWORD PTR [eax]
-	push	eax
+	mov	ecx, DWORD PTR _hc_template
+	mov	edx, DWORD PTR [ecx]
+	push	edx
 	call	_free
 	add	esp, 4
 ; Line 84
 	mov	eax, DWORD PTR _hc_template
-	mov	eax, DWORD PTR [eax+4]
-	push	eax
+	mov	ecx, DWORD PTR [eax+4]
+	push	ecx
 	call	_free
 	add	esp, 4
 ; Line 85
-	mov	eax, DWORD PTR _hc_template
-	push	eax
+	mov	edx, DWORD PTR _hc_template
+	push	edx
 	call	_free
 	add	esp, 4
 ; Line 86
-$L240:
-	pop	edi
-	pop	esi
-	pop	ebx
-	leave
+	pop	ebp
 	ret	0
 _destroy_hypercraft ENDP
 _TEXT	ENDS

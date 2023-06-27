@@ -6,6 +6,8 @@
 #include "../headers/ui.h"
 #include "../headers/hyptest.h"
 #include "../headers/blazer2.h"
+#include "../headers/net.h"
+#include "../headers/sndmixer.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -87,6 +89,7 @@ void title_init(){
 	create_buttons();
 
 	init_hypercraft();
+	play_music("sfx/menu.wav");
 }
 
 void title_module(){
