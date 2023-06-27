@@ -60,10 +60,11 @@ int load_soundfx(char* filename, uint8 priority, bool_t loop){
 			fseek(fp, 0, SEEK_END);
 			sz = ftell(fp);
 			fseek(fp, 0, SEEK_SET);
-			sounds[i].num_samples = sz;
+			sounds[i].num_samples = sz - 100;
 			sounds[i].samples = malloc(sz);
 			fread(sounds[i].samples, 1, sz, fp);
 			fclose(fp);
+			sounds[i].samples += 70;
 			return i;
 		}
 	}

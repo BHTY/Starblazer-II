@@ -207,6 +207,7 @@ void asteroid_script(ENTITY** ptr){
 		StarblazerEntities[0]->health -= 5;
 		shake_frames = 7;
 		explode_entity(ptr);
+		play_soundfx(SND_HIT);
 		return;
 	}
 
