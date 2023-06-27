@@ -4,9 +4,9 @@ To-do List
 - tweak compiler settings
 - optimizations
 
-Multiplayer enhancements - colors & names above ships
+Multiplayer enhancements - colors & names above ships?
 
-In detail (fix hitboxes) -- LINUX NETWORKING!!!!
+In detail (fix hitboxes) -- attempt Win32s port?
 - Finish UI subsystem
   - Add other UI controls
   - Fix text spacing
@@ -14,11 +14,8 @@ In detail (fix hitboxes) -- LINUX NETWORKING!!!!
 - Add the options screens & multiplayer selection screen
 - Joystick support
 - Laser turrets (single player)
-- Make the DOS port less barebones
+- Make the DOS & Linux ports less barebones
+  - Sound support on DOS & Linux
+  - Mouse support on DOS
+  - Serial support on DOS & networking support on Linux
 - Optimization
-
-Unfinished Subsystems (July 15 demo -- 3.5 weeks remaining)
-- UI
-- Selection Screens
-- Sound
-- Port to MS-DOS
