@@ -14,11 +14,9 @@ In detail (fix hitboxes) -- LINUX NETWORKING!!!!
 - Add the options screens & multiplayer selection screen
 - Joystick support
 - Laser turrets (single player)
-- Make the DOS port less barebones
+- Make the DOS & Linux ports less barebones
+  - Sound support on DOS & Linux
+  - Mouse support on DOS
+  - Serial support on DOS & networking support on Linux
+- Attempt port to Win32s?
 - Optimization
-
-Unfinished Subsystems (July 15 demo -- 3.5 weeks remaining)
-- UI
-- Selection Screens
-- Sound
-- Port to MS-DOS
