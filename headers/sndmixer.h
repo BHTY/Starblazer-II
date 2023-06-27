@@ -22,5 +22,6 @@ typedef struct{
 extern uint8* buffer1;
 extern uint8* buffer2;
 extern int current_buffer;
+extern bool_t sfx_enable;
 
 #endif

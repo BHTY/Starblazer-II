@@ -11,6 +11,7 @@
 #include "../headers/stats.h"
 #include "../headers/hyptest.h"
 #include "../headers/net.h"
+#include "../headers/sndmixer.h"
 
 #define NUM_SHARDS 64
 
@@ -139,6 +140,7 @@ void enemy_laser_script(ENTITY** ptr){
 		StarblazerEntities[0]->health -= 5;
 		shake_frames = 7;
 		impact_id = (*ptr)->state[13];
+		play_soundfx(SND_HIT);
 		free(*ptr);
 		*ptr = 0;
 		return;
@@ -185,6 +187,7 @@ void laser_script(ENTITY** ptr){
 					StarblazerEntities[i]->health -= (*ptr)->state[15];
 
 					//despawn
+					play_soundfx(SND_HIT);
 					free(*ptr);
 					*ptr = 0;
 					return;
@@ -296,6 +299,7 @@ void blazer2_init(){
 	// sfx/music
 	stop_music();
 	play_music("sfx/net.wav");
+	sfx_enable = 1;
 	SND_EXPLODE = load_soundfx("sfx/explode.wav", 1, 0);
 	SND_LASER = load_soundfx("sfx/laser.wav", 2, 0);
 	SND_LASER_ENEMY = load_soundfx("sfx/laser.wav", 3, 0);
@@ -446,6 +450,7 @@ void blazer2_module(){
 	}
 
 	if (StarblazerEntities[0]->health <= 0 && frames_respawning == 0){
+		play_soundfx(SND_EXPLODE);
 		dying = 1;
 		frames_respawning = timeout;
 		BG_COLOR = 127;

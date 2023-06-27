@@ -13,6 +13,7 @@ uint16* mix_buffer;
 
 int current_buffer;
 FILE* musicfp;
+bool_t sfx_enable;
 
 void init_sound(){
 	memset(sounds, 0, sizeof(sounds));
@@ -27,6 +28,7 @@ void init_sound(){
 	memset(mix_buffer, 0, BUFFER_SIZE * 2);
 
 	current_buffer = 0;
+	sfx_enable = 0;
 }
 
 void play_music(char* filename){
@@ -128,6 +130,15 @@ void mix_channel(int ch){
 	}
 }
 
+void copy_music(uint8* ptr){
+	int bytes_read = fread(ptr, 1, BUFFER_SIZE, musicfp);
+
+	if (bytes_read < BUFFER_SIZE){
+		fseek(musicfp, 0, SEEK_SET);
+		fread(ptr + bytes_read, 1, BUFFER_SIZE - bytes_read, musicfp);
+	}
+}
+
 void mix_music(uint8* ptr){
 	int i;
 
@@ -152,6 +163,11 @@ void mix(){
 		ptr = buffer1;
 	}else{
 		ptr = buffer2;
+	}
+
+	if (sfx_enable == 0 && musicfp){
+		copy_music(ptr);
+		return;
 	}
 
 	memset(mix_buffer, 0, BUFFER_SIZE * 2);

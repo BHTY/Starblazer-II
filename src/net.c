@@ -3,6 +3,7 @@
 #include "../headers/ecs.h"
 #include "../headers/blazer2.h"
 #include "../headers/star_gen.h"
+#include "../headers/sndmixer.h"
 
 #define TIMEOUT 3000
 
@@ -22,6 +23,7 @@ void spawn_enemy_laser(uint32 index){ //index= index into connected players tabl
 	StarblazerEntities[id]->state[15] = players[index].laser->damage;
 	StarblazerEntities[id]->state[0] = 280;
 	StarblazerEntities[id]->state[13] = index;
+	play_soundfx(SND_LASER_ENEMY);
 }
 
 /*

@@ -27,15 +27,6 @@ PUBLIC	_focused_textbox_ptr
 PUBLIC	_cursor
 _DATA	SEGMENT
 COMM	_widgets:DWORD:0c8H
-_DATA	ENDS
-_BSS	SEGMENT
-_current_widget_focus DD 01H DUP (?)
-_focused_textbox_ptr DB 01H DUP (?)
-	ALIGN	4
-
-_cursor	DB	01H DUP (?)
-_BSS	ENDS
-_DATA	SEGMENT
 _widget_can_focus DB 00H
 	DB	00H
 	DB	01H
@@ -43,44 +34,53 @@ _widget_can_focus DB 00H
 	DB	01H
 	DB	01H
 	DB	01H
+	ORG $+1
+_current_widget_focus DD 00H
+_focused_textbox_ptr DB 00H
+	ORG $+3
+_cursor	DB	00H
 _DATA	ENDS
 PUBLIC	_UI_OPEN_SLOT
 _TEXT	SEGMENT
+; File src\ui.c
 _starting$ = 8
 _i$ = -4
 _UI_OPEN_SLOT PROC NEAR
-; File src\ui.c
 ; Line 28
 	push	ebp
 	mov	ebp, esp
-	push	ecx
+	sub	esp, 4
+	push	ebx
+	push	esi
+	push	edi
 ; Line 31
 	mov	eax, DWORD PTR _starting$[ebp]
 	mov	DWORD PTR _i$[ebp], eax
-	jmp	SHORT $L385
-$L386:
-	mov	ecx, DWORD PTR _i$[ebp]
-	add	ecx, 1
-	mov	DWORD PTR _i$[ebp], ecx
-$L385:
+	jmp	$L379
+$L380:
+	inc	DWORD PTR _i$[ebp]
+$L379:
 	cmp	DWORD PTR _i$[ebp], 200			; 000000c8H
-	jge	SHORT $L387
+	jge	$L381
 ; Line 32
-	mov	edx, DWORD PTR _i$[ebp]
-	cmp	DWORD PTR _widgets[edx*4], 0
-	jne	SHORT $L388
 	mov	eax, DWORD PTR _i$[ebp]
-	jmp	SHORT $L383
-$L388:
+	cmp	DWORD PTR _widgets[eax*4], 0
+	jne	$L382
+	mov	eax, DWORD PTR _i$[ebp]
+	jmp	$L377
 ; Line 33
-	jmp	SHORT $L386
-$L387:
+$L382:
+	jmp	$L380
+$L381:
 ; Line 35
 	xor	eax, eax
-$L383:
+	jmp	$L377
 ; Line 36
-	mov	esp, ebp
-	pop	ebp
+$L377:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_OPEN_SLOT ENDP
 _TEXT	ENDS
@@ -96,76 +96,83 @@ _UI_DRAW_RECT PROC NEAR
 ; Line 38
 	push	ebp
 	mov	ebp, esp
+	push	ebx
+	push	esi
+	push	edi
 ; Line 39
-	mov	al, BYTE PTR _color$[ebp]
+	mov	eax, DWORD PTR _color$[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _y1$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	push	ecx
-	mov	edx, DWORD PTR _x2$[ebp]
-	and	edx, 65535				; 0000ffffH
-	push	edx
 	mov	eax, DWORD PTR _y1$[ebp]
 	and	eax, 65535				; 0000ffffH
 	push	eax
-	mov	ecx, DWORD PTR _x1$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	push	ecx
+	mov	eax, DWORD PTR _x2$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
 ; Line 40
-	mov	dl, BYTE PTR _color$[ebp]
-	push	edx
+	mov	eax, DWORD PTR _color$[ebp]
+	push	eax
 	mov	eax, DWORD PTR _y2$[ebp]
 	and	eax, 65535				; 0000ffffH
 	push	eax
-	mov	ecx, DWORD PTR _x2$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	push	ecx
-	mov	edx, DWORD PTR _y1$[ebp]
-	and	edx, 65535				; 0000ffffH
-	push	edx
+	mov	eax, DWORD PTR _x2$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
 	mov	eax, DWORD PTR _x2$[ebp]
 	and	eax, 65535				; 0000ffffH
 	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
 ; Line 41
-	mov	cl, BYTE PTR _color$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _y2$[ebp]
-	and	edx, 65535				; 0000ffffH
-	push	edx
-	mov	eax, DWORD PTR _x1$[ebp]
-	and	eax, 65535				; 0000ffffH
+	mov	eax, DWORD PTR _color$[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _y2$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	push	ecx
-	mov	edx, DWORD PTR _x2$[ebp]
-	and	edx, 65535				; 0000ffffH
-	push	edx
-	call	_draw_line
-	add	esp, 20					; 00000014H
-; Line 42
-	mov	al, BYTE PTR _color$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _y1$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	push	ecx
-	mov	edx, DWORD PTR _x1$[ebp]
-	and	edx, 65535				; 0000ffffH
-	push	edx
 	mov	eax, DWORD PTR _y2$[ebp]
 	and	eax, 65535				; 0000ffffH
 	push	eax
-	mov	ecx, DWORD PTR _x1$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	push	ecx
+	mov	eax, DWORD PTR _x1$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _y2$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _x2$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	call	_draw_line
+	add	esp, 20					; 00000014H
+; Line 42
+	mov	eax, DWORD PTR _color$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _y1$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _y2$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
+	mov	eax, DWORD PTR _x1$[ebp]
+	and	eax, 65535				; 0000ffffH
+	push	eax
 	call	_draw_line
 	add	esp, 20					; 00000014H
 ; Line 43
-	pop	ebp
+$L389:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_DRAW_RECT ENDP
 _TEXT	ENDS
@@ -178,27 +185,31 @@ _UI_FILL_RECT PROC NEAR
 ; Line 45
 	push	ebp
 	mov	ebp, esp
-	push	ecx
+	sub	esp, 4
+	push	ebx
+	push	esi
+	push	edi
 ; Line 49
 	mov	eax, DWORD PTR _y1$[ebp]
 	and	eax, 65535				; 0000ffffH
 	mov	DWORD PTR _i$[ebp], eax
-	jmp	SHORT $L404
-$L405:
-	mov	ecx, DWORD PTR _i$[ebp]
-	add	ecx, 1
-	mov	DWORD PTR _i$[ebp], ecx
-$L404:
-	mov	edx, DWORD PTR _y2$[ebp]
-	and	edx, 65535				; 0000ffffH
-	cmp	DWORD PTR _i$[ebp], edx
-	jge	SHORT $L406
+	jmp	$L398
+$L399:
+	inc	DWORD PTR _i$[ebp]
+$L398:
+	mov	eax, DWORD PTR _y2$[ebp]
+	and	eax, 65535				; 0000ffffH
+	cmp	eax, DWORD PTR _i$[ebp]
+	jle	$L400
 ; Line 51
-	jmp	SHORT $L405
-$L406:
+	jmp	$L399
+$L400:
 ; Line 52
-	mov	esp, ebp
-	pop	ebp
+$L396:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_FILL_RECT ENDP
 _TEXT	ENDS
@@ -218,120 +229,127 @@ _UI_DRAW_BOX PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
 ; Line 55
 	mov	eax, DWORD PTR _text$[ebp]
 	xor	ecx, ecx
 	mov	cl, BYTE PTR [eax+1]
-	lea	edx, DWORD PTR [ecx*4+1]
-	mov	DWORD PTR _text_size_y$[ebp], edx
+	lea	eax, DWORD PTR [ecx*4]
+	inc	eax
+	mov	DWORD PTR _text_size_y$[ebp], eax
 ; Line 58
+	mov	eax, DWORD PTR _text$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+2]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	edx, edx
+	mov	dl, BYTE PTR [eax+4]
+	cmp	ecx, edx
+	je	$L411
+; Line 59
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	al, BYTE PTR [eax+4]
+	push	eax
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
-	mov	cl, BYTE PTR [eax+4]
-	mov	edx, DWORD PTR _text$[ebp]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx+2]
-	cmp	ecx, eax
-	je	SHORT $L417
-; Line 59
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	mov	dl, BYTE PTR [ecx+4]
-	push	edx
+	mov	cx, WORD PTR [eax+2]
 	mov	eax, DWORD PTR _y$[ebp]
 	and	eax, 65535				; 0000ffffH
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx+2]
-	add	eax, edx
-	push	eax
+	add	ecx, eax
+	push	ecx
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax]
 	mov	eax, DWORD PTR _x$[ebp]
 	and	eax, 65535				; 0000ffffH
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx]
-	add	eax, edx
-	push	eax
-	mov	ax, WORD PTR _y$[ebp]
-	push	eax
-	mov	cx, WORD PTR _x$[ebp]
+	add	ecx, eax
 	push	ecx
+	mov	eax, DWORD PTR _y$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x$[ebp]
+	push	eax
 	call	_UI_FILL_RECT
 	add	esp, 20					; 00000014H
-$L417:
 ; Line 63
-	mov	edx, DWORD PTR _current_widget_focus
-	cmp	edx, DWORD PTR _id$[ebp]
-	jne	SHORT $L544
+$L411:
+	mov	eax, DWORD PTR _id$[ebp]
+	cmp	DWORD PTR _current_widget_focus, eax
+	jne	$L534
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cl, BYTE PTR [eax+6]
 	mov	DWORD PTR -8+[ebp], ecx
-	jmp	SHORT $L545
-$L544:
-	mov	edx, DWORD PTR _ptr$[ebp]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx+5]
-	mov	DWORD PTR -8+[ebp], eax
-$L545:
-	mov	cl, BYTE PTR -8+[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _y$[ebp]
-	and	edx, 65535				; 0000ffffH
+	jmp	$L535
+$L534:
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+5]
+	mov	DWORD PTR -8+[ebp], ecx
+$L535:
+	mov	eax, DWORD PTR -8+[ebp]
+	push	eax
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+2]
-	add	edx, ecx
-	push	edx
-	mov	edx, DWORD PTR _x$[ebp]
-	and	edx, 65535				; 0000ffffH
+	mov	eax, DWORD PTR _y$[ebp]
+	and	eax, 65535				; 0000ffffH
+	add	ecx, eax
+	push	ecx
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax]
-	add	edx, ecx
-	push	edx
-	mov	dx, WORD PTR _y$[ebp]
-	push	edx
-	mov	ax, WORD PTR _x$[ebp]
+	mov	eax, DWORD PTR _x$[ebp]
+	and	eax, 65535				; 0000ffffH
+	add	ecx, eax
+	push	ecx
+	mov	eax, DWORD PTR _y$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _x$[ebp]
 	push	eax
 	call	_UI_DRAW_RECT
 	add	esp, 20					; 00000014H
 ; Line 66
-	mov	ecx, DWORD PTR _text$[ebp]
-	mov	dl, BYTE PTR [ecx+3]
-	push	edx
 	mov	eax, DWORD PTR _text$[ebp]
-	mov	cl, BYTE PTR [eax+2]
-	push	ecx
-	mov	edx, DWORD PTR _text$[ebp]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx+1]
+	mov	al, BYTE PTR [eax+3]
 	push	eax
-	mov	ecx, DWORD PTR _text$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx]
-	push	edx
+	mov	eax, DWORD PTR _text$[ebp]
+	mov	al, BYTE PTR [eax+2]
+	push	eax
+	mov	eax, DWORD PTR _text$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+1]
+	push	ecx
+	mov	eax, DWORD PTR _text$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
+	push	ecx
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+2]
+	sub	ecx, DWORD PTR _text_size_y$[ebp]
+	sar	ecx, 1
 	mov	eax, DWORD PTR _y$[ebp]
 	and	eax, 65535				; 0000ffffH
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx+2]
-	sub	edx, DWORD PTR _text_size_y$[ebp]
-	sar	edx, 1
-	add	eax, edx
-	push	eax
-	mov	eax, DWORD PTR _x$[ebp]
+	add	ecx, eax
+	push	ecx
+	mov	eax, DWORD PTR _px_offset$[ebp]
 	and	eax, 65535				; 0000ffffH
-	mov	ecx, DWORD PTR _px_offset$[ebp]
+	mov	ecx, DWORD PTR _x$[ebp]
 	and	ecx, 65535				; 0000ffffH
 	add	eax, ecx
 	push	eax
-	mov	edx, DWORD PTR _txt$[ebp]
-	push	edx
+	mov	eax, DWORD PTR _txt$[ebp]
+	push	eax
 	call	_vputs
 	add	esp, 28					; 0000001cH
 ; Line 67
-	mov	esp, ebp
-	pop	ebp
+$L409:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_DRAW_BOX ENDP
 _TEXT	ENDS
@@ -345,45 +363,51 @@ _UI_DRAW_LABEL PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
 ; Line 70
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR _ptr$[ebp], ecx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR _ptr$[ebp], eax
 ; Line 71
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+12]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR _label_data$[ebp], eax
 ; Line 72
-	mov	ecx, DWORD PTR _label_data$[ebp]
-	mov	dl, BYTE PTR [ecx+3]
-	push	edx
 	mov	eax, DWORD PTR _label_data$[ebp]
-	mov	cl, BYTE PTR [eax+2]
-	push	ecx
-	mov	edx, DWORD PTR _label_data$[ebp]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx+1]
+	mov	al, BYTE PTR [eax+3]
 	push	eax
-	mov	ecx, DWORD PTR _label_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx]
-	push	edx
+	mov	eax, DWORD PTR _label_data$[ebp]
+	mov	al, BYTE PTR [eax+2]
+	push	eax
+	mov	eax, DWORD PTR _label_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+1]
+	push	ecx
+	mov	eax, DWORD PTR _label_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
+	push	ecx
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+10]
 	push	ecx
-	mov	edx, DWORD PTR _ptr$[ebp]
-	xor	eax, eax
-	mov	ax, WORD PTR [edx+8]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+8]
+	push	ecx
+	mov	eax, DWORD PTR _label_data$[ebp]
+	mov	eax, DWORD PTR [eax+4]
 	push	eax
-	mov	ecx, DWORD PTR _label_data$[ebp]
-	mov	edx, DWORD PTR [ecx+4]
-	push	edx
 	call	_vputs
 	add	esp, 28					; 0000001cH
 ; Line 73
-	mov	esp, ebp
-	pop	ebp
+$L414:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_DRAW_LABEL ENDP
 _TEXT	ENDS
@@ -399,84 +423,97 @@ _UI_DRAW_CHECKBOX PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 16					; 00000010H
+	push	ebx
+	push	esi
+	push	edi
 ; Line 76
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR _ptr$[ebp], ecx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR _ptr$[ebp], eax
 ; Line 77
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+12]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR _checkbox_data$[ebp], eax
 ; Line 78
-	mov	ecx, DWORD PTR _checkbox_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx]
-	lea	eax, DWORD PTR [edx+edx+1]
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
+	lea	eax, DWORD PTR [ecx*2]
+	inc	eax
 	mov	DWORD PTR _box_size_x$[ebp], eax
 ; Line 79
-	mov	ecx, DWORD PTR _checkbox_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx+1]
-	lea	eax, DWORD PTR [edx*4+1]
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+1]
+	lea	eax, DWORD PTR [ecx*4]
+	inc	eax
 	mov	DWORD PTR _box_size_y$[ebp], eax
 ; Line 82
-	mov	ecx, DWORD PTR _checkbox_data$[ebp]
-	mov	dl, BYTE PTR [ecx+2]
-	push	edx
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	mov	al, BYTE PTR [eax+2]
+	push	eax
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+10]
 	add	ecx, DWORD PTR _box_size_y$[ebp]
 	push	ecx
-	mov	edx, DWORD PTR _ptr$[ebp]
-	xor	eax, eax
-	mov	ax, WORD PTR [edx+8]
-	add	eax, DWORD PTR _box_size_x$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	mov	dx, WORD PTR [ecx+10]
-	push	edx
-	mov	eax, DWORD PTR _ptr$[ebp]
-	mov	cx, WORD PTR [eax+8]
-	push	ecx
-	call	_UI_DRAW_RECT
-	add	esp, 20					; 00000014H
-; Line 85
-	mov	edx, DWORD PTR _checkbox_data$[ebp]
-	mov	al, BYTE PTR [edx+3]
-	push	eax
-	mov	ecx, DWORD PTR _checkbox_data$[ebp]
-	mov	dl, BYTE PTR [ecx+2]
-	push	edx
-	mov	eax, DWORD PTR _checkbox_data$[ebp]
-	xor	ecx, ecx
-	mov	cl, BYTE PTR [eax+1]
-	push	ecx
-	mov	edx, DWORD PTR _checkbox_data$[ebp]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx]
-	push	eax
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx+10]
-	push	edx
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+8]
 	add	ecx, DWORD PTR _box_size_x$[ebp]
-	mov	edx, DWORD PTR _checkbox_data$[ebp]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx+3]
-	add	ecx, eax
 	push	ecx
-	mov	ecx, DWORD PTR _checkbox_data$[ebp]
-	mov	edx, DWORD PTR [ecx+4]
-	push	edx
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	ax, WORD PTR [eax+10]
+	push	eax
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	ax, WORD PTR [eax+8]
+	push	eax
+	call	_UI_DRAW_RECT
+	add	esp, 20					; 00000014H
+; Line 85
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	mov	al, BYTE PTR [eax+3]
+	push	eax
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	mov	al, BYTE PTR [eax+2]
+	push	eax
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+1]
+	push	ecx
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
+	push	ecx
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+10]
+	push	ecx
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+3]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	edx, edx
+	mov	dx, WORD PTR [eax+8]
+	add	ecx, edx
+	add	ecx, DWORD PTR _box_size_x$[ebp]
+	push	ecx
+	mov	eax, DWORD PTR _checkbox_data$[ebp]
+	mov	eax, DWORD PTR [eax+4]
+	push	eax
 	call	_vputs
 	add	esp, 28					; 0000001cH
+; Line 87
+	mov	eax, DWORD PTR _ptr$[ebp]
+	cmp	DWORD PTR [eax+16], 1
+	jne	$L424
 ; Line 90
-	mov	esp, ebp
-	pop	ebp
+$L424:
+$L419:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_DRAW_CHECKBOX ENDP
 _TEXT	ENDS
@@ -490,17 +527,23 @@ _UI_DRAW_DROPDOWN PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
 ; Line 93
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR _ptr$[ebp], ecx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR _ptr$[ebp], eax
 ; Line 94
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+12]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR _dropdown_data$[ebp], eax
 ; Line 103
-	mov	esp, ebp
-	pop	ebp
+$L427:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_DRAW_DROPDOWN ENDP
 _TEXT	ENDS
@@ -519,129 +562,134 @@ _UI_DRAW_RADIO PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 24					; 00000018H
+	push	ebx
+	push	esi
+	push	edi
 ; Line 106
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR _ptr$[ebp], ecx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR _ptr$[ebp], eax
 ; Line 107
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+12]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR _radio_data$[ebp], eax
 ; Line 110
-	mov	ecx, DWORD PTR _radio_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx]
-	lea	eax, DWORD PTR [edx+edx+1]
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
+	lea	eax, DWORD PTR [ecx*2]
+	inc	eax
 	mov	DWORD PTR _box_size_x$[ebp], eax
 ; Line 111
-	mov	ecx, DWORD PTR _radio_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx+1]
-	lea	eax, DWORD PTR [edx*4+1]
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+1]
+	lea	eax, DWORD PTR [ecx*4]
+	inc	eax
 	mov	DWORD PTR _box_size_y$[ebp], eax
 ; Line 112
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx+10]
-	mov	DWORD PTR _current_y$[ebp], edx
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+10]
+	mov	DWORD PTR _current_y$[ebp], ecx
 ; Line 114
 	mov	DWORD PTR _i$[ebp], 0
-	jmp	SHORT $L445
-$L446:
-	mov	eax, DWORD PTR _i$[ebp]
-	add	eax, 1
-	mov	DWORD PTR _i$[ebp], eax
-$L445:
-	mov	ecx, DWORD PTR _radio_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx+4]
-	cmp	DWORD PTR _i$[ebp], edx
-	jge	$L447
+	jmp	$L439
+$L440:
+	inc	DWORD PTR _i$[ebp]
+$L439:
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+4]
+	cmp	ecx, DWORD PTR _i$[ebp]
+	jle	$L441
 ; Line 116
 	mov	eax, DWORD PTR _radio_data$[ebp]
-	mov	cl, BYTE PTR [eax+2]
-	push	ecx
-	mov	edx, DWORD PTR _current_y$[ebp]
-	add	edx, DWORD PTR _box_size_y$[ebp]
-	push	edx
+	mov	al, BYTE PTR [eax+2]
+	push	eax
+	mov	eax, DWORD PTR _current_y$[ebp]
+	add	eax, DWORD PTR _box_size_y$[ebp]
+	push	eax
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+8]
 	add	ecx, DWORD PTR _box_size_x$[ebp]
 	push	ecx
-	mov	dx, WORD PTR _current_y$[ebp]
-	push	edx
+	mov	eax, DWORD PTR _current_y$[ebp]
+	push	eax
 	mov	eax, DWORD PTR _ptr$[ebp]
-	mov	cx, WORD PTR [eax+8]
-	push	ecx
+	mov	ax, WORD PTR [eax+8]
+	push	eax
 	call	_UI_DRAW_RECT
 	add	esp, 20					; 00000014H
 ; Line 119
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+16]
-	cmp	eax, DWORD PTR _i$[ebp]
-	jne	SHORT $L448
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	ecx, DWORD PTR _i$[ebp]
+	cmp	DWORD PTR [eax+16], ecx
+	jne	$L442
 ; Line 120
-	mov	ecx, DWORD PTR _radio_data$[ebp]
-	mov	dl, BYTE PTR [ecx+2]
-	push	edx
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	mov	al, BYTE PTR [eax+2]
+	push	eax
 	mov	eax, DWORD PTR _current_y$[ebp]
 	add	eax, DWORD PTR _box_size_y$[ebp]
 	sar	eax, 1
 	push	eax
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx+8]
-	add	edx, DWORD PTR _box_size_x$[ebp]
-	sar	edx, 1
-	push	edx
-	call	_plot_pixel
-	add	esp, 12					; 0000000cH
-$L448:
-; Line 124
-	mov	eax, DWORD PTR _radio_data$[ebp]
-	mov	cl, BYTE PTR [eax+3]
-	push	ecx
-	mov	edx, DWORD PTR _radio_data$[ebp]
-	mov	al, BYTE PTR [edx+2]
-	push	eax
-	mov	ecx, DWORD PTR _radio_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx+1]
-	push	edx
-	mov	eax, DWORD PTR _radio_data$[ebp]
-	xor	ecx, ecx
-	mov	cl, BYTE PTR [eax]
-	push	ecx
-	mov	edx, DWORD PTR _current_y$[ebp]
-	push	edx
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+8]
 	add	ecx, DWORD PTR _box_size_x$[ebp]
-	mov	edx, DWORD PTR _radio_data$[ebp]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx+3]
-	add	ecx, eax
+	sar	ecx, 1
 	push	ecx
-	mov	ecx, DWORD PTR _radio_data$[ebp]
-	mov	edx, DWORD PTR [ecx+8]
-	mov	eax, DWORD PTR _i$[ebp]
-	mov	ecx, DWORD PTR [edx+eax*4]
+	call	_plot_pixel
+	add	esp, 12					; 0000000cH
+; Line 124
+$L442:
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	mov	al, BYTE PTR [eax+3]
+	push	eax
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	mov	al, BYTE PTR [eax+2]
+	push	eax
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+1]
 	push	ecx
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
+	push	ecx
+	mov	eax, DWORD PTR _current_y$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+3]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	xor	edx, edx
+	mov	dx, WORD PTR [eax+8]
+	add	ecx, edx
+	add	ecx, DWORD PTR _box_size_x$[ebp]
+	push	ecx
+	mov	eax, DWORD PTR _radio_data$[ebp]
+	mov	eax, DWORD PTR [eax+8]
+	mov	ecx, DWORD PTR _i$[ebp]
+	mov	eax, DWORD PTR [eax+ecx*4]
+	push	eax
 	call	_vputs
 	add	esp, 28					; 0000001cH
 ; Line 126
-	mov	edx, DWORD PTR _box_size_y$[ebp]
-	mov	eax, DWORD PTR _current_y$[ebp]
-	lea	ecx, DWORD PTR [eax+edx+1]
-	mov	DWORD PTR _current_y$[ebp], ecx
+	mov	eax, DWORD PTR _box_size_y$[ebp]
+	inc	eax
+	add	DWORD PTR _current_y$[ebp], eax
 ; Line 127
-	jmp	$L446
-$L447:
+	jmp	$L440
+$L441:
 ; Line 128
-	mov	esp, ebp
-	pop	ebp
+$L432:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_DRAW_RADIO ENDP
 _TEXT	ENDS
@@ -655,29 +703,44 @@ _UI_DRAW_TEXTBOX PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
 ; Line 131
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR _ptr$[ebp], ecx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR _ptr$[ebp], eax
 ; Line 132
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+12]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR _textbox_data$[ebp], eax
 ; Line 138
-	mov	ecx, DWORD PTR _current_widget_focus
-	cmp	ecx, DWORD PTR _widget_handle$[ebp]
-	jne	SHORT $L454
-; Line 142
+	mov	eax, DWORD PTR _widget_handle$[ebp]
+	cmp	DWORD PTR _current_widget_focus, eax
+	jne	$L448
+; Line 139
 	xor	eax, eax
 	mov	al, BYTE PTR _cursor
-	neg	eax
-	sbb	eax, eax
-	inc	eax
-	mov	BYTE PTR _cursor, al
-$L454:
+	test	eax, eax
+	je	$L449
+; Line 142
+$L449:
+	xor	eax, eax
+	mov	al, BYTE PTR _cursor
+	test	eax, eax
+	jne	$L536
+	mov	BYTE PTR _cursor, 1
+	jmp	$L537
+$L536:
+	mov	BYTE PTR _cursor, 0
+$L537:
 ; Line 144
-	mov	esp, ebp
-	pop	ebp
+$L448:
+$L445:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_DRAW_TEXTBOX ENDP
 _TEXT	ENDS
@@ -694,59 +757,64 @@ _UI_DRAW_BUTTON PROC NEAR
 	mov	ebp, esp
 	sub	esp, 12					; 0000000cH
 	push	ebx
+	push	esi
+	push	edi
 ; Line 147
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR _ptr$[ebp], ecx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR _ptr$[ebp], eax
 ; Line 148
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+12]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	eax, DWORD PTR [eax+12]
 	mov	DWORD PTR _button_data$[ebp], eax
 ; Line 150
-	mov	ecx, DWORD PTR _button_data$[ebp]
-	mov	edx, DWORD PTR [ecx+12]
-	push	edx
+	mov	eax, DWORD PTR _button_data$[ebp]
+	xor	ebx, ebx
+	mov	bl, BYTE PTR [eax]
+	mov	eax, DWORD PTR _button_data$[ebp]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax+3]
+	lea	ebx, DWORD PTR [ecx+ebx*2]
+	add	ebx, 2
+	mov	eax, DWORD PTR _button_data$[ebp]
+	mov	eax, DWORD PTR [eax+12]
+	push	eax
 	call	_strlen
 	add	esp, 4
-	mov	ecx, DWORD PTR _button_data$[ebp]
-	xor	edx, edx
-	mov	dl, BYTE PTR [ecx]
-	mov	ecx, DWORD PTR _button_data$[ebp]
-	xor	ebx, ebx
-	mov	bl, BYTE PTR [ecx+3]
-	lea	edx, DWORD PTR [ebx+edx*2+2]
-	imul	eax, edx
-	add	eax, 6
-	mov	DWORD PTR _text_size_x$[ebp], eax
+	imul	ebx, eax
+	add	ebx, 6
+	mov	DWORD PTR _text_size_x$[ebp], ebx
 ; Line 154
 	mov	eax, DWORD PTR _button_data$[ebp]
-	mov	ecx, DWORD PTR [eax+12]
-	push	ecx
-	mov	edx, DWORD PTR _button_data$[ebp]
-	xor	eax, eax
-	mov	ax, WORD PTR [edx+4]
-	sub	eax, DWORD PTR _text_size_x$[ebp]
-	sar	eax, 1
+	mov	eax, DWORD PTR [eax+12]
 	push	eax
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	mov	dx, WORD PTR [ecx+10]
-	push	edx
-	mov	eax, DWORD PTR _ptr$[ebp]
-	mov	cx, WORD PTR [eax+8]
+	mov	eax, DWORD PTR _button_data$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+4]
+	sub	ecx, DWORD PTR _text_size_x$[ebp]
+	sar	ecx, 1
 	push	ecx
-	mov	edx, DWORD PTR _button_data$[ebp]
-	push	edx
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	ax, WORD PTR [eax+10]
+	push	eax
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	ax, WORD PTR [eax+8]
+	push	eax
+	mov	eax, DWORD PTR _button_data$[ebp]
+	push	eax
 	mov	eax, DWORD PTR _button_data$[ebp]
 	add	eax, 4
 	push	eax
-	mov	ecx, DWORD PTR _widget_handle$[ebp]
-	push	ecx
+	mov	eax, DWORD PTR _widget_handle$[ebp]
+	push	eax
 	call	_UI_DRAW_BOX
 	add	esp, 28					; 0000001cH
 ; Line 155
+$L452:
+	pop	edi
+	pop	esi
 	pop	ebx
-	mov	esp, ebp
-	pop	ebp
+	leave
 	ret	0
 _UI_DRAW_BUTTON ENDP
 _TEXT	ENDS
@@ -764,6 +832,9 @@ _ui_create_widget PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
 ; Line 158
 	push	1
 	call	_UI_OPEN_SLOT
@@ -771,74 +842,86 @@ _ui_create_widget PROC NEAR
 	mov	DWORD PTR _handle$[ebp], eax
 ; Line 160
 	cmp	DWORD PTR _handle$[ebp], 0
-	jne	SHORT $L469
+	jne	$L463
 	mov	eax, DWORD PTR _handle$[ebp]
-	jmp	$L467
-$L469:
+	jmp	$L461
 ; Line 162
+$L463:
 	push	20					; 00000014H
 	call	_malloc
 	add	esp, 4
 	mov	ecx, DWORD PTR _handle$[ebp]
 	mov	DWORD PTR _widgets[ecx*4], eax
 ; Line 163
-	mov	edx, DWORD PTR _handle$[ebp]
-	mov	eax, DWORD PTR _widgets[edx*4]
-	mov	cl, BYTE PTR _widgetType$[ebp]
-	mov	BYTE PTR [eax], cl
+	mov	al, BYTE PTR _widgetType$[ebp]
+	mov	ecx, DWORD PTR _handle$[ebp]
+	mov	ecx, DWORD PTR _widgets[ecx*4]
+	mov	BYTE PTR [ecx], al
 ; Line 164
-	mov	edx, DWORD PTR _handle$[ebp]
-	mov	eax, DWORD PTR _widgets[edx*4]
-	mov	ecx, DWORD PTR _widgetID$[ebp]
-	mov	DWORD PTR [eax+4], ecx
+	mov	eax, DWORD PTR _widgetID$[ebp]
+	mov	ecx, DWORD PTR _handle$[ebp]
+	mov	ecx, DWORD PTR _widgets[ecx*4]
+	mov	DWORD PTR [ecx+4], eax
 ; Line 165
-	mov	edx, DWORD PTR _handle$[ebp]
-	mov	eax, DWORD PTR _widgets[edx*4]
-	mov	cx, WORD PTR _posX$[ebp]
-	mov	WORD PTR [eax+8], cx
+	mov	ax, WORD PTR _posX$[ebp]
+	mov	ecx, DWORD PTR _handle$[ebp]
+	mov	ecx, DWORD PTR _widgets[ecx*4]
+	mov	WORD PTR [ecx+8], ax
 ; Line 166
-	mov	edx, DWORD PTR _handle$[ebp]
-	mov	eax, DWORD PTR _widgets[edx*4]
-	mov	cx, WORD PTR _posY$[ebp]
-	mov	WORD PTR [eax+10], cx
+	mov	ax, WORD PTR _posY$[ebp]
+	mov	ecx, DWORD PTR _handle$[ebp]
+	mov	ecx, DWORD PTR _widgets[ecx*4]
+	mov	WORD PTR [ecx+10], ax
 ; Line 167
-	mov	edx, DWORD PTR _handle$[ebp]
-	mov	eax, DWORD PTR _widgets[edx*4]
-	mov	ecx, DWORD PTR _widgetData$[ebp]
-	mov	DWORD PTR [eax+12], ecx
+	mov	eax, DWORD PTR _widgetData$[ebp]
+	mov	ecx, DWORD PTR _handle$[ebp]
+	mov	ecx, DWORD PTR _widgets[ecx*4]
+	mov	DWORD PTR [ecx+12], eax
 ; Line 169
-	mov	dl, BYTE PTR _widgetType$[ebp]
-	mov	BYTE PTR -8+[ebp], dl
-	cmp	BYTE PTR -8+[ebp], 5
-	je	SHORT $L474
-	jmp	SHORT $L475
-$L474:
+	xor	eax, eax
+	mov	al, BYTE PTR _widgetType$[ebp]
+	mov	DWORD PTR -8+[ebp], eax
+	jmp	$L464
+; Line 170
+$L468:
 ; Line 171
 	push	80					; 00000050H
 	call	_malloc
 	add	esp, 4
 	mov	ecx, DWORD PTR _handle$[ebp]
-	mov	edx, DWORD PTR _widgets[ecx*4]
-	mov	DWORD PTR [edx+16], eax
+	mov	ecx, DWORD PTR _widgets[ecx*4]
+	mov	DWORD PTR [ecx+16], eax
 ; Line 172
 	mov	eax, DWORD PTR _handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	edx, DWORD PTR [ecx+16]
-	mov	DWORD PTR [edx], 0
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	eax, DWORD PTR [eax+16]
+	mov	DWORD PTR [eax], 0
 ; Line 173
-	jmp	SHORT $L471
-$L475:
+	jmp	$L465
+; Line 174
+$L469:
 ; Line 175
 	mov	eax, DWORD PTR _handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR [ecx+16], 0
-$L471:
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR [eax+16], 0
+; Line 176
+	jmp	$L465
+; Line 177
+	jmp	$L465
+$L464:
+	cmp	DWORD PTR -8+[ebp], 5
+	je	$L468
+	jmp	$L469
+$L465:
 ; Line 179
 	mov	eax, DWORD PTR _handle$[ebp]
-$L467:
+	jmp	$L461
 ; Line 180
-	mov	esp, ebp
-	pop	ebp
+$L461:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _ui_create_widget ENDP
 _TEXT	ENDS
@@ -851,35 +934,41 @@ _ui_destroy_widget PROC NEAR
 ; Line 182
 	push	ebp
 	mov	ebp, esp
-	push	ecx
+	sub	esp, 4
+	push	ebx
+	push	esi
+	push	edi
 ; Line 183
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	DWORD PTR _ptr$[ebp], ecx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	DWORD PTR _ptr$[ebp], eax
 ; Line 184
-	mov	edx, DWORD PTR _widget_handle$[ebp]
-	mov	DWORD PTR _widgets[edx*4], 0
+	mov	eax, DWORD PTR _widget_handle$[ebp]
+	mov	DWORD PTR _widgets[eax*4], 0
 ; Line 186
 	mov	eax, DWORD PTR _ptr$[ebp]
 	xor	ecx, ecx
 	mov	cl, BYTE PTR [eax]
 	cmp	ecx, 5
-	jne	SHORT $L479
+	jne	$L473
 ; Line 187
-	mov	edx, DWORD PTR _ptr$[ebp]
-	mov	eax, DWORD PTR [edx+16]
+	mov	eax, DWORD PTR _ptr$[ebp]
+	mov	eax, DWORD PTR [eax+16]
 	push	eax
 	call	_free
 	add	esp, 4
-$L479:
 ; Line 190
-	mov	ecx, DWORD PTR _ptr$[ebp]
-	push	ecx
+$L473:
+	mov	eax, DWORD PTR _ptr$[ebp]
+	push	eax
 	call	_free
 	add	esp, 4
 ; Line 191
-	mov	esp, ebp
-	pop	ebp
+$L471:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _ui_destroy_widget ENDP
 _TEXT	ENDS
@@ -891,40 +980,46 @@ _ui_get_handle_by_id PROC NEAR
 ; Line 193
 	push	ebp
 	mov	ebp, esp
-	push	ecx
+	sub	esp, 4
+	push	ebx
+	push	esi
+	push	edi
 ; Line 196
 	mov	DWORD PTR _i$[ebp], 1
-	jmp	SHORT $L483
-$L484:
-	mov	eax, DWORD PTR _i$[ebp]
-	add	eax, 1
-	mov	DWORD PTR _i$[ebp], eax
-$L483:
+	jmp	$L477
+$L478:
+	inc	DWORD PTR _i$[ebp]
+$L477:
 	cmp	DWORD PTR _i$[ebp], 200			; 000000c8H
-	jge	SHORT $L485
+	jge	$L479
 ; Line 197
-	mov	ecx, DWORD PTR _i$[ebp]
-	cmp	DWORD PTR _widgets[ecx*4], 0
-	je	SHORT $L487
+	mov	eax, DWORD PTR _i$[ebp]
+	cmp	DWORD PTR _widgets[eax*4], 0
+	je	$L480
 ; Line 198
-	mov	edx, DWORD PTR _i$[ebp]
-	mov	eax, DWORD PTR _widgets[edx*4]
-	mov	ecx, DWORD PTR [eax+4]
-	cmp	ecx, DWORD PTR _widgetID$[ebp]
-	jne	SHORT $L487
+	mov	eax, DWORD PTR _i$[ebp]
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	ecx, DWORD PTR _widgetID$[ebp]
+	cmp	DWORD PTR [eax+4], ecx
+	jne	$L481
 ; Line 199
 	mov	eax, DWORD PTR _i$[ebp]
-	jmp	SHORT $L481
-$L487:
+	jmp	$L475
+; Line 201
+$L481:
 ; Line 202
-	jmp	SHORT $L484
-$L485:
+$L480:
+	jmp	$L478
+$L479:
 ; Line 204
 	xor	eax, eax
-$L481:
+	jmp	$L475
 ; Line 205
-	mov	esp, ebp
-	pop	ebp
+$L475:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _ui_get_handle_by_id ENDP
 _TEXT	ENDS
@@ -935,12 +1030,20 @@ _ui_get_state PROC NEAR
 ; Line 207
 	push	ebp
 	mov	ebp, esp
+	push	ebx
+	push	esi
+	push	edi
 ; Line 208
 	mov	eax, DWORD PTR _widget_handle$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	eax, DWORD PTR [ecx+16]
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	eax, DWORD PTR [eax+16]
+	jmp	$L483
 ; Line 209
-	pop	ebp
+$L483:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _ui_get_state ENDP
 _TEXT	ENDS
@@ -954,6 +1057,9 @@ _ui_display_widgets PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 16					; 00000010H
+	push	ebx
+	push	esi
+	push	edi
 ; Line 216
 	lea	eax, DWORD PTR _mouse$[ebp]
 	push	eax
@@ -961,113 +1067,128 @@ _ui_display_widgets PROC NEAR
 	add	esp, 4
 ; Line 217
 	push	255					; 000000ffH
-	mov	ecx, DWORD PTR _mouse$[ebp+2]
-	and	ecx, 65535				; 0000ffffH
-	add	ecx, 5
-	push	ecx
-	mov	edx, DWORD PTR _mouse$[ebp]
-	and	edx, 65535				; 0000ffffH
-	add	edx, 5
-	push	edx
-	mov	eax, DWORD PTR _mouse$[ebp+2]
+	xor	eax, eax
+	mov	ax, WORD PTR _mouse$[ebp+2]
+	add	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _mouse$[ebp]
+	and	eax, 65535				; 0000ffffH
+	add	eax, 5
+	push	eax
+	xor	eax, eax
+	mov	ax, WORD PTR _mouse$[ebp+2]
+	sub	eax, 5
+	push	eax
+	mov	eax, DWORD PTR _mouse$[ebp]
 	and	eax, 65535				; 0000ffffH
 	sub	eax, 5
 	push	eax
-	mov	ecx, DWORD PTR _mouse$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	sub	ecx, 5
-	push	ecx
 	call	_UI_DRAW_RECT
 	add	esp, 20					; 00000014H
 ; Line 219
 	mov	DWORD PTR _i$[ebp], 1
-	jmp	SHORT $L493
-$L494:
-	mov	edx, DWORD PTR _i$[ebp]
-	add	edx, 1
-	mov	DWORD PTR _i$[ebp], edx
-$L493:
+	jmp	$L487
+$L488:
+	inc	DWORD PTR _i$[ebp]
+$L487:
 	cmp	DWORD PTR _i$[ebp], 200			; 000000c8H
-	jge	$L495
+	jge	$L489
 ; Line 220
 	mov	eax, DWORD PTR _i$[ebp]
 	cmp	DWORD PTR _widgets[eax*4], 0
-	je	SHORT $L498
+	je	$L490
 ; Line 222
-	mov	ecx, DWORD PTR _i$[ebp]
-	mov	edx, DWORD PTR _widgets[ecx*4]
-	xor	eax, eax
-	mov	al, BYTE PTR [edx]
-	mov	DWORD PTR -16+[ebp], eax
-	mov	ecx, DWORD PTR -16+[ebp]
-	sub	ecx, 1
+	mov	eax, DWORD PTR _i$[ebp]
+	mov	eax, DWORD PTR _widgets[eax*4]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
 	mov	DWORD PTR -16+[ebp], ecx
-	cmp	DWORD PTR -16+[ebp], 5
-	ja	SHORT $L507
-	mov	edx, DWORD PTR -16+[ebp]
-	jmp	DWORD PTR $L557[edx*4]
-$L501:
+	jmp	$L491
+; Line 223
+$L495:
 ; Line 224
 	mov	eax, DWORD PTR _i$[ebp]
 	push	eax
 	call	_UI_DRAW_LABEL
 	add	esp, 4
 ; Line 225
-	jmp	SHORT $L498
-$L502:
+	jmp	$L492
+; Line 228
+$L496:
 ; Line 229
-	mov	ecx, DWORD PTR _i$[ebp]
-	push	ecx
+	mov	eax, DWORD PTR _i$[ebp]
+	push	eax
 	call	_UI_DRAW_CHECKBOX
 	add	esp, 4
 ; Line 230
-	jmp	SHORT $L498
-$L503:
+	jmp	$L492
+; Line 233
+$L497:
 ; Line 234
-	mov	edx, DWORD PTR _i$[ebp]
-	push	edx
+	mov	eax, DWORD PTR _i$[ebp]
+	push	eax
 	call	_UI_DRAW_DROPDOWN
 	add	esp, 4
 ; Line 235
-	jmp	SHORT $L498
-$L504:
+	jmp	$L492
+; Line 238
+$L498:
 ; Line 239
 	mov	eax, DWORD PTR _i$[ebp]
 	push	eax
 	call	_UI_DRAW_RADIO
 	add	esp, 4
 ; Line 240
-	jmp	SHORT $L498
-$L505:
+	jmp	$L492
+; Line 243
+$L499:
 ; Line 244
-	mov	ecx, DWORD PTR _i$[ebp]
-	push	ecx
+	mov	eax, DWORD PTR _i$[ebp]
+	push	eax
 	call	_UI_DRAW_TEXTBOX
 	add	esp, 4
 ; Line 245
-	jmp	SHORT $L498
-$L506:
+	jmp	$L492
+; Line 248
+$L500:
 ; Line 249
-	mov	edx, DWORD PTR _i$[ebp]
-	push	edx
+	mov	eax, DWORD PTR _i$[ebp]
+	push	eax
 	call	_UI_DRAW_BUTTON
 	add	esp, 4
-$L507:
-$L498:
+; Line 250
+	jmp	$L492
+; Line 253
+$L501:
+; Line 254
+	jmp	$L492
+; Line 256
+	jmp	$L492
+$L491:
+	dec	DWORD PTR -16+[ebp]
+	cmp	DWORD PTR -16+[ebp], 5
+	ja	$L501
+	mov	eax, DWORD PTR -16+[ebp]
+	jmp	DWORD PTR $L538[eax*4]
+$L538:
+	DD	OFFSET FLAT:$L495
+	DD	OFFSET FLAT:$L496
+	DD	OFFSET FLAT:$L497
+	DD	OFFSET FLAT:$L498
+	DD	OFFSET FLAT:$L499
+	DD	OFFSET FLAT:$L500
+$L492:
 ; Line 258
-	jmp	$L494
-$L495:
+$L490:
+	jmp	$L488
+$L489:
 ; Line 259
-	mov	esp, ebp
-	pop	ebp
+$L484:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
-$L557:
-	DD	$L501
-	DD	$L502
-	DD	$L503
-	DD	$L504
-	DD	$L505
-	DD	$L506
 _ui_display_widgets ENDP
 _TEXT	ENDS
 PUBLIC	_UI_GET_RECT
@@ -1080,56 +1201,72 @@ _UI_GET_RECT PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
+	push	ebx
+	push	esi
+	push	edi
 ; Line 264
 	mov	eax, DWORD PTR _id$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	edx, DWORD PTR [ecx+12]
-	mov	DWORD PTR _button_data$[ebp], edx
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	eax, DWORD PTR [eax+12]
+	mov	DWORD PTR _button_data$[ebp], eax
 ; Line 266
 	mov	eax, DWORD PTR _id$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx+8]
+	mov	eax, DWORD PTR _widgets[eax*4]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+8]
 	mov	eax, DWORD PTR _rect$[ebp]
-	mov	DWORD PTR [eax], edx
+	mov	DWORD PTR [eax], ecx
 ; Line 267
-	mov	ecx, DWORD PTR _id$[ebp]
-	mov	edx, DWORD PTR _widgets[ecx*4]
-	xor	eax, eax
-	mov	ax, WORD PTR [edx+10]
-	mov	ecx, DWORD PTR _rect$[ebp]
-	mov	DWORD PTR [ecx+8], eax
+	mov	eax, DWORD PTR _id$[ebp]
+	mov	eax, DWORD PTR _widgets[eax*4]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+10]
+	mov	eax, DWORD PTR _rect$[ebp]
+	mov	DWORD PTR [eax+8], ecx
 ; Line 269
-	mov	edx, DWORD PTR _id$[ebp]
-	mov	eax, DWORD PTR _widgets[edx*4]
+	mov	eax, DWORD PTR _id$[ebp]
+	mov	eax, DWORD PTR _widgets[eax*4]
+	xor	ecx, ecx
 	mov	cl, BYTE PTR [eax]
-	mov	BYTE PTR -8+[ebp], cl
-	cmp	BYTE PTR -8+[ebp], 6
-	je	SHORT $L517
-	jmp	SHORT $L518
-$L517:
+	mov	DWORD PTR -8+[ebp], ecx
+	jmp	$L507
+; Line 270
+$L511:
 ; Line 271
-	mov	edx, DWORD PTR _button_data$[ebp]
-	xor	eax, eax
-	mov	ax, WORD PTR [edx+4]
-	mov	ecx, DWORD PTR _rect$[ebp]
-	mov	edx, DWORD PTR [ecx]
-	add	edx, eax
+	mov	eax, DWORD PTR _button_data$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+4]
 	mov	eax, DWORD PTR _rect$[ebp]
-	mov	DWORD PTR [eax+4], edx
+	add	ecx, DWORD PTR [eax]
+	mov	eax, DWORD PTR _rect$[ebp]
+	mov	DWORD PTR [eax+4], ecx
 ; Line 272
-	mov	ecx, DWORD PTR _button_data$[ebp]
-	xor	edx, edx
-	mov	dx, WORD PTR [ecx+6]
+	mov	eax, DWORD PTR _button_data$[ebp]
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+6]
 	mov	eax, DWORD PTR _rect$[ebp]
-	mov	ecx, DWORD PTR [eax+8]
-	add	ecx, edx
-	mov	edx, DWORD PTR _rect$[ebp]
-	mov	DWORD PTR [edx+12], ecx
-$L518:
+	add	ecx, DWORD PTR [eax+8]
+	mov	eax, DWORD PTR _rect$[ebp]
+	mov	DWORD PTR [eax+12], ecx
+; Line 273
+	jmp	$L508
+; Line 275
+$L512:
+; Line 277
+	jmp	$L508
+; Line 279
+	jmp	$L508
+$L507:
+	cmp	DWORD PTR -8+[ebp], 6
+	je	$L511
+	jmp	$L512
+$L508:
 ; Line 280
-	mov	esp, ebp
-	pop	ebp
+$L505:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_GET_RECT ENDP
 _TEXT	ENDS
@@ -1140,28 +1277,46 @@ _UI_HANDLE_CLICK PROC NEAR
 ; Line 283
 	push	ebp
 	mov	ebp, esp
-	push	ecx
+	sub	esp, 4
+	push	ebx
+	push	esi
+	push	edi
 ; Line 284
 	mov	eax, DWORD PTR _id$[ebp]
-	mov	ecx, DWORD PTR _widgets[eax*4]
-	mov	dl, BYTE PTR [ecx]
-	mov	BYTE PTR -4+[ebp], dl
-	cmp	BYTE PTR -4+[ebp], 6
-	je	SHORT $L526
-	jmp	SHORT $L527
-$L526:
+	mov	eax, DWORD PTR _widgets[eax*4]
+	xor	ecx, ecx
+	mov	cl, BYTE PTR [eax]
+	mov	DWORD PTR -4+[ebp], ecx
+	jmp	$L516
+; Line 285
+$L520:
 ; Line 286
 	mov	eax, DWORD PTR _id$[ebp]
 	push	eax
-	mov	ecx, DWORD PTR _id$[ebp]
-	mov	edx, DWORD PTR _widgets[ecx*4]
-	mov	eax, DWORD PTR [edx+12]
+	mov	eax, DWORD PTR _id$[ebp]
+	mov	eax, DWORD PTR _widgets[eax*4]
+	mov	eax, DWORD PTR [eax+12]
 	call	DWORD PTR [eax+16]
 	add	esp, 4
-$L527:
+; Line 287
+	jmp	$L517
+; Line 289
+$L521:
+; Line 290
+	jmp	$L517
+; Line 292
+	jmp	$L517
+$L516:
+	cmp	DWORD PTR -4+[ebp], 6
+	je	$L520
+	jmp	$L521
+$L517:
 ; Line 293
-	mov	esp, ebp
-	pop	ebp
+$L515:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _UI_HANDLE_CLICK ENDP
 _TEXT	ENDS
@@ -1175,70 +1330,75 @@ _ui_process_widgets PROC NEAR
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 28					; 0000001cH
+	push	ebx
+	push	esi
+	push	edi
 ; Line 322
 	lea	eax, DWORD PTR _mouse$[ebp]
 	push	eax
 	call	_SG_ReadMouse
 	add	esp, 4
 ; Line 324
-	mov	ecx, DWORD PTR _mouse$[ebp+4]
-	and	ecx, 255				; 000000ffH
-	test	ecx, ecx
-	je	$L535
+	xor	eax, eax
+	mov	al, BYTE PTR _mouse$[ebp+4]
+	test	eax, eax
+	je	$L526
 ; Line 325
 	mov	DWORD PTR _i$[ebp], 1
-	jmp	SHORT $L533
-$L534:
-	mov	edx, DWORD PTR _i$[ebp]
-	add	edx, 1
-	mov	DWORD PTR _i$[ebp], edx
-$L533:
+	jmp	$L527
+$L528:
+	inc	DWORD PTR _i$[ebp]
+$L527:
 	cmp	DWORD PTR _i$[ebp], 200			; 000000c8H
-	jge	SHORT $L535
+	jge	$L529
 ; Line 326
 	mov	eax, DWORD PTR _i$[ebp]
 	cmp	DWORD PTR _widgets[eax*4], 0
-	jne	SHORT $L536
-	jmp	SHORT $L534
-$L536:
+	jne	$L530
+	jmp	$L528
 ; Line 328
-	lea	ecx, DWORD PTR _rect$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _i$[ebp]
-	push	edx
+$L530:
+	lea	eax, DWORD PTR _rect$[ebp]
+	push	eax
+	mov	eax, DWORD PTR _i$[ebp]
+	push	eax
 	call	_UI_GET_RECT
 	add	esp, 8
 ; Line 330
 	mov	eax, DWORD PTR _mouse$[ebp]
 	and	eax, 65535				; 0000ffffH
 	cmp	eax, DWORD PTR _rect$[ebp]
-	jl	SHORT $L537
-	mov	ecx, DWORD PTR _mouse$[ebp]
-	and	ecx, 65535				; 0000ffffH
-	cmp	ecx, DWORD PTR _rect$[ebp+4]
-	jg	SHORT $L537
-	mov	edx, DWORD PTR _mouse$[ebp+2]
-	and	edx, 65535				; 0000ffffH
-	cmp	edx, DWORD PTR _rect$[ebp+8]
-	jl	SHORT $L537
-	mov	eax, DWORD PTR _mouse$[ebp+2]
+	jl	$L531
+	mov	eax, DWORD PTR _mouse$[ebp]
 	and	eax, 65535				; 0000ffffH
+	cmp	eax, DWORD PTR _rect$[ebp+4]
+	jg	$L531
+	xor	eax, eax
+	mov	ax, WORD PTR _mouse$[ebp+2]
+	cmp	eax, DWORD PTR _rect$[ebp+8]
+	jl	$L531
+	xor	eax, eax
+	mov	ax, WORD PTR _mouse$[ebp+2]
 	cmp	eax, DWORD PTR _rect$[ebp+12]
-	jg	SHORT $L537
+	jg	$L531
 ; Line 331
-	mov	ecx, DWORD PTR _i$[ebp]
-	push	ecx
+	mov	eax, DWORD PTR _i$[ebp]
+	push	eax
 	call	_UI_HANDLE_CLICK
 	add	esp, 4
 ; Line 332
-	jmp	SHORT $L535
-$L537:
+	jmp	$L522
 ; Line 334
-	jmp	SHORT $L534
-$L535:
+$L531:
+	jmp	$L528
+$L529:
 ; Line 336
-	mov	esp, ebp
-	pop	ebp
+$L526:
+$L522:
+	pop	edi
+	pop	esi
+	pop	ebx
+	leave
 	ret	0
 _ui_process_widgets ENDP
 _TEXT	ENDS
