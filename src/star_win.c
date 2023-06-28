@@ -18,7 +18,15 @@ Description: Starblazer II for Windows 95/NT
 #include "../headers/sndmixer.h"
 
 char* SG_platform = "win32";
-char* SG_title = "Starblazer II for Windows 95/NT";
+
+#ifdef _WIN64
+	char *SG_title = "Starblazer II for Win64";
+#elif _M_IX86 //win32 for x86
+	char *SG_title = "Starblazer II for Windows 95";
+#else //win32 for risc
+	char *SG_title = "Starblazer II for Windows NT";
+#endif
+
 uint8* frontbuffer;
 
 //WEIRDASS WINDOWS STUFF BEGINS HERE

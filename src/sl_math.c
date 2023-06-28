@@ -11,50 +11,93 @@ uint32 int_abs(uint32 x){
 	return (x ^ y) - y;
 }
 
-extern int MulDiv(int, int, int);
-extern int mulDiv(int a, int b, int c);
-
 FIXED muldiv(FIXED a, FIXED b, FIXED c){
-	int32 result;
+#ifdef _M_IX86
+	__asm{
+		//store sign in ecx
+		mov ecx, a
+		xor ecx, b
+		xor ecx, c
 
-	if (c == 0){
-		return ((a ^ b) < 0) ? -1 : 2147483647;
+		mov eax, a
+		cmp eax, 0
+		jge no_nega
+		neg eax
+
+	no_nega:
+		mov ebx, b
+		cmp ebx, 0
+		jge no_negb
+		neg ebx
+	no_negb:
+		mov esi, c
+		cmp esi, 0
+		jge no_negc
+		neg esi
+	no_negc:
+
+		mul ebx
+		cmp edx, esi
+		jge overflow
+		div esi
+		cmp ecx, 0
+		jge done
+		neg eax
+		done:
 	}
 
-	//printf("We make it in...\n");
-	result = ((int64)a * b) / c;
-	//printf("But do we make it out?\n");
+	return;
 
-	return result;
+	__asm{
+	overflow:
+		mov eax, 2147483647
 
-	/*uint64 prod;
+	}
+#else
 	int32 result;
-	int32 sign = a ^ b ^ c;
-	if (a < 0) a = -a;
-	if (b < 0) b = -b;
-	if (c < 0) c = -c;
+	//int64 temp = (int64)a * b;
 
-	prod = (uint64)a * (uint64)b;
-	if ((*((uint32*)(&prod) + 1)) >= c) goto overflow;
-	result = prod / c;
-	if (result < 0) goto overflow;
-	if (sign < 0) result = -result;
+	/*if (c == 0){
+		return ((a ^ b) < 0) ? -1 : 2147483647;
+	}*/
+
+	result = ((int64)a * b) / c;
+
+	/*if (abs(*(int32*)((int32*)&temp + 1)) >= abs(c)){
+		return ((a ^ b) < 0) ? 2147483648 : 2147483647;//return 0;// printf("a=%d b=%d c=%d hh=%d result=%d\n", a, b, c, *(int32*)((uint8*)&temp + 1), result);
+	}*/
 
 	return result;
-
-overflow:
-	
-	return sign < 0 ? -1 : 2147483647;*/
+#endif
 }
 
 FIXED fixed_mul(FIXED a, FIXED b) {
-	// TODO: inline assembly
+#ifdef _M_IX86
+	__asm{
+		mov eax, a
+		imul b
+		shr eax, 16
+		shl edx, 16
+		or eax, edx
+	}
+#else
 	return ((int64)a * b) >> 16;
+#endif
 }
 
 FIXED fixed_div(FIXED a, FIXED b) {
-	// TODO: inline assembly
+#ifdef _M_IX86
+	__asm{
+		mov eax, a
+		mov edx, eax
+		shr edx, 16
+		movsx edx, dx
+		shl eax, 16
+		idiv b
+	}
+#else
 	return ((int64)a << 16) / b;
+#endif
 }
 
 ANGLE angle_atan2(FIXED y, FIXED x) {
@@ -64,6 +107,8 @@ ANGLE angle_atan2(FIXED y, FIXED x) {
 FIXED fast_sqrt(FIXED n) {
 	FIXED x = n / 2;
 	int i;
+	//printf("Square rooting %f\n", n/65536.0);
+	//return sqrt(n / 65536.0);
 	// 4 iterations? is that enough? too many? idk
 	for (i = 0; i < 8; i++) {
 		if (x == 0) return 0;
@@ -86,8 +131,11 @@ void vec3_cross(VEC3 *a, VEC3 *b, VEC3 *o) {
 	o->y = fixed_mul(a->z, b->x) - fixed_mul(a->x, b->z);
 	o->z = fixed_mul(a->x, b->y) - fixed_mul(a->y, b->x);
 }
+
+#define cap(a) (a < 0 ? 2147483647 : a)
+
 void vec3_normalize(VEC3 *x) {
-	FIXED magnitude = fast_sqrt(fixed_mul(x->x, x->x) + fixed_mul(x->y, x->y) + fixed_mul(x->z, x->z));
+	FIXED magnitude = fast_sqrt(cap(fixed_mul(x->x, x->x) + fixed_mul(x->y, x->y) + fixed_mul(x->z, x->z)));
 	if (magnitude == 0) return;
 	x->x = fixed_div(x->x, magnitude);
 	x->y = fixed_div(x->y, magnitude);

@@ -13,7 +13,8 @@ uint8* FBPTR;
 
 void plot_pixel(uint16 x, uint16 y, uint8 color){
 	if ((x < 320) && (y < 200)){
-		FBPTR[y*320+x] = color;
+		//FBPTR[y*320+x] = color;
+		FBPTR[ADDR(x, y)] = color;
 	}
 }
 
@@ -306,7 +307,7 @@ void fill_tri(int x1, int y1, int x2, int y2, int x3, int y3, uint8 color) {
 		end += se;
 		y++;
 	}
-	/*draw_line(x1, y1, x2, y2, 0xe0);
-	draw_line(x2, y2, x3, y3, 0xe0);
-	draw_line(x1, y1, x3, y3, 0xe0);*/
+	/*draw_line(x1, y1, x2, y2, 191);// 0xe0);
+	draw_line(x2, y2, x3, y3, 191);// 0xe0);
+	draw_line(x1, y1, x3, y3, 191);// 0xe0);*/
 }

@@ -254,7 +254,7 @@ void render_end(bool_t shading){
 			y3 = SL_VERTS[SL_TRIANGLES[i].v2].y;
 
 			if (shading){
-				illum = (3*find_illumination(&(SL_ORIG_VERTS[SL_TRIANGLES[i].v0]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v1]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS)) + int_fixed(1)) / 4;
+				illum = (3*find_illumination(&(SL_ORIG_VERTS[SL_TRIANGLES[i].v0]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v1]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS)) + int_fixed(1)) >> 14; ///4
 				//illum = int_fixed(1);
 				//r = (((c >> 5) & 7) * illum) >> 16;
 				//g = (((c >> 2) & 7) * illum) >> 16;
@@ -266,14 +266,14 @@ void render_end(bool_t shading){
 
 				//fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
 				//fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
-				fill_tri(x1, y1, x2, y2, x3, y3, (c) | (illum >> 12));
+				fill_tri(x1, y1, x2, y2, x3, y3, (c) | (illum)); //>>12
 			}
 			else{
 				//printf("Color: %d\n", c);
 				//printf("About to draw triangle with verts (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
-				drawline(x1, y1, x2, y2, c | 15);
-				drawline(x1, y1, x3, y3, c | 15);
-				drawline(x2, y2, x3, y3, c | 15);
+				draw_line(x1, y1, x2, y2, c | 15);
+				draw_line(x1, y1, x3, y3, c | 15);
+				draw_line(x2, y2, x3, y3, c | 15);
 			}
 		}
 	}

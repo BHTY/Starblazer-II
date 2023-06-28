@@ -16,6 +16,7 @@ typedef struct{
 	uint32 entity_id; //id of attached entity
 	TEMPLATE* fighter;
 	LASER* laser;
+	char name[16];
 } CONNECTED_PLAYER;
 
 extern CONNECTED_PLAYER players[16];
