@@ -7,7 +7,7 @@ To-do List
   - Triangle filling
   - Lighting calculation
   - Plot pixel & draw line
-  - Sound code (which just needs some improvements, period)__
+  - Sound code (which just needs some improvements, period)
 
 
 Multiplayer enhancements & game balance
