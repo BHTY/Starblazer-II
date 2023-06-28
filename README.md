@@ -3,10 +3,9 @@ To-do List
 - make the game
 - tweak compiler settings (i.e. /O2 on Windows)
 - optimizations (particularly on DOS but also for slower Windows machines) -- hotspots below
-  - Math functions (particularly mul/div)
+  - Math functions
   - Triangle filling
   - Lighting calculation
-  - Plot pixel & draw line
   - Sound code (which just needs some improvements, period)
 
 
