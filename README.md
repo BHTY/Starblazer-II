@@ -1,7 +1,7 @@
 # Starblazer-II
 To-do List
 - make the game
-- tweak compiler settings - compile demo with MSVC2 in /O2 (also compile an AMD64 build)
+- tweak compiler settings - compile demo with MSVC2 in /O2 (also compile an AMD64 & MIPS build)
 - optimizations (particularly on DOS but also for slower Windows machines) -- hotspots below
   - Math functions
   - Triangle filling
