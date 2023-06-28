@@ -1,7 +1,7 @@
 # Starblazer-II
 To-do List
 - make the game
-- tweak compiler settings
+- tweak compiler settings (i.e. /O2 on Windows)
 - optimizations (particularly on DOS but also for slower Windows machines) -- hotspots below
   - Math functions (particularly mul/div)
   - Triangle filling
