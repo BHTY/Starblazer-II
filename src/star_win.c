@@ -342,15 +342,18 @@ void SG_Init(int argc, char** argv){
 
 	//setup sound code
 	init_sound();
-	num_devs = waveOutGetNumDevs();
-	initWave(&global_wave, WAVE_FORMAT_PCM, 1, 22050, 22050, 1, 8, 0);
 
-	if(num_devs){
-		while(waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION) != MMSYSERR_NOERROR);
+	if (SOUND_ENABLE){
+		num_devs = waveOutGetNumDevs();
+		initWave(&global_wave, WAVE_FORMAT_PCM, 1, 22050, 22050, 1, 8, 0);
+
+		if (num_devs){
+			while (waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION) != MMSYSERR_NOERROR);
+		}
+
+		win_initialize_wave(&waveHdrA, buffer1);
+		win_initialize_wave(&waveHdrB, buffer2);
 	}
-
-	win_initialize_wave(&waveHdrA, buffer1);
-	win_initialize_wave(&waveHdrB, buffer2);
 }
 
 void SG_ReadMouse(SG_mouse_t* mouse){

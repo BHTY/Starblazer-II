@@ -35,7 +35,9 @@ void init_sound(){
 }
 
 void play_music(char* filename){
-	musicfp = fopen(filename, "rb");
+	if (MUSIC_ENABLE){
+		musicfp = fopen(filename, "rb");
+	}
 }
 
 void stop_music(){
@@ -162,6 +164,8 @@ void mix_music(uint8* ptr){
 void mix(){
 	int i;
 	uint8* ptr;
+
+	sfx_enable = sfx_enable && SFX_ENABLE;
 
 	if(current_buffer == 0){
 		ptr = buffer1;
