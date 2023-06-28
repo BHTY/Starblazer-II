@@ -9,11 +9,13 @@ To-do List
   - Plot pixel & draw line
   - Sound code (which just needs some improvements, period)
 
+
 Multiplayer enhancements & game balance
 - Player names above ships (and you get told who killed you)
 - Different laser types
   - Dragonbreath: Peashooter -- low damage, power draw, high firing rate (colors: green/magenta/red) -- overheat?
   - Shredder: Essentially the weapon we have right now, but tweak the power draw and delay between shots slightly to lower em a bit
+
 
 In detail (fix hitboxes) -- attempt Win32s port?
 - Finish UI subsystem
