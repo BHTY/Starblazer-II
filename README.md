@@ -11,6 +11,7 @@ To-do List
 
 
 Multiplayer enhancements & game balance
+- Add laser and frameskip to config.ini
 - Player names above ships (and you get told who killed you)
 - Different laser types
   - Dragonbreath: Peashooter -- low damage, power draw, high firing rate (colors: green/magenta/red) -- overheat?
