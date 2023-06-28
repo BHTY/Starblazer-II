@@ -13,8 +13,8 @@ To-do List
 Multiplayer enhancements & game balance
 - Add laser and frameskip to config.ini
 - Player names above ships (and you get told who killed you)
-- Different laser types
-  - Dragonbreath: Peashooter -- low damage, power draw, high firing rate (colors: green/magenta/red) -- overheat?
+- Different laser types (magenta for turrets)
+  - Dragonbreath: Peashooter -- low damage, power draw, high firing rate (primary color: green | secondary color: red) -- overheat?
   - Shredder: Essentially the weapon we have right now, but tweak the power draw and delay between shots slightly to lower em a bit
 
 
