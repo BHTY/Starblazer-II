@@ -14,7 +14,6 @@ Multiplayer enhancements & game balance
 - Different laser types
   - Dragonbreath: Peashooter -- low damage, power draw, high firing rate (colors: green/magenta/red) -- overheat?
   - Shredder: Essentially the weapon we have right now, but tweak the power draw and delay between shots slightly to lower em a bit
-- colors & names above ships? - different lasers?
 
 In detail (fix hitboxes) -- attempt Win32s port?
 - Finish UI subsystem
