@@ -954,8 +954,8 @@ EXTRN	_create_hitbox:NEAR
 EXTRN	_load_model:NEAR
 _DATA	SEGMENT
 	ORG $+2
-$SG385	DB	'assets/boltem.obj', 00H
-	ORG $+2
+$SG385	DB	'assets/dragon2.obj', 00H
+	ORG $+1
 $SG386	DB	'assets/shard.obj', 00H
 	ORG $+3
 $SG387	DB	'assets/asterold.obj', 00H
@@ -1025,39 +1025,39 @@ _set_attributes PROC NEAR
 	mov	DWORD PTR _player_fighter+16, 40	; 00000028H
 ; Line 254
 	mov	DWORD PTR _player_fighter+20, 40	; 00000028H
-; Line 256
-	mov	DWORD PTR _player_weapon, 10		; 0000000aH
-; Line 257
-	mov	DWORD PTR _player_weapon+4, 9
-; Line 258
-	mov	DWORD PTR _player_weapon+8, 8
-; Line 259
+; Line 260
+	mov	DWORD PTR _player_weapon, 3
+; Line 261
+	mov	DWORD PTR _player_weapon+4, 2
+; Line 262
+	mov	DWORD PTR _player_weapon+8, 2
+; Line 263
 	mov	ecx, DWORD PTR _LASER_PLAYER
 	mov	DWORD PTR _player_weapon+12, ecx
-; Line 261
-	mov	DWORD PTR _laser_velocity, 0
-; Line 262
-	mov	DWORD PTR _laser_velocity+4, 0
-; Line 263
-	mov	DWORD PTR _laser_velocity+8, 65536	; 00010000H
 ; Line 265
+	mov	DWORD PTR _laser_velocity, 0
+; Line 266
+	mov	DWORD PTR _laser_velocity+4, 0
+; Line 267
+	mov	DWORD PTR _laser_velocity+8, 65536	; 00010000H
+; Line 269
 	push	OFFSET FLAT:$SG386
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _EXPLOSION_SHARD, eax
-; Line 266
+; Line 270
 	mov	edx, DWORD PTR _EXPLOSION_SHARD
 	mov	DWORD PTR [edx+12], OFFSET FLAT:_debris_script
-; Line 267
+; Line 271
 	mov	eax, DWORD PTR _EXPLOSION_SHARD
 	mov	DWORD PTR [eax+32], 2
-; Line 268
+; Line 272
 	mov	ecx, DWORD PTR _EXPLOSION_SHARD
 	mov	BYTE PTR [ecx+36], 127			; 0000007fH
-; Line 269
+; Line 273
 	mov	edx, DWORD PTR _EXPLOSION_SHARD
 	mov	BYTE PTR [edx+37], 0
-; Line 270
+; Line 274
 	push	0
 	push	0
 	push	0
@@ -1065,27 +1065,27 @@ _set_attributes PROC NEAR
 	push	eax
 	call	_create_hitbox
 	add	esp, 16					; 00000010H
-; Line 272
+; Line 276
 	push	OFFSET FLAT:$SG387
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _ASTEROID, eax
-; Line 273
+; Line 277
 	mov	ecx, DWORD PTR _ASTEROID
 	mov	DWORD PTR [ecx+12], OFFSET FLAT:_asteroid_script
-; Line 274
+; Line 278
 	mov	edx, DWORD PTR _ASTEROID
 	mov	DWORD PTR [edx+32], 3
-; Line 275
+; Line 279
 	mov	eax, DWORD PTR _ASTEROID
 	mov	DWORD PTR [eax+28], 10			; 0000000aH
-; Line 276
+; Line 280
 	mov	ecx, DWORD PTR _ASTEROID
-	mov	BYTE PTR [ecx+36], 207			; 000000cfH
-; Line 277
+	mov	BYTE PTR [ecx+36], 250			; 000000faH
+; Line 281
 	mov	edx, DWORD PTR _ASTEROID
 	mov	BYTE PTR [edx+37], 0
-; Line 278
+; Line 282
 	push	327680					; 00050000H
 	push	327680					; 00050000H
 	push	327680					; 00050000H
@@ -1093,32 +1093,32 @@ _set_attributes PROC NEAR
 	push	eax
 	call	_create_hitbox
 	add	esp, 16					; 00000010H
-; Line 280
+; Line 284
 	push	OFFSET FLAT:$SG388
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _AX5, eax
-; Line 281
+; Line 285
 	mov	ecx, DWORD PTR _AX5
 	mov	DWORD PTR [ecx+12], OFFSET FLAT:_ax5_script
-; Line 282
+; Line 286
 	mov	edx, DWORD PTR _AX5
 	mov	DWORD PTR [edx+32], 3
-; Line 283
+; Line 287
 	mov	eax, DWORD PTR _AX5
 	mov	DWORD PTR [eax+28], 0
-; Line 284
+; Line 288
 	mov	ecx, DWORD PTR _AX5
 	mov	BYTE PTR [ecx+37], 1
-; Line 285
+; Line 289
 	push	458752					; 00070000H
-	push	131072					; 00020000H
-	push	196608					; 00030000H
+	push	327680					; 00050000H
+	push	327680					; 00050000H
 	mov	edx, DWORD PTR _AX5
 	push	edx
 	call	_create_hitbox
 	add	esp, 16					; 00000010H
-; Line 286
+; Line 290
 	pop	ebp
 	ret	0
 _set_attributes ENDP
@@ -1144,87 +1144,87 @@ $SG397	DB	'sfx/laser.wav', 00H
 $SG398	DB	'sfx/laser.wav', 00H
 	ORG $+2
 $SG399	DB	'sfx/hit.wav', 00H
-$SG400	DB	'assets/bolt.obj', 00H
+$SG400	DB	'assets/dragon1.obj', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
 _i$ = -4
 _blazer2_init PROC NEAR
-; Line 295
+; Line 299
 	push	ebp
 	mov	ebp, esp
 	push	ecx
-; Line 298
-	mov	DWORD PTR _frames, 0
-; Line 301
-	call	_stop_music
 ; Line 302
+	mov	DWORD PTR _frames, 0
+; Line 305
+	call	_stop_music
+; Line 306
 	push	OFFSET FLAT:$SG394
 	call	_play_music
 	add	esp, 4
-; Line 303
+; Line 307
 	mov	BYTE PTR _sfx_enable, 1
-; Line 304
+; Line 308
 	push	0
 	push	1
 	push	OFFSET FLAT:$SG396
 	call	_load_soundfx
 	add	esp, 12					; 0000000cH
 	mov	DWORD PTR _SND_EXPLODE, eax
-; Line 305
+; Line 309
 	push	0
 	push	2
 	push	OFFSET FLAT:$SG397
 	call	_load_soundfx
 	add	esp, 12					; 0000000cH
 	mov	DWORD PTR _SND_LASER, eax
-; Line 306
+; Line 310
 	push	0
 	push	3
 	push	OFFSET FLAT:$SG398
 	call	_load_soundfx
 	add	esp, 12					; 0000000cH
 	mov	DWORD PTR _SND_LASER_ENEMY, eax
-; Line 307
+; Line 311
 	push	0
 	push	1
 	push	OFFSET FLAT:$SG399
 	call	_load_soundfx
 	add	esp, 12					; 0000000cH
 	mov	DWORD PTR _SND_HIT, eax
-; Line 310
+; Line 314
 	push	OFFSET FLAT:$SG400
 	call	_load_model
 	add	esp, 4
 	mov	DWORD PTR _LASER_PLAYER, eax
-; Line 311
+; Line 315
 	mov	WORD PTR _SL_CENTER_X, 160		; 000000a0H
-; Line 312
-	mov	WORD PTR _SL_CENTER_Y, 100		; 00000064H
-; Line 314
-	call	_set_attributes
 ; Line 316
-	mov	DWORD PTR _cam_template, 0
-; Line 317
-	mov	DWORD PTR _cam_template+4, 0
+	mov	WORD PTR _SL_CENTER_Y, 100		; 00000064H
 ; Line 318
-	mov	WORD PTR _cam_template+8, 0
-; Line 319
-	mov	WORD PTR _cam_template+10, 0
+	call	_set_attributes
 ; Line 320
-	mov	DWORD PTR _cam_template+12, OFFSET FLAT:_cam_script
+	mov	DWORD PTR _cam_template, 0
 ; Line 321
+	mov	DWORD PTR _cam_template+4, 0
+; Line 322
+	mov	WORD PTR _cam_template+8, 0
+; Line 323
+	mov	WORD PTR _cam_template+10, 0
+; Line 324
+	mov	DWORD PTR _cam_template+12, OFFSET FLAT:_cam_script
+; Line 325
 	mov	eax, DWORD PTR _player_fighter
 	mov	DWORD PTR _cam_template+28, eax
-; Line 322
+; Line 326
 	mov	DWORD PTR _cam_template+32, 2
-; Line 324
+; Line 328
 	push	458752					; 00070000H
 	push	131072					; 00020000H
 	push	196608					; 00030000H
 	push	OFFSET FLAT:_cam_template
 	call	_create_hitbox
 	add	esp, 16					; 00000010H
-; Line 327
+; Line 331
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	SHORT $L401
 $L402:
@@ -1234,17 +1234,17 @@ $L402:
 $L401:
 	cmp	DWORD PTR _i$[ebp], 500			; 000001f4H
 	jae	SHORT $L403
-; Line 328
+; Line 332
 	mov	edx, DWORD PTR _i$[ebp]
 	imul	edx, 12					; 0000000cH
 	add	edx, OFFSET FLAT:_title_stars
 	push	edx
 	call	_init_star
 	add	esp, 4
-; Line 329
+; Line 333
 	jmp	SHORT $L402
 $L403:
-; Line 332
+; Line 336
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	SHORT $L404
 $L405:
@@ -1254,19 +1254,19 @@ $L405:
 $L404:
 	cmp	DWORD PTR _i$[ebp], 1000		; 000003e8H
 	jae	SHORT $L406
-; Line 333
+; Line 337
 	mov	ecx, DWORD PTR _i$[ebp]
 	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
 	push	edx
 	call	_free
 	add	esp, 4
-; Line 334
+; Line 338
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	DWORD PTR _StarblazerEntities[eax*4], 0
-; Line 335
+; Line 339
 	jmp	SHORT $L405
 $L406:
-; Line 338
+; Line 342
 	push	0
 	push	0
 	push	0
@@ -1295,18 +1295,18 @@ $L406:
 	call	_spawn_entity
 	add	esp, 28					; 0000001cH
 	mov	DWORD PTR _i$[ebp], eax
-; Line 341
+; Line 345
 	mov	edx, DWORD PTR _player_fighter+16
 	mov	DWORD PTR _player_boost, edx
-; Line 342
+; Line 346
 	mov	eax, DWORD PTR _player_fighter+20
 	mov	DWORD PTR _player_battery, eax
-; Line 347
+; Line 351
 	xor	ecx, ecx
 	mov	cl, BYTE PTR _multiplayer
 	test	ecx, ecx
 	jne	SHORT $L410
-; Line 348
+; Line 352
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	SHORT $L408
 $L409:
@@ -1316,25 +1316,25 @@ $L409:
 $L408:
 	cmp	DWORD PTR _i$[ebp], 100			; 00000064H
 	jae	SHORT $L410
-; Line 349
+; Line 353
 	call	_spawn_asteroid
-; Line 350
+; Line 354
 	jmp	SHORT $L409
 $L410:
-; Line 354
-	mov	DWORD PTR _SG_Module, OFFSET FLAT:_blazer2_module
-; Line 355
-	mov	DWORD PTR _SG_Draw, OFFSET FLAT:_blazer2_draw
-; Line 357
-	mov	DWORD PTR _velocity, 0
 ; Line 358
-	mov	DWORD PTR _velocity+4, 0
+	mov	DWORD PTR _SG_Module, OFFSET FLAT:_blazer2_module
 ; Line 359
+	mov	DWORD PTR _SG_Draw, OFFSET FLAT:_blazer2_draw
+; Line 361
+	mov	DWORD PTR _velocity, 0
+; Line 362
+	mov	DWORD PTR _velocity+4, 0
+; Line 363
 	mov	eax, DWORD PTR _player_fighter+8
 	mov	DWORD PTR _velocity+8, eax
-; Line 361
+; Line 365
 	call	_init_hypercraft
-; Line 362
+; Line 366
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1345,16 +1345,16 @@ _TEXT	SEGMENT
 _angle$ = 8
 _joy_amount$ = 12
 _angle_multiply PROC NEAR
-; Line 364
+; Line 368
 	push	ebp
 	mov	ebp, esp
-; Line 365
+; Line 369
 	mov	eax, DWORD PTR _angle$[ebp]
 	and	eax, 255				; 000000ffH
 	movsx	ecx, BYTE PTR _joy_amount$[ebp]
 	imul	eax, ecx
 	sar	eax, 8
-; Line 366
+; Line 370
 	pop	ebp
 	ret	0
 _angle_multiply ENDP
@@ -1366,47 +1366,47 @@ _TEXT	SEGMENT
 _joy$ = 8
 _mouse$ = -8
 _vjoy_read PROC NEAR
-; Line 368
+; Line 372
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
-; Line 372
+; Line 376
 	lea	eax, DWORD PTR _mouse$[ebp]
 	push	eax
 	call	_SG_ReadMouse
 	add	esp, 4
-; Line 374
+; Line 378
 	push	74					; 0000004aH
 	call	_SG_KeyDown
 	add	esp, 4
 	mov	ecx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [ecx+3], al
-; Line 375
+; Line 379
 	mov	edx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [edx+7], 0
-; Line 376
+; Line 380
 	push	75					; 0000004bH
 	call	_SG_KeyDown
 	add	esp, 4
 	mov	ecx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [ecx+6], al
-; Line 377
+; Line 381
 	push	66					; 00000042H
 	call	_SG_KeyDown
 	add	esp, 4
 	mov	edx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [edx+5], al
-; Line 380
+; Line 384
 	push	87					; 00000057H
 	call	_SG_KeyDown
 	add	esp, 4
 	and	eax, 255				; 000000ffH
 	test	eax, eax
 	je	SHORT $L417
-; Line 381
+; Line 385
 	mov	eax, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [eax], 127			; 0000007fH
-; Line 383
+; Line 387
 	jmp	SHORT $L420
 $L417:
 	push	83					; 00000053H
@@ -1415,27 +1415,27 @@ $L417:
 	and	eax, 255				; 000000ffH
 	test	eax, eax
 	je	SHORT $L419
-; Line 384
+; Line 388
 	mov	ecx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [ecx], -127			; ffffff81H
-; Line 386
+; Line 390
 	jmp	SHORT $L420
 $L419:
-; Line 387
+; Line 391
 	mov	edx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [edx], 0
 $L420:
-; Line 391
+; Line 395
 	push	65					; 00000041H
 	call	_SG_KeyDown
 	add	esp, 4
 	and	eax, 255				; 000000ffH
 	test	eax, eax
 	je	SHORT $L421
-; Line 392
+; Line 396
 	mov	eax, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [eax+1], 127			; 0000007fH
-; Line 394
+; Line 398
 	jmp	SHORT $L424
 $L421:
 	push	68					; 00000044H
@@ -1444,27 +1444,27 @@ $L421:
 	and	eax, 255				; 000000ffH
 	test	eax, eax
 	je	SHORT $L423
-; Line 395
+; Line 399
 	mov	ecx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [ecx+1], -127			; ffffff81H
-; Line 397
+; Line 401
 	jmp	SHORT $L424
 $L423:
-; Line 398
+; Line 402
 	mov	edx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [edx+1], 0
 $L424:
-; Line 402
+; Line 406
 	push	81					; 00000051H
 	call	_SG_KeyDown
 	add	esp, 4
 	and	eax, 255				; 000000ffH
 	test	eax, eax
 	je	SHORT $L425
-; Line 403
+; Line 407
 	mov	eax, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [eax+2], -127			; ffffff81H
-; Line 405
+; Line 409
 	jmp	SHORT $L428
 $L425:
 	push	69					; 00000045H
@@ -1473,17 +1473,17 @@ $L425:
 	and	eax, 255				; 000000ffH
 	test	eax, eax
 	je	SHORT $L427
-; Line 406
+; Line 410
 	mov	ecx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [ecx+2], 127			; 0000007fH
-; Line 408
+; Line 412
 	jmp	SHORT $L428
 $L427:
-; Line 409
+; Line 413
 	mov	edx, DWORD PTR _joy$[ebp]
 	mov	BYTE PTR [edx+2], 0
 $L428:
-; Line 419
+; Line 423
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1492,14 +1492,14 @@ _TEXT	ENDS
 PUBLIC	_respawn_player
 _TEXT	SEGMENT
 _respawn_player PROC NEAR
-; Line 437
+; Line 441
 	push	ebp
 	mov	ebp, esp
-; Line 438
+; Line 442
 	mov	eax, DWORD PTR _StarblazerEntities
 	mov	ecx, DWORD PTR _player_fighter
 	mov	DWORD PTR [eax+96], ecx
-; Line 439
+; Line 443
 	call	_rand
 	cdq
 	mov	ecx, 100				; 00000064H
@@ -1508,7 +1508,7 @@ _respawn_player PROC NEAR
 	shl	edx, 16					; 00000010H
 	mov	eax, DWORD PTR _StarblazerEntities
 	mov	DWORD PTR [eax+4], edx
-; Line 440
+; Line 444
 	call	_rand
 	cdq
 	mov	ecx, 100				; 00000064H
@@ -1517,7 +1517,7 @@ _respawn_player PROC NEAR
 	shl	edx, 16					; 00000010H
 	mov	eax, DWORD PTR _StarblazerEntities
 	mov	DWORD PTR [eax+8], edx
-; Line 441
+; Line 445
 	call	_rand
 	cdq
 	mov	ecx, 100				; 00000064H
@@ -1526,7 +1526,7 @@ _respawn_player PROC NEAR
 	shl	edx, 16					; 00000010H
 	mov	eax, DWORD PTR _StarblazerEntities
 	mov	DWORD PTR [eax+12], edx
-; Line 442
+; Line 446
 	pop	ebp
 	ret	0
 _respawn_player ENDP
@@ -1539,74 +1539,74 @@ EXTRN	_memset:NEAR
 _TEXT	SEGMENT
 _joy$ = -8
 _blazer2_module PROC NEAR
-; Line 444
+; Line 448
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 12					; 0000000cH
-; Line 447
+; Line 451
 	lea	eax, DWORD PTR _joy$[ebp]
 	push	eax
 	call	_vjoy_read
 	add	esp, 4
-; Line 449
+; Line 453
 	cmp	DWORD PTR _frames_respawning, 0
 	jne	SHORT $L436
-; Line 450
+; Line 454
 	mov	BYTE PTR _BG_COLOR, 0
 $L436:
-; Line 453
+; Line 457
 	mov	ecx, DWORD PTR _StarblazerEntities
 	cmp	DWORD PTR [ecx+96], 0
 	jg	SHORT $L438
 	cmp	DWORD PTR _frames_respawning, 0
 	jne	SHORT $L438
-; Line 454
+; Line 458
 	mov	edx, DWORD PTR _SND_EXPLODE
 	push	edx
 	call	_play_soundfx
 	add	esp, 4
-; Line 455
+; Line 459
 	mov	BYTE PTR _dying, 1
-; Line 456
+; Line 460
 	mov	eax, DWORD PTR _timeout
 	mov	DWORD PTR _frames_respawning, eax
-; Line 457
+; Line 461
 	mov	BYTE PTR _BG_COLOR, 127			; 0000007fH
-; Line 459
+; Line 463
 	cmp	DWORD PTR _timeout, 0
 	jne	SHORT $L438
-; Line 460
+; Line 464
 	call	_respawn_player
 $L438:
-; Line 464
+; Line 468
 	cmp	DWORD PTR _frames_respawning, 0
 	je	SHORT $L441
-; Line 465
+; Line 469
 	push	8
 	push	0
 	lea	ecx, DWORD PTR _joy$[ebp]
 	push	ecx
 	call	_memset
 	add	esp, 12					; 0000000cH
-; Line 466
+; Line 470
 	mov	edx, DWORD PTR _frames_respawning
 	sub	edx, 1
 	mov	DWORD PTR _frames_respawning, edx
-; Line 468
+; Line 472
 	cmp	DWORD PTR _frames_respawning, 0
 	jne	SHORT $L441
-; Line 469
+; Line 473
 	call	_respawn_player
 $L441:
-; Line 473
+; Line 477
 	cmp	DWORD PTR _shake_frames, 0
 	je	SHORT $L442
-; Line 474
+; Line 478
 	mov	eax, DWORD PTR _shake_frames
 	sub	eax, 1
 	mov	DWORD PTR _shake_frames, eax
 $L442:
-; Line 478
+; Line 482
 	mov	ecx, DWORD PTR _StarblazerEntities
 	add	ecx, 16					; 00000010H
 	push	ecx
@@ -1619,7 +1619,7 @@ $L442:
 	push	eax
 	call	_quat_pitch
 	add	esp, 8
-; Line 479
+; Line 483
 	mov	ecx, DWORD PTR _StarblazerEntities
 	add	ecx, 16					; 00000010H
 	push	ecx
@@ -1632,7 +1632,7 @@ $L442:
 	push	eax
 	call	_quat_yaw
 	add	esp, 8
-; Line 480
+; Line 484
 	mov	ecx, DWORD PTR _StarblazerEntities
 	add	ecx, 16					; 00000010H
 	push	ecx
@@ -1645,14 +1645,14 @@ $L442:
 	push	eax
 	call	_quat_roll
 	add	esp, 8
-; Line 482
+; Line 486
 	push	80					; 00000050H
 	call	_SG_KeyDown
 	add	esp, 4
 	and	eax, 255				; 000000ffH
 	test	eax, eax
 	je	SHORT $L443
-; Line 483
+; Line 487
 	xor	ecx, ecx
 	mov	cl, BYTE PTR _shading
 	neg	ecx
@@ -1660,7 +1660,7 @@ $L442:
 	inc	ecx
 	mov	BYTE PTR _shading, cl
 $L443:
-; Line 487
+; Line 491
 	mov	edx, DWORD PTR _joy$[ebp+3]
 	and	edx, 255				; 000000ffH
 	test	edx, edx
@@ -1670,25 +1670,25 @@ $L443:
 	jb	SHORT $L444
 	cmp	DWORD PTR _firing_cooldown, 0
 	jne	SHORT $L444
-; Line 488
+; Line 492
 	mov	ecx, DWORD PTR _player_battery
 	sub	ecx, DWORD PTR _player_weapon+4
 	mov	DWORD PTR _player_battery, ecx
-; Line 489
+; Line 493
 	mov	edx, DWORD PTR _player_weapon
 	mov	DWORD PTR _firing_cooldown, edx
-; Line 490
+; Line 494
 	call	_fire_laser
-; Line 492
+; Line 496
 	jmp	SHORT $L448
 $L444:
-; Line 493
+; Line 497
 	mov	BYTE PTR _firing, 0
-; Line 494
+; Line 498
 	mov	eax, DWORD PTR _player_battery
 	cmp	eax, DWORD PTR _player_fighter+20
 	jae	SHORT $L447
-; Line 495
+; Line 499
 	mov	eax, DWORD PTR _frames
 	cdq
 	mov	ecx, 15					; 0000000fH
@@ -1699,15 +1699,15 @@ $L444:
 	add	edx, 1
 	mov	DWORD PTR _player_battery, edx
 $L447:
-; Line 497
+; Line 501
 	cmp	DWORD PTR _firing_cooldown, 0
 	jbe	SHORT $L448
-; Line 498
+; Line 502
 	mov	eax, DWORD PTR _firing_cooldown
 	sub	eax, 1
 	mov	DWORD PTR _firing_cooldown, eax
 $L448:
-; Line 503
+; Line 507
 	mov	ecx, DWORD PTR _joy$[ebp+5]
 	and	ecx, 255				; 000000ffH
 	test	ecx, ecx
@@ -1716,10 +1716,10 @@ $L448:
 	mov	dl, BYTE PTR _boost_overheating
 	test	edx, edx
 	jne	SHORT $L449
-; Line 504
+; Line 508
 	mov	eax, DWORD PTR _player_fighter+12
 	mov	DWORD PTR _velocity+8, eax
-; Line 505
+; Line 509
 	mov	eax, DWORD PTR _frames
 	cdq
 	mov	ecx, 5
@@ -1730,7 +1730,7 @@ $L448:
 	sub	edx, 1
 	mov	DWORD PTR _player_boost, edx
 $L450:
-; Line 507
+; Line 511
 	jmp	$L458
 $L449:
 	mov	eax, DWORD PTR _joy$[ebp+6]
@@ -1741,9 +1741,9 @@ $L449:
 	mov	cl, BYTE PTR _boost_overheating
 	test	ecx, ecx
 	jne	SHORT $L452
-; Line 508
+; Line 512
 	mov	DWORD PTR _velocity+8, 0
-; Line 509
+; Line 513
 	mov	eax, DWORD PTR _frames
 	cdq
 	mov	ecx, 5
@@ -1754,26 +1754,26 @@ $L449:
 	sub	edx, 1
 	mov	DWORD PTR _player_boost, edx
 $L453:
-; Line 511
+; Line 515
 	jmp	SHORT $L458
 $L452:
-; Line 512
+; Line 516
 	cmp	DWORD PTR _frames_respawning, 0
 	jne	SHORT $L455
-; Line 513
+; Line 517
 	mov	eax, DWORD PTR _player_fighter+8
 	mov	DWORD PTR _velocity+8, eax
-; Line 515
+; Line 519
 	jmp	SHORT $L456
 $L455:
-; Line 516
+; Line 520
 	mov	DWORD PTR _velocity+8, 0
 $L456:
-; Line 518
+; Line 522
 	mov	ecx, DWORD PTR _player_boost
 	cmp	ecx, DWORD PTR _player_fighter+16
 	jae	SHORT $L458
-; Line 519
+; Line 523
 	mov	eax, DWORD PTR _frames
 	cdq
 	mov	ecx, 15					; 0000000fH
@@ -1784,35 +1784,35 @@ $L456:
 	add	edx, 1
 	mov	DWORD PTR _player_boost, edx
 $L458:
-; Line 525
+; Line 529
 	xor	eax, eax
 	mov	al, BYTE PTR _multiplayer
 	test	eax, eax
 	je	SHORT $L459
-; Line 526
+; Line 530
 	call	_net_syncstate
 $L459:
-; Line 529
+; Line 533
 	call	_run_entity_scripts
-; Line 532
+; Line 536
 	cmp	DWORD PTR _player_boost, 0
 	jne	SHORT $L460
-; Line 533
+; Line 537
 	mov	BYTE PTR _boost_overheating, 1
 $L460:
-; Line 535
+; Line 539
 	mov	ecx, DWORD PTR _player_fighter+16
 	shr	ecx, 1
 	cmp	DWORD PTR _player_boost, ecx
 	jb	SHORT $L461
-; Line 536
+; Line 540
 	mov	BYTE PTR _boost_overheating, 0
 $L461:
-; Line 540
+; Line 544
 	mov	edx, DWORD PTR _frames
 	add	edx, 1
 	mov	DWORD PTR _frames, edx
-; Line 541
+; Line 545
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1822,10 +1822,10 @@ PUBLIC	_blazer2_screencrack
 EXTRN	_draw_line:NEAR
 _TEXT	SEGMENT
 _blazer2_screencrack PROC NEAR
-; Line 543
+; Line 547
 	push	ebp
 	mov	ebp, esp
-; Line 544
+; Line 548
 	push	255					; 000000ffH
 	push	50					; 00000032H
 	push	40					; 00000028H
@@ -1833,7 +1833,7 @@ _blazer2_screencrack PROC NEAR
 	push	30					; 0000001eH
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 545
+; Line 549
 	push	255					; 000000ffH
 	push	80					; 00000050H
 	push	70					; 00000046H
@@ -1841,7 +1841,7 @@ _blazer2_screencrack PROC NEAR
 	push	40					; 00000028H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 546
+; Line 550
 	push	255					; 000000ffH
 	push	85					; 00000055H
 	push	120					; 00000078H
@@ -1849,7 +1849,7 @@ _blazer2_screencrack PROC NEAR
 	push	70					; 00000046H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 547
+; Line 551
 	push	255					; 000000ffH
 	push	155					; 0000009bH
 	push	180					; 000000b4H
@@ -1857,7 +1857,7 @@ _blazer2_screencrack PROC NEAR
 	push	215					; 000000d7H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 548
+; Line 552
 	push	255					; 000000ffH
 	push	200					; 000000c8H
 	push	220					; 000000dcH
@@ -1865,7 +1865,7 @@ _blazer2_screencrack PROC NEAR
 	push	180					; 000000b4H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 549
+; Line 553
 	push	255					; 000000ffH
 	push	70					; 00000046H
 	push	200					; 000000c8H
@@ -1873,7 +1873,7 @@ _blazer2_screencrack PROC NEAR
 	push	215					; 000000d7H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 550
+; Line 554
 	push	255					; 000000ffH
 	push	50					; 00000032H
 	push	215					; 000000d7H
@@ -1881,7 +1881,7 @@ _blazer2_screencrack PROC NEAR
 	push	200					; 000000c8H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 551
+; Line 555
 	push	255					; 000000ffH
 	push	40					; 00000028H
 	push	319					; 0000013fH
@@ -1889,7 +1889,7 @@ _blazer2_screencrack PROC NEAR
 	push	215					; 000000d7H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 552
+; Line 556
 	push	255					; 000000ffH
 	push	130					; 00000082H
 	push	100					; 00000064H
@@ -1897,7 +1897,7 @@ _blazer2_screencrack PROC NEAR
 	push	160					; 000000a0H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 553
+; Line 557
 	push	255					; 000000ffH
 	push	140					; 0000008cH
 	push	215					; 000000d7H
@@ -1905,7 +1905,7 @@ _blazer2_screencrack PROC NEAR
 	push	160					; 000000a0H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 554
+; Line 558
 	push	255					; 000000ffH
 	push	140					; 0000008cH
 	push	215					; 000000d7H
@@ -1913,7 +1913,7 @@ _blazer2_screencrack PROC NEAR
 	push	160					; 000000a0H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 555
+; Line 559
 	push	255					; 000000ffH
 	push	85					; 00000055H
 	push	215					; 000000d7H
@@ -1921,7 +1921,7 @@ _blazer2_screencrack PROC NEAR
 	push	160					; 000000a0H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 556
+; Line 560
 	push	255					; 000000ffH
 	push	100					; 00000064H
 	push	160					; 000000a0H
@@ -1929,7 +1929,7 @@ _blazer2_screencrack PROC NEAR
 	push	120					; 00000078H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 557
+; Line 561
 	push	255					; 000000ffH
 	push	160					; 000000a0H
 	push	80					; 00000050H
@@ -1937,7 +1937,7 @@ _blazer2_screencrack PROC NEAR
 	push	100					; 00000064H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 558
+; Line 562
 	push	255					; 000000ffH
 	push	170					; 000000aaH
 	push	20					; 00000014H
@@ -1945,7 +1945,7 @@ _blazer2_screencrack PROC NEAR
 	push	80					; 00000050H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 559
+; Line 563
 	push	255					; 000000ffH
 	push	192					; 000000c0H
 	push	0
@@ -1953,7 +1953,7 @@ _blazer2_screencrack PROC NEAR
 	push	20					; 00000014H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 560
+; Line 564
 	pop	ebp
 	ret	0
 _blazer2_screencrack ENDP
@@ -1963,13 +1963,13 @@ _TEXT	SEGMENT
 _i$ = -8
 _c$ = -4
 _count_entities PROC NEAR
-; Line 563
+; Line 567
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
-; Line 565
+; Line 569
 	mov	DWORD PTR _c$[ebp], 0
-; Line 567
+; Line 571
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	SHORT $L469
 $L470:
@@ -1979,7 +1979,7 @@ $L470:
 $L469:
 	cmp	DWORD PTR _i$[ebp], 1000		; 000003e8H
 	jge	SHORT $L471
-; Line 568
+; Line 572
 	mov	ecx, DWORD PTR _i$[ebp]
 	cmp	DWORD PTR _StarblazerEntities[ecx*4], 0
 	je	SHORT $L472
@@ -1987,12 +1987,12 @@ $L469:
 	add	edx, 1
 	mov	DWORD PTR _c$[ebp], edx
 $L472:
-; Line 569
+; Line 573
 	jmp	SHORT $L470
 $L471:
-; Line 571
+; Line 575
 	mov	eax, DWORD PTR _c$[ebp]
-; Line 572
+; Line 576
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2005,6 +2005,7 @@ EXTRN	_LAST_FRAME_TIME:DWORD
 EXTRN	_vputs:NEAR
 EXTRN	_sprintf:NEAR
 _DATA	SEGMENT
+	ORG $+1
 $SG477	DB	'ENT', 00H
 $SG479	DB	'%d / %d', 00H
 $SG480	DB	'TRI', 00H
@@ -2019,11 +2020,11 @@ _DATA	ENDS
 _TEXT	SEGMENT
 _num$ = -100
 _draw_debug PROC NEAR
-; Line 575
+; Line 579
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 100				; 00000064H
-; Line 579
+; Line 583
 	push	1
 	push	239					; 000000efH
 	push	1
@@ -2033,42 +2034,11 @@ _draw_debug PROC NEAR
 	push	OFFSET FLAT:$SG477
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 580
+; Line 584
 	push	1000					; 000003e8H
 	call	_count_entities
 	push	eax
 	push	OFFSET FLAT:$SG479
-	lea	eax, DWORD PTR _num$[ebp]
-	push	eax
-	call	_sprintf
-	add	esp, 16					; 00000010H
-; Line 581
-	push	1
-	push	239					; 000000efH
-	push	1
-	push	1
-	push	0
-	push	15					; 0000000fH
-	lea	ecx, DWORD PTR _num$[ebp]
-	push	ecx
-	call	_vputs
-	add	esp, 28					; 0000001cH
-; Line 583
-	push	1
-	push	239					; 000000efH
-	push	1
-	push	1
-	push	7
-	push	0
-	push	OFFSET FLAT:$SG480
-	call	_vputs
-	add	esp, 28					; 0000001cH
-; Line 584
-	push	1500					; 000005dcH
-	xor	edx, edx
-	mov	dx, WORD PTR _SL_TRIANGLE_INDEX
-	push	edx
-	push	OFFSET FLAT:$SG481
 	lea	eax, DWORD PTR _num$[ebp]
 	push	eax
 	call	_sprintf
@@ -2078,7 +2048,7 @@ _draw_debug PROC NEAR
 	push	239					; 000000efH
 	push	1
 	push	1
-	push	7
+	push	0
 	push	15					; 0000000fH
 	lea	ecx, DWORD PTR _num$[ebp]
 	push	ecx
@@ -2089,12 +2059,43 @@ _draw_debug PROC NEAR
 	push	239					; 000000efH
 	push	1
 	push	1
+	push	7
+	push	0
+	push	OFFSET FLAT:$SG480
+	call	_vputs
+	add	esp, 28					; 0000001cH
+; Line 588
+	push	2500					; 000009c4H
+	xor	edx, edx
+	mov	dx, WORD PTR _SL_TRIANGLE_INDEX
+	push	edx
+	push	OFFSET FLAT:$SG481
+	lea	eax, DWORD PTR _num$[ebp]
+	push	eax
+	call	_sprintf
+	add	esp, 16					; 00000010H
+; Line 589
+	push	1
+	push	239					; 000000efH
+	push	1
+	push	1
+	push	7
+	push	15					; 0000000fH
+	lea	ecx, DWORD PTR _num$[ebp]
+	push	ecx
+	call	_vputs
+	add	esp, 28					; 0000001cH
+; Line 591
+	push	1
+	push	239					; 000000efH
+	push	1
+	push	1
 	push	14					; 0000000eH
 	push	0
 	push	OFFSET FLAT:$SG482
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 588
+; Line 592
 	cmp	DWORD PTR _LAST_FRAME_TIME, 0
 	je	SHORT $L483
 	mov	eax, 1000				; 000003e8H
@@ -2107,7 +2108,7 @@ _draw_debug PROC NEAR
 	call	_sprintf
 	add	esp, 12					; 0000000cH
 $L483:
-; Line 589
+; Line 593
 	push	1
 	push	239					; 000000efH
 	push	1
@@ -2118,7 +2119,7 @@ $L483:
 	push	eax
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 592
+; Line 596
 	mov	ecx, DWORD PTR _StarblazerEntities
 	mov	edx, DWORD PTR [ecx+12]
 	sar	edx, 16					; 00000010H
@@ -2136,7 +2137,7 @@ $L483:
 	push	ecx
 	call	_sprintf
 	add	esp, 20					; 00000014H
-; Line 593
+; Line 597
 	push	1
 	push	175					; 000000afH
 	push	1
@@ -2147,7 +2148,7 @@ $L483:
 	push	edx
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 595
+; Line 599
 	push	2500					; 000009c4H
 	xor	eax, eax
 	mov	ax, WORD PTR _SL_VERTEX_INDEX
@@ -2157,7 +2158,7 @@ $L483:
 	push	ecx
 	call	_sprintf
 	add	esp, 16					; 00000010H
-; Line 596
+; Line 600
 	push	1
 	push	175					; 000000afH
 	push	1
@@ -2168,7 +2169,7 @@ $L483:
 	push	edx
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 597
+; Line 601
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2186,11 +2187,11 @@ _pos3$ = -8
 _pos4$ = -12
 _c$ = -16
 _draw_HPbar PROC NEAR
-; Line 599
+; Line 603
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 32					; 00000020H
-; Line 604
+; Line 608
 	mov	eax, DWORD PTR _StarblazerEntities
 	mov	eax, DWORD PTR [eax+96]
 	imul	eax, 21					; 00000015H
@@ -2199,12 +2200,12 @@ _draw_HPbar PROC NEAR
 	idiv	ecx
 	add	eax, 16					; 00000010H
 	mov	DWORD PTR _k$[ebp], eax
-; Line 605
+; Line 609
 	mov	edx, DWORD PTR _barcycle
 	sar	edx, 3
 	add	edx, 8
 	mov	DWORD PTR _i$[ebp], edx
-; Line 606
+; Line 610
 	mov	DWORD PTR _j$[ebp], 0
 	jmp	SHORT $L497
 $L498:
@@ -2214,57 +2215,57 @@ $L498:
 $L497:
 	cmp	DWORD PTR _j$[ebp], 22			; 00000016H
 	jge	$L499
-; Line 607
+; Line 611
 	mov	ecx, DWORD PTR _j$[ebp]
 	movsx	edx, BYTE PTR _barcolors[ecx]
 	mov	DWORD PTR _c$[ebp], edx
-; Line 608
+; Line 612
 	mov	eax, DWORD PTR _i$[ebp]
 	cmp	eax, DWORD PTR _k$[ebp]
 	jle	SHORT $L500
 	jmp	$L499
 $L500:
-; Line 609
+; Line 613
 	mov	DWORD PTR _pos1$[ebp], 24		; 00000018H
-; Line 610
+; Line 614
 	mov	ecx, DWORD PTR _i$[ebp]
 	mov	DWORD PTR _pos2$[ebp], ecx
-; Line 611
+; Line 615
 	mov	DWORD PTR _pos3$[ebp], 8
-; Line 612
+; Line 616
 	mov	edx, DWORD PTR _i$[ebp]
 	add	edx, 8
 	mov	DWORD PTR _pos4$[ebp], edx
-; Line 613
+; Line 617
 	mov	eax, DWORD PTR _i$[ebp]
 	add	eax, 8
 	cmp	eax, DWORD PTR _k$[ebp]
 	jle	SHORT $L501
-; Line 615
+; Line 619
 	mov	ecx, DWORD PTR _i$[ebp]
 	add	ecx, 8
 	sub	ecx, DWORD PTR _k$[ebp]
 	mov	edx, DWORD PTR _pos3$[ebp]
 	lea	eax, DWORD PTR [edx+ecx*2]
 	mov	DWORD PTR _pos3$[ebp], eax
-; Line 616
+; Line 620
 	mov	ecx, DWORD PTR _k$[ebp]
 	mov	DWORD PTR _pos4$[ebp], ecx
 $L501:
-; Line 618
+; Line 622
 	cmp	DWORD PTR _i$[ebp], 16			; 00000010H
 	jge	SHORT $L502
-; Line 619
+; Line 623
 	mov	edx, 16					; 00000010H
 	sub	edx, DWORD PTR _i$[ebp]
 	shl	edx, 1
 	mov	eax, DWORD PTR _pos1$[ebp]
 	sub	eax, edx
 	mov	DWORD PTR _pos1$[ebp], eax
-; Line 620
+; Line 624
 	mov	DWORD PTR _pos2$[ebp], 16		; 00000010H
 $L502:
-; Line 622
+; Line 626
 	mov	ecx, DWORD PTR _c$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _pos4$[ebp]
@@ -2277,46 +2278,46 @@ $L502:
 	push	edx
 	call	_drawline
 	add	esp, 20					; 00000014H
-; Line 623
+; Line 627
 	mov	eax, DWORD PTR _i$[ebp]
 	add	eax, 8
 	mov	DWORD PTR _i$[ebp], eax
-; Line 624
+; Line 628
 	jmp	$L498
 $L499:
-; Line 625
-	push	255					; 000000ffH
-	push	16					; 00000010H
-	push	24					; 00000018H
-	push	16					; 00000010H
-	push	8
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 626
-	push	255					; 000000ffH
-	push	184					; 000000b8H
-	push	24					; 00000018H
-	push	16					; 00000010H
-	push	24					; 00000018H
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 627
-	push	255					; 000000ffH
-	push	184					; 000000b8H
-	push	8
-	push	184					; 000000b8H
-	push	24					; 00000018H
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 628
-	push	255					; 000000ffH
-	push	16					; 00000010H
-	push	8
-	push	184					; 000000b8H
-	push	8
-	call	_drawline
-	add	esp, 20					; 00000014H
 ; Line 629
+	push	255					; 000000ffH
+	push	16					; 00000010H
+	push	24					; 00000018H
+	push	16					; 00000010H
+	push	8
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 630
+	push	255					; 000000ffH
+	push	184					; 000000b8H
+	push	24					; 00000018H
+	push	16					; 00000010H
+	push	24					; 00000018H
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 631
+	push	255					; 000000ffH
+	push	184					; 000000b8H
+	push	8
+	push	184					; 000000b8H
+	push	24					; 00000018H
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 632
+	push	255					; 000000ffH
+	push	16					; 00000010H
+	push	8
+	push	184					; 000000b8H
+	push	8
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 633
 	push	255					; 000000ffH
 	mov	ecx, DWORD PTR _k$[ebp]
 	push	ecx
@@ -2326,7 +2327,7 @@ $L499:
 	push	8
 	call	_drawline
 	add	esp, 20					; 00000014H
-; Line 630
+; Line 634
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2337,11 +2338,11 @@ EXTRN	_bitset_pixel:NEAR
 _TEXT	SEGMENT
 _i$ = -4
 _draw_crosshair PROC NEAR
-; Line 632
+; Line 636
 	push	ebp
 	mov	ebp, esp
 	push	ecx
-; Line 634
+; Line 638
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	SHORT $L507
 $L508:
@@ -2351,7 +2352,7 @@ $L508:
 $L507:
 	cmp	DWORD PTR _i$[ebp], 7
 	jge	$L509
-; Line 637
+; Line 641
 	push	175					; 000000afH
 	push	90					; 0000005aH
 	mov	ecx, DWORD PTR _i$[ebp]
@@ -2359,7 +2360,7 @@ $L507:
 	push	ecx
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 638
+; Line 642
 	push	175					; 000000afH
 	push	90					; 0000005aH
 	mov	edx, 170				; 000000aaH
@@ -2367,7 +2368,7 @@ $L507:
 	push	edx
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 639
+; Line 643
 	push	175					; 000000afH
 	push	110					; 0000006eH
 	mov	eax, DWORD PTR _i$[ebp]
@@ -2375,7 +2376,7 @@ $L507:
 	push	eax
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 640
+; Line 644
 	push	175					; 000000afH
 	push	110					; 0000006eH
 	mov	ecx, 170				; 000000aaH
@@ -2383,7 +2384,7 @@ $L507:
 	push	ecx
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 641
+; Line 645
 	push	175					; 000000afH
 	mov	edx, DWORD PTR _i$[ebp]
 	add	edx, 90					; 0000005aH
@@ -2391,7 +2392,7 @@ $L507:
 	push	150					; 00000096H
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 642
+; Line 646
 	push	175					; 000000afH
 	mov	eax, 110				; 0000006eH
 	sub	eax, DWORD PTR _i$[ebp]
@@ -2399,7 +2400,7 @@ $L507:
 	push	150					; 00000096H
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 643
+; Line 647
 	push	175					; 000000afH
 	mov	ecx, DWORD PTR _i$[ebp]
 	add	ecx, 90					; 0000005aH
@@ -2407,7 +2408,7 @@ $L507:
 	push	170					; 000000aaH
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 644
+; Line 648
 	push	175					; 000000afH
 	mov	edx, 110				; 0000006eH
 	sub	edx, DWORD PTR _i$[ebp]
@@ -2415,16 +2416,16 @@ $L507:
 	push	170					; 000000aaH
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 645
+; Line 649
 	jmp	$L508
 $L509:
-; Line 647
+; Line 651
 	push	175					; 000000afH
 	push	100					; 00000064H
 	push	160					; 000000a0H
 	call	_bitset_pixel
 	add	esp, 12					; 0000000cH
-; Line 648
+; Line 652
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2441,11 +2442,11 @@ _pos3$ = -8
 _pos4$ = -12
 _c$ = -16
 _draw_boost_bar PROC NEAR
-; Line 651
+; Line 655
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 32					; 00000020H
-; Line 656
+; Line 660
 	mov	eax, DWORD PTR _player_boost
 	imul	eax, 21					; 00000015H
 	xor	edx, edx
@@ -2453,12 +2454,12 @@ _draw_boost_bar PROC NEAR
 	div	ecx
 	add	eax, 16					; 00000010H
 	mov	DWORD PTR _k$[ebp], eax
-; Line 657
+; Line 661
 	mov	edx, DWORD PTR _barcycle
 	sar	edx, 3
 	add	edx, 8
 	mov	DWORD PTR _i$[ebp], edx
-; Line 658
+; Line 662
 	mov	DWORD PTR _j$[ebp], 0
 	jmp	SHORT $L521
 $L522:
@@ -2468,7 +2469,7 @@ $L522:
 $L521:
 	cmp	DWORD PTR _j$[ebp], 22			; 00000016H
 	jge	$L523
-; Line 659
+; Line 663
 	xor	ecx, ecx
 	mov	cl, BYTE PTR _boost_overheating
 	neg	ecx
@@ -2476,53 +2477,53 @@ $L521:
 	and	ecx, 64					; 00000040H
 	add	ecx, 159				; 0000009fH
 	mov	DWORD PTR _c$[ebp], ecx
-; Line 660
+; Line 664
 	mov	edx, DWORD PTR _i$[ebp]
 	cmp	edx, DWORD PTR _k$[ebp]
 	jle	SHORT $L524
 	jmp	$L523
 $L524:
-; Line 661
+; Line 665
 	mov	DWORD PTR _pos1$[ebp], 312		; 00000138H
-; Line 662
+; Line 666
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	DWORD PTR _pos2$[ebp], eax
-; Line 663
+; Line 667
 	mov	DWORD PTR _pos3$[ebp], 296		; 00000128H
-; Line 664
+; Line 668
 	mov	ecx, DWORD PTR _i$[ebp]
 	add	ecx, 8
 	mov	DWORD PTR _pos4$[ebp], ecx
-; Line 665
+; Line 669
 	mov	edx, DWORD PTR _i$[ebp]
 	add	edx, 8
 	cmp	edx, DWORD PTR _k$[ebp]
 	jle	SHORT $L525
-; Line 667
+; Line 671
 	mov	eax, DWORD PTR _i$[ebp]
 	add	eax, 8
 	sub	eax, DWORD PTR _k$[ebp]
 	mov	ecx, DWORD PTR _pos3$[ebp]
 	lea	edx, DWORD PTR [ecx+eax*2]
 	mov	DWORD PTR _pos3$[ebp], edx
-; Line 668
+; Line 672
 	mov	eax, DWORD PTR _k$[ebp]
 	mov	DWORD PTR _pos4$[ebp], eax
 $L525:
-; Line 670
+; Line 674
 	cmp	DWORD PTR _i$[ebp], 16			; 00000010H
 	jge	SHORT $L526
-; Line 671
+; Line 675
 	mov	ecx, 16					; 00000010H
 	sub	ecx, DWORD PTR _i$[ebp]
 	shl	ecx, 1
 	mov	edx, DWORD PTR _pos1$[ebp]
 	sub	edx, ecx
 	mov	DWORD PTR _pos1$[ebp], edx
-; Line 672
+; Line 676
 	mov	DWORD PTR _pos2$[ebp], 16		; 00000010H
 $L526:
-; Line 674
+; Line 678
 	mov	eax, DWORD PTR _c$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _pos4$[ebp]
@@ -2535,46 +2536,46 @@ $L526:
 	push	ecx
 	call	_drawline
 	add	esp, 20					; 00000014H
-; Line 675
+; Line 679
 	mov	edx, DWORD PTR _i$[ebp]
 	add	edx, 8
 	mov	DWORD PTR _i$[ebp], edx
-; Line 676
+; Line 680
 	jmp	$L522
 $L523:
-; Line 677
-	push	255					; 000000ffH
-	push	16					; 00000010H
-	push	312					; 00000138H
-	push	16					; 00000010H
-	push	296					; 00000128H
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 678
-	push	255					; 000000ffH
-	push	184					; 000000b8H
-	push	312					; 00000138H
-	push	16					; 00000010H
-	push	312					; 00000138H
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 679
-	push	255					; 000000ffH
-	push	184					; 000000b8H
-	push	296					; 00000128H
-	push	184					; 000000b8H
-	push	312					; 00000138H
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 680
-	push	255					; 000000ffH
-	push	16					; 00000010H
-	push	296					; 00000128H
-	push	184					; 000000b8H
-	push	296					; 00000128H
-	call	_drawline
-	add	esp, 20					; 00000014H
 ; Line 681
+	push	255					; 000000ffH
+	push	16					; 00000010H
+	push	312					; 00000138H
+	push	16					; 00000010H
+	push	296					; 00000128H
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 682
+	push	255					; 000000ffH
+	push	184					; 000000b8H
+	push	312					; 00000138H
+	push	16					; 00000010H
+	push	312					; 00000138H
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 683
+	push	255					; 000000ffH
+	push	184					; 000000b8H
+	push	296					; 00000128H
+	push	184					; 000000b8H
+	push	312					; 00000138H
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 684
+	push	255					; 000000ffH
+	push	16					; 00000010H
+	push	296					; 00000128H
+	push	184					; 000000b8H
+	push	296					; 00000128H
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 685
 	push	255					; 000000ffH
 	mov	eax, DWORD PTR _k$[ebp]
 	push	eax
@@ -2584,7 +2585,7 @@ $L523:
 	push	296					; 00000128H
 	call	_drawline
 	add	esp, 20					; 00000014H
-; Line 682
+; Line 686
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2604,11 +2605,11 @@ _pos2$ = -4
 _vector_pos$ = -40
 _screen_coords$ = -20
 _draw_radar PROC NEAR
-; Line 684
+; Line 688
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 48					; 00000030H
-; Line 689
+; Line 693
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	SHORT $L537
 $L538:
@@ -2618,7 +2619,7 @@ $L538:
 $L537:
 	cmp	DWORD PTR _i$[ebp], 60			; 0000003cH
 	jge	$L539
-; Line 690
+; Line 694
 	mov	DWORD PTR _j$[ebp], 0
 	jmp	SHORT $L540
 $L541:
@@ -2628,9 +2629,9 @@ $L541:
 $L540:
 	cmp	DWORD PTR _j$[ebp], 60			; 0000003cH
 	jge	SHORT $L542
-; Line 691
+; Line 695
 	mov	DWORD PTR _c$[ebp], 0
-; Line 693
+; Line 697
 	cmp	DWORD PTR _i$[ebp], 0
 	je	SHORT $L544
 	cmp	DWORD PTR _i$[ebp], 59			; 0000003bH
@@ -2642,7 +2643,7 @@ $L540:
 $L544:
 	mov	DWORD PTR _c$[ebp], 255			; 000000ffH
 $L543:
-; Line 694
+; Line 698
 	cmp	DWORD PTR _c$[ebp], 0
 	jne	SHORT $L545
 	mov	edx, DWORD PTR _i$[ebp]
@@ -2657,7 +2658,7 @@ $L632:
 	je	SHORT $L545
 	jmp	SHORT $L541
 $L545:
-; Line 695
+; Line 699
 	mov	eax, DWORD PTR _c$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _j$[ebp]
@@ -2668,13 +2669,13 @@ $L545:
 	push	edx
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
-; Line 696
+; Line 700
 	jmp	SHORT $L541
 $L542:
-; Line 697
+; Line 701
 	jmp	$L538
 $L539:
-; Line 700
+; Line 704
 	mov	DWORD PTR _j$[ebp], -1
 	jmp	SHORT $L547
 $L548:
@@ -2684,7 +2685,7 @@ $L548:
 $L547:
 	cmp	DWORD PTR _j$[ebp], 2
 	jge	SHORT $L549
-; Line 701
+; Line 705
 	mov	DWORD PTR _k$[ebp], -1
 	jmp	SHORT $L550
 $L551:
@@ -2694,7 +2695,7 @@ $L551:
 $L550:
 	cmp	DWORD PTR _k$[ebp], 2
 	jge	SHORT $L552
-; Line 702
+; Line 706
 	push	239					; 000000efH
 	mov	edx, DWORD PTR _k$[ebp]
 	add	edx, 40					; 00000028H
@@ -2704,13 +2705,13 @@ $L550:
 	push	eax
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
-; Line 703
+; Line 707
 	jmp	SHORT $L551
 $L552:
-; Line 704
+; Line 708
 	jmp	SHORT $L548
 $L549:
-; Line 706
+; Line 710
 	push	239					; 000000efH
 	push	44					; 0000002cH
 	push	160					; 000000a0H
@@ -2718,7 +2719,7 @@ $L549:
 	push	160					; 000000a0H
 	call	_draw_line
 	add	esp, 20					; 00000014H
-; Line 709
+; Line 713
 	mov	DWORD PTR _i$[ebp], 1
 	jmp	SHORT $L553
 $L554:
@@ -2728,7 +2729,7 @@ $L554:
 $L553:
 	cmp	DWORD PTR _i$[ebp], 1000		; 000003e8H
 	jge	$L555
-; Line 710
+; Line 714
 	mov	edx, DWORD PTR _i$[ebp]
 	cmp	DWORD PTR _StarblazerEntities[edx*4], 0
 	je	$L571
@@ -2739,7 +2740,7 @@ $L553:
 	and	eax, 2
 	test	eax, eax
 	je	$L571
-; Line 711
+; Line 715
 	mov	ecx, DWORD PTR _i$[ebp]
 	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
 	add	edx, 4
@@ -2749,7 +2750,7 @@ $L553:
 	mov	DWORD PTR _vector_pos$[ebp+4], ecx
 	mov	edx, DWORD PTR [edx+8]
 	mov	DWORD PTR _vector_pos$[ebp+8], edx
-; Line 712
+; Line 716
 	lea	eax, DWORD PTR _vector_pos$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _StarblazerEntities
@@ -2757,7 +2758,7 @@ $L553:
 	push	ecx
 	call	_vec3_subtract
 	add	esp, 8
-; Line 713
+; Line 717
 	lea	edx, DWORD PTR _screen_coords$[ebp]
 	push	edx
 	lea	eax, DWORD PTR _vector_pos$[ebp]
@@ -2765,35 +2766,35 @@ $L553:
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	call	_mat3_mul
 	add	esp, 12					; 0000000cH
-; Line 715
+; Line 719
 	mov	ecx, DWORD PTR _screen_coords$[ebp]
 	sar	ecx, 17					; 00000011H
 	mov	DWORD PTR _pos1$[ebp], ecx
-; Line 716
+; Line 720
 	mov	edx, DWORD PTR _screen_coords$[ebp+8]
 	sar	edx, 17					; 00000011H
 	mov	DWORD PTR _pos2$[ebp], edx
-; Line 718
+; Line 722
 	cmp	DWORD PTR _pos1$[ebp], 30		; 0000001eH
 	jle	SHORT $L557
 	mov	DWORD PTR _pos1$[ebp], 30		; 0000001eH
 $L557:
-; Line 719
+; Line 723
 	cmp	DWORD PTR _pos1$[ebp], -30		; ffffffe2H
 	jge	SHORT $L558
 	mov	DWORD PTR _pos1$[ebp], -30		; ffffffe2H
 $L558:
-; Line 720
+; Line 724
 	cmp	DWORD PTR _pos2$[ebp], 30		; 0000001eH
 	jle	SHORT $L559
 	mov	DWORD PTR _pos2$[ebp], 30		; 0000001eH
 $L559:
-; Line 721
+; Line 725
 	cmp	DWORD PTR _pos2$[ebp], -30		; ffffffe2H
 	jge	SHORT $L560
 	mov	DWORD PTR _pos2$[ebp], -30		; ffffffe2H
 $L560:
-; Line 723
+; Line 727
 	mov	eax, DWORD PTR _i$[ebp]
 	mov	ecx, DWORD PTR _StarblazerEntities[eax*4]
 	mov	edx, DWORD PTR [ecx]
@@ -2801,18 +2802,18 @@ $L560:
 	mov	al, BYTE PTR [edx+37]
 	test	eax, eax
 	je	$L561
-; Line 724
+; Line 728
 	cmp	DWORD PTR _screen_coords$[ebp+4], 0
 	jl	SHORT $L562
-; Line 725
+; Line 729
 	mov	DWORD PTR _c$[ebp], 175			; 000000afH
-; Line 727
+; Line 731
 	jmp	SHORT $L563
 $L562:
-; Line 728
+; Line 732
 	mov	DWORD PTR _c$[ebp], 223			; 000000dfH
 $L563:
-; Line 731
+; Line 735
 	mov	DWORD PTR _j$[ebp], -1
 	jmp	SHORT $L564
 $L565:
@@ -2822,7 +2823,7 @@ $L565:
 $L564:
 	cmp	DWORD PTR _j$[ebp], 2
 	jge	SHORT $L566
-; Line 732
+; Line 736
 	mov	DWORD PTR _k$[ebp], -1
 	jmp	SHORT $L567
 $L568:
@@ -2832,7 +2833,7 @@ $L568:
 $L567:
 	cmp	DWORD PTR _k$[ebp], 2
 	jge	SHORT $L569
-; Line 733
+; Line 737
 	mov	eax, DWORD PTR _k$[ebp]
 	mov	ecx, DWORD PTR _pos2$[ebp]
 	lea	edx, DWORD PTR [ecx+eax+40]
@@ -2840,7 +2841,7 @@ $L567:
 	jge	SHORT $L570
 	jmp	SHORT $L568
 $L570:
-; Line 734
+; Line 738
 	mov	eax, DWORD PTR _c$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _k$[ebp]
@@ -2853,16 +2854,16 @@ $L570:
 	push	eax
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
-; Line 735
+; Line 739
 	jmp	SHORT $L568
 $L569:
-; Line 736
+; Line 740
 	jmp	SHORT $L565
 $L566:
-; Line 738
+; Line 742
 	jmp	SHORT $L571
 $L561:
-; Line 739
+; Line 743
 	mov	ecx, DWORD PTR _i$[ebp]
 	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
 	mov	eax, DWORD PTR [edx]
@@ -2878,10 +2879,10 @@ $L561:
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
 $L571:
-; Line 742
+; Line 746
 	jmp	$L554
 $L555:
-; Line 743
+; Line 747
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2893,18 +2894,18 @@ _offset$ = -4
 _i$ = -12
 _intensity$ = -8
 _draw_battery PROC NEAR
-; Line 745
+; Line 749
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 12					; 0000000cH
-; Line 746
+; Line 750
 	mov	DWORD PTR _offset$[ebp], 140		; 0000008cH
-; Line 748
+; Line 752
 	mov	eax, DWORD PTR _player_battery
 	imul	eax, 6
 	shr	eax, 4
 	mov	DWORD PTR _intensity$[ebp], eax
-; Line 750
+; Line 754
 	mov	DWORD PTR _i$[ebp], 0
 	jmp	SHORT $L577
 $L578:
@@ -2914,11 +2915,11 @@ $L578:
 $L577:
 	cmp	DWORD PTR _i$[ebp], 40			; 00000028H
 	jge	SHORT $L579
-; Line 751
+; Line 755
 	mov	edx, DWORD PTR _player_battery
 	cmp	edx, DWORD PTR _i$[ebp]
 	jb	SHORT $L580
-; Line 752
+; Line 756
 	mov	eax, DWORD PTR _intensity$[ebp]
 	or	al, -96					; ffffffa0H
 	push	eax
@@ -2933,42 +2934,42 @@ $L577:
 	call	_drawline
 	add	esp, 20					; 00000014H
 $L580:
-; Line 754
+; Line 758
 	jmp	SHORT $L578
 $L579:
-; Line 776
-	push	255					; 000000ffH
-	push	160					; 000000a0H
-	push	180					; 000000b4H
-	push	160					; 000000a0H
-	push	139					; 0000008bH
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 777
-	push	255					; 000000ffH
-	push	170					; 000000aaH
-	push	180					; 000000b4H
-	push	170					; 000000aaH
-	push	139					; 0000008bH
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 778
-	push	255					; 000000ffH
-	push	170					; 000000aaH
-	push	139					; 0000008bH
-	push	160					; 000000a0H
-	push	139					; 0000008bH
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 779
-	push	255					; 000000ffH
-	push	170					; 000000aaH
-	push	180					; 000000b4H
-	push	160					; 000000a0H
-	push	180					; 000000b4H
-	call	_drawline
-	add	esp, 20					; 00000014H
 ; Line 780
+	push	255					; 000000ffH
+	push	160					; 000000a0H
+	push	180					; 000000b4H
+	push	160					; 000000a0H
+	push	139					; 0000008bH
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 781
+	push	255					; 000000ffH
+	push	170					; 000000aaH
+	push	180					; 000000b4H
+	push	170					; 000000aaH
+	push	139					; 0000008bH
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 782
+	push	255					; 000000ffH
+	push	170					; 000000aaH
+	push	139					; 0000008bH
+	push	160					; 000000a0H
+	push	139					; 0000008bH
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 783
+	push	255					; 000000ffH
+	push	170					; 000000aaH
+	push	180					; 000000b4H
+	push	160					; 000000a0H
+	push	180					; 000000b4H
+	call	_drawline
+	add	esp, 20					; 00000014H
+; Line 784
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -2987,14 +2988,14 @@ _DATA	ENDS
 _TEXT	SEGMENT
 _text$ = -80
 _blazer2_draw PROC NEAR
-; Line 783
+; Line 787
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 80					; 00000050H
-; Line 787
+; Line 791
 	cmp	DWORD PTR _shake_frames, 0
 	je	SHORT $L583
-; Line 788
+; Line 792
 	call	_rand
 	cdq
 	mov	ecx, 20					; 00000014H
@@ -3003,7 +3004,7 @@ _blazer2_draw PROC NEAR
 	mov	ax, WORD PTR _SL_CENTER_X
 	add	ax, dx
 	mov	WORD PTR _SL_CENTER_X, ax
-; Line 789
+; Line 793
 	call	_rand
 	cdq
 	mov	ecx, 20					; 00000014H
@@ -3012,28 +3013,28 @@ _blazer2_draw PROC NEAR
 	mov	ax, WORD PTR _SL_CENTER_Y
 	add	ax, dx
 	mov	WORD PTR _SL_CENTER_Y, ax
-; Line 791
+; Line 795
 	jmp	SHORT $L584
 $L583:
-; Line 792
+; Line 796
 	mov	WORD PTR _SL_CENTER_X, 160		; 000000a0H
-; Line 793
+; Line 797
 	mov	WORD PTR _SL_CENTER_Y, 100		; 00000064H
 $L584:
-; Line 797
+; Line 801
 	mov	ecx, DWORD PTR _StarblazerEntities
 	add	ecx, 4
 	push	ecx
 	call	_camera_translate
 	add	esp, 4
-; Line 798
+; Line 802
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	mov	edx, DWORD PTR _StarblazerEntities
 	add	edx, 16					; 00000010H
 	push	edx
 	call	_quat_tomat
 	add	esp, 8
-; Line 801
+; Line 805
 	push	500					; 000001f4H
 	push	OFFSET FLAT:_title_stars
 	mov	al, BYTE PTR _shading
@@ -3055,32 +3056,32 @@ $L584:
 	push	edx
 	call	_draw_scene
 	add	esp, 32					; 00000020H
-; Line 804
+; Line 808
 	cmp	DWORD PTR _frames_respawning, 0
 	jne	SHORT $L585
 	call	_draw_crosshair
 $L585:
-; Line 807
+; Line 811
 	call	_draw_boost_bar
-; Line 810
+; Line 814
 	call	_draw_HPbar
-; Line 813
+; Line 817
 	call	_draw_radar
-; Line 816
-	call	_draw_battery
 ; Line 820
+	call	_draw_battery
+; Line 824
 	mov	eax, DWORD PTR _player_fighter
 	shr	eax, 1
 	mov	ecx, DWORD PTR _StarblazerEntities
 	cmp	DWORD PTR [ecx+96], eax
 	jae	SHORT $L586
-; Line 821
+; Line 825
 	call	_blazer2_screencrack
 $L586:
-; Line 824
+; Line 828
 	cmp	DWORD PTR _frames_respawning, 0
 	je	SHORT $L587
-; Line 825
+; Line 829
 	push	1
 	push	159					; 0000009fH
 	push	2
@@ -3090,7 +3091,7 @@ $L586:
 	push	OFFSET FLAT:$SG588
 	call	_vputs
 	add	esp, 28					; 0000001cH
-; Line 826
+; Line 830
 	mov	eax, DWORD PTR _frames_respawning
 	xor	edx, edx
 	mov	ecx, 70					; 00000046H
@@ -3101,7 +3102,7 @@ $L586:
 	push	edx
 	call	_sprintf
 	add	esp, 12					; 0000000cH
-; Line 827
+; Line 831
 	push	1
 	push	159					; 0000009fH
 	push	2
@@ -3113,18 +3114,18 @@ $L586:
 	call	_vputs
 	add	esp, 28					; 0000001cH
 $L587:
-; Line 831
+; Line 835
 	call	_draw_debug
-; Line 833
+; Line 837
 	mov	ecx, DWORD PTR _barcycle
 	add	ecx, 2
 	mov	DWORD PTR _barcycle, ecx
-; Line 834
+; Line 838
 	cmp	DWORD PTR _barcycle, 64			; 00000040H
 	jne	SHORT $L590
 	mov	DWORD PTR _barcycle, 0
 $L590:
-; Line 837
+; Line 841
 	mov	edx, DWORD PTR _StarblazerEntities
 	add	edx, 16					; 00000010H
 	sub	esp, 16					; 00000010H
@@ -3139,12 +3140,12 @@ $L590:
 	mov	DWORD PTR [eax+12], edx
 	call	_set_hypercraft_orientation
 	add	esp, 16					; 00000010H
-; Line 838
+; Line 842
 	push	160					; 000000a0H
 	push	265					; 00000109H
 	call	_draw_hypercraft
 	add	esp, 8
-; Line 839
+; Line 843
 	mov	esp, ebp
 	pop	ebp
 	ret	0

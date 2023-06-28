@@ -232,7 +232,7 @@ void debris_script(ENTITY** ptr){
 }
 
 void set_attributes(){
-	ENEMY_LASER.model = load_model("assets/boltem.obj");
+	ENEMY_LASER.model = load_model("assets/shreder2.obj");
 	ENEMY_LASER.model->script = enemy_laser_script;
 	ENEMY_LASER.model->radar_color = 239;
 	ENEMY_LASER.model->radar_type = 0;
@@ -253,9 +253,13 @@ void set_attributes(){
 	player_fighter.boost_size = 40;
 	player_fighter.energy_tank = 40;
 
-	player_weapon.cooldown_ticks = 10;
-	player_weapon.energy_draw = 9;
-	player_weapon.damage = 8;
+	//              Cooldown/Energy/Damage
+	//Shredder:     10/7/8
+	//Dragonbreath: 
+
+	player_weapon.cooldown_ticks = 3;// 10;
+	player_weapon.energy_draw = 2;// 7;
+	player_weapon.damage = 2;
 	player_weapon.model = LASER_PLAYER;
 
 	laser_velocity.x = 0;
@@ -273,7 +277,7 @@ void set_attributes(){
 	ASTEROID->script = asteroid_script;
 	ASTEROID->flags = 3;
 	ASTEROID->maxhp = 10;
-	ASTEROID->radar_color = 207;
+	ASTEROID->radar_color = 250;// 207;
 	ASTEROID->radar_type = 0;
 	create_hitbox(ASTEROID, int_fixed(5), int_fixed(5), int_fixed(5));
 
@@ -282,7 +286,7 @@ void set_attributes(){
 	AX5->flags = 3;
 	AX5->maxhp = 0;
 	AX5->radar_type = 1;
-	create_hitbox(AX5, int_fixed(3), int_fixed(2), int_fixed(7)); //2x2x2
+	create_hitbox(AX5, int_fixed(5), int_fixed(5), int_fixed(7)); //3x2x7
 }
 
 //when you're dead, it'll forcibly zero out your velocity and your joystick inputs
@@ -307,7 +311,7 @@ void blazer2_init(){
 	SND_HIT = load_soundfx("sfx/hit.wav", 1, 0);
 
 	//load models
-	LASER_PLAYER = load_model("assets/bolt.obj");
+	LASER_PLAYER = load_model("assets/shreder1.obj");
 	SL_CENTER_X = 160;
 	SL_CENTER_Y = 100;
 
