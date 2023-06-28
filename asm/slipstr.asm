@@ -254,19 +254,19 @@ $L441:
 	mov	edx, DWORD PTR _color_override$[ebp]
 	and	edx, 255				; 000000ffH
 	test	edx, edx
-	je	SHORT $L508
+	je	SHORT $L507
 	mov	eax, DWORD PTR _color_override$[ebp]
 	and	eax, 255				; 000000ffH
 	mov	DWORD PTR -20+[ebp], eax
-	jmp	SHORT $L509
-$L508:
+	jmp	SHORT $L508
+$L507:
 	mov	ecx, DWORD PTR _i$[ebp]
 	imul	ecx, 12					; 0000000cH
 	mov	edx, DWORD PTR _tris$[ebp]
 	xor	eax, eax
 	mov	al, BYTE PTR [edx+ecx+6]
 	mov	DWORD PTR -20+[ebp], eax
-$L509:
+$L508:
 	xor	ecx, ecx
 	mov	cx, WORD PTR _SL_TRIANGLE_INDEX
 	imul	ecx, 12					; 0000000cH
@@ -739,8 +739,8 @@ $L469:
 _clip_polygon ENDP
 _TEXT	ENDS
 PUBLIC	_render_end
+EXTRN	_draw_line:NEAR
 EXTRN	_fill_tri:NEAR
-EXTRN	_drawline:NEAR
 _TEXT	SEGMENT
 _shading$ = 8
 _i$ = -32
@@ -864,69 +864,12 @@ $L494:
 	add	esp, 16					; 00000010H
 	imul	eax, 3
 	add	eax, 65536				; 00010000H
-	cdq
-	and	edx, 3
-	add	eax, edx
-	sar	eax, 2
+	sar	eax, 14					; 0000000eH
 	mov	DWORD PTR _illum$[ebp], eax
 ; Line 269
 	mov	eax, DWORD PTR _c$[ebp]
 	and	eax, 255				; 000000ffH
-	mov	ecx, DWORD PTR _illum$[ebp]
-	sar	ecx, 12					; 0000000cH
-	or	eax, ecx
-	push	eax
-	mov	edx, DWORD PTR _y3$[ebp]
-	push	edx
-	mov	eax, DWORD PTR _x3$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _y2$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _x2$[ebp]
-	push	edx
-	mov	eax, DWORD PTR _y1$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _x1$[ebp]
-	push	ecx
-	call	_fill_tri
-	add	esp, 28					; 0000001cH
-; Line 271
-	jmp	SHORT $L499
-$L498:
-; Line 274
-	mov	edx, DWORD PTR _c$[ebp]
-	and	edx, 255				; 000000ffH
-	or	edx, 15					; 0000000fH
-	push	edx
-	mov	eax, DWORD PTR _y2$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _x2$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _y1$[ebp]
-	push	edx
-	mov	eax, DWORD PTR _x1$[ebp]
-	push	eax
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 275
-	mov	ecx, DWORD PTR _c$[ebp]
-	and	ecx, 255				; 000000ffH
-	or	ecx, 15					; 0000000fH
-	push	ecx
-	mov	edx, DWORD PTR _y3$[ebp]
-	push	edx
-	mov	eax, DWORD PTR _x3$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _y1$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _x1$[ebp]
-	push	edx
-	call	_drawline
-	add	esp, 20					; 00000014H
-; Line 276
-	mov	eax, DWORD PTR _c$[ebp]
-	and	eax, 255				; 000000ffH
-	or	al, 15					; 0000000fH
+	or	eax, DWORD PTR _illum$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _y3$[ebp]
 	push	ecx
@@ -936,7 +879,59 @@ $L498:
 	push	eax
 	mov	ecx, DWORD PTR _x2$[ebp]
 	push	ecx
-	call	_drawline
+	mov	edx, DWORD PTR _y1$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _x1$[ebp]
+	push	eax
+	call	_fill_tri
+	add	esp, 28					; 0000001cH
+; Line 271
+	jmp	SHORT $L499
+$L498:
+; Line 274
+	mov	ecx, DWORD PTR _c$[ebp]
+	and	ecx, 255				; 000000ffH
+	or	ecx, 15					; 0000000fH
+	push	ecx
+	mov	edx, DWORD PTR _y2$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _x2$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _y1$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _x1$[ebp]
+	push	edx
+	call	_draw_line
+	add	esp, 20					; 00000014H
+; Line 275
+	mov	eax, DWORD PTR _c$[ebp]
+	and	eax, 255				; 000000ffH
+	or	al, 15					; 0000000fH
+	push	eax
+	mov	ecx, DWORD PTR _y3$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _x3$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _y1$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _x1$[ebp]
+	push	ecx
+	call	_draw_line
+	add	esp, 20					; 00000014H
+; Line 276
+	mov	edx, DWORD PTR _c$[ebp]
+	and	edx, 255				; 000000ffH
+	or	edx, 15					; 0000000fH
+	push	edx
+	mov	eax, DWORD PTR _y3$[ebp]
+	push	eax
+	mov	ecx, DWORD PTR _x3$[ebp]
+	push	ecx
+	mov	edx, DWORD PTR _y2$[ebp]
+	push	edx
+	mov	eax, DWORD PTR _x2$[ebp]
+	push	eax
+	call	_draw_line
 	add	esp, 20					; 00000014H
 $L499:
 ; Line 279

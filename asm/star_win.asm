@@ -74,7 +74,7 @@ _PORT	DD	0270fH
 _OTHER_PORT DD	05ba0H
 $SG21993 DB	'win32', 00H
 	ORG $+2
-$SG21995 DB	'Starblazer II for Windows 95/NT', 00H
+$SG21995 DB	'Starblazer II for Windows 95', 00H
 _DATA	ENDS
 PUBLIC	_SG_CloseConnection
 PUBLIC	_WndProc@16
@@ -113,11 +113,11 @@ _hdc_bmp$ = -4
 _old_bmp$ = -12
 _WndProc@16 PROC NEAR
 ; File src\star_win.c
-; Line 43
+; Line 51
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 16					; 00000010H
-; Line 48
+; Line 56
 	mov	eax, DWORD PTR _msg$[ebp]
 	mov	DWORD PTR -16+[ebp], eax
 	cmp	DWORD PTR -16+[ebp], 256		; 00000100H
@@ -150,94 +150,94 @@ $L22206:
 	je	$L22032
 	jmp	$L22033
 $L22022:
-; Line 50
+; Line 58
 	push	0
 	call	DWORD PTR __imp__PostQuitMessage@4
-; Line 51
+; Line 59
 	call	_SG_CloseConnection
-; Line 52
+; Line 60
 	jmp	$L22019
 $L22023:
-; Line 56
+; Line 64
 	mov	ecx, DWORD PTR _hWnd$[ebp]
 	push	ecx
 	call	DWORD PTR __imp__DestroyWindow@4
-; Line 57
+; Line 65
 	push	0
 	call	DWORD PTR __imp__ExitProcess@4
-; Line 58
+; Line 66
 	call	_SG_CloseConnection
-; Line 59
+; Line 67
 	jmp	$L22019
 $L22024:
-; Line 63
+; Line 71
 	push	0
 	call	DWORD PTR __imp__ExitProcess@4
-; Line 64
+; Line 72
 	call	_SG_CloseConnection
-; Line 65
+; Line 73
 	jmp	$L22019
 $L22025:
-; Line 69
+; Line 77
 	mov	edx, DWORD PTR _wParam$[ebp]
 	and	edx, 255				; 000000ffH
 	mov	BYTE PTR _keys[edx], 1
-; Line 70
+; Line 78
 	jmp	$L22019
 $L22026:
-; Line 74
+; Line 82
 	mov	eax, DWORD PTR _wParam$[ebp]
 	and	eax, 255				; 000000ffH
 	mov	BYTE PTR _keys[eax], 0
-; Line 75
+; Line 83
 	jmp	$L22019
 $L22027:
-; Line 79
+; Line 87
 	mov	ecx, DWORD PTR _lParam$[ebp]
 	and	ecx, 65535				; 0000ffffH
 	mov	DWORD PTR _window_width, ecx
-; Line 80
+; Line 88
 	mov	edx, DWORD PTR _lParam$[ebp]
 	and	edx, -65536				; ffff0000H
 	shr	edx, 16					; 00000010H
 	mov	DWORD PTR _window_height, edx
-; Line 81
+; Line 89
 	fild	DWORD PTR _window_width
 	fdivr	QWORD PTR __real@8@4007a000000000000000
 	fstp	DWORD PTR _mouseFactorX
-; Line 82
+; Line 90
 	fild	DWORD PTR _window_height
 	fdivr	QWORD PTR __real@8@4006c800000000000000
 	fstp	DWORD PTR _mouseFactorY
-; Line 83
+; Line 91
 	push	OFFSET FLAT:_rectScreen
 	mov	eax, DWORD PTR _hwnd
 	push	eax
 	call	DWORD PTR __imp__GetWindowRect@8
-; Line 84
+; Line 92
 	push	OFFSET FLAT:_rectScreen
 	call	DWORD PTR __imp__ClipCursor@4
-; Line 85
+; Line 93
 	jmp	$L22019
 $L22028:
-; Line 89
+; Line 97
 	mov	ecx, DWORD PTR _hWnd$[ebp]
 	push	ecx
 	call	DWORD PTR __imp__GetDC@4
 	mov	DWORD PTR _hdc$[ebp], eax
-; Line 90
+; Line 98
 	mov	edx, DWORD PTR _hdc$[ebp]
 	push	edx
 	call	DWORD PTR __imp__CreateCompatibleDC@4
 	mov	DWORD PTR _hdc_bmp$[ebp], eax
-; Line 91
+; Line 99
 	mov	eax, DWORD PTR _backBitmap
 	push	eax
 	mov	ecx, DWORD PTR _hdc_bmp$[ebp]
 	push	ecx
 	call	DWORD PTR __imp__SelectObject@8
 	mov	DWORD PTR _old_bmp$[ebp], eax
-; Line 92
+; Line 100
 	push	13369376				; 00cc0020H
 	push	200					; 000000c8H
 	push	320					; 00000140H
@@ -254,50 +254,50 @@ $L22028:
 	mov	edx, DWORD PTR _hdc$[ebp]
 	push	edx
 	call	DWORD PTR __imp__StretchBlt@44
-; Line 93
+; Line 101
 	mov	eax, DWORD PTR _old_bmp$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _hdc$[ebp]
 	push	ecx
 	call	DWORD PTR __imp__SelectObject@8
-; Line 94
+; Line 102
 	mov	edx, DWORD PTR _hdc_bmp$[ebp]
 	push	edx
 	call	DWORD PTR __imp__DeleteDC@4
-; Line 95
+; Line 103
 	mov	eax, DWORD PTR _old_bmp$[ebp]
 	push	eax
 	call	DWORD PTR __imp__DeleteObject@4
-; Line 96
+; Line 104
 	mov	ecx, DWORD PTR _hdc$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _hWnd$[ebp]
 	push	edx
 	call	DWORD PTR __imp__ReleaseDC@8
-; Line 97
+; Line 105
 	jmp	SHORT $L22019
 $L22029:
-; Line 101
+; Line 109
 	mov	BYTE PTR _mouseDownLeft, 1
-; Line 102
+; Line 110
 	jmp	SHORT $L22019
 $L22030:
-; Line 106
+; Line 114
 	mov	BYTE PTR _mouseDownLeft, 0
-; Line 107
+; Line 115
 	jmp	SHORT $L22019
 $L22031:
-; Line 111
+; Line 119
 	mov	BYTE PTR _mouseDownRight, 1
-; Line 112
+; Line 120
 	jmp	SHORT $L22019
 $L22032:
-; Line 116
+; Line 124
 	mov	BYTE PTR _mouseDownRight, 0
-; Line 117
+; Line 125
 	jmp	SHORT $L22019
 $L22033:
-; Line 121
+; Line 129
 	mov	eax, DWORD PTR _lParam$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _wParam$[ebp]
@@ -308,7 +308,7 @@ $L22033:
 	push	eax
 	call	DWORD PTR __imp__DefWindowProcA@16
 $L22019:
-; Line 124
+; Line 132
 	mov	esp, ebp
 	pop	ebp
 	ret	16					; 00000010H
@@ -342,12 +342,12 @@ _TEXT	ENDS
 PUBLIC	_mmproc@20
 _TEXT	SEGMENT
 _mmproc@20 PROC NEAR
-; Line 126
+; Line 134
 	push	ebp
 	mov	ebp, esp
-; Line 127
+; Line 135
 	mov	DWORD PTR _newFrame, 1
-; Line 128
+; Line 136
 	pop	ebp
 	ret	20					; 00000014H
 _mmproc@20 ENDP
@@ -362,34 +362,34 @@ _dwUser$ = 24
 _dwFlags$ = 28
 _dwLoops$ = 32
 _initWaveHeader PROC NEAR
-; Line 130
+; Line 138
 	push	ebp
 	mov	ebp, esp
-; Line 131
+; Line 139
 	mov	eax, DWORD PTR _wvHdr$[ebp]
 	mov	ecx, DWORD PTR _lpData$[ebp]
 	mov	DWORD PTR [eax], ecx
-; Line 132
+; Line 140
 	mov	edx, DWORD PTR _wvHdr$[ebp]
 	mov	eax, DWORD PTR _dwBufferLength$[ebp]
 	mov	DWORD PTR [edx+4], eax
-; Line 133
+; Line 141
 	mov	ecx, DWORD PTR _wvHdr$[ebp]
 	mov	edx, DWORD PTR _dwBytesRecorded$[ebp]
 	mov	DWORD PTR [ecx+8], edx
-; Line 134
+; Line 142
 	mov	eax, DWORD PTR _wvHdr$[ebp]
 	mov	ecx, DWORD PTR _dwUser$[ebp]
 	mov	DWORD PTR [eax+12], ecx
-; Line 135
+; Line 143
 	mov	edx, DWORD PTR _wvHdr$[ebp]
 	mov	eax, DWORD PTR _dwFlags$[ebp]
 	mov	DWORD PTR [edx+16], eax
-; Line 136
+; Line 144
 	mov	ecx, DWORD PTR _wvHdr$[ebp]
 	mov	edx, DWORD PTR _dwLoops$[ebp]
 	mov	DWORD PTR [ecx+20], edx
-; Line 137
+; Line 145
 	pop	ebp
 	ret	0
 _initWaveHeader ENDP
@@ -405,38 +405,38 @@ _nBlockAlign$ = 28
 _wBitsPerSample$ = 32
 _cbSize$ = 36
 _initWave PROC NEAR
-; Line 139
+; Line 147
 	push	ebp
 	mov	ebp, esp
-; Line 140
+; Line 148
 	mov	eax, DWORD PTR _wave$[ebp]
 	mov	cx, WORD PTR _wFormatTag$[ebp]
 	mov	WORD PTR [eax], cx
-; Line 141
+; Line 149
 	mov	edx, DWORD PTR _wave$[ebp]
 	mov	ax, WORD PTR _nChannels$[ebp]
 	mov	WORD PTR [edx+2], ax
-; Line 142
+; Line 150
 	mov	ecx, DWORD PTR _wave$[ebp]
 	mov	edx, DWORD PTR _nSamplesPerSec$[ebp]
 	mov	DWORD PTR [ecx+4], edx
-; Line 143
+; Line 151
 	mov	eax, DWORD PTR _wave$[ebp]
 	mov	ecx, DWORD PTR _nAvgBytesPerSec$[ebp]
 	mov	DWORD PTR [eax+8], ecx
-; Line 144
+; Line 152
 	mov	edx, DWORD PTR _wave$[ebp]
 	mov	ax, WORD PTR _nBlockAlign$[ebp]
 	mov	WORD PTR [edx+12], ax
-; Line 145
+; Line 153
 	mov	ecx, DWORD PTR _wave$[ebp]
 	mov	dx, WORD PTR _wBitsPerSample$[ebp]
 	mov	WORD PTR [ecx+14], dx
-; Line 146
+; Line 154
 	mov	eax, DWORD PTR _wave$[ebp]
 	mov	cx, WORD PTR _cbSize$[ebp]
 	mov	WORD PTR [eax+16], cx
-; Line 147
+; Line 155
 	pop	ebp
 	ret	0
 _initWave ENDP
@@ -447,6 +447,7 @@ EXTRN	_exit:NEAR
 EXTRN	_WSAStartup@8:NEAR
 EXTRN	_WSAGetLastError@0:NEAR
 _DATA	SEGMENT
+	ORG $+3
 $SG22065 DB	'WSAStartup failed: %d', 00H
 _DATA	ENDS
 _TEXT	SEGMENT
@@ -454,15 +455,15 @@ _winsock_version$ = -4
 _winsock_data$ = -404
 $T22218 = 8
 _init_networking PROC NEAR
-; Line 149
+; Line 157
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 404				; 00000194H
 	push	esi
 	push	edi
-; Line 150
+; Line 158
 	mov	WORD PTR _winsock_version$[ebp], 514	; 00000202H
-; Line 153
+; Line 161
 	lea	eax, DWORD PTR _winsock_data$[ebp]
 	push	eax
 	mov	cx, WORD PTR _winsock_version$[ebp]
@@ -470,24 +471,24 @@ _init_networking PROC NEAR
 	call	_WSAStartup@8
 	test	eax, eax
 	je	SHORT $L22064
-; Line 155
+; Line 163
 	call	_WSAGetLastError@0
 	push	eax
 	push	OFFSET FLAT:$SG22065
 	call	_printf
 	add	esp, 8
-; Line 156
+; Line 164
 	push	0
 	call	_exit
 	add	esp, 4
 $L22064:
-; Line 159
+; Line 167
 	mov	ecx, 100				; 00000064H
 	lea	esi, DWORD PTR _winsock_data$[ebp]
 	mov	edi, DWORD PTR $T22218[ebp]
 	rep movsd
 	mov	eax, DWORD PTR $T22218[ebp]
-; Line 160
+; Line 168
 	pop	edi
 	pop	esi
 	mov	esp, ebp
@@ -503,10 +504,10 @@ _TEXT	SEGMENT
 _wvHdr$ = 8
 _buf$ = 12
 _win_initialize_wave PROC NEAR
-; Line 174
+; Line 182
 	push	ebp
 	mov	ebp, esp
-; Line 175
+; Line 183
 	push	0
 	push	0
 	push	0
@@ -518,28 +519,28 @@ _win_initialize_wave PROC NEAR
 	push	ecx
 	call	_initWaveHeader
 	add	esp, 28					; 0000001cH
-; Line 176
+; Line 184
 	push	32					; 00000020H
 	mov	edx, DWORD PTR _wvHdr$[ebp]
 	push	edx
 	mov	eax, DWORD PTR _global_hWaveOut
 	push	eax
 	call	DWORD PTR __imp__waveOutPrepareHeader@12
-; Line 177
+; Line 185
 	push	32					; 00000020H
 	mov	ecx, DWORD PTR _wvHdr$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _global_hWaveOut
 	push	edx
 	call	DWORD PTR __imp__waveOutWrite@12
-; Line 178
+; Line 186
 	push	32					; 00000020H
 	mov	eax, DWORD PTR _wvHdr$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _global_hWaveOut
 	push	ecx
 	call	DWORD PTR __imp__waveOutUnprepareHeader@12
-; Line 179
+; Line 187
 	pop	ebp
 	ret	0
 _win_initialize_wave ENDP
@@ -552,43 +553,43 @@ EXTRN	_mix:NEAR
 _TEXT	SEGMENT
 _msg$ = 12
 _sound_callback@20 PROC NEAR
-; Line 181
+; Line 189
 	push	ebp
 	mov	ebp, esp
-; Line 182
+; Line 190
 	cmp	DWORD PTR _msg$[ebp], 955		; 000003bbH
 	jne	SHORT $L22086
-; Line 183
+; Line 191
 	jmp	SHORT $L22085
 $L22086:
-; Line 186
+; Line 194
 	cmp	DWORD PTR _current_buffer, 0
 	jne	SHORT $L22087
-; Line 187
+; Line 195
 	mov	eax, DWORD PTR _buffer1
 	push	eax
 	push	OFFSET FLAT:_waveHdrA
 	call	_win_initialize_wave
 	add	esp, 8
-; Line 188
+; Line 196
 	jmp	SHORT $L22088
 $L22087:
-; Line 189
+; Line 197
 	mov	ecx, DWORD PTR _buffer2
 	push	ecx
 	push	OFFSET FLAT:_waveHdrB
 	call	_win_initialize_wave
 	add	esp, 8
 $L22088:
-; Line 192
+; Line 200
 	call	_mix
-; Line 193
+; Line 201
 	xor	edx, edx
 	cmp	DWORD PTR _current_buffer, 0
 	sete	dl
 	mov	DWORD PTR _current_buffer, edx
 $L22085:
-; Line 195
+; Line 203
 	pop	ebp
 	ret	20					; 00000014H
 _sound_callback@20 ENDP
@@ -600,46 +601,46 @@ EXTRN	_socket@12:NEAR
 _TEXT	SEGMENT
 _iMode$ = -4
 _SG_OpenConnection PROC NEAR
-; Line 199
+; Line 207
 	push	ebp
 	mov	ebp, esp
 	push	ecx
-; Line 200
+; Line 208
 	mov	DWORD PTR _iMode$[ebp], 1
-; Line 202
+; Line 210
 	mov	WORD PTR _server_addr, 2
-; Line 203
+; Line 211
 	mov	ax, WORD PTR _PORT
 	push	eax
 	call	_htons@4
 	mov	WORD PTR _server_addr+2, ax
-; Line 204
+; Line 212
 	mov	ecx, DWORD PTR _mplayer_addr
 	mov	DWORD PTR _server_addr+4, ecx
-; Line 206
+; Line 214
 	push	17					; 00000011H
 	push	2
 	push	2
 	call	_socket@12
 	mov	DWORD PTR _server_connection, eax
-; Line 208
+; Line 216
 	cmp	DWORD PTR _server_connection, -1
 	jne	SHORT $L22093
-; Line 209
+; Line 217
 	xor	al, al
 	jmp	SHORT $L22091
 $L22093:
-; Line 212
+; Line 220
 	lea	edx, DWORD PTR _iMode$[ebp]
 	push	edx
 	push	-2147195266				; 8004667eH
 	mov	eax, DWORD PTR _server_connection
 	push	eax
 	call	_ioctlsocket@12
-; Line 214
+; Line 222
 	mov	al, 1
 $L22091:
-; Line 215
+; Line 223
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -652,11 +653,11 @@ _buf$ = 8
 _num_bytes$ = 12
 _return_value$ = -4
 _SG_RecievePacket PROC NEAR
-; Line 217
+; Line 225
 	push	ebp
 	mov	ebp, esp
 	push	ecx
-; Line 218
+; Line 226
 	push	0
 	push	0
 	push	0
@@ -668,17 +669,17 @@ _SG_RecievePacket PROC NEAR
 	push	edx
 	call	_recvfrom@24
 	mov	DWORD PTR _return_value$[ebp], eax
-; Line 220
+; Line 228
 	cmp	DWORD PTR _return_value$[ebp], -1
 	jne	SHORT $L22098
-; Line 221
+; Line 229
 	xor	eax, eax
 	jmp	SHORT $L22099
 $L22098:
-; Line 224
+; Line 232
 	mov	eax, DWORD PTR _return_value$[ebp]
 $L22099:
-; Line 226
+; Line 234
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -690,10 +691,10 @@ _TEXT	SEGMENT
 _buf$ = 8
 _num_bytes$ = 12
 _SG_SendPacket PROC NEAR
-; Line 228
+; Line 236
 	push	ebp
 	mov	ebp, esp
-; Line 229
+; Line 237
 	push	16					; 00000010H
 	push	OFFSET FLAT:_server_addr
 	push	0
@@ -704,7 +705,7 @@ _SG_SendPacket PROC NEAR
 	mov	edx, DWORD PTR _server_connection
 	push	edx
 	call	_sendto@24
-; Line 230
+; Line 238
 	pop	ebp
 	ret	0
 _SG_SendPacket ENDP
@@ -712,14 +713,14 @@ _TEXT	ENDS
 EXTRN	_closesocket@4:NEAR
 _TEXT	SEGMENT
 _SG_CloseConnection PROC NEAR
-; Line 232
+; Line 240
 	push	ebp
 	mov	ebp, esp
-; Line 233
+; Line 241
 	mov	eax, DWORD PTR _server_connection
 	push	eax
 	call	_closesocket@4
-; Line 234
+; Line 242
 	pop	ebp
 	ret	0
 _SG_CloseConnection ENDP
@@ -757,17 +758,17 @@ _pin$ = 32
 _taddr$ = -52
 _fp$ = -56
 _SG_TempLoadConfig PROC NEAR
-; Line 236
+; Line 244
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 56					; 00000038H
-; Line 239
+; Line 247
 	push	OFFSET FLAT:$SG22115
 	push	OFFSET FLAT:$SG22116
 	call	_fopen
 	add	esp, 8
 	mov	DWORD PTR _fp$[ebp], eax
-; Line 240
+; Line 248
 	lea	eax, DWORD PTR _taddr$[ebp]
 	push	eax
 	push	OFFSET FLAT:$SG22117
@@ -775,7 +776,7 @@ _SG_TempLoadConfig PROC NEAR
 	push	ecx
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 241
+; Line 249
 	mov	edx, DWORD PTR _port$[ebp]
 	push	edx
 	push	OFFSET FLAT:$SG22118
@@ -783,7 +784,7 @@ _SG_TempLoadConfig PROC NEAR
 	push	eax
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 242
+; Line 250
 	mov	ecx, DWORD PTR _name$[ebp]
 	push	ecx
 	push	OFFSET FLAT:$SG22119
@@ -791,7 +792,7 @@ _SG_TempLoadConfig PROC NEAR
 	push	edx
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 243
+; Line 251
 	mov	eax, DWORD PTR _pin$[ebp]
 	push	eax
 	push	OFFSET FLAT:$SG22120
@@ -799,7 +800,7 @@ _SG_TempLoadConfig PROC NEAR
 	push	ecx
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 244
+; Line 252
 	mov	edx, DWORD PTR _x$[ebp]
 	push	edx
 	push	OFFSET FLAT:$SG22121
@@ -807,7 +808,7 @@ _SG_TempLoadConfig PROC NEAR
 	push	eax
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 245
+; Line 253
 	mov	ecx, DWORD PTR _y$[ebp]
 	push	ecx
 	push	OFFSET FLAT:$SG22122
@@ -815,18 +816,18 @@ _SG_TempLoadConfig PROC NEAR
 	push	edx
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 246
+; Line 254
 	mov	eax, DWORD PTR _fp$[ebp]
 	push	eax
 	call	_fclose
 	add	esp, 4
-; Line 248
+; Line 256
 	lea	ecx, DWORD PTR _taddr$[ebp]
 	push	ecx
 	call	_inet_addr@4
 	mov	edx, DWORD PTR _addr$[ebp]
 	mov	DWORD PTR [edx], eax
-; Line 249
+; Line 257
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -859,13 +860,13 @@ _hdcScreen$ = -60
 _wc$ = -40
 $T22227 = -464
 _SG_Init PROC NEAR
-; Line 258
+; Line 266
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 464				; 000001d0H
-; Line 265
+; Line 273
 	call	_SG_GameInit
-; Line 267
+; Line 275
 	push	OFFSET FLAT:_GAME_SETTINGS+30
 	push	OFFSET FLAT:_GAME_SETTINGS+14
 	push	OFFSET FLAT:_OTHER_PORT
@@ -875,58 +876,58 @@ _SG_Init PROC NEAR
 	push	OFFSET FLAT:_mplayer_addr
 	call	_SG_TempLoadConfig
 	add	esp, 28					; 0000001cH
-; Line 269
+; Line 277
 	lea	eax, DWORD PTR $T22227[ebp]
 	push	eax
 	call	_init_networking
 	add	esp, 4
-; Line 274
+; Line 282
 	mov	DWORD PTR _winRect$[ebp], 0
-; Line 275
+; Line 283
 	mov	DWORD PTR _winRect$[ebp+4], 0
-; Line 276
+; Line 284
 	mov	ecx, DWORD PTR _window_height
 	mov	DWORD PTR _winRect$[ebp+12], ecx
-; Line 277
+; Line 285
 	mov	edx, DWORD PTR _window_width
 	mov	DWORD PTR _winRect$[ebp+8], edx
-; Line 279
+; Line 287
 	push	0
 	push	13565952				; 00cf0000H
 	lea	eax, DWORD PTR _winRect$[ebp]
 	push	eax
 	call	DWORD PTR __imp__AdjustWindowRect@12
-; Line 281
+; Line 289
 	push	1068					; 0000042cH
 	call	_malloc
 	add	esp, 4
 	mov	DWORD PTR _bmi, eax
-; Line 283
+; Line 291
 	mov	ecx, DWORD PTR _bmi
 	mov	DWORD PTR [ecx], 40			; 00000028H
-; Line 284
+; Line 292
 	mov	edx, DWORD PTR _bmi
 	mov	DWORD PTR [edx+4], 320			; 00000140H
-; Line 285
+; Line 293
 	mov	eax, DWORD PTR _bmi
 	mov	DWORD PTR [eax+8], -200			; ffffff38H
-; Line 286
+; Line 294
 	mov	ecx, DWORD PTR _bmi
 	mov	WORD PTR [ecx+12], 1
-; Line 287
+; Line 295
 	mov	edx, DWORD PTR _bmi
 	mov	WORD PTR [edx+14], 8
-; Line 288
+; Line 296
 	mov	eax, DWORD PTR _bmi
 	mov	DWORD PTR [eax+32], 256			; 00000100H
-; Line 289
+; Line 297
 	mov	ecx, DWORD PTR _bmi
 	mov	DWORD PTR [ecx+16], 0
-; Line 291
+; Line 299
 	push	0
 	call	DWORD PTR __imp__GetDC@4
 	mov	DWORD PTR _hdcScreen$[ebp], eax
-; Line 292
+; Line 300
 	push	0
 	push	0
 	push	OFFSET FLAT:_frontbuffer
@@ -937,47 +938,47 @@ _SG_Init PROC NEAR
 	push	eax
 	call	DWORD PTR __imp__CreateDIBSection@24
 	mov	DWORD PTR _backBitmap, eax
-; Line 293
+; Line 301
 	mov	ecx, DWORD PTR _hdcScreen$[ebp]
 	push	ecx
 	push	0
 	call	DWORD PTR __imp__ReleaseDC@8
-; Line 295
+; Line 303
 	mov	DWORD PTR _wc$[ebp], 0
-; Line 296
+; Line 304
 	mov	DWORD PTR _wc$[ebp+4], OFFSET FLAT:_WndProc@16
-; Line 297
+; Line 305
 	mov	DWORD PTR _wc$[ebp+8], 0
-; Line 298
+; Line 306
 	mov	DWORD PTR _wc$[ebp+12], 0
-; Line 299
+; Line 307
 	push	0
 	call	DWORD PTR __imp__GetModuleHandleA@4
 	mov	DWORD PTR _wc$[ebp+16], eax
-; Line 300
+; Line 308
 	push	101					; 00000065H
 	push	0
 	call	DWORD PTR __imp__GetModuleHandleA@4
 	push	eax
 	call	DWORD PTR __imp__LoadIconA@8
 	mov	DWORD PTR _wc$[ebp+20], eax
-; Line 301
+; Line 309
 	push	32512					; 00007f00H
 	push	0
 	call	DWORD PTR __imp__LoadCursorA@8
 	mov	DWORD PTR _wc$[ebp+24], eax
-; Line 302
+; Line 310
 	mov	DWORD PTR _wc$[ebp+28], 6
-; Line 303
+; Line 311
 	mov	DWORD PTR _wc$[ebp+32], 0
-; Line 304
+; Line 312
 	mov	edx, DWORD PTR _SG_title
 	mov	DWORD PTR _wc$[ebp+36], edx
-; Line 305
+; Line 313
 	lea	eax, DWORD PTR _wc$[ebp]
 	push	eax
 	call	DWORD PTR __imp__RegisterClassA@4
-; Line 307
+; Line 315
 	push	0
 	push	0
 	call	DWORD PTR __imp__GetModuleHandleA@4
@@ -1000,58 +1001,58 @@ _SG_Init PROC NEAR
 	push	0
 	call	DWORD PTR __imp__CreateWindowExA@48
 	mov	DWORD PTR _hwnd, eax
-; Line 308
+; Line 316
 	push	5
 	mov	edx, DWORD PTR _hwnd
 	push	edx
 	call	DWORD PTR __imp__ShowWindow@8
-; Line 309
+; Line 317
 	mov	eax, DWORD PTR _hwnd
 	push	eax
 	call	DWORD PTR __imp__UpdateWindow@4
-; Line 311
+; Line 319
 	push	OFFSET FLAT:_rectScreen
 	mov	ecx, DWORD PTR _hwnd
 	push	ecx
 	call	DWORD PTR __imp__GetWindowRect@8
-; Line 313
+; Line 321
 	push	1
 	call	DWORD PTR __imp__timeBeginPeriod@4
-; Line 315
+; Line 323
 	fild	DWORD PTR _window_width
 	fdivr	QWORD PTR __real@8@4007a000000000000000
 	fstp	DWORD PTR _mouseFactorX
-; Line 316
+; Line 324
 	fild	DWORD PTR _window_height
 	fdivr	QWORD PTR __real@8@4006c800000000000000
 	fstp	DWORD PTR _mouseFactorY
-; Line 318
+; Line 326
 	push	OFFSET FLAT:_rectScreen
 	call	DWORD PTR __imp__ClipCursor@4
-; Line 320
+; Line 328
 	push	64000					; 0000fa00H
 	call	_malloc
 	add	esp, 4
 	mov	DWORD PTR _FBPTR, eax
-; Line 321
+; Line 329
 	push	1
 	push	0
 	push	OFFSET FLAT:_mmproc@20
 	push	1
 	push	14					; 0000000eH
 	call	DWORD PTR __imp__timeSetEvent@20
-; Line 322
+; Line 330
 	push	256					; 00000100H
 	push	0
 	push	OFFSET FLAT:_keys
 	call	_memset
 	add	esp, 12					; 0000000cH
-; Line 326
+; Line 334
 	call	_init_sound
-; Line 327
+; Line 335
 	call	DWORD PTR __imp__waveOutGetNumDevs@0
 	mov	DWORD PTR _num_devs$[ebp], eax
-; Line 328
+; Line 336
 	push	0
 	push	8
 	push	1
@@ -1062,11 +1063,11 @@ _SG_Init PROC NEAR
 	push	OFFSET FLAT:_global_wave
 	call	_initWave
 	add	esp, 32					; 00000020H
-; Line 330
+; Line 338
 	cmp	DWORD PTR _num_devs$[ebp], 0
 	je	SHORT $L22134
 $L22133:
-; Line 331
+; Line 339
 	push	196608					; 00030000H
 	push	0
 	push	OFFSET FLAT:_sound_callback@20
@@ -1078,19 +1079,19 @@ $L22133:
 	je	SHORT $L22134
 	jmp	SHORT $L22133
 $L22134:
-; Line 334
+; Line 342
 	mov	edx, DWORD PTR _buffer1
 	push	edx
 	push	OFFSET FLAT:_waveHdrA
 	call	_win_initialize_wave
 	add	esp, 8
-; Line 335
+; Line 343
 	mov	eax, DWORD PTR _buffer2
 	push	eax
 	push	OFFSET FLAT:_waveHdrB
 	call	_win_initialize_wave
 	add	esp, 8
-; Line 336
+; Line 344
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1104,41 +1105,41 @@ _TEXT	SEGMENT
 _mouse$ = 8
 _p$ = -8
 _SG_ReadMouse PROC NEAR
-; Line 338
+; Line 346
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
-; Line 340
+; Line 348
 	lea	eax, DWORD PTR _p$[ebp]
 	push	eax
 	call	DWORD PTR __imp__GetCursorPos@4
-; Line 341
+; Line 349
 	lea	ecx, DWORD PTR _p$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _hwnd
 	push	edx
 	call	DWORD PTR __imp__ScreenToClient@8
-; Line 342
+; Line 350
 	fild	DWORD PTR _p$[ebp]
 	fmul	DWORD PTR _mouseFactorX
 	call	__ftol
 	mov	ecx, DWORD PTR _mouse$[ebp]
 	mov	WORD PTR [ecx], ax
-; Line 343
+; Line 351
 	fild	DWORD PTR _p$[ebp+4]
 	fmul	DWORD PTR _mouseFactorY
 	call	__ftol
 	mov	edx, DWORD PTR _mouse$[ebp]
 	mov	WORD PTR [edx+2], ax
-; Line 344
+; Line 352
 	mov	eax, DWORD PTR _mouse$[ebp]
 	mov	cl, BYTE PTR _mouseDownLeft
 	mov	BYTE PTR [eax+4], cl
-; Line 345
+; Line 353
 	mov	edx, DWORD PTR _mouse$[ebp]
 	mov	al, BYTE PTR _mouseDownRight
 	mov	BYTE PTR [edx+5], al
-; Line 346
+; Line 354
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1148,14 +1149,14 @@ PUBLIC	_SG_KeyDown
 _TEXT	SEGMENT
 _key$ = 8
 _SG_KeyDown PROC NEAR
-; Line 348
+; Line 356
 	push	ebp
 	mov	ebp, esp
-; Line 349
+; Line 357
 	mov	eax, DWORD PTR _key$[ebp]
 	and	eax, 255				; 000000ffH
 	mov	al, BYTE PTR _keys[eax]
-; Line 350
+; Line 358
 	pop	ebp
 	ret	0
 _SG_KeyDown ENDP
@@ -1164,16 +1165,16 @@ PUBLIC	_SG_DrawFrame
 EXTRN	__imp__InvalidateRect@12:NEAR
 _TEXT	SEGMENT
 _SG_DrawFrame PROC NEAR
-; Line 352
+; Line 360
 	push	ebp
 	mov	ebp, esp
-; Line 353
+; Line 361
 	push	0
 	push	0
 	mov	eax, DWORD PTR _hwnd
 	push	eax
 	call	DWORD PTR __imp__InvalidateRect@12
-; Line 354
+; Line 362
 	pop	ebp
 	ret	0
 _SG_DrawFrame ENDP
@@ -1189,40 +1190,40 @@ _col$ = -4
 _willPalette$ = -8
 _tempHDC$ = -12
 _SG_SetPaletteIndex PROC NEAR
-; Line 356
+; Line 364
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 12					; 0000000cH
-; Line 358
+; Line 366
 	mov	eax, DWORD PTR _bmi
 	add	eax, 40					; 00000028H
 	mov	DWORD PTR _willPalette$[ebp], eax
-; Line 360
+; Line 368
 	push	0
 	call	DWORD PTR __imp__CreateCompatibleDC@4
 	mov	DWORD PTR _tempHDC$[ebp], eax
-; Line 361
+; Line 369
 	mov	ecx, DWORD PTR _backBitmap
 	push	ecx
 	mov	edx, DWORD PTR _tempHDC$[ebp]
 	push	edx
 	call	DWORD PTR __imp__SelectObject@8
-; Line 362
+; Line 370
 	mov	al, BYTE PTR _r$[ebp]
 	mov	BYTE PTR _col$[ebp+2], al
-; Line 363
+; Line 371
 	mov	cl, BYTE PTR _g$[ebp]
 	mov	BYTE PTR _col$[ebp+1], cl
-; Line 364
+; Line 372
 	mov	dl, BYTE PTR _b$[ebp]
 	mov	BYTE PTR _col$[ebp], dl
-; Line 365
+; Line 373
 	mov	eax, DWORD PTR _index$[ebp]
 	and	eax, 255				; 000000ffH
 	mov	ecx, DWORD PTR _willPalette$[ebp]
 	mov	edx, DWORD PTR _col$[ebp]
 	mov	DWORD PTR [ecx+eax*4], edx
-; Line 366
+; Line 374
 	mov	eax, DWORD PTR _index$[ebp]
 	and	eax, 255				; 000000ffH
 	mov	ecx, DWORD PTR _willPalette$[ebp]
@@ -1235,11 +1236,11 @@ _SG_SetPaletteIndex PROC NEAR
 	mov	ecx, DWORD PTR _tempHDC$[ebp]
 	push	ecx
 	call	DWORD PTR __imp__SetDIBColorTable@16
-; Line 367
+; Line 375
 	mov	edx, DWORD PTR _tempHDC$[ebp]
 	push	edx
 	call	DWORD PTR __imp__DeleteDC@4
-; Line 368
+; Line 376
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1249,12 +1250,12 @@ PUBLIC	_SG_GetTicks
 EXTRN	__imp__timeGetTime@0:NEAR
 _TEXT	SEGMENT
 _SG_GetTicks PROC NEAR
-; Line 370
+; Line 378
 	push	ebp
 	mov	ebp, esp
-; Line 371
+; Line 379
 	call	DWORD PTR __imp__timeGetTime@0
-; Line 372
+; Line 380
 	pop	ebp
 	ret	0
 _SG_GetTicks ENDP
@@ -1266,15 +1267,15 @@ EXTRN	__imp__PeekMessageA@20:NEAR
 _TEXT	SEGMENT
 _Msg$ = -28
 _SG_WaitBlank PROC NEAR
-; Line 374
+; Line 382
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 28					; 0000001cH
 $L22153:
-; Line 377
+; Line 385
 	cmp	DWORD PTR _newFrame, 0
 	jne	SHORT $L22154
-; Line 378
+; Line 386
 	push	1
 	push	0
 	push	0
@@ -1285,21 +1286,21 @@ $L22153:
 	call	DWORD PTR __imp__PeekMessageA@20
 	test	eax, eax
 	je	SHORT $L22155
-; Line 379
+; Line 387
 	lea	edx, DWORD PTR _Msg$[ebp]
 	push	edx
 	call	DWORD PTR __imp__TranslateMessage@4
-; Line 380
+; Line 388
 	lea	eax, DWORD PTR _Msg$[ebp]
 	push	eax
 	call	DWORD PTR __imp__DispatchMessageA@4
 $L22155:
-; Line 382
+; Line 390
 	jmp	SHORT $L22153
 $L22154:
-; Line 383
+; Line 391
 	mov	DWORD PTR _newFrame, 0
-; Line 384
+; Line 392
 	mov	esp, ebp
 	pop	ebp
 	ret	0
@@ -1314,33 +1315,33 @@ _TEXT	SEGMENT
 _argc$ = 8
 _argv$ = 12
 _main	PROC NEAR
-; Line 386
+; Line 394
 	push	ebp
 	mov	ebp, esp
-; Line 387
+; Line 395
 	call	_SG_WelcomeMessage
-; Line 388
+; Line 396
 	mov	eax, DWORD PTR _argv$[ebp]
 	push	eax
 	mov	ecx, DWORD PTR _argc$[ebp]
 	push	ecx
 	call	_SG_Init
 	add	esp, 8
-; Line 389
+; Line 397
 	call	_SG_InitPalette
-; Line 390
+; Line 398
 	call	_title_init
 $L22163:
-; Line 392
+; Line 400
 	mov	edx, 1
 	test	edx, edx
 	je	SHORT $L22164
-; Line 393
+; Line 401
 	call	_SG_Tick
-; Line 394
+; Line 402
 	jmp	SHORT $L22163
 $L22164:
-; Line 395
+; Line 403
 	pop	ebp
 	ret	0
 _main	ENDP

@@ -310,7 +310,7 @@ EXTRN	_printf:NEAR
 _DATA	SEGMENT
 	ORG $+3
 $SG315	DB	'Starblazer II Beta Version', 0aH, 00H
-$SG316	DB	'13:01:17', 00H
+$SG316	DB	'16:52:13', 00H
 	ORG $+3
 $SG317	DB	'Jun 28 2023', 00H
 $SG318	DB	'Build Time: %s %s', 0aH, 00H

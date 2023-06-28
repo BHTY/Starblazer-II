@@ -24,7 +24,7 @@ endif
 PUBLIC	_timeout
 _DATA	SEGMENT
 COMM	_player_id:DWORD
-COMM	_players:BYTE:0100H
+COMM	_players:BYTE:0200H
 _timeout DD	0afH
 _DATA	ENDS
 PUBLIC	_spawn_enemy_laser
@@ -45,7 +45,7 @@ _spawn_enemy_laser PROC NEAR
 	sub	esp, 32					; 00000020H
 ; Line 18
 	mov	eax, DWORD PTR _index$[ebp]
-	shl	eax, 4
+	shl	eax, 5
 	mov	ecx, DWORD PTR _players[eax+4]
 	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
 	add	edx, 4
@@ -57,7 +57,7 @@ _spawn_enemy_laser PROC NEAR
 	mov	DWORD PTR _pos$[ebp+8], edx
 ; Line 19
 	mov	eax, DWORD PTR _index$[ebp]
-	shl	eax, 4
+	shl	eax, 5
 	mov	ecx, DWORD PTR _players[eax+4]
 	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
 	add	edx, 16					; 00000010H
@@ -80,7 +80,7 @@ _spawn_enemy_laser PROC NEAR
 	mov	ecx, DWORD PTR _pos$[ebp]
 	push	ecx
 	mov	edx, DWORD PTR _index$[ebp]
-	shl	edx, 4
+	shl	edx, 5
 	mov	eax, DWORD PTR _players[edx+12]
 	mov	ecx, DWORD PTR [eax+12]
 	push	ecx
@@ -101,7 +101,7 @@ _spawn_enemy_laser PROC NEAR
 	mov	DWORD PTR [eax+12], edx
 ; Line 23
 	mov	eax, DWORD PTR _index$[ebp]
-	shl	eax, 4
+	shl	eax, 5
 	mov	ecx, DWORD PTR _players[eax+12]
 	mov	edx, DWORD PTR _id$[ebp]
 	mov	eax, DWORD PTR _StarblazerEntities[edx*4]
@@ -366,7 +366,7 @@ $L322:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	xor	edx, edx
 	mov	dl, BYTE PTR _players[ecx]
 	cmp	edx, 1
@@ -376,7 +376,7 @@ $L322:
 	and	eax, 65535				; 0000ffffH
 	and	eax, 240				; 000000f0H
 	sar	eax, 4
-	shl	eax, 4
+	shl	eax, 5
 	mov	ecx, DWORD PTR _players[eax+4]
 	lea	edx, DWORD PTR _StarblazerEntities[ecx*4]
 	push	edx
@@ -388,7 +388,7 @@ $L325:
 	and	eax, 65535				; 0000ffffH
 	and	eax, 240				; 000000f0H
 	sar	eax, 4
-	shl	eax, 4
+	shl	eax, 5
 	mov	BYTE PTR _players[eax], 0
 ; Line 111
 	jmp	$L333
@@ -403,7 +403,7 @@ $L324:
 	and	edx, 65535				; 0000ffffH
 	and	edx, 240				; 000000f0H
 	sar	edx, 4
-	shl	edx, 4
+	shl	edx, 5
 	xor	eax, eax
 	mov	al, BYTE PTR _players[edx]
 	cmp	eax, 1
@@ -413,7 +413,7 @@ $L324:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	mov	edx, DWORD PTR _players[ecx+4]
 	lea	eax, DWORD PTR _StarblazerEntities[edx*4]
 	push	eax
@@ -425,7 +425,7 @@ $L328:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	mov	BYTE PTR _players[ecx], 2
 ; Line 117
 	jmp	$L333
@@ -435,7 +435,7 @@ $L327:
 	and	edx, 65535				; 0000ffffH
 	and	edx, 240				; 000000f0H
 	sar	edx, 4
-	shl	edx, 4
+	shl	edx, 5
 	xor	eax, eax
 	mov	al, BYTE PTR _players[edx]
 	cmp	eax, 1
@@ -445,7 +445,7 @@ $L327:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	mov	edx, DWORD PTR _AX5
 	mov	DWORD PTR _players[ecx+8], edx
 ; Line 122
@@ -453,7 +453,7 @@ $L327:
 	and	eax, 65535				; 0000ffffH
 	and	eax, 240				; 000000f0H
 	sar	eax, 4
-	shl	eax, 4
+	shl	eax, 5
 	mov	DWORD PTR _players[eax+12], OFFSET FLAT:_ENEMY_LASER
 ; Line 123
 	push	0
@@ -466,7 +466,7 @@ $L327:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	mov	edx, DWORD PTR _players[ecx+8]
 	push	edx
 	call	_spawn_entity
@@ -475,14 +475,14 @@ $L327:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	mov	DWORD PTR _players[ecx+4], eax
 ; Line 124
 	mov	edx, DWORD PTR _packet$[ebp+28]
 	and	edx, 65535				; 0000ffffH
 	and	edx, 240				; 000000f0H
 	sar	edx, 4
-	shl	edx, 4
+	shl	edx, 5
 	mov	BYTE PTR _players[edx], 1
 $L330:
 ; Line 127
@@ -496,7 +496,7 @@ $L330:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	mov	edx, DWORD PTR _players[ecx+4]
 	lea	eax, DWORD PTR _StarblazerEntities[edx*4]
 	push	eax
@@ -507,7 +507,7 @@ $L330:
 	and	ecx, 65535				; 0000ffffH
 	and	ecx, 240				; 000000f0H
 	sar	ecx, 4
-	shl	ecx, 4
+	shl	ecx, 5
 	mov	BYTE PTR _players[ecx], 2
 ; Line 131
 	jmp	$L333
@@ -517,7 +517,7 @@ $L331:
 	and	edx, 65535				; 0000ffffH
 	and	edx, 240				; 000000f0H
 	sar	edx, 4
-	shl	edx, 4
+	shl	edx, 5
 	mov	eax, DWORD PTR _players[edx+4]
 	mov	ecx, DWORD PTR _StarblazerEntities[eax*4]
 	add	ecx, 4
@@ -532,7 +532,7 @@ $L331:
 	and	eax, 65535				; 0000ffffH
 	and	eax, 240				; 000000f0H
 	sar	eax, 4
-	shl	eax, 4
+	shl	eax, 5
 	mov	ecx, DWORD PTR _players[eax+4]
 	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
 	add	edx, 16					; 00000010H
