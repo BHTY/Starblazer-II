@@ -255,7 +255,11 @@ void set_attributes(){
 
 	//              Cooldown/Energy/Damage
 	//Shredder:     10/7/8
-	//Dragonbreath: 
+	//Dragonbreath: 3/2/2
+	//Shredder DPS: 70 / 70 / 10 * 8 = 56
+	//Dragonbreath DPS: 70 / 3 * 2 = 46.67
+	//Shredder DPB: 40 / 7 * 8 = 45.71
+	//Dragonbreath DPB: 40/2 * 2 = 40
 
 	player_weapon.cooldown_ticks = 3;// 10;
 	player_weapon.energy_draw = 2;// 7;
