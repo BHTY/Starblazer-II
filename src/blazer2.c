@@ -16,6 +16,7 @@
 #define NUM_SHARDS 64
 
 uint32 SND_EXPLODE, SND_HIT, SND_LASER, SND_LASER_ENEMY;
+bool_t laser_type;
 
 LASER ENEMY_LASER;
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
@@ -52,7 +53,6 @@ MAT3 rot_mat;
 VEC3 pos_delta;
 
 VEC3 laser_velocity;
-bool_t shading = 1;
 
 void explode_at(VEC3* pos){
 	int i;
@@ -304,6 +304,7 @@ void blazer2_init(){
 	uint32 i;
 
 	frames = 0;
+	shading = 1;
 
 	// sfx/music
 	stop_music();

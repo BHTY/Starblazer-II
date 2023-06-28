@@ -7,6 +7,7 @@
 #include "../headers/ecs.h"
 #include "../headers/blazer2.h"
 
+bool_t shading;
 SANGLE MAX_ROT = 31;
 ENTITY* hypercraft;
 TEMPLATE* hc_template;
@@ -14,6 +15,7 @@ QUAT hyptest_ori;
 
 void init_hypercraft(){
 	uint32 id;
+	shading = 1;
 	hc_template = load_model("assets/hyper.obj");
 
 	id = spawn_entity(hc_template, 0, 0, int_fixed(25), 0, 0, 0); //25
@@ -72,7 +74,7 @@ void draw_hypercraft(int centerX, int centerY){
 	put_triangles(hc_template->mesh, hc_template->num_tris, 0, 0);
 
 	polygon_zsort();
-	render_end(1);
+	render_end(shading);
 
 	SL_CENTER_X = old_centerX;
 	SL_CENTER_Y = old_centerY;

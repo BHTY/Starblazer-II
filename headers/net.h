@@ -62,6 +62,7 @@ typedef struct{
 #define DISCONNECTED(packet) (((packet.flags >> 12) == SENDER_ID(packet)) && DIED(packet))
 #define RESPAWNING(packet) (packet.flags & 4)
 #define RADAR_LOCK(packet) (player_id == ((packet.flags & 3840) >> 8))
+#define LASER_TYPE(packet) (packet.flags & 8)
 
 #endif
 

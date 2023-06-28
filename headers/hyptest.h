@@ -3,6 +3,8 @@
 
 #include "sl_math.h"
 
+extern bool_t shading;
+
 void init_hypercraft();
 void rot_hypercraft();
 void draw_hypercraft(int, int);

@@ -4,7 +4,8 @@
 #include "int.h"
 #define MAX_CHANNELS 16
 #define MAX_SOUNDS 16
-#define BUFFER_SIZE 1024
+extern int BUFFER_SIZE;
+extern bool_t MUSIC_ENABLE, SOUND_ENABLE, SFX_ENABLE;
 
 typedef struct{
 	uint8* samples;

@@ -31,7 +31,7 @@ void SG_Tick(){
 
 	SG_Module();
 
-	GAME_SETTINGS.vid_settings.frameskip = 0;
+	//GAME_SETTINGS.vid_settings.frameskip = 0;
 
 	if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
 		current_frame = 0;

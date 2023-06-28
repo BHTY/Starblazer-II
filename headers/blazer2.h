@@ -16,6 +16,7 @@ extern uint32 impact_id, frames_respawning;
 extern TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
 extern uint32 SND_EXPLODE, SND_HIT, SND_LASER, SND_LASER_ENEMY;
 extern LASER ENEMY_LASER;
+extern bool_t laser_type;
 
 void explode_at(VEC3*);
 void explode_entity(ENTITY**); //frees the entity and spawns an explosion there

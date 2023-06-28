@@ -18,6 +18,7 @@ Description: Starblazer II for Windows 95/NT
 #include "../headers/sndmixer.h"
 
 char* SG_platform = "win32";
+extern bool_t laser_type;
 
 #ifdef _WIN64
 	char *SG_title = "Starblazer II for Win64";
@@ -251,6 +252,12 @@ void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, 
 	fscanf(fp, "pin= %s\n", pin);
 	fscanf(fp, "x= %d\n", x);
 	fscanf(fp, "y= %d\n", y);
+	fscanf(fp, "laser= %d\n", &laser_type);
+	fscanf(fp, "frameskip= %d\n", &(GAME_SETTINGS.vid_settings.frameskip));
+	fscanf(fp, "block= %d\n", &BUFFER_SIZE);
+	fscanf(fp, "sfx= %d\n", &SFX_ENABLE);
+	fscanf(fp, "music= %d\n", &MUSIC_ENABLE);
+	fscanf(fp, "sound= %d\n", &SOUND_ENABLE);
 	fclose(fp);
 
 	*addr = inet_addr(taddr);
@@ -268,6 +275,9 @@ void SG_Init(int argc, char** argv){
 	RECT winRect;
 	HDC hdcScreen;
 	WNDCLASS wc;
+	DWORD version = GetVersion();
+
+	printf("Running on Windows version %d.%02d\n", version & 0xFF, (version >> 8) & 0xFF);
 
 	//do the generic initialization
 	SG_GameInit();
