@@ -18,7 +18,7 @@ Multiplayer enhancements & game balance
   - Shredder: Essentially the weapon we have right now, but tweak the power draw and delay between shots slightly to lower em a bit
 
 
-In detail (fix hitboxes)
+In det
 - Finish UI subsystem
   - Add other UI controls
   - Fix text spacing
