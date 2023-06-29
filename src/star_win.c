@@ -32,11 +32,14 @@ uint8* frontbuffer;
 
 //WEIRDASS WINDOWS STUFF BEGINS HERE
 HWND hwnd; //this is the window handle to the... window
+HDC globalHdc;
 BITMAPINFO* bmi;
 HBITMAP backBitmap;
 HPALETTE hPalette;
 RECT rectScreen;
 int newFrame = 0;
+
+HDC hdc_bmp;
 
 uint32 mplayer_addr;
 
@@ -51,7 +54,7 @@ bool_t keys[256];
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 	HDC hdc;
-	HDC hdc_bmp;
+	//HDC hdc_bmp;
 	HGDIOBJ old_bmp;
 
 	switch (msg){
@@ -95,15 +98,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 		}
 
 		case WM_PAINT:{
-			hdc = GetDC(hWnd);
-			hdc_bmp = CreateCompatibleDC(hdc);
 			old_bmp = SelectObject(hdc_bmp, backBitmap);
-			StretchBlt(hdc, 0, 0, window_width, window_height, hdc_bmp, 0, 0, 320, 200, SRCCOPY);
-			SelectObject(hdc, old_bmp);
-			DeleteDC(hdc_bmp);
+			StretchBlt(globalHdc, 0, 0, window_width, window_height, hdc_bmp, 0, 0, 320, 200, SRCCOPY);
 			DeleteObject(old_bmp);
-			ReleaseDC(hWnd, hdc);
-			break;
+			return DefWindowProc(hWnd, msg, wParam, lParam);
 		}
 
 		case WM_LBUTTONDOWN:{
@@ -354,6 +352,9 @@ void SG_Init(int argc, char** argv){
 		win_initialize_wave(&waveHdrA, buffer1);
 		win_initialize_wave(&waveHdrB, buffer2);
 	}
+
+	globalHdc = GetDC(hwnd);
+	hdc_bmp = CreateCompatibleDC(globalHdc);
 }
 
 void SG_ReadMouse(SG_mouse_t* mouse){
@@ -395,11 +396,19 @@ uint32 SG_GetTicks(){
 void SG_WaitBlank(){
 	MSG Msg;
 
-	while (!newFrame){
+	/*Sleep(10);
+
+	while (PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)) {
+		TranslateMessage(&Msg);
+		DispatchMessage(&Msg);
+	}*/
+
+	while (!newFrame) {
 		if (PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)){
 			TranslateMessage(&Msg);
 			DispatchMessage(&Msg);
 		}
+		//newFrame = 1;
 	}
 	newFrame = 0;
 }
