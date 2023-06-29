@@ -809,6 +809,13 @@ void draw_battery(){
 	drawline(180, 160, 180, 170, 0xff);
 }
 
+/*
+The way the nametag system works is that
+1.) When a player starts their game, the default name of the null character is given to all players
+2.) When a player connects to the server, they send their name to the server. The server sends the names of all connected players back.
+3.) The server sends the new player's name to all other players. That way, all players know who everyone else is.
+*/
+
 void draw_nametags() {
 	int i;
 	VEC3 vector_pos, screen_coords;
@@ -823,7 +830,7 @@ void draw_nametags() {
 			screen_coords.y = SL_CENTER_Y - fixed_int(muldiv(screen_coords.y, SL_FOV_Y, screen_coords.z));
 
 			if (screen_coords.z > 65535 && screen_coords.z < 0x640000) { //determine center pos & scale size a bit better
-				vputs("PLAYER", screen_coords.x, screen_coords.y, 1, 1, 255, 1);
+				vputs("PLAYER", screen_coords.x, screen_coords.y, 1, 1, 255, 1); //fetch their actual player name and not "PLAYER"
 			}
 		}
 	}
