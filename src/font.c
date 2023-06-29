@@ -54,8 +54,9 @@ void draw_glyph(int index, int centerX, int centerY, char color, int scaleX, int
 	_draw_glyph(glyphs[index], centerX, centerY, color, scaleX, scaleY);
 }
 
-void draw_string(const char* str, int upperRightX, int upperRightY, int scaleX, int scaleY, char color, int spacing){
+int draw_string(const char* str, int upperRightX, int upperRightY, int scaleX, int scaleY, char color, int spacing){
 	char c;
+	int original = upperRightX;
 
 	while (*str){
 
@@ -151,8 +152,10 @@ void draw_string(const char* str, int upperRightX, int upperRightY, int scaleX, 
 		str++;
 		upperRightX += scaleX * 3 + spacing;
 	}
+	
+	return upperRightX - original;
 }
 
-void vputs(char* str, int x, int y, int xscale, int yscale, char color, char spacing){
-	draw_string(str, x, y, xscale, yscale, color, spacing);
+int vputs(char* str, int x, int y, int xscale, int yscale, char color, char spacing){
+	return draw_string(str, x, y, xscale, yscale, color, spacing);
 }

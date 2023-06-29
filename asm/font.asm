@@ -221,38 +221,40 @@ _scaleX$ = 20
 _scaleY$ = 24
 _color$ = 28
 _spacing$ = 32
+_original$ = 12
 _draw_string PROC NEAR					; COMDAT
-; Line 60
+; Line 61
 	mov	eax, DWORD PTR _str$[esp-4]
-	mov	cl, BYTE PTR [eax]
-	test	cl, cl
-	je	$L431
 	push	ebx
 	mov	ebx, DWORD PTR _upperRightX$[esp]
+	mov	cl, BYTE PTR [eax]
+	mov	DWORD PTR _original$[esp], ebx
+	test	cl, cl
+	je	$L432
 	push	ebp
 	mov	ebp, DWORD PTR _color$[esp+4]
 	push	esi
 	mov	esi, DWORD PTR _scaleX$[esp+8]
 	push	edi
 	mov	edi, DWORD PTR _scaleY$[esp+12]
-$L430:
-; Line 62
-	cmp	cl, 93					; 0000005dH
-	jne	SHORT $L432
+$L431:
 ; Line 63
-	mov	cl, BYTE PTR [eax+1]
+	cmp	cl, 93					; 0000005dH
+	jne	SHORT $L433
 ; Line 64
+	mov	cl, BYTE PTR [eax+1]
+; Line 65
 	add	eax, 2
 	mov	BYTE PTR _color$[esp+12], cl
 	mov	DWORD PTR _str$[esp+12], eax
-; Line 65
+; Line 66
 	mov	ebp, DWORD PTR _color$[esp+12]
-	jmp	$L478
-$L432:
-; Line 68
+	jmp	$L479
+$L433:
+; Line 69
 	cmp	cl, 47					; 0000002fH
-	jne	SHORT $L433
-; Line 70
+	jne	SHORT $L434
+; Line 71
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -273,11 +275,11 @@ $L432:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L433:
-; Line 73
+$L434:
+; Line 74
 	cmp	BYTE PTR [eax], 39			; 00000027H
-	jne	SHORT $L434
-; Line 76
+	jne	SHORT $L435
+; Line 77
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -298,14 +300,14 @@ $L433:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L434:
-; Line 79
+$L435:
+; Line 80
 	mov	cl, BYTE PTR [eax]
 	cmp	cl, 65					; 00000041H
-	jl	SHORT $L435
+	jl	SHORT $L436
 	cmp	cl, 90					; 0000005aH
-	jg	SHORT $L435
-; Line 82
+	jg	SHORT $L436
+; Line 83
 	lea	eax, DWORD PTR [edi+edi*4]
 	push	edi
 	cdq
@@ -328,14 +330,14 @@ $L434:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L435:
-; Line 85
+$L436:
+; Line 86
 	mov	cl, BYTE PTR [eax]
 	cmp	cl, 48					; 00000030H
-	jl	SHORT $L436
+	jl	SHORT $L437
 	cmp	cl, 57					; 00000039H
-	jg	SHORT $L436
-; Line 88
+	jg	SHORT $L437
+; Line 89
 	lea	eax, DWORD PTR [edi+edi*4]
 	push	edi
 	cdq
@@ -358,11 +360,11 @@ $L435:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L436:
-; Line 91
+$L437:
+; Line 92
 	cmp	BYTE PTR [eax], 46			; 0000002eH
-	jne	SHORT $L437
-; Line 94
+	jne	SHORT $L438
+; Line 95
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -383,11 +385,11 @@ $L436:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L437:
-; Line 97
+$L438:
+; Line 98
 	cmp	BYTE PTR [eax], 44			; 0000002cH
-	jne	SHORT $L438
-; Line 100
+	jne	SHORT $L439
+; Line 101
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -408,11 +410,11 @@ $L437:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L438:
-; Line 103
+$L439:
+; Line 104
 	cmp	BYTE PTR [eax], 45			; 0000002dH
-	jne	SHORT $L439
-; Line 106
+	jne	SHORT $L440
+; Line 107
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -433,11 +435,11 @@ $L438:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L439:
-; Line 109
+$L440:
+; Line 110
 	cmp	BYTE PTR [eax], 63			; 0000003fH
-	jne	SHORT $L440
-; Line 112
+	jne	SHORT $L441
+; Line 113
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -458,11 +460,11 @@ $L439:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L440:
-; Line 115
+$L441:
+; Line 116
 	cmp	BYTE PTR [eax], 33			; 00000021H
-	jne	SHORT $L441
-; Line 118
+	jne	SHORT $L442
+; Line 119
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -483,11 +485,11 @@ $L440:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L441:
-; Line 121
+$L442:
+; Line 122
 	cmp	BYTE PTR [eax], 58			; 0000003aH
-	jne	SHORT $L442
-; Line 124
+	jne	SHORT $L443
+; Line 125
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -508,11 +510,11 @@ $L441:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L442:
-; Line 127
+$L443:
+; Line 128
 	cmp	BYTE PTR [eax], 59			; 0000003bH
-	jne	SHORT $L443
-; Line 130
+	jne	SHORT $L444
+; Line 131
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -533,11 +535,11 @@ $L442:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L443:
-; Line 133
+$L444:
+; Line 134
 	cmp	BYTE PTR [eax], 116			; 00000074H
-	jne	SHORT $L444
-; Line 136
+	jne	SHORT $L445
+; Line 137
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -558,11 +560,11 @@ $L443:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L444:
-; Line 139
+$L445:
+; Line 140
 	cmp	BYTE PTR [eax], 43			; 0000002bH
-	jne	SHORT $L445
-; Line 142
+	jne	SHORT $L446
+; Line 143
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -583,11 +585,11 @@ $L444:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L445:
-; Line 145
+$L446:
+; Line 146
 	cmp	BYTE PTR [eax], 120			; 00000078H
-	jne	SHORT $L446
-; Line 148
+	jne	SHORT $L447
+; Line 149
 	mov	ecx, DWORD PTR _upperRightY$[esp+12]
 	lea	eax, DWORD PTR [edi+edi*4]
 	cdq
@@ -608,8 +610,8 @@ $L445:
 	call	_draw_glyph
 	mov	eax, DWORD PTR _str$[esp+36]
 	add	esp, 24					; 00000018H
-$L446:
-; Line 152
+$L447:
+; Line 153
 	mov	ecx, DWORD PTR _spacing$[esp+12]
 	inc	eax
 	mov	DWORD PTR _str$[esp+12], eax
@@ -617,16 +619,20 @@ $L446:
 	mov	ecx, esi
 	add	ecx, edx
 	add	ebx, ecx
-$L478:
+$L479:
 	mov	cl, BYTE PTR [eax]
 	test	cl, cl
-	jne	$L430
+	jne	$L431
 	pop	edi
 	pop	esi
 	pop	ebp
+$L432:
+; Line 156
+	mov	ecx, DWORD PTR _original$[esp]
+	mov	eax, ebx
+	sub	eax, ecx
 	pop	ebx
-$L431:
-; Line 154
+; Line 157
 	ret	0
 _draw_string ENDP
 _TEXT	ENDS
@@ -641,7 +647,7 @@ _yscale$ = 24
 _color$ = 28
 _spacing$ = 32
 _vputs	PROC NEAR					; COMDAT
-; Line 157
+; Line 160
 	movsx	eax, BYTE PTR _spacing$[esp-4]
 	mov	ecx, DWORD PTR _color$[esp-4]
 	mov	edx, DWORD PTR _yscale$[esp-4]
@@ -658,7 +664,7 @@ _vputs	PROC NEAR					; COMDAT
 	push	eax
 	call	_draw_string
 	add	esp, 28					; 0000001cH
-; Line 158
+; Line 161
 	ret	0
 _vputs	ENDP
 _TEXT	ENDS

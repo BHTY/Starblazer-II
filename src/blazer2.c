@@ -822,7 +822,7 @@ void draw_nametags() {
 			screen_coords.x = SL_CENTER_X - fixed_int(muldiv(screen_coords.x, SL_FOV_X, screen_coords.z));
 			screen_coords.y = SL_CENTER_Y - fixed_int(muldiv(screen_coords.y, SL_FOV_Y, screen_coords.z));
 
-			if (screen_coords.z > 0) { //determine center pos & scale size a bit better
+			if (screen_coords.z > 65535 && screen_coords.z < 0x640000) { //determine center pos & scale size a bit better
 				vputs("PLAYER", screen_coords.x, screen_coords.y, 1, 1, 255, 1);
 			}
 		}

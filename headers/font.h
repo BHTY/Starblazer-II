@@ -19,7 +19,7 @@ typedef struct{
 void unpack_glyphs(char* filename);
 void _draw_glyph(glyph_t *glyph, int centerX, int centerY, char color, int scaleX, int scaleY);
 void draw_glyph(int index, int centerX, int centerY, char color, int scaleX, int scaleY);
-void draw_string(const char* str, int upperRightX, int upperRightY, int scaleX, int scaleY, char color, int spacing);
-void vputs(char* str, int x, int y, int xscale, int yscale, char color, char spacing);
+int draw_string(const char* str, int upperRightX, int upperRightY, int scaleX, int scaleY, char color, int spacing);
+int vputs(char* str, int x, int y, int xscale, int yscale, char color, char spacing);
 
 #endif

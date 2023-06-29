@@ -24,7 +24,7 @@ _DATA	ENDS
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
-;	COMDAT ??_C@_08DGOM@14?358?344?$AA@
+;	COMDAT ??_C@_08KBL@15?317?359?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
 ;	COMDAT ??_C@_0M@NDLP@Jun?529?52023?$AA@
@@ -306,7 +306,7 @@ _SG_InitPalette ENDP
 _TEXT	ENDS
 PUBLIC	_SG_WelcomeMessage
 PUBLIC	??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
-PUBLIC	??_C@_08DGOM@14?358?344?$AA@			; `string'
+PUBLIC	??_C@_08KBL@15?317?359?$AA@			; `string'
 PUBLIC	??_C@_0M@NDLP@Jun?529?52023?$AA@		; `string'
 PUBLIC	??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 PUBLIC	??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@ ; `string'
@@ -317,9 +317,9 @@ _DATA	SEGMENT
 ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ DB 'Starblazer II Bet'
 	DB	'a Version', 0aH, 00H			; `string'
 _DATA	ENDS
-;	COMDAT ??_C@_08DGOM@14?358?344?$AA@
+;	COMDAT ??_C@_08KBL@15?317?359?$AA@
 _DATA	SEGMENT
-??_C@_08DGOM@14?358?344?$AA@ DB '14:58:44', 00H		; `string'
+??_C@_08KBL@15?317?359?$AA@ DB '15:17:59', 00H		; `string'
 _DATA	ENDS
 ;	COMDAT ??_C@_0M@NDLP@Jun?529?52023?$AA@
 _DATA	SEGMENT
@@ -343,7 +343,7 @@ _SG_WelcomeMessage PROC NEAR				; COMDAT
 	push	OFFSET FLAT:??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
 	call	_printf
 ; Line 109
-	push	OFFSET FLAT:??_C@_08DGOM@14?358?344?$AA@ ; `string'
+	push	OFFSET FLAT:??_C@_08KBL@15?317?359?$AA@	; `string'
 	push	OFFSET FLAT:??_C@_0M@NDLP@Jun?529?52023?$AA@ ; `string'
 	push	OFFSET FLAT:??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 	call	_printf
