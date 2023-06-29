@@ -18,6 +18,57 @@ $$TYPES	SEGMENT BYTE USE32 'DEBTYP'
 $$TYPES	ENDS
 _TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
 _TLS	ENDS
+;	COMDAT ??_C@_08KGCG@CAMPAIGN?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0M@MGOA@MULTIPLAYER?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_07MKIM@OPTIONS?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0BA@KPAO@assets?1star?4obj?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@JEHG@sfx?1menu?4wav?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@OENN@STARBLAZER?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_06KIN@?5?5?5?5II?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0BN@POOO@BY?5WILL?5KLEES?5AND?5JOSH?5PIETY?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT _init_stars
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _options_button
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _multiplayer_button
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _campaign_button
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _create_buttons
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _title_init
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _title_module
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _draw_cursor
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
+;	COMDAT _title_draw
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
 FLAT	GROUP _DATA, CONST, _BSS
 	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
 endif
@@ -34,268 +85,212 @@ _DATA	ENDS
 PUBLIC	_init_stars
 EXTRN	_title_stars:BYTE
 EXTRN	_init_star:NEAR
+;	COMDAT _init_stars
 _TEXT	SEGMENT
-_i$ = -4
-_init_stars PROC NEAR
+_init_stars PROC NEAR					; COMDAT
 ; File src\title.c
 ; Line 22
-	push	ebp
-	mov	ebp, esp
-	push	ecx
+	push	esi
 ; Line 24
-	mov	DWORD PTR _i$[ebp], 0
-	jmp	SHORT $L705
-$L706:
-	mov	eax, DWORD PTR _i$[ebp]
-	add	eax, 1
-	mov	DWORD PTR _i$[ebp], eax
-$L705:
-	cmp	DWORD PTR _i$[ebp], 500			; 000001f4H
-	jge	SHORT $L707
-	mov	ecx, DWORD PTR _i$[ebp]
-	imul	ecx, 12					; 0000000cH
-	add	ecx, OFFSET FLAT:_title_stars
-	push	ecx
+	mov	esi, OFFSET FLAT:_title_stars
+$L753:
+	push	esi
 	call	_init_star
+	add	esi, 12					; 0000000cH
 	add	esp, 4
-	jmp	SHORT $L706
-$L707:
+	cmp	esi, OFFSET FLAT:_title_stars+6000
+	jl	SHORT $L753
+	pop	esi
 ; Line 25
-	mov	esp, ebp
-	pop	ebp
 	ret	0
 _init_stars ENDP
 _TEXT	ENDS
 PUBLIC	_options_button
+;	COMDAT _options_button
 _TEXT	SEGMENT
-_options_button PROC NEAR
-; Line 27
-	push	ebp
-	mov	ebp, esp
+_options_button PROC NEAR				; COMDAT
 ; Line 29
-	pop	ebp
 	ret	0
 _options_button ENDP
 _TEXT	ENDS
 PUBLIC	_multiplayer_button
 EXTRN	_mplayer_addr:DWORD
 EXTRN	_destroy_hypercraft:NEAR
-EXTRN	_multiplayer:BYTE
+EXTRN	_multiplayer:DWORD
 EXTRN	_net_connect:NEAR
 EXTRN	_blazer2_init:NEAR
+;	COMDAT _multiplayer_button
 _TEXT	SEGMENT
-_multiplayer_button PROC NEAR
-; Line 31
-	push	ebp
-	mov	ebp, esp
+_multiplayer_button PROC NEAR				; COMDAT
 ; Line 32
 	mov	eax, DWORD PTR _mplayer_addr
 	push	eax
 	call	_net_connect
 	add	esp, 4
-	and	eax, 255				; 000000ffH
 	test	eax, eax
-	jne	SHORT $L714
+	jne	SHORT $L762
 ; Line 33
-	mov	BYTE PTR _multiplayer, 1
+	mov	DWORD PTR _multiplayer, 1
 ; Line 34
 	call	_destroy_hypercraft
 ; Line 35
-	call	_blazer2_init
-$L714:
+	jmp	_blazer2_init
+$L762:
 ; Line 37
-	pop	ebp
 	ret	0
 _multiplayer_button ENDP
 _TEXT	ENDS
 PUBLIC	_campaign_button
+;	COMDAT _campaign_button
 _TEXT	SEGMENT
-_campaign_button PROC NEAR
-; Line 39
-	push	ebp
-	mov	ebp, esp
+_campaign_button PROC NEAR				; COMDAT
 ; Line 40
 	call	_destroy_hypercraft
 ; Line 41
-	call	_blazer2_init
-; Line 42
-	pop	ebp
-	ret	0
+	jmp	_blazer2_init
 _campaign_button ENDP
 _TEXT	ENDS
 PUBLIC	_create_buttons
+PUBLIC	??_C@_08KGCG@CAMPAIGN?$AA@			; `string'
+PUBLIC	??_C@_0M@MGOA@MULTIPLAYER?$AA@			; `string'
+PUBLIC	??_C@_07MKIM@OPTIONS?$AA@			; `string'
 EXTRN	_ui_create_widget:NEAR
-EXTRN	_memcpy:NEAR
 EXTRN	_malloc:NEAR
+;	COMDAT ??_C@_08KGCG@CAMPAIGN?$AA@
+; File src\title.c
 _DATA	SEGMENT
-$SG725	DB	'CAMPAIGN', 00H
-	ORG $+3
-$SG726	DB	'MULTIPLAYER', 00H
-$SG727	DB	'OPTIONS', 00H
+??_C@_08KGCG@CAMPAIGN?$AA@ DB 'CAMPAIGN', 00H		; `string'
 _DATA	ENDS
+;	COMDAT ??_C@_0M@MGOA@MULTIPLAYER?$AA@
+_DATA	SEGMENT
+??_C@_0M@MGOA@MULTIPLAYER?$AA@ DB 'MULTIPLAYER', 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_07MKIM@OPTIONS?$AA@
+_DATA	SEGMENT
+??_C@_07MKIM@OPTIONS?$AA@ DB 'OPTIONS', 00H		; `string'
+_DATA	ENDS
+;	COMDAT _create_buttons
 _TEXT	SEGMENT
-_id$ = -12
-_buttonData$ = -4
-_buttonData2$ = -8
-_buttonData3$ = -16
-_create_buttons PROC NEAR
+_buttonData3$ = -4
+_create_buttons PROC NEAR				; COMDAT
+; File src\title.c
 ; Line 44
+	push	ecx
+	push	ebx
 	push	ebp
-	mov	ebp, esp
-	sub	esp, 16					; 00000010H
+	push	esi
+	push	edi
 ; Line 46
 	push	20					; 00000014H
 	call	_malloc
-	add	esp, 4
-	mov	DWORD PTR _buttonData$[ebp], eax
 ; Line 47
 	push	20					; 00000014H
+	mov	ebx, eax
 	call	_malloc
-	add	esp, 4
-	mov	DWORD PTR _buttonData2$[ebp], eax
 ; Line 48
 	push	20					; 00000014H
+	mov	ebp, eax
 	call	_malloc
-	add	esp, 4
-	mov	DWORD PTR _buttonData3$[ebp], eax
-; Line 49
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG725
-; Line 50
-	mov	ecx, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [ecx], 3
-; Line 51
-	mov	edx, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [edx+1], 2
 ; Line 52
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+2], 175			; 000000afH
-; Line 53
-	mov	ecx, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [ecx+3], 0
-; Line 54
-	mov	edx, DWORD PTR _buttonData$[ebp]
-	mov	WORD PTR [edx+4], 100			; 00000064H
-; Line 55
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	WORD PTR [eax+6], 12			; 0000000cH
-; Line 56
-	mov	ecx, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [ecx+8], 175			; 000000afH
-; Line 57
-	mov	edx, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [edx+9], 255			; 000000ffH
-; Line 58
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	mov	BYTE PTR [eax+10], 255			; 000000ffH
+	mov	cl, 175					; 000000afH
 ; Line 60
-	push	20					; 00000014H
-	mov	ecx, DWORD PTR _buttonData$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _buttonData2$[ebp]
-	push	edx
-	call	_memcpy
-	add	esp, 12					; 0000000cH
-; Line 61
-	push	20					; 00000014H
-	mov	eax, DWORD PTR _buttonData$[ebp]
-	push	eax
-	mov	ecx, DWORD PTR _buttonData3$[ebp]
-	push	ecx
-	call	_memcpy
-	add	esp, 12					; 0000000cH
-; Line 63
-	mov	edx, DWORD PTR _buttonData2$[ebp]
-	mov	DWORD PTR [edx+12], OFFSET FLAT:$SG726
-; Line 64
-	mov	eax, DWORD PTR _buttonData3$[ebp]
-	mov	DWORD PTR [eax+12], OFFSET FLAT:$SG727
-; Line 66
-	mov	ecx, DWORD PTR _buttonData$[ebp]
-	mov	DWORD PTR [ecx+16], OFFSET FLAT:_campaign_button
-; Line 67
-	mov	edx, DWORD PTR _buttonData2$[ebp]
-	mov	DWORD PTR [edx+16], OFFSET FLAT:_multiplayer_button
-; Line 68
-	mov	eax, DWORD PTR _buttonData3$[ebp]
-	mov	DWORD PTR [eax+16], OFFSET FLAT:_options_button
+	mov	esi, ebx
+	mov	BYTE PTR [ebx+2], cl
+	mov	BYTE PTR [ebx+8], cl
+	mov	cl, 255					; 000000ffH
+	mov	edi, ebp
+	mov	BYTE PTR [ebx+9], cl
+	mov	BYTE PTR [ebx+10], cl
+	mov	ecx, 5
+	mov	DWORD PTR [ebx+12], OFFSET FLAT:??_C@_08KGCG@CAMPAIGN?$AA@ ; `string'
+	mov	BYTE PTR [ebx], 3
+	mov	BYTE PTR [ebx+1], 2
+	mov	BYTE PTR [ebx+3], 0
+	mov	WORD PTR [ebx+4], 100			; 00000064H
+	mov	WORD PTR [ebx+6], 12			; 0000000cH
 ; Line 70
-	mov	ecx, DWORD PTR _buttonData$[ebp]
-	push	ecx
+	push	ebx
+	rep movsd
+	mov	ecx, 5
+	mov	esi, ebx
+	mov	edi, eax
 	push	120					; 00000078H
+	rep movsd
+	mov	DWORD PTR [ebp+12], OFFSET FLAT:??_C@_0M@MGOA@MULTIPLAYER?$AA@ ; `string'
+	mov	DWORD PTR [eax+12], OFFSET FLAT:??_C@_07MKIM@OPTIONS?$AA@ ; `string'
 	push	110					; 0000006eH
+	mov	DWORD PTR [ebx+16], OFFSET FLAT:_campaign_button
 	push	0
+	mov	DWORD PTR [ebp+16], OFFSET FLAT:_multiplayer_button
 	push	6
+	mov	DWORD PTR _buttonData3$[esp+52], eax
+	mov	DWORD PTR [eax+16], OFFSET FLAT:_options_button
 	call	_ui_create_widget
-	add	esp, 20					; 00000014H
-	mov	DWORD PTR _id$[ebp], eax
 ; Line 71
-	mov	edx, DWORD PTR _buttonData2$[ebp]
-	push	edx
+	push	ebp
 	push	140					; 0000008cH
 	push	110					; 0000006eH
 	push	0
 	push	6
 	call	_ui_create_widget
-	add	esp, 20					; 00000014H
-	mov	DWORD PTR _id$[ebp], eax
 ; Line 72
-	mov	eax, DWORD PTR _buttonData3$[ebp]
+	mov	eax, DWORD PTR _buttonData3$[esp+72]
 	push	eax
 	push	160					; 000000a0H
 	push	110					; 0000006eH
 	push	0
 	push	6
 	call	_ui_create_widget
-	add	esp, 20					; 00000014H
-	mov	DWORD PTR _id$[ebp], eax
-; Line 73
-	mov	esp, ebp
+	add	esp, 72					; 00000048H
+	pop	edi
+	pop	esi
 	pop	ebp
+	pop	ebx
+; Line 73
+	pop	ecx
 	ret	0
 _create_buttons ENDP
 _TEXT	ENDS
 PUBLIC	_title_init
+PUBLIC	??_C@_0BA@KPAO@assets?1star?4obj?$AA@		; `string'
+PUBLIC	??_C@_0N@JEHG@sfx?1menu?4wav?$AA@		; `string'
 EXTRN	_quat_create:NEAR
 EXTRN	_SL_CENTER_Y:WORD
 EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 EXTRN	_init_hypercraft:NEAR
 EXTRN	_play_music:NEAR
+;	COMDAT ??_C@_0BA@KPAO@assets?1star?4obj?$AA@
+; File src\title.c
 _DATA	SEGMENT
-$SG730	DB	'assets/star.obj', 00H
-$SG732	DB	'sfx/menu.wav', 00H
+??_C@_0BA@KPAO@assets?1star?4obj?$AA@ DB 'assets/star.obj', 00H ; `string'
 _DATA	ENDS
+;	COMDAT ??_C@_0N@JEHG@sfx?1menu?4wav?$AA@
+_DATA	SEGMENT
+??_C@_0N@JEHG@sfx?1menu?4wav?$AA@ DB 'sfx/menu.wav', 00H ; `string'
+_DATA	ENDS
+;	COMDAT _title_init
 _TEXT	SEGMENT
-_title_init PROC NEAR
-; Line 75
-	push	ebp
-	mov	ebp, esp
-; Line 76
-	mov	DWORD PTR _title_camera, 0
-; Line 77
-	mov	DWORD PTR _title_camera+4, 0
-; Line 78
-	mov	DWORD PTR _title_camera+8, 0
+_title_init PROC NEAR					; COMDAT
+; File src\title.c
 ; Line 80
 	push	OFFSET FLAT:_title_cam_ori
 	push	0
 	push	0
 	push	0
+	mov	DWORD PTR _title_camera, 0
+	mov	DWORD PTR _title_camera+4, 0
+	mov	DWORD PTR _title_camera+8, 0
 	call	_quat_create
-	add	esp, 16					; 00000010H
 ; Line 81
 	push	OFFSET FLAT:_stars_cam_ori
 	push	0
 	push	0
 	push	0
 	call	_quat_create
-	add	esp, 16					; 00000010H
 ; Line 83
-	push	OFFSET FLAT:$SG730
+	push	OFFSET FLAT:??_C@_0BA@KPAO@assets?1star?4obj?$AA@ ; `string'
 	call	_load_model
-	add	esp, 4
-	mov	DWORD PTR _logo, eax
 ; Line 84
 	push	0
 	push	128					; 00000080H
@@ -303,10 +298,10 @@ _title_init PROC NEAR
 	push	655360					; 000a0000H
 	push	0
 	push	0
-	mov	eax, DWORD PTR _logo
 	push	eax
+	mov	DWORD PTR _logo, eax
 	call	_spawn_entity
-	add	esp, 28					; 0000001cH
+	add	esp, 64					; 00000040H
 ; Line 86
 	mov	WORD PTR _SL_CENTER_Y, 45		; 0000002dH
 ; Line 88
@@ -316,11 +311,10 @@ _title_init PROC NEAR
 ; Line 91
 	call	_init_hypercraft
 ; Line 92
-	push	OFFSET FLAT:$SG732
+	push	OFFSET FLAT:??_C@_0N@JEHG@sfx?1menu?4wav?$AA@ ; `string'
 	call	_play_music
-	add	esp, 4
+	pop	ecx
 ; Line 93
-	pop	ebp
 	ret	0
 _title_init ENDP
 _TEXT	ENDS
@@ -330,124 +324,95 @@ EXTRN	_quat_yaw:NEAR
 EXTRN	_quat_roll:NEAR
 EXTRN	_StarblazerEntities:BYTE
 EXTRN	_ui_process_widgets:NEAR
+;	COMDAT _title_module
 _TEXT	SEGMENT
-_title_module PROC NEAR
-; Line 95
-	push	ebp
-	mov	ebp, esp
+_title_module PROC NEAR					; COMDAT
 ; Line 97
 	mov	eax, DWORD PTR _StarblazerEntities
 	add	eax, 16					; 00000010H
 	push	eax
 	push	16					; 00000010H
 	call	_quat_yaw
-	add	esp, 8
 ; Line 99
 	push	OFFSET FLAT:_stars_cam_ori
 	push	8
 	call	_quat_pitch
-	add	esp, 8
 ; Line 100
 	push	OFFSET FLAT:_stars_cam_ori
 	push	8
 	call	_quat_yaw
-	add	esp, 8
 ; Line 101
 	push	OFFSET FLAT:_stars_cam_ori
 	push	8
 	call	_quat_roll
-	add	esp, 8
+	add	esp, 32					; 00000020H
 ; Line 103
-	call	_ui_process_widgets
-; Line 104
-	pop	ebp
-	ret	0
+	jmp	_ui_process_widgets
 _title_module ENDP
 _TEXT	ENDS
 PUBLIC	_draw_cursor
 EXTRN	_draw_line:NEAR
+;	COMDAT _draw_cursor
 _TEXT	SEGMENT
 _x$ = 8
 _y$ = 12
 _clr$ = 16
-_draw_cursor PROC NEAR
-; Line 106
-	push	ebp
-	mov	ebp, esp
+_draw_cursor PROC NEAR					; COMDAT
 ; Line 107
-	mov	al, BYTE PTR _clr$[ebp]
+	mov	eax, DWORD PTR _y$[esp-4]
+	push	ebx
+	push	ebp
+	mov	ebp, DWORD PTR _x$[esp+4]
+	push	esi
+	lea	esi, DWORD PTR [eax+5]
+	lea	ebx, DWORD PTR [eax-5]
+	mov	eax, DWORD PTR _clr$[esp+8]
+	push	edi
+	lea	edi, DWORD PTR [ebp-5]
 	push	eax
-	mov	ecx, DWORD PTR _y$[ebp]
-	add	ecx, 5
-	push	ecx
-	mov	edx, DWORD PTR _x$[ebp]
-	sub	edx, 5
-	push	edx
-	mov	eax, DWORD PTR _y$[ebp]
-	sub	eax, 5
-	push	eax
-	mov	ecx, DWORD PTR _x$[ebp]
-	sub	ecx, 5
-	push	ecx
+	push	esi
+	push	edi
+	push	ebx
+	push	edi
 	call	_draw_line
-	add	esp, 20					; 00000014H
 ; Line 108
-	mov	dl, BYTE PTR _clr$[ebp]
-	push	edx
-	mov	eax, DWORD PTR _y$[ebp]
-	add	eax, 5
-	push	eax
-	mov	ecx, DWORD PTR _x$[ebp]
-	add	ecx, 5
+	mov	ecx, DWORD PTR _clr$[esp+32]
+	add	ebp, 5
 	push	ecx
-	mov	edx, DWORD PTR _y$[ebp]
-	add	edx, 5
-	push	edx
-	mov	eax, DWORD PTR _x$[ebp]
-	sub	eax, 5
-	push	eax
+	push	esi
+	push	ebp
+	push	esi
+	push	edi
 	call	_draw_line
-	add	esp, 20					; 00000014H
 ; Line 109
-	mov	cl, BYTE PTR _clr$[ebp]
-	push	ecx
-	mov	edx, DWORD PTR _y$[ebp]
-	sub	edx, 5
+	mov	edx, DWORD PTR _clr$[esp+52]
 	push	edx
-	mov	eax, DWORD PTR _x$[ebp]
-	add	eax, 5
-	push	eax
-	mov	ecx, DWORD PTR _y$[ebp]
-	add	ecx, 5
-	push	ecx
-	mov	edx, DWORD PTR _x$[ebp]
-	add	edx, 5
-	push	edx
+	push	ebx
+	push	ebp
+	push	esi
+	push	ebp
 	call	_draw_line
-	add	esp, 20					; 00000014H
 ; Line 110
-	mov	al, BYTE PTR _clr$[ebp]
+	mov	eax, DWORD PTR _clr$[esp+72]
 	push	eax
-	mov	ecx, DWORD PTR _y$[ebp]
-	sub	ecx, 5
-	push	ecx
-	mov	edx, DWORD PTR _x$[ebp]
-	sub	edx, 5
-	push	edx
-	mov	eax, DWORD PTR _y$[ebp]
-	sub	eax, 5
-	push	eax
-	mov	ecx, DWORD PTR _x$[ebp]
-	add	ecx, 5
-	push	ecx
+	push	ebx
+	push	edi
+	push	ebx
+	push	ebp
 	call	_draw_line
-	add	esp, 20					; 00000014H
-; Line 111
+	add	esp, 80					; 00000050H
+	pop	edi
+	pop	esi
 	pop	ebp
+	pop	ebx
+; Line 111
 	ret	0
 _draw_cursor ENDP
 _TEXT	ENDS
 PUBLIC	_title_draw
+PUBLIC	??_C@_0L@OENN@STARBLAZER?$AA@			; `string'
+PUBLIC	??_C@_06KIN@?5?5?5?5II?$AA@			; `string'
+PUBLIC	??_C@_0BN@POOO@BY?5WILL?5KLEES?5AND?5JOSH?5PIETY?$AA@ ; `string'
 EXTRN	_quat_tomat:NEAR
 EXTRN	_SL_CAMERA_ORIENTATION:BYTE
 EXTRN	_draw_scene:NEAR
@@ -455,26 +420,31 @@ EXTRN	_vputs:NEAR
 EXTRN	_SG_ReadMouse:NEAR
 EXTRN	_ui_display_widgets:NEAR
 EXTRN	_draw_stars:NEAR
+;	COMDAT ??_C@_0L@OENN@STARBLAZER?$AA@
+; File src\title.c
 _DATA	SEGMENT
-	ORG $+3
-$SG745	DB	'STARBLAZER', 00H
-	ORG $+1
-$SG746	DB	'    II', 00H
-	ORG $+1
-$SG747	DB	'BY WILL KLEES AND JOSH PIETY', 00H
+??_C@_0L@OENN@STARBLAZER?$AA@ DB 'STARBLAZER', 00H	; `string'
 _DATA	ENDS
+;	COMDAT ??_C@_06KIN@?5?5?5?5II?$AA@
+_DATA	SEGMENT
+??_C@_06KIN@?5?5?5?5II?$AA@ DB '    II', 00H		; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0BN@POOO@BY?5WILL?5KLEES?5AND?5JOSH?5PIETY?$AA@
+_DATA	SEGMENT
+??_C@_0BN@POOO@BY?5WILL?5KLEES?5AND?5JOSH?5PIETY?$AA@ DB 'BY WILL KLEES A'
+	DB	'ND JOSH PIETY', 00H				; `string'
+_DATA	ENDS
+;	COMDAT _title_draw
 _TEXT	SEGMENT
-_mouse$ = -8
-_title_draw PROC NEAR
+_mouse$ = -12
+_title_draw PROC NEAR					; COMDAT
+; File src\title.c
 ; Line 113
-	push	ebp
-	mov	ebp, esp
-	sub	esp, 8
+	sub	esp, 12					; 0000000cH
 ; Line 115
-	lea	eax, DWORD PTR _mouse$[ebp]
+	lea	eax, DWORD PTR _mouse$[esp+12]
 	push	eax
 	call	_SG_ReadMouse
-	add	esp, 4
 ; Line 129
 	push	0
 	push	-97					; ffffff9fH
@@ -482,9 +452,8 @@ _title_draw PROC NEAR
 	push	3
 	push	0
 	push	0
-	push	OFFSET FLAT:$SG745
+	push	OFFSET FLAT:??_C@_0L@OENN@STARBLAZER?$AA@ ; `string'
 	call	_vputs
-	add	esp, 28					; 0000001cH
 ; Line 130
 	push	0
 	push	-17					; ffffffefH
@@ -492,9 +461,8 @@ _title_draw PROC NEAR
 	push	3
 	push	10					; 0000000aH
 	push	0
-	push	OFFSET FLAT:$SG746
+	push	OFFSET FLAT:??_C@_06KIN@?5?5?5?5II?$AA@	; `string'
 	call	_vputs
-	add	esp, 28					; 0000001cH
 ; Line 131
 	push	0
 	push	-1
@@ -502,38 +470,35 @@ _title_draw PROC NEAR
 	push	3
 	push	100					; 00000064H
 	push	30					; 0000001eH
-	push	OFFSET FLAT:$SG747
+	push	OFFSET FLAT:??_C@_0BN@POOO@BY?5WILL?5KLEES?5AND?5JOSH?5PIETY?$AA@ ; `string'
 	call	_vputs
-	add	esp, 28					; 0000001cH
+	add	esp, 88					; 00000058H
 ; Line 133
+	mov	edx, DWORD PTR _title_cam_ori
+	mov	eax, DWORD PTR _title_cam_ori+4
 	push	0
 	push	0
 	push	0
 	sub	esp, 16					; 00000010H
-	mov	edx, esp
-	mov	eax, DWORD PTR _title_cam_ori
-	mov	DWORD PTR [edx], eax
-	mov	ecx, DWORD PTR _title_cam_ori+4
-	mov	DWORD PTR [edx+4], ecx
-	mov	eax, DWORD PTR _title_cam_ori+8
-	mov	DWORD PTR [edx+8], eax
-	mov	ecx, DWORD PTR _title_cam_ori+12
-	mov	DWORD PTR [edx+12], ecx
+	mov	ecx, esp
 	push	OFFSET FLAT:_title_camera
+	mov	DWORD PTR [ecx], edx
+	mov	edx, DWORD PTR _title_cam_ori+8
+	mov	DWORD PTR [ecx+4], eax
+	mov	eax, DWORD PTR _title_cam_ori+12
+	mov	DWORD PTR [ecx+8], edx
+	mov	DWORD PTR [ecx+12], eax
 	call	_draw_scene
-	add	esp, 32					; 00000020H
 ; Line 139
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	push	OFFSET FLAT:_stars_cam_ori
 	call	_quat_tomat
-	add	esp, 8
 ; Line 140
 	call	_draw_stars
 ; Line 142
 	call	_ui_display_widgets
 ; Line 145
-	mov	esp, ebp
-	pop	ebp
+	add	esp, 52					; 00000034H
 	ret	0
 _title_draw ENDP
 _TEXT	ENDS

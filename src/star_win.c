@@ -375,7 +375,7 @@ void SG_DrawFrame(){
 	InvalidateRect(hwnd, NULL, 0);
 }
 
-void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){ //do the windows RealizePalette nonsense
+void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){ 
 	RGBQUAD col;
 	RGBQUAD *willPalette = &(bmi->bmiColors[0]);
 
@@ -388,6 +388,17 @@ void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){ //do the window
 	SetDIBColorTable(tempHDC, index, 1, willPalette + index);
 	DeleteDC(tempHDC);
 }
+
+/* The way to handle this on 256 color Windows
+    HPALETTE hPal;
+	LOGPALETTE* lpPalette = malloc(sizeof(LOGPALETTE) + sizeof(PALETTEENTRY) * 255);
+		fill in the palette entries
+	lpPalette->palVersion = 0x300;
+	lpPalette->palNumEntries = 256;
+	hPal = CreatePalette(lpPalette);
+	SelectPalette(tempHDC, hPal, FALSE);
+	RealizePalette(tempHDC);
+*/
 
 uint32 SG_GetTicks(){
 	return timeGetTime();

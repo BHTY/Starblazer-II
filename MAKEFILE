@@ -10,7 +10,7 @@ release\star_win.exe: src\blazer.obj src\blazer2.obj src\ecs.obj src\font.obj \
     winmm.lib user32.lib gdi32.lib wsock32.lib kernel32.lib
 
 {src}.c{src}.obj:
-  $(CC) /Zi /FA /nologo $(CFLAGS) /c /Fosrc\ $<
+  $(CC) /O2 /Zi /FA /nologo $(CFLAGS) /c /Fosrc\ $<
 
 star.res: star.rc star.ico
     $(rc) $(rcvars) -r -fo $*.res $*.rc
