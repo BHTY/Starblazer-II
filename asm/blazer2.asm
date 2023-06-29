@@ -2782,22 +2782,22 @@ _vector_pos$ = -12
 _screen_coords$ = -24
 _draw_nametags PROC NEAR				; COMDAT
 ; File src\blazer2.c
-; Line 812
+; Line 819
 	sub	esp, 24					; 00000018H
 	push	esi
-; Line 816
+; Line 823
 	mov	esi, OFFSET FLAT:_players+4
 $L652:
-; Line 817
+; Line 824
 	cmp	BYTE PTR [esi-4], 1
 	jne	$L653
-; Line 818
+; Line 825
 	mov	eax, DWORD PTR [esi]
 	mov	ecx, DWORD PTR _StarblazerEntities[eax*4]
 	add	ecx, 4
 	mov	edx, DWORD PTR [ecx]
 	mov	DWORD PTR _vector_pos$[esp+28], edx
-; Line 819
+; Line 826
 	lea	edx, DWORD PTR _vector_pos$[esp+28]
 	mov	eax, DWORD PTR [ecx+4]
 	push	edx
@@ -2808,14 +2808,14 @@ $L652:
 	push	eax
 	mov	DWORD PTR _vector_pos$[esp+44], ecx
 	call	_vec3_subtract
-; Line 820
+; Line 827
 	lea	ecx, DWORD PTR _screen_coords$[esp+36]
 	lea	edx, DWORD PTR _vector_pos$[esp+36]
 	push	ecx
 	push	edx
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	call	_mat3_mul
-; Line 822
+; Line 829
 	mov	eax, DWORD PTR _screen_coords$[esp+56]
 	mov	ecx, DWORD PTR _SL_FOV_X
 	mov	edx, DWORD PTR _screen_coords$[esp+48]
@@ -2824,7 +2824,7 @@ $L652:
 	push	edx
 	call	_muldiv
 	movsx	ecx, WORD PTR _SL_CENTER_X
-; Line 823
+; Line 830
 	mov	edx, DWORD PTR _screen_coords$[esp+68]
 	sar	eax, 16					; 00000010H
 	sub	ecx, eax
@@ -2835,7 +2835,7 @@ $L652:
 	push	eax
 	push	ecx
 	call	_muldiv
-; Line 825
+; Line 832
 	mov	ecx, DWORD PTR _screen_coords$[esp+80]
 	mov	edx, eax
 	movsx	eax, WORD PTR _SL_CENTER_Y
@@ -2847,7 +2847,7 @@ $L652:
 	jle	SHORT $L653
 	cmp	ecx, 6553600				; 00640000H
 	jge	SHORT $L653
-; Line 826
+; Line 833
 	push	1
 	push	255					; 000000ffH
 	push	1
@@ -2863,7 +2863,7 @@ $L653:
 	cmp	esi, OFFSET FLAT:_players+516
 	jl	$L652
 	pop	esi
-; Line 830
+; Line 837
 	add	esp, 24					; 00000018H
 	ret	0
 _draw_nametags ENDP
@@ -2888,46 +2888,46 @@ _TEXT	SEGMENT
 _text$ = -80
 _blazer2_draw PROC NEAR					; COMDAT
 ; File src\blazer2.c
-; Line 837
+; Line 844
 	mov	eax, DWORD PTR _shake_frames
 	sub	esp, 80					; 00000050H
 	test	eax, eax
 	push	esi
 	je	SHORT $L660
-; Line 838
+; Line 845
 	call	_rand
 	cdq
 	mov	ecx, 20					; 00000014H
 	idiv	ecx
 	sub	edx, 10					; 0000000aH
 	add	WORD PTR _SL_CENTER_X, dx
-; Line 839
+; Line 846
 	call	_rand
 	cdq
 	mov	ecx, 20					; 00000014H
 	idiv	ecx
 	sub	edx, 10					; 0000000aH
 	add	WORD PTR _SL_CENTER_Y, dx
-; Line 841
+; Line 848
 	jmp	SHORT $L661
 $L660:
-; Line 842
+; Line 849
 	mov	WORD PTR _SL_CENTER_X, 160		; 000000a0H
-; Line 843
+; Line 850
 	mov	WORD PTR _SL_CENTER_Y, 100		; 00000064H
 $L661:
-; Line 847
+; Line 854
 	mov	edx, DWORD PTR _StarblazerEntities
 	add	edx, 4
 	push	edx
 	call	_camera_translate
-; Line 848
+; Line 855
 	mov	eax, DWORD PTR _StarblazerEntities
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	add	eax, 16					; 00000010H
 	push	eax
 	call	_quat_tomat
-; Line 851
+; Line 858
 	mov	cl, BYTE PTR _shading
 	mov	eax, DWORD PTR _StarblazerEntities
 	add	esp, 12					; 0000000cH
@@ -2948,41 +2948,41 @@ $L661:
 	mov	DWORD PTR [ecx+8], esi
 	mov	DWORD PTR [ecx+12], edx
 	call	_draw_scene
-; Line 854
+; Line 861
 	mov	eax, DWORD PTR _frames_respawning
 	add	esp, 32					; 00000020H
 	test	eax, eax
 	jne	SHORT $L662
 	call	_draw_crosshair
 $L662:
-; Line 857
+; Line 864
 	call	_draw_boost_bar
-; Line 860
+; Line 867
 	call	_draw_HPbar
-; Line 863
+; Line 870
 	call	_draw_radar
-; Line 866
+; Line 873
 	call	_draw_battery
-; Line 868
+; Line 875
 	mov	al, BYTE PTR _multiplayer
 	test	al, al
 	je	SHORT $L663
 	call	_draw_nametags
 $L663:
-; Line 872
+; Line 879
 	mov	ecx, DWORD PTR _StarblazerEntities
 	mov	eax, DWORD PTR _player_fighter
 	shr	eax, 1
 	cmp	DWORD PTR [ecx+96], eax
 	jae	SHORT $L664
-; Line 873
+; Line 880
 	call	_blazer2_screencrack
 $L664:
-; Line 876
+; Line 883
 	mov	eax, DWORD PTR _frames_respawning
 	test	eax, eax
 	je	SHORT $L665
-; Line 877
+; Line 884
 	push	1
 	push	159					; 0000009fH
 	push	2
@@ -2991,7 +2991,7 @@ $L664:
 	push	110					; 0000006eH
 	push	OFFSET FLAT:??_C@_0L@LPNF@RESPAWNING?$AA@ ; `string'
 	call	_vputs
-; Line 878
+; Line 885
 	mov	ecx, DWORD PTR _frames_respawning
 	mov	eax, -736280107				; d41d41d5H
 	mul	ecx
@@ -3004,7 +3004,7 @@ $L664:
 	push	OFFSET FLAT:??_C@_0L@CMOD@?5IN?5?$CFd?5SEC?$AA@ ; `string'
 	push	edx
 	call	_sprintf
-; Line 879
+; Line 886
 	push	1
 	push	159					; 0000009fH
 	push	2
@@ -3016,18 +3016,18 @@ $L664:
 	call	_vputs
 	add	esp, 68					; 00000044H
 $L665:
-; Line 883
+; Line 890
 	call	_draw_debug
-; Line 885
+; Line 892
 	mov	eax, DWORD PTR _barcycle
 	add	eax, 2
-; Line 886
+; Line 893
 	cmp	eax, 64					; 00000040H
 	mov	DWORD PTR _barcycle, eax
 	jne	SHORT $L668
 	mov	DWORD PTR _barcycle, 0
 $L668:
-; Line 889
+; Line 896
 	mov	ecx, DWORD PTR _StarblazerEntities
 	sub	esp, 16					; 00000010H
 	add	ecx, 16					; 00000010H
@@ -3041,12 +3041,12 @@ $L668:
 	mov	ecx, DWORD PTR [ecx+12]
 	mov	DWORD PTR [edx+12], ecx
 	call	_set_hypercraft_orientation
-; Line 890
+; Line 897
 	push	160					; 000000a0H
 	push	265					; 00000109H
 	call	_draw_hypercraft
 	add	esp, 24					; 00000018H
-; Line 891
+; Line 898
 	pop	esi
 	add	esp, 80					; 00000050H
 	ret	0
