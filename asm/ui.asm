@@ -87,16 +87,16 @@ _current_widget_focus DD 01H DUP (?)
 _focused_textbox_ptr DB 01H DUP (?)
 	ALIGN	4
 
-_cursor	DD	01H DUP (?)
+_cursor	DB	01H DUP (?)
 _BSS	ENDS
 _DATA	SEGMENT
-_widget_can_focus DD 00H
-	DD	00H
-	DD	01H
-	DD	01H
-	DD	01H
-	DD	01H
-	DD	01H
+_widget_can_focus DB 00H
+	DB	00H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
+	DB	01H
 _DATA	ENDS
 PUBLIC	_UI_OPEN_SLOT
 ;	COMDAT _UI_OPEN_SLOT
@@ -541,11 +541,10 @@ _UI_DRAW_TEXTBOX PROC NEAR				; COMDAT
 	cmp	eax, ecx
 	jne	SHORT $L496
 ; Line 142
-	mov	eax, DWORD PTR _cursor
-	xor	ecx, ecx
-	test	eax, eax
+	mov	al, BYTE PTR _cursor
+	test	al, al
 	sete	cl
-	mov	DWORD PTR _cursor, ecx
+	mov	BYTE PTR _cursor, cl
 $L496:
 ; Line 144
 	ret	0
@@ -758,23 +757,23 @@ PUBLIC	_ui_display_widgets
 EXTRN	_SG_ReadMouse:NEAR
 ;	COMDAT _ui_display_widgets
 _TEXT	SEGMENT
-_mouse$ = -12
+_mouse$ = -8
 _ui_display_widgets PROC NEAR				; COMDAT
 ; Line 211
-	sub	esp, 12					; 0000000cH
+	sub	esp, 8
 ; Line 216
-	lea	eax, DWORD PTR _mouse$[esp+12]
+	lea	eax, DWORD PTR _mouse$[esp+8]
 	push	esi
 	push	edi
 	push	eax
 	call	_SG_ReadMouse
 ; Line 217
-	mov	eax, DWORD PTR _mouse$[esp+26]
+	mov	eax, DWORD PTR _mouse$[esp+22]
 	push	255					; 000000ffH
 	lea	ecx, DWORD PTR [eax+5]
 	add	eax, -5					; fffffffbH
 	push	ecx
-	mov	ecx, DWORD PTR _mouse$[esp+32]
+	mov	ecx, DWORD PTR _mouse$[esp+28]
 	lea	edx, DWORD PTR [ecx+5]
 	add	ecx, -5					; fffffffbH
 	push	edx
@@ -843,7 +842,7 @@ $L536:
 	pop	edi
 	pop	esi
 ; Line 259
-	add	esp, 12					; 0000000cH
+	add	esp, 8
 	ret	0
 	npad	2
 $L659:
@@ -923,21 +922,21 @@ _TEXT	ENDS
 PUBLIC	_ui_process_widgets
 ;	COMDAT _ui_process_widgets
 _TEXT	SEGMENT
-_mouse$ = -28
+_mouse$ = -24
 _rect$ = -16
 _ui_process_widgets PROC NEAR				; COMDAT
 ; Line 318
-	sub	esp, 28					; 0000001cH
+	sub	esp, 24					; 00000018H
 ; Line 322
-	lea	eax, DWORD PTR _mouse$[esp+28]
+	lea	eax, DWORD PTR _mouse$[esp+24]
 	push	esi
 	push	edi
 	push	eax
 	call	_SG_ReadMouse
 ; Line 324
-	mov	eax, DWORD PTR _mouse$[esp+44]
+	mov	al, BYTE PTR _mouse$[esp+40]
 	add	esp, 4
-	test	eax, eax
+	test	al, al
 	je	SHORT $L577
 ; Line 325
 	mov	edi, 1
@@ -947,25 +946,25 @@ $L575:
 	cmp	DWORD PTR [esi], 0
 	je	SHORT $L576
 ; Line 328
-	lea	ecx, DWORD PTR _rect$[esp+36]
+	lea	ecx, DWORD PTR _rect$[esp+32]
 	push	ecx
 	push	edi
 	call	_UI_GET_RECT
 ; Line 330
-	mov	eax, DWORD PTR _mouse$[esp+44]
-	mov	ecx, DWORD PTR _rect$[esp+44]
+	mov	eax, DWORD PTR _mouse$[esp+40]
+	mov	ecx, DWORD PTR _rect$[esp+40]
 	and	eax, 65535				; 0000ffffH
 	add	esp, 8
 	cmp	eax, ecx
 	jl	SHORT $L576
-	cmp	eax, DWORD PTR _rect$[esp+40]
+	cmp	eax, DWORD PTR _rect$[esp+36]
 	jg	SHORT $L576
-	mov	eax, DWORD PTR _mouse$[esp+38]
-	mov	ecx, DWORD PTR _rect$[esp+44]
+	mov	eax, DWORD PTR _mouse$[esp+34]
+	mov	ecx, DWORD PTR _rect$[esp+40]
 	and	eax, 65535				; 0000ffffH
 	cmp	eax, ecx
 	jl	SHORT $L576
-	cmp	eax, DWORD PTR _rect$[esp+48]
+	cmp	eax, DWORD PTR _rect$[esp+44]
 	jle	SHORT $L670
 $L576:
 ; Line 325
@@ -976,7 +975,7 @@ $L576:
 	pop	edi
 	pop	esi
 ; Line 336
-	add	esp, 28					; 0000001cH
+	add	esp, 24					; 00000018H
 	ret	0
 $L670:
 ; Line 331
@@ -987,7 +986,7 @@ $L577:
 	pop	edi
 	pop	esi
 ; Line 336
-	add	esp, 28					; 0000001cH
+	add	esp, 24					; 00000018H
 	ret	0
 _ui_process_widgets ENDP
 _TEXT	ENDS

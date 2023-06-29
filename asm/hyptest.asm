@@ -41,7 +41,7 @@ FLAT	GROUP _DATA, CONST, _BSS
 endif
 PUBLIC	_MAX_ROT
 _DATA	SEGMENT
-COMM	_shading:DWORD
+COMM	_shading:BYTE
 COMM	_hypercraft:DWORD
 COMM	_hc_template:DWORD
 COMM	_hyptest_ori:BYTE:010H
@@ -64,7 +64,7 @@ _init_hypercraft PROC NEAR				; COMDAT
 ; File src\hyptest.c
 ; Line 19
 	push	OFFSET FLAT:??_C@_0BB@BDIL@assets?1hyper?4obj?$AA@ ; `string'
-	mov	DWORD PTR _shading, 1
+	mov	BYTE PTR _shading, 1
 	call	_load_model
 ; Line 21
 	push	0
@@ -119,17 +119,17 @@ EXTRN	_vjoy_read:NEAR
 EXTRN	_angle_multiply:NEAR
 ;	COMDAT _rot_hypercraft
 _TEXT	SEGMENT
-_joy$ = -24
+_joy$ = -8
 _rot_hypercraft PROC NEAR				; COMDAT
 ; Line 32
-	sub	esp, 24					; 00000018H
+	sub	esp, 8
 ; Line 36
-	lea	eax, DWORD PTR _joy$[esp+24]
+	lea	eax, DWORD PTR _joy$[esp+8]
 	push	eax
 	call	_vjoy_read
 ; Line 39
 	mov	ecx, DWORD PTR _hypercraft
-	mov	edx, DWORD PTR _joy$[esp+28]
+	mov	edx, DWORD PTR _joy$[esp+12]
 	mov	al, BYTE PTR _MAX_ROT
 	add	esp, 4
 	add	ecx, 16					; 00000010H
@@ -142,7 +142,7 @@ _rot_hypercraft PROC NEAR				; COMDAT
 	call	_quat_pitch
 ; Line 41
 	mov	ecx, DWORD PTR _hypercraft
-	mov	edx, DWORD PTR _joy$[esp+33]
+	mov	edx, DWORD PTR _joy$[esp+17]
 	mov	al, BYTE PTR _MAX_ROT
 	add	esp, 8
 	add	ecx, 16					; 00000010H
@@ -155,7 +155,7 @@ _rot_hypercraft PROC NEAR				; COMDAT
 	call	_quat_yaw
 ; Line 43
 	mov	ecx, DWORD PTR _hypercraft
-	mov	edx, DWORD PTR _joy$[esp+34]
+	mov	edx, DWORD PTR _joy$[esp+18]
 	mov	al, BYTE PTR _MAX_ROT
 	add	esp, 8
 	add	ecx, 16					; 00000010H
@@ -167,7 +167,7 @@ _rot_hypercraft PROC NEAR				; COMDAT
 	push	eax
 	call	_quat_roll
 ; Line 44
-	add	esp, 32					; 00000020H
+	add	esp, 16					; 00000010H
 	ret	0
 _rot_hypercraft ENDP
 _TEXT	ENDS
@@ -229,10 +229,10 @@ _draw_hypercraft PROC NEAR				; COMDAT
 	mov	eax, DWORD PTR _hc_template
 	add	esp, 20					; 00000014H
 	cmp	WORD PTR [eax+8], si
-	jbe	SHORT $L302
+	jbe	SHORT $L303
 	push	edi
 	xor	edi, edi
-$L300:
+$L301:
 ; Line 69
 	mov	eax, DWORD PTR [eax+4]
 	lea	edx, DWORD PTR _vec$[esp+64]
@@ -260,10 +260,10 @@ $L300:
 	mov	dx, WORD PTR [eax+8]
 	add	edi, 12					; 0000000cH
 	cmp	esi, edx
-	jl	SHORT $L300
+	jl	SHORT $L301
 	xor	esi, esi
 	pop	edi
-$L302:
+$L303:
 ; Line 74
 	mov	cx, WORD PTR [eax+10]
 	mov	edx, DWORD PTR [eax]
@@ -275,7 +275,7 @@ $L302:
 ; Line 76
 	call	_polygon_zsort
 ; Line 77
-	mov	eax, DWORD PTR _shading
+	mov	al, BYTE PTR _shading
 	push	eax
 	call	_render_end
 	add	esp, 20					; 00000014H

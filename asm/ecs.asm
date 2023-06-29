@@ -406,14 +406,14 @@ _test_collisions PROC NEAR				; COMDAT
 	jge	SHORT $L574
 	pop	edi
 ; Line 137
-	mov	eax, 1
+	mov	al, 1
 	pop	esi
 ; Line 142
 	ret	0
 $L574:
 	pop	edi
 ; Line 141
-	xor	eax, eax
+	xor	al, al
 	pop	esi
 ; Line 142
 	ret	0
@@ -539,7 +539,7 @@ _load_model PROC NEAR					; COMDAT
 	call	_malloc
 	mov	edi, eax
 ; Line 183
-	push	44					; 0000002cH
+	push	40					; 00000028H
 	mov	DWORD PTR _verts$[esp+600], edi
 	call	_malloc
 	add	esp, 20					; 00000014H

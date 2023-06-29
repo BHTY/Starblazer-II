@@ -93,13 +93,13 @@ _init_stars PROC NEAR					; COMDAT
 	push	esi
 ; Line 24
 	mov	esi, OFFSET FLAT:_title_stars
-$L753:
+$L754:
 	push	esi
 	call	_init_star
 	add	esi, 12					; 0000000cH
 	add	esp, 4
 	cmp	esi, OFFSET FLAT:_title_stars+6000
-	jl	SHORT $L753
+	jl	SHORT $L754
 	pop	esi
 ; Line 25
 	ret	0
@@ -116,7 +116,7 @@ _TEXT	ENDS
 PUBLIC	_multiplayer_button
 EXTRN	_mplayer_addr:DWORD
 EXTRN	_destroy_hypercraft:NEAR
-EXTRN	_multiplayer:DWORD
+EXTRN	_multiplayer:BYTE
 EXTRN	_net_connect:NEAR
 EXTRN	_blazer2_init:NEAR
 ;	COMDAT _multiplayer_button
@@ -127,15 +127,15 @@ _multiplayer_button PROC NEAR				; COMDAT
 	push	eax
 	call	_net_connect
 	add	esp, 4
-	test	eax, eax
-	jne	SHORT $L762
+	test	al, al
+	jne	SHORT $L763
 ; Line 33
-	mov	DWORD PTR _multiplayer, 1
+	mov	BYTE PTR _multiplayer, 1
 ; Line 34
 	call	_destroy_hypercraft
 ; Line 35
 	jmp	_blazer2_init
-$L762:
+$L763:
 ; Line 37
 	ret	0
 _multiplayer_button ENDP
@@ -436,13 +436,13 @@ _DATA	SEGMENT
 _DATA	ENDS
 ;	COMDAT _title_draw
 _TEXT	SEGMENT
-_mouse$ = -12
+_mouse$ = -8
 _title_draw PROC NEAR					; COMDAT
 ; File src\title.c
 ; Line 113
-	sub	esp, 12					; 0000000cH
+	sub	esp, 8
 ; Line 115
-	lea	eax, DWORD PTR _mouse$[esp+12]
+	lea	eax, DWORD PTR _mouse$[esp+8]
 	push	eax
 	call	_SG_ReadMouse
 ; Line 129
@@ -498,7 +498,7 @@ _title_draw PROC NEAR					; COMDAT
 ; Line 142
 	call	_ui_display_widgets
 ; Line 145
-	add	esp, 52					; 00000034H
+	add	esp, 48					; 00000030H
 	ret	0
 _title_draw ENDP
 _TEXT	ENDS

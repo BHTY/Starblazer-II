@@ -18,7 +18,7 @@
 uint32 SND_EXPLODE, SND_HIT, SND_LASER, SND_LASER_ENEMY;
 bool_t laser_type;
 
-LASER ENEMY_LASER;
+LASER ENEMY_LASER_SHREDDER, ENEMY_LASER_DRAGONBREATH;
 TEMPLATE *AX5, *LASER_PLAYER, *LASER_ENEMY, *EXPLOSION_SHARD, *ASTEROID, *TURRET_PLATFORM, *TURRET;
 //char barcolors[22] = "\xe0\xe0\xc0\xc4\xc4\xa0\xa8\xa8\xac\x8c\x8c\x90\x74\x75\x55\x59\x5a\x3a\x3e\x1f\x1f\x1f";
   char barcolors[22] = "\xe8\xe8\xc8\xcc\xcc\xca\xe8\xe8\xe8\xe8\xe8\xe8\xe8\xe8\xf8\xf8\xb8\xb8\xbc\xbf\xbf\xbf";
@@ -232,17 +232,39 @@ void debris_script(ENTITY** ptr){
 }
 
 void set_attributes(){
-	ENEMY_LASER.model = load_model("assets/shreder2.obj");
-	ENEMY_LASER.model->script = enemy_laser_script;
-	ENEMY_LASER.model->radar_color = 239;
-	ENEMY_LASER.model->radar_type = 0;
-	ENEMY_LASER.model->flags = 2;
-	create_hitbox(ENEMY_LASER.model, int_fixed(3), int_fixed(3), int_fixed(3));
-	ENEMY_LASER.damage = 8;
+	ENEMY_LASER_SHREDDER.model = load_model("assets/shreder2.obj");
+	ENEMY_LASER_SHREDDER.model->script = enemy_laser_script;
+	ENEMY_LASER_SHREDDER.model->radar_color = 239;
+	ENEMY_LASER_SHREDDER.model->radar_type = 0;
+	ENEMY_LASER_SHREDDER.model->flags = 2;
+	create_hitbox(ENEMY_LASER_SHREDDER.model, int_fixed(3), int_fixed(3), int_fixed(3));
+	ENEMY_LASER_SHREDDER.damage = 8;
 
-	LASER_PLAYER->script = laser_script;
+	ENEMY_LASER_DRAGONBREATH.model = load_model("assets/dragon2.obj");
+	ENEMY_LASER_DRAGONBREATH.model->script = enemy_laser_script;
+	ENEMY_LASER_DRAGONBREATH.model->radar_color = 207;
+	ENEMY_LASER_DRAGONBREATH.model->radar_type = 0;
+	ENEMY_LASER_DRAGONBREATH.model->flags = 2;
+	create_hitbox(ENEMY_LASER_DRAGONBREATH.model, int_fixed(3), int_fixed(3), int_fixed(3));
+	ENEMY_LASER_DRAGONBREATH.damage = 2;
+
+	if (laser_type == 0) {
+		LASER_PLAYER = load_model("assets/shreder1.obj");
+		LASER_PLAYER->radar_color = 191;
+		player_weapon.cooldown_ticks = 10;
+		player_weapon.energy_draw = 7;
+		player_weapon.damage = 8;
+	}
+	else {
+		LASER_PLAYER = load_model("assets/dragon1.obj");
+		LASER_PLAYER->radar_color = 175;
+		player_weapon.cooldown_ticks = 3;
+		player_weapon.energy_draw = 2;
+		player_weapon.damage = 1;
+	}
+
 	LASER_PLAYER->flags = 2;
-	LASER_PLAYER->radar_color = 191;
+	LASER_PLAYER->script = laser_script;
 	LASER_PLAYER->radar_type = 0;
 	create_hitbox(LASER_PLAYER, int_fixed(3), int_fixed(3), int_fixed(3));
 
@@ -261,9 +283,9 @@ void set_attributes(){
 	//Shredder DPB: 40 / 7 * 8 = 45.71
 	//Dragonbreath DPB: 40/2 * 2 = 40
 
-	player_weapon.cooldown_ticks = 3;// 10;
+	/*player_weapon.cooldown_ticks = 3;// 10;
 	player_weapon.energy_draw = 2;// 7;
-	player_weapon.damage = 2;
+	player_weapon.damage = 2;*/
 	player_weapon.model = LASER_PLAYER;
 
 	laser_velocity.x = 0;
@@ -316,7 +338,6 @@ void blazer2_init(){
 	SND_HIT = load_soundfx("sfx/hit.wav", 1, 0);
 
 	//load models
-	LASER_PLAYER = load_model("assets/shreder1.obj");
 	SL_CENTER_X = 160;
 	SL_CENTER_Y = 100;
 

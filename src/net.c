@@ -84,7 +84,7 @@ void net_syncstate(){
 	//send my own status
 	packet.pos = StarblazerEntities[0]->pos;
 	packet.rot = StarblazerEntities[0]->orientation;
-	packet.flags = (player_id << 4) | firing;
+	packet.flags = (player_id << 4) | firing | (laser_type << 3);
 
 	if (dying){
 		packet.flags |= 2;
@@ -119,7 +119,7 @@ void net_syncstate(){
 			if (players[SENDER_ID(packet)].status != 1){ //they either just respawned or just connected
 				//printf("Spawning in an entity for player %d\n", SENDER_ID(packet));
 				players[SENDER_ID(packet)].fighter = AX5;
-				players[SENDER_ID(packet)].laser = &ENEMY_LASER;
+				//players[SENDER_ID(packet)].laser = &ENEMY_LASER;
 				players[SENDER_ID(packet)].entity_id = spawn_entity(players[SENDER_ID(packet)].fighter, 0, 0, 0, 0, 0, 0);
 				players[SENDER_ID(packet)].status = 1;
 			}
@@ -134,6 +134,13 @@ void net_syncstate(){
 				StarblazerEntities[players[SENDER_ID(packet)].entity_id]->orientation = packet.rot;
 
 				if (SHOOTING(packet)){ //fire a laser from their position if they did
+					if (LASER_TYPE(packet) == 0) {
+						players[SENDER_ID(packet)].laser = &ENEMY_LASER_SHREDDER;
+					}
+					else {
+						players[SENDER_ID(packet)].laser = &ENEMY_LASER_DRAGONBREATH;
+					}
+
 					spawn_enemy_laser(SENDER_ID(packet));
 				}
 			}

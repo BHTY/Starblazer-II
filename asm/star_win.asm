@@ -166,11 +166,13 @@ COMM	_mouseFactorX:DWORD
 COMM	_mouseFactorY:DWORD
 _DATA	ENDS
 _BSS	SEGMENT
-_mouseDownLeft DD 01H DUP (?)
-_mouseDownRight DD 01H DUP (?)
+_mouseDownLeft DB 01H DUP (?)
+	ALIGN	4
+
+_mouseDownRight DB 01H DUP (?)
 _BSS	ENDS
 _DATA	SEGMENT
-COMM	_keys:DWORD:0100H
+COMM	_keys:BYTE:0100H
 COMM	_server_connection:DWORD
 COMM	_server_addr:BYTE:010H
 COMM	_size_response:DWORD
@@ -179,6 +181,8 @@ COMM	_waveHdrB:BYTE:020H
 COMM	_global_wave:BYTE:012H
 _DATA	ENDS
 _BSS	SEGMENT
+	ALIGN	4
+
 _global_hWaveOut DD 01H DUP (?)
 _BSS	ENDS
 _DATA	SEGMENT
@@ -335,7 +339,7 @@ $L22073:
 	mov	eax, DWORD PTR _wParam$[esp]
 	pop	esi
 	and	eax, 255				; 000000ffH
-	mov	DWORD PTR _keys[eax*4], 1
+	mov	BYTE PTR _keys[eax], 1
 ; Line 131
 	ret	16					; 00000010H
 $L22301:
@@ -348,7 +352,7 @@ $L22301:
 	cmp	esi, 513				; 00000201H
 	jne	SHORT $L22081
 ; Line 108
-	mov	DWORD PTR _mouseDownLeft, 1
+	mov	BYTE PTR _mouseDownLeft, 1
 	pop	esi
 ; Line 131
 	ret	16					; 00000010H
@@ -357,12 +361,12 @@ $L22074:
 	mov	ecx, DWORD PTR _wParam$[esp]
 	pop	esi
 	and	ecx, 255				; 000000ffH
-	mov	DWORD PTR _keys[ecx*4], 0
+	mov	BYTE PTR _keys[ecx], 0
 ; Line 131
 	ret	16					; 00000010H
 $L22078:
 ; Line 113
-	mov	DWORD PTR _mouseDownLeft, 0
+	mov	BYTE PTR _mouseDownLeft, 0
 	pop	esi
 ; Line 131
 	ret	16					; 00000010H
@@ -388,13 +392,13 @@ $L22081:
 	ret	16					; 00000010H
 $L22080:
 ; Line 123
-	mov	DWORD PTR _mouseDownRight, 0
+	mov	BYTE PTR _mouseDownRight, 0
 	pop	esi
 ; Line 131
 	ret	16					; 00000010H
 $L22079:
 ; Line 118
-	mov	DWORD PTR _mouseDownRight, 1
+	mov	BYTE PTR _mouseDownRight, 1
 	pop	esi
 ; Line 131
 	ret	16					; 00000010H
@@ -679,7 +683,7 @@ _SG_OpenConnection PROC NEAR				; COMDAT
 	mov	DWORD PTR _server_connection, eax
 	jne	SHORT $L22141
 ; Line 216
-	xor	eax, eax
+	xor	al, al
 ; Line 222
 	pop	ecx
 	ret	0
@@ -691,7 +695,7 @@ $L22141:
 	push	eax
 	call	_ioctlsocket@12
 ; Line 221
-	mov	eax, 1
+	mov	al, 1
 ; Line 222
 	pop	ecx
 	ret	0
@@ -781,7 +785,7 @@ EXTRN	_GAME_SETTINGS:BYTE
 EXTRN	_MUSIC_ENABLE:DWORD
 EXTRN	_SOUND_ENABLE:DWORD
 EXTRN	_SFX_ENABLE:DWORD
-EXTRN	_laser_type:DWORD
+EXTRN	_laser_type:BYTE
 EXTRN	_inet_addr@4:NEAR
 ;	COMDAT ??_C@_01LHO@r?$AA@
 ; File src\star_win.c
@@ -997,8 +1001,8 @@ _SG_Init PROC NEAR					; COMDAT
 ; Line 281
 	call	_SG_GameInit
 ; Line 283
-	push	OFFSET FLAT:_GAME_SETTINGS+36
-	push	OFFSET FLAT:_GAME_SETTINGS+20
+	push	OFFSET FLAT:_GAME_SETTINGS+30
+	push	OFFSET FLAT:_GAME_SETTINGS+14
 	push	OFFSET FLAT:_OTHER_PORT
 	push	OFFSET FLAT:_PORT
 	push	OFFSET FLAT:_window_height
@@ -1157,7 +1161,7 @@ _SG_Init PROC NEAR					; COMDAT
 	push	14					; 0000000eH
 	call	DWORD PTR __imp__timeSetEvent@20
 ; Line 338
-	mov	ecx, 256				; 00000100H
+	mov	ecx, 64					; 00000040H
 	xor	eax, eax
 	mov	edi, OFFSET FLAT:_keys
 	rep stosd
@@ -1268,11 +1272,11 @@ _SG_ReadMouse PROC NEAR					; COMDAT
 	call	__ftol
 	mov	WORD PTR [esi+2], ax
 ; Line 366
-	mov	eax, DWORD PTR _mouseDownLeft
-	mov	DWORD PTR [esi+4], eax
+	mov	al, BYTE PTR _mouseDownLeft
+	mov	BYTE PTR [esi+4], al
 ; Line 367
-	mov	ecx, DWORD PTR _mouseDownRight
-	mov	DWORD PTR [esi+8], ecx
+	mov	cl, BYTE PTR _mouseDownRight
+	mov	BYTE PTR [esi+5], cl
 	pop	esi
 ; Line 368
 	add	esp, 8
@@ -1287,7 +1291,7 @@ _SG_KeyDown PROC NEAR					; COMDAT
 ; Line 371
 	mov	eax, DWORD PTR _key$[esp-4]
 	and	eax, 255				; 000000ffH
-	mov	eax, DWORD PTR _keys[eax*4]
+	mov	al, BYTE PTR _keys[eax]
 ; Line 372
 	ret	0
 _SG_KeyDown ENDP

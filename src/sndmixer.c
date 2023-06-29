@@ -7,7 +7,7 @@ cached_sound sounds[MAX_SOUNDS];
 mixer_channel channels[MAX_CHANNELS];
 
 int BUFFER_SIZE;
-bool_t MUSIC_ENABLE, SOUND_ENABLE, SFX_ENABLE;
+int MUSIC_ENABLE, SOUND_ENABLE, SFX_ENABLE;
 
 uint8* buffer1;
 uint8* buffer2;

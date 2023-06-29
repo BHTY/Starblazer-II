@@ -18,16 +18,13 @@ $$TYPES	SEGMENT BYTE USE32 'DEBTYP'
 $$TYPES	ENDS
 _TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
 _TLS	ENDS
-;	COMDAT ??_C@_03HMFC@?$CFd?6?$AA@
-_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
-_DATA	ENDS
 ;	COMDAT ??_C@_0N@GJDG@starfont?4fnt?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
-;	COMDAT ??_C@_08IELG@00?327?300?$AA@
+;	COMDAT ??_C@_08GHBP@00?350?328?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
 ;	COMDAT ??_C@_0M@NDLP@Jun?529?52023?$AA@
@@ -71,7 +68,7 @@ PUBLIC	_time_at_which_last_frame_was_rendered
 _DATA	SEGMENT
 COMM	_SG_Draw:DWORD
 COMM	_SG_Module:DWORD
-COMM	_GAME_SETTINGS:BYTE:068H
+COMM	_GAME_SETTINGS:BYTE:058H
 _DATA	ENDS
 _BSS	SEGMENT
 _BG_COLOR DB	01H DUP (?)
@@ -107,61 +104,39 @@ _SG_PresentFrame PROC NEAR				; COMDAT
 _SG_PresentFrame ENDP
 _TEXT	ENDS
 PUBLIC	_SG_Tick
-PUBLIC	??_C@_03HMFC@?$CFd?6?$AA@			; `string'
 EXTRN	_SG_GetTicks:NEAR
 EXTRN	_SG_WaitBlank:NEAR
-EXTRN	_printf:NEAR
-;	COMDAT ??_C@_03HMFC@?$CFd?6?$AA@
-; File src\blazer.c
-_DATA	SEGMENT
-??_C@_03HMFC@?$CFd?6?$AA@ DB '%d', 0aH, 00H		; `string'
-_DATA	ENDS
 ;	COMDAT _SG_Tick
 _TEXT	SEGMENT
 _SG_Tick PROC NEAR					; COMDAT
-; File src\blazer.c
 ; Line 33
-	call	_SG_GetTicks
-; Line 34
-	mov	edx, DWORD PTR _time_last_tick
-	mov	ecx, eax
-	sub	ecx, edx
-; Line 35
-	mov	DWORD PTR _time_last_tick, eax
-; Line 36
-	push	ecx
-	push	OFFSET FLAT:??_C@_03HMFC@?$CFd?6?$AA@	; `string'
-	mov	DWORD PTR _LAST_TICK_TIME, ecx
-	call	_printf
-	add	esp, 8
-; Line 38
 	call	DWORD PTR _SG_Module
-; Line 42
+; Line 37
 	mov	eax, DWORD PTR _GAME_SETTINGS+4
 	mov	ecx, DWORD PTR _current_frame
 	and	eax, 255				; 000000ffH
 	cmp	ecx, eax
-	jne	SHORT $L349
-; Line 43
+	jne	SHORT $L347
+; Line 38
 	mov	DWORD PTR _current_frame, 0
-; Line 44
+; Line 39
 	call	_SG_PresentFrame
-; Line 45
+; Line 40
 	call	_SG_GetTicks
-; Line 46
+; Line 41
 	mov	edx, DWORD PTR _time_at_which_last_frame_was_rendered
 	mov	ecx, eax
 	sub	ecx, edx
-; Line 47
+; Line 42
 	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
 	mov	DWORD PTR _LAST_FRAME_TIME, ecx
-; Line 49
-	jmp	SHORT $L350
-$L349:
-; Line 50
+; Line 44
+	jmp	SHORT $L348
+$L347:
+; Line 45
 	inc	DWORD PTR _current_frame
-$L350:
-; Line 53
+$L348:
+; Line 48
 	jmp	_SG_WaitBlank
 _SG_Tick ENDP
 _TEXT	ENDS
@@ -169,7 +144,7 @@ PUBLIC	_SG_LoadConfig
 ;	COMDAT _SG_LoadConfig
 _TEXT	SEGMENT
 _SG_LoadConfig PROC NEAR				; COMDAT
-; Line 58
+; Line 53
 	ret	0
 _SG_LoadConfig ENDP
 _TEXT	ENDS
@@ -177,7 +152,7 @@ PUBLIC	_SG_SaveConfig
 ;	COMDAT _SG_SaveConfig
 _TEXT	SEGMENT
 _SG_SaveConfig PROC NEAR				; COMDAT
-; Line 62
+; Line 57
 	ret	0
 _SG_SaveConfig ENDP
 _TEXT	ENDS
@@ -197,21 +172,21 @@ _DATA	ENDS
 _TEXT	SEGMENT
 _SG_GameInit PROC NEAR					; COMDAT
 ; File src\blazer.c
-; Line 65
+; Line 60
 	push	OFFSET FLAT:_GAME_SETTINGS
 	call	_SG_LoadConfig
-; Line 69
+; Line 64
 	push	OFFSET FLAT:??_C@_0N@GJDG@starfont?4fnt?$AA@ ; `string'
 	mov	DWORD PTR _SG_Draw, OFFSET FLAT:_title_draw
 	mov	DWORD PTR _SG_Module, OFFSET FLAT:_title_module
 	call	_unpack_glyphs
-; Line 70
+; Line 65
 	push	0
 	call	_time
 	push	eax
 	call	_srand
 	add	esp, 16					; 00000010H
-; Line 71
+; Line 66
 	ret	0
 _SG_GameInit ENDP
 _TEXT	ENDS
@@ -224,19 +199,19 @@ _r$ = -6
 _g$ = -8
 _b$ = -7
 _SG_InitPalette PROC NEAR				; COMDAT
-; Line 73
+; Line 68
 	sub	esp, 8
-; Line 93
+; Line 88
 	xor	eax, eax
 	push	ebx
 	mov	DWORD PTR _i$[esp+12], eax
-	jmp	SHORT $L367
-$L422:
+	jmp	SHORT $L365
+$L419:
 	mov	eax, DWORD PTR _i$[esp+12]
-$L367:
-; Line 94
+$L365:
+; Line 89
 	test	al, 4
-	je	SHORT $L412
+	je	SHORT $L409
 	mov	ecx, eax
 	and	cl, 8
 	neg	cl
@@ -244,13 +219,13 @@ $L367:
 	and	cl, 8
 	add	cl, 8
 	mov	BYTE PTR _r$[esp+12], cl
-	jmp	SHORT $L413
-$L412:
+	jmp	SHORT $L410
+$L409:
 	mov	BYTE PTR _r$[esp+12], 0
-$L413:
-; Line 95
+$L410:
+; Line 90
 	test	al, 2
-	je	SHORT $L414
+	je	SHORT $L411
 	mov	edx, eax
 	and	dl, 8
 	neg	dl
@@ -258,14 +233,14 @@ $L413:
 	and	dl, 8
 	add	dl, 8
 	mov	BYTE PTR _g$[esp+12], dl
-	jmp	SHORT $L415
-$L414:
+	jmp	SHORT $L412
+$L411:
 	mov	BYTE PTR _g$[esp+12], 0
 	mov	dl, BYTE PTR _g$[esp+12]
-$L415:
-; Line 96
+$L412:
+; Line 91
 	test	al, 1
-	je	SHORT $L416
+	je	SHORT $L413
 	mov	ecx, eax
 	and	cl, 8
 	neg	cl
@@ -273,32 +248,32 @@ $L415:
 	and	cl, 8
 	add	cl, 8
 	mov	BYTE PTR _b$[esp+12], cl
-	jmp	SHORT $L417
-$L416:
+	jmp	SHORT $L414
+$L413:
 	mov	BYTE PTR _b$[esp+12], 0
 	mov	cl, BYTE PTR _b$[esp+12]
-$L417:
-; Line 99
+$L414:
+; Line 94
 	cmp	eax, 7
-	jne	SHORT $L370
-; Line 101
+	jne	SHORT $L368
+; Line 96
 	mov	BYTE PTR _g$[esp+12], 8
-; Line 102
+; Line 97
 	mov	BYTE PTR _b$[esp+12], 0
 	mov	dl, BYTE PTR _g$[esp+12]
 	mov	cl, BYTE PTR _b$[esp+12]
 	mov	BYTE PTR _r$[esp+12], 16		; 00000010H
-$L370:
-; Line 105
+$L368:
+; Line 100
 	xor	ebx, ebx
-; Line 106
+; Line 101
 	shl	al, 4
 	mov	BYTE PTR -5+[esp+12], al
-	jmp	SHORT $L371
-$L423:
+	jmp	SHORT $L369
+$L420:
 	mov	dl, BYTE PTR _g$[esp+12]
 	mov	cl, BYTE PTR _b$[esp+12]
-$L371:
+$L369:
 	mov	al, bl
 	imul	cl
 	push	eax
@@ -316,33 +291,34 @@ $L371:
 	add	esp, 16					; 00000010H
 	inc	ebx
 	cmp	ebx, 16					; 00000010H
-	jl	SHORT $L423
+	jl	SHORT $L420
 	mov	eax, DWORD PTR _i$[esp+12]
 	inc	eax
 	cmp	eax, 16					; 00000010H
 	mov	DWORD PTR _i$[esp+12], eax
-	jl	$L422
+	jl	$L419
 	pop	ebx
-; Line 109
+; Line 104
 	add	esp, 8
 	ret	0
 _SG_InitPalette ENDP
 _TEXT	ENDS
 PUBLIC	_SG_WelcomeMessage
 PUBLIC	??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
-PUBLIC	??_C@_08IELG@00?327?300?$AA@			; `string'
+PUBLIC	??_C@_08GHBP@00?350?328?$AA@			; `string'
 PUBLIC	??_C@_0M@NDLP@Jun?529?52023?$AA@		; `string'
 PUBLIC	??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 PUBLIC	??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@ ; `string'
+EXTRN	_printf:NEAR
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 ; File src\blazer.c
 _DATA	SEGMENT
 ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ DB 'Starblazer II Bet'
 	DB	'a Version', 0aH, 00H			; `string'
 _DATA	ENDS
-;	COMDAT ??_C@_08IELG@00?327?300?$AA@
+;	COMDAT ??_C@_08GHBP@00?350?328?$AA@
 _DATA	SEGMENT
-??_C@_08IELG@00?327?300?$AA@ DB '00:27:00', 00H		; `string'
+??_C@_08GHBP@00?350?328?$AA@ DB '00:50:28', 00H		; `string'
 _DATA	ENDS
 ;	COMDAT ??_C@_0M@NDLP@Jun?529?52023?$AA@
 _DATA	SEGMENT
@@ -362,19 +338,19 @@ _DATA	ENDS
 _TEXT	SEGMENT
 _SG_WelcomeMessage PROC NEAR				; COMDAT
 ; File src\blazer.c
-; Line 112
+; Line 107
 	push	OFFSET FLAT:??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
 	call	_printf
-; Line 113
-	push	OFFSET FLAT:??_C@_08IELG@00?327?300?$AA@ ; `string'
+; Line 108
+	push	OFFSET FLAT:??_C@_08GHBP@00?350?328?$AA@ ; `string'
 	push	OFFSET FLAT:??_C@_0M@NDLP@Jun?529?52023?$AA@ ; `string'
 	push	OFFSET FLAT:??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 	call	_printf
-; Line 114
+; Line 109
 	push	OFFSET FLAT:??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@ ; `string'
 	call	_printf
 	add	esp, 20					; 00000014H
-; Line 115
+; Line 110
 	ret	0
 _SG_WelcomeMessage ENDP
 _TEXT	ENDS
