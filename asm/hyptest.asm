@@ -229,10 +229,10 @@ _draw_hypercraft PROC NEAR				; COMDAT
 	mov	eax, DWORD PTR _hc_template
 	add	esp, 20					; 00000014H
 	cmp	WORD PTR [eax+8], si
-	jbe	SHORT $L303
+	jbe	SHORT $L305
 	push	edi
 	xor	edi, edi
-$L301:
+$L303:
 ; Line 69
 	mov	eax, DWORD PTR [eax+4]
 	lea	edx, DWORD PTR _vec$[esp+64]
@@ -260,10 +260,10 @@ $L301:
 	mov	dx, WORD PTR [eax+8]
 	add	edi, 12					; 0000000cH
 	cmp	esi, edx
-	jl	SHORT $L301
+	jl	SHORT $L303
 	xor	esi, esi
 	pop	edi
-$L303:
+$L305:
 ; Line 74
 	mov	cx, WORD PTR [eax+10]
 	mov	edx, DWORD PTR [eax]

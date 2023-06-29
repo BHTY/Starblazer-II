@@ -809,6 +809,26 @@ void draw_battery(){
 	drawline(180, 160, 180, 170, 0xff);
 }
 
+void draw_nametags() {
+	int i;
+	VEC3 vector_pos, screen_coords;
+
+	for (i = 0; i < 16; i++) {
+		if (players[i].status == 1) { //they're connected normally
+			vector_pos = StarblazerEntities[players[i].entity_id]->pos;
+			vec3_subtract(&(StarblazerEntities[0]->pos), &vector_pos);
+			mat3_mul(&SL_CAMERA_ORIENTATION, &vector_pos, &screen_coords);
+
+			screen_coords.x = SL_CENTER_X - fixed_int(muldiv(screen_coords.x, SL_FOV_X, screen_coords.z));
+			screen_coords.y = SL_CENTER_Y - fixed_int(muldiv(screen_coords.y, SL_FOV_Y, screen_coords.z));
+
+			if (screen_coords.z > 0) { //determine center pos & scale size a bit better
+				vputs("PLAYER", screen_coords.x, screen_coords.y, 1, 1, 255, 1);
+			}
+		}
+	}
+}
+
 
 void blazer2_draw(){
 	char text[80];
@@ -844,6 +864,8 @@ void blazer2_draw(){
     
 	//draw weapons energy tank
 	draw_battery();
+
+	if (multiplayer) { draw_nametags(); }
     
 	//draw targeting computer lead position
     //draw screen crack

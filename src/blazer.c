@@ -15,6 +15,7 @@ int LAST_FRAME_TIME = 14;
 
 int time_at_which_last_frame_was_rendered = 0;
 uint32 time_last_tick;
+uint32 start_time;
 
 void (*SG_Draw)();
 void (*SG_Module)();

@@ -93,13 +93,13 @@ _init_stars PROC NEAR					; COMDAT
 	push	esi
 ; Line 24
 	mov	esi, OFFSET FLAT:_title_stars
-$L754:
+$L756:
 	push	esi
 	call	_init_star
 	add	esi, 12					; 0000000cH
 	add	esp, 4
 	cmp	esi, OFFSET FLAT:_title_stars+6000
-	jl	SHORT $L754
+	jl	SHORT $L756
 	pop	esi
 ; Line 25
 	ret	0
@@ -128,14 +128,14 @@ _multiplayer_button PROC NEAR				; COMDAT
 	call	_net_connect
 	add	esp, 4
 	test	al, al
-	jne	SHORT $L763
+	jne	SHORT $L765
 ; Line 33
 	mov	BYTE PTR _multiplayer, 1
 ; Line 34
 	call	_destroy_hypercraft
 ; Line 35
 	jmp	_blazer2_init
-$L763:
+$L765:
 ; Line 37
 	ret	0
 _multiplayer_button ENDP

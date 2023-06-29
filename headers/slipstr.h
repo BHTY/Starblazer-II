@@ -13,6 +13,7 @@ extern MAT3 SL_CAMERA_ORIENTATION;
 
 extern int16 SL_CENTER_X;
 extern int16 SL_CENTER_Y;
+extern FIXED SL_FOV_X, SL_FOV_Y;
 
 typedef struct{
 	uint16 v0, v1, v2;

@@ -407,9 +407,9 @@ uint32 SG_GetTicks(){
 void SG_WaitBlank(){
 	MSG Msg;
 
-	/*Sleep(10);
+	//Sleep(10);
 
-	while (PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)) {
+	/*while (PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)) {
 		TranslateMessage(&Msg);
 		DispatchMessage(&Msg);
 	}*/

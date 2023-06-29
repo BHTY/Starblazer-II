@@ -24,7 +24,7 @@ void SG_Close();
 //Input functions
 void SG_ReadStick(SG_joystick_t*);
 void SG_ReadMouse(SG_mouse_t*);
-bool_t SG_KeyDown(char);
+bool_t SG_KeyDown(uint8);
 
 //Graphics painting
 void SG_DrawFrame();
