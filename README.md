@@ -1,30 +1,21 @@
 # Starblazer-II
 To-do List
 - make the game
-- tweak compiler settings - compile demo with MSVC2 in /O2 (also compile an AMD64 & MIPS build)
+- tweak compiler settings - compile demo with MSVC2 in /O2 or MinGW with MSVCRT20.DLL
 - optimizations (particularly on DOS but also for slower Windows machines) -- hotspots below
   - Math functions
   - Triangle filling
   - Lighting calculation
-  - Sound code (which just needs some improvements, period)
+  - Stop using floating point in the sound code
 
-
-Multiplayer enhancements & game balance
-- Add laser and frameskip to config.ini
-- Player names above ships (and you get told who killed you)
-- Different laser types (magenta for turrets)
-  - Dragonbreath: Peashooter -- low damage, power draw, high firing rate (primary color: green | secondary color: red) -- overheat?
-  - Shredder: Essentially the weapon we have right now, but tweak the power draw and delay between shots slightly to lower em a bit
-
-
-In det
+In detail (finish the naming thing in the netcode)
 - Finish UI subsystem
   - Add other UI controls
   - Fix text spacing
 - Correctly load/save/use the options file
 - Add the options screens & multiplayer selection screen
-- Joystick support
-- Laser turrets (single player)
+- Joystick support (ON EVERYTHING!!!)
+- ~~Laser turrets (single player)~~
 - Make the DOS & Linux ports less barebones
   - Sound support on DOS & Linux
   - Mouse support on DOS
