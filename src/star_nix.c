@@ -95,7 +95,7 @@ void SG_ReadMouse(SG_mouse_t* mouse){
 	mouse->buttons[1] = mouseDownRight;
 }
 
-bool_t SG_KeyDown(char key){
+bool_t SG_KeyDown(unsigned char key){
 	uint8 *keystate = SDL_GetKeyboardState(NULL);
 	return keystate[SDL_GetScancodeFromKey(tolower(key))];
 }

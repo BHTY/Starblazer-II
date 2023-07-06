@@ -1103,7 +1103,7 @@ $L452:
 ; Line 243
 	mov	DWORD PTR _player_weapon+4, esi
 ; Line 244
-	mov	DWORD PTR _player_weapon+8, 1
+	mov	DWORD PTR _player_weapon+8, esi
 $L454:
 ; Line 247
 	mov	edx, DWORD PTR _LASER_PLAYER
