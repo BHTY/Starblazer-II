@@ -33,6 +33,8 @@ void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b); //realizes pale
 //Timing
 uint32 SG_GetTicks();
 void SG_WaitBlank();
+void SG_ProcessEvents();
+void SG_Sleep(int ms);
 
 //Networking
 bool_t SG_OpenConnection(uint32);

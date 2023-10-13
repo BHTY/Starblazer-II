@@ -134,6 +134,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
 void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, unsigned int* dwUser, unsigned int* dw, unsigned int* dw2){
 	newFrame = 1;
+	tick_counter++;
 }
 
 VOID initWaveHeader(WAVEHDR* wvHdr, char* lpData, DWORD dwBufferLength, DWORD dwBytesRecorded, DWORD dwUser, DWORD dwFlags, DWORD dwLoops){
@@ -258,6 +259,7 @@ void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, 
 	fscanf(fp, "sfx= %d\n", &SFX_ENABLE);
 	fscanf(fp, "music= %d\n", &MUSIC_ENABLE);
 	fscanf(fp, "sound= %d\n", &SOUND_ENABLE);
+	fscanf(fp, "sleep= %d\n", &SLEEP_TIME);
 	fclose(fp);
 
 	*addr = inet_addr(taddr);
@@ -315,7 +317,7 @@ void SG_Init(int argc, char** argv){
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = GetModuleHandle(NULL);
-	wc.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(101));
+	wc.hIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(1)); //101
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wc.lpszMenuName = NULL;
@@ -424,6 +426,19 @@ void SG_WaitBlank(){
 		//newFrame = 1;
 	}
 	newFrame = 0;
+}
+
+void SG_Sleep(int ms){
+	Sleep(ms);
+}
+
+void SG_ProcessEvents(){
+	MSG Msg;
+
+	while(PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)){
+			TranslateMessage(&Msg);
+			DispatchMessage(&Msg);
+	}
 }
 
 int main(int argc, char** argv){

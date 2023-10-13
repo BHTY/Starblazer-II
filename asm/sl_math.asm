@@ -1114,18 +1114,18 @@ _DATA	ENDS
 PUBLIC	_int_abs
 ;	COMDAT _int_abs
 _TEXT	SEGMENT
+; File src\sl_math.c
 _x$ = 8
 _int_abs PROC NEAR					; COMDAT
-; File src\sl_math.c
 ; Line 10
-	mov	edx, DWORD PTR _x$[esp-4]
-	mov	ecx, edx
-	shr	ecx, 31					; 0000001fH
-	neg	ecx
+	mov	ecx, DWORD PTR _x$[esp-4]
+	mov	edx, ecx
+	shr	edx, 31					; 0000001fH
+	neg	edx
 ; Line 11
-	mov	eax, ecx
-	xor	eax, edx
-	sub	eax, ecx
+	mov	eax, edx
+	xor	eax, ecx
+	sub	eax, edx
 ; Line 12
 	ret	0
 _int_abs ENDP
@@ -1138,43 +1138,43 @@ _b$ = 12
 _c$ = 16
 _muldiv	PROC NEAR					; COMDAT
 ; Line 14
-	push	ebp
-	mov	ebp, esp
 	push	ebx
 	push	esi
-	push	edi
 ; Line 18
-	mov	ecx, DWORD PTR _a$[ebp]
+	mov	ecx, DWORD PTR _a$[esp+4]
 ; Line 19
-	xor	ecx, DWORD PTR _b$[ebp]
+	xor	ecx, DWORD PTR _b$[esp+4]
 ; Line 20
-	xor	ecx, DWORD PTR _c$[ebp]
+	xor	ecx, DWORD PTR _c$[esp+4]
 ; Line 22
-	mov	eax, DWORD PTR _a$[ebp]
+	mov	eax, DWORD PTR _a$[esp+4]
 ; Line 23
 	cmp	eax, 0
 ; Line 24
 	jge	SHORT $no_nega$184
 ; Line 25
 	neg	eax
+; Line 27
 $no_nega$184:
 ; Line 28
-	mov	ebx, DWORD PTR _b$[ebp]
+	mov	ebx, DWORD PTR _b$[esp+4]
 ; Line 29
 	cmp	ebx, 0
 ; Line 30
 	jge	SHORT $no_negb$185
 ; Line 31
 	neg	ebx
+; Line 32
 $no_negb$185:
 ; Line 33
-	mov	esi, DWORD PTR _c$[ebp]
+	mov	esi, DWORD PTR _c$[esp+4]
 ; Line 34
 	cmp	esi, 0
 ; Line 35
 	jge	SHORT $no_negc$186
 ; Line 36
 	neg	esi
+; Line 37
 $no_negc$186:
 ; Line 39
 	mul	ebx
@@ -1190,18 +1190,16 @@ $no_negc$186:
 	jge	SHORT $done$188
 ; Line 45
 	neg	eax
-$done$188:
-; Line 49
-	jmp	SHORT $L183
+	jmp	SHORT $done$188
+; Line 52
 $overflow$187:
 ; Line 53
 	mov	eax, 2147483647				; 7fffffffH
-$L183:
+; Line 46
+$done$188:
 ; Line 72
-	pop	edi
 	pop	esi
 	pop	ebx
-	pop	ebp
 	ret	0
 _muldiv	ENDP
 _TEXT	ENDS
@@ -1211,13 +1209,10 @@ _TEXT	SEGMENT
 _a$ = 8
 _b$ = 12
 _fixed_mul PROC NEAR					; COMDAT
-; Line 74
-	push	ebp
-	mov	ebp, esp
 ; Line 77
-	mov	eax, DWORD PTR _a$[ebp]
+	mov	eax, DWORD PTR _a$[esp-4]
 ; Line 78
-	imul	DWORD PTR _b$[ebp]
+	imul	DWORD PTR _b$[esp-4]
 ; Line 79
 	shr	eax, 16					; 00000010H
 ; Line 80
@@ -1225,7 +1220,6 @@ _fixed_mul PROC NEAR					; COMDAT
 ; Line 81
 	or	eax, edx
 ; Line 86
-	pop	ebp
 	ret	0
 _fixed_mul ENDP
 _TEXT	ENDS
@@ -1235,11 +1229,8 @@ _TEXT	SEGMENT
 _a$ = 8
 _b$ = 12
 _fixed_div PROC NEAR					; COMDAT
-; Line 88
-	push	ebp
-	mov	ebp, esp
 ; Line 91
-	mov	eax, DWORD PTR _a$[ebp]
+	mov	eax, DWORD PTR _a$[esp-4]
 ; Line 92
 	mov	edx, eax
 ; Line 93
@@ -1249,9 +1240,8 @@ _fixed_div PROC NEAR					; COMDAT
 ; Line 95
 	shl	eax, 16					; 00000010H
 ; Line 96
-	idiv	DWORD PTR _b$[ebp]
+	idiv	DWORD PTR _b$[esp-4]
 ; Line 101
-	pop	ebp
 	ret	0
 _fixed_div ENDP
 _TEXT	ENDS
@@ -1272,46 +1262,48 @@ _n$ = 8
 _fast_sqrt PROC NEAR					; COMDAT
 ; Line 107
 	push	ebx
-; Line 108
-	mov	ebx, DWORD PTR _n$[esp]
-	mov	eax, ebx
 	push	esi
-	cdq
-	sub	eax, edx
+	mov	esi, DWORD PTR _n$[esp+4]
 	push	edi
-	mov	esi, eax
-	sar	esi, 1
-; Line 113
-	xor	edi, edi
-$L202:
-; Line 114
-	test	esi, esi
-	je	SHORT $L334
-; Line 115
-	push	esi
-	push	ebx
-	call	_fixed_div
-	add	eax, esi
-	add	esp, 8
+; Line 108
+	mov	eax, esi
+	xor	ebx, ebx
 	cdq
 	sub	eax, edx
 	sar	eax, 1
-	inc	edi
-	mov	esi, eax
-	cmp	edi, 8
+	mov	edi, eax
+; Line 113
+$L202:
+; Line 114
+	test	edi, edi
+	je	SHORT $L331
+; Line 115
+	push	edi
+	inc	ebx
+	push	esi
+	call	_fixed_div
+	add	esp, 8
+	add	eax, edi
+	cdq
+	sub	eax, edx
+	sar	eax, 1
+	cmp	ebx, 8
+	mov	edi, eax
+; Line 113
 	jl	SHORT $L202
+; Line 117
+	mov	eax, edi
+; Line 118
 	pop	edi
 	pop	esi
 	pop	ebx
-; Line 118
 	ret	0
-$L334:
-	pop	edi
-	pop	esi
+$L331:
 ; Line 114
 	xor	eax, eax
+	pop	edi
+	pop	esi
 	pop	ebx
-; Line 118
 	ret	0
 _fast_sqrt ENDP
 _TEXT	ENDS
@@ -1323,23 +1315,15 @@ _b$ = 12
 _vec3_add PROC NEAR					; COMDAT
 ; Line 120
 	mov	ecx, DWORD PTR _a$[esp-4]
-	mov	eax, DWORD PTR _b$[esp-4]
-	push	esi
-	mov	edx, DWORD PTR [ecx]
-	mov	esi, DWORD PTR [eax]
-	add	esi, edx
-	mov	DWORD PTR [eax], esi
+	mov	edx, DWORD PTR _b$[esp-4]
+	mov	eax, DWORD PTR [ecx]
+	add	DWORD PTR [edx], eax
 ; Line 121
-	mov	edx, DWORD PTR [ecx+4]
-	mov	esi, DWORD PTR [eax+4]
-	add	esi, edx
+	mov	eax, DWORD PTR [ecx+4]
+	add	DWORD PTR [edx+4], eax
 ; Line 122
-	mov	edx, DWORD PTR [eax+8]
-	mov	DWORD PTR [eax+4], esi
 	mov	ecx, DWORD PTR [ecx+8]
-	add	edx, ecx
-	pop	esi
-	mov	DWORD PTR [eax+8], edx
+	add	DWORD PTR [edx+8], ecx
 ; Line 123
 	ret	0
 _vec3_add ENDP
@@ -1352,23 +1336,15 @@ _b$ = 12
 _vec3_subtract PROC NEAR				; COMDAT
 ; Line 125
 	mov	ecx, DWORD PTR _a$[esp-4]
-	mov	eax, DWORD PTR _b$[esp-4]
-	push	esi
-	mov	edx, DWORD PTR [ecx]
-	mov	esi, DWORD PTR [eax]
-	sub	esi, edx
-	mov	DWORD PTR [eax], esi
+	mov	edx, DWORD PTR _b$[esp-4]
+	mov	eax, DWORD PTR [ecx]
+	sub	DWORD PTR [edx], eax
 ; Line 126
-	mov	edx, DWORD PTR [ecx+4]
-	mov	esi, DWORD PTR [eax+4]
-	sub	esi, edx
+	mov	eax, DWORD PTR [ecx+4]
+	sub	DWORD PTR [edx+4], eax
 ; Line 127
-	mov	edx, DWORD PTR [eax+8]
-	mov	DWORD PTR [eax+4], esi
 	mov	ecx, DWORD PTR [ecx+8]
-	sub	edx, ecx
-	pop	esi
-	mov	DWORD PTR [eax+8], edx
+	sub	DWORD PTR [edx+8], ecx
 ; Line 128
 	ret	0
 _vec3_subtract ENDP
@@ -1382,60 +1358,65 @@ _o$ = 16
 _vec3_cross PROC NEAR					; COMDAT
 ; Line 129
 	push	ebx
-	push	ebp
 	push	esi
-; Line 130
-	mov	esi, DWORD PTR _b$[esp+8]
+	mov	esi, DWORD PTR _a$[esp+4]
 	push	edi
-	mov	edi, DWORD PTR _a$[esp+12]
+	push	ebp
+	mov	ecx, DWORD PTR [esi+4]
+	mov	ebp, DWORD PTR _b$[esp+12]
+; Line 130
+	mov	eax, DWORD PTR [ebp+8]
+	push	eax
+	push	ecx
+	call	_fixed_mul
+	add	esp, 8
+	mov	ebx, eax
+	mov	ecx, DWORD PTR [ebp+4]
 	mov	eax, DWORD PTR [esi+8]
-	mov	ecx, DWORD PTR [edi+4]
-	push	eax
 	push	ecx
-	call	_fixed_mul
-	mov	edx, DWORD PTR [esi+4]
-	mov	ebp, eax
-	mov	eax, DWORD PTR [edi+8]
-	push	edx
 	push	eax
 	call	_fixed_mul
-	mov	ebx, DWORD PTR _o$[esp+28]
-	sub	ebp, eax
-	mov	DWORD PTR [ebx], ebp
+	mov	edi, DWORD PTR _o$[esp+20]
+	add	esp, 8
+	sub	ebx, eax
+	mov	DWORD PTR [edi], ebx
 ; Line 131
+	mov	eax, DWORD PTR [ebp]
 	mov	ecx, DWORD PTR [esi+8]
-	mov	edx, DWORD PTR [edi]
+	push	eax
 	push	ecx
-	push	edx
 	call	_fixed_mul
-	mov	ecx, DWORD PTR [edi+8]
-	mov	ebp, eax
+	add	esp, 8
+	mov	ebx, eax
+	mov	ecx, DWORD PTR [ebp+8]
 	mov	eax, DWORD PTR [esi]
-	push	eax
 	push	ecx
+	push	eax
 	call	_fixed_mul
-	sub	eax, ebp
-	mov	DWORD PTR [ebx+4], eax
+	add	esp, 8
+	sub	ebx, eax
+	mov	DWORD PTR [edi+4], ebx
 ; Line 132
-	mov	edx, DWORD PTR [esi+4]
-	mov	eax, DWORD PTR [edi]
-	push	edx
+	mov	ecx, DWORD PTR [ebp+4]
+	mov	eax, DWORD PTR [esi]
+	push	ecx
 	push	eax
 	call	_fixed_mul
-	mov	ecx, DWORD PTR [esi]
-	mov	edx, DWORD PTR [edi+4]
+	add	esp, 8
+	mov	ebx, eax
+	mov	ecx, DWORD PTR [ebp]
+	mov	eax, DWORD PTR [esi+4]
 	push	ecx
-	push	edx
-	mov	ebp, eax
+	push	eax
 	call	_fixed_mul
-	add	esp, 48					; 00000030H
-	sub	ebp, eax
-	mov	DWORD PTR [ebx+8], ebp
+	add	esp, 8
+	sub	ebx, eax
+	mov	DWORD PTR [edi+8], ebx
+; Line 133
+	pop	ebp
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-; Line 133
 	ret	0
 _vec3_cross ENDP
 _TEXT	ENDS
@@ -1445,81 +1426,81 @@ _TEXT	SEGMENT
 _x$ = 8
 _vec3_normalize PROC NEAR				; COMDAT
 ; Line 137
-	push	ebx
-	push	ebp
 	push	esi
+	push	edi
+	mov	esi, DWORD PTR _x$[esp+4]
 ; Line 138
-	mov	esi, DWORD PTR _x$[esp+8]
-	push	edi
-	mov	eax, DWORD PTR [esi]
-	mov	edi, DWORD PTR [esi+8]
-	mov	ebx, DWORD PTR [esi+4]
+	mov	eax, DWORD PTR [esi+4]
 	push	eax
 	push	eax
 	call	_fixed_mul
-	push	ebx
-	push	ebx
-	mov	ebp, eax
-	call	_fixed_mul
-	push	edi
-	push	edi
-	add	ebp, eax
-	call	_fixed_mul
-	add	esp, 24					; 00000018H
-	add	ebp, eax
-	jns	SHORT $L348
-	mov	edi, 2147483647				; 7fffffffH
-	jmp	SHORT $L349
-$L348:
-	mov	eax, DWORD PTR [esi]
-	mov	ebx, DWORD PTR [esi+8]
-	mov	ebp, DWORD PTR [esi+4]
-	push	eax
-	push	eax
-	call	_fixed_mul
-	push	ebp
-	push	ebp
+	add	esp, 8
 	mov	edi, eax
+	mov	ecx, DWORD PTR [esi+8]
+	push	ecx
+	push	ecx
 	call	_fixed_mul
-	push	ebx
-	push	ebx
+	add	esp, 8
 	add	edi, eax
+	mov	ecx, DWORD PTR [esi]
+	push	ecx
+	push	ecx
 	call	_fixed_mul
-	add	esp, 24					; 00000018H
+	add	esp, 8
 	add	edi, eax
-$L349:
-	push	edi
+	mov	eax, 2147483647				; 7fffffffH
+	js	SHORT $L341
+	mov	eax, DWORD PTR [esi+4]
+	push	eax
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	mov	edi, eax
+	mov	ecx, DWORD PTR [esi+8]
+	push	ecx
+	push	ecx
+	call	_fixed_mul
+	add	esp, 8
+	add	edi, eax
+	mov	ecx, DWORD PTR [esi]
+	push	ecx
+	push	ecx
+	call	_fixed_mul
+	add	esp, 8
+	add	eax, edi
+$L341:
+	push	eax
 	call	_fast_sqrt
-	mov	edi, eax
 	add	esp, 4
+	mov	edi, eax
 ; Line 139
 	test	edi, edi
 	je	SHORT $L217
 ; Line 140
+	push	edi
 	mov	eax, DWORD PTR [esi]
+	push	eax
+	call	_fixed_div
+	add	esp, 8
+	mov	DWORD PTR [esi], eax
+; Line 141
+	mov	eax, DWORD PTR [esi+4]
 	push	edi
 	push	eax
 	call	_fixed_div
-; Line 141
-	mov	ecx, DWORD PTR [esi+4]
-	push	edi
-	push	ecx
-	mov	DWORD PTR [esi], eax
-	call	_fixed_div
-; Line 142
-	mov	edx, DWORD PTR [esi+8]
-	push	edi
-	push	edx
+	add	esp, 8
 	mov	DWORD PTR [esi+4], eax
+; Line 142
+	mov	eax, DWORD PTR [esi+8]
+	push	edi
+	push	eax
 	call	_fixed_div
-	add	esp, 24					; 00000018H
+	add	esp, 8
 	mov	DWORD PTR [esi+8], eax
+; Line 143
 $L217:
 	pop	edi
 	pop	esi
-	pop	ebp
-	pop	ebx
-; Line 143
 	ret	0
 _vec3_normalize ENDP
 _TEXT	ENDS
@@ -1532,33 +1513,35 @@ _vec3_dot PROC NEAR					; COMDAT
 ; Line 146
 	push	ebx
 	push	esi
-; Line 147
-	mov	esi, DWORD PTR _b$[esp+4]
+	mov	esi, DWORD PTR _a$[esp+4]
 	push	edi
-	mov	edi, DWORD PTR _a$[esp+8]
-	mov	eax, DWORD PTR [esi+8]
-	mov	ecx, DWORD PTR [edi+8]
+; Line 147
+	mov	edi, DWORD PTR _b$[esp+8]
+	mov	ecx, DWORD PTR [esi+8]
+	mov	eax, DWORD PTR [edi+8]
 	push	eax
 	push	ecx
 	call	_fixed_mul
-	mov	edx, DWORD PTR [esi+4]
+	add	esp, 8
 	mov	ebx, eax
 	mov	eax, DWORD PTR [edi+4]
-	push	edx
+	mov	ecx, DWORD PTR [esi+4]
+	push	eax
+	push	ecx
+	call	_fixed_mul
+	add	esp, 8
+	add	ebx, eax
+	mov	ecx, DWORD PTR [edi]
+	mov	eax, DWORD PTR [esi]
+	push	ecx
 	push	eax
 	call	_fixed_mul
-	mov	ecx, DWORD PTR [esi]
-	mov	edx, DWORD PTR [edi]
-	push	ecx
-	push	edx
-	add	ebx, eax
-	call	_fixed_mul
-	add	esp, 24					; 00000018H
+	add	esp, 8
 	add	eax, ebx
+; Line 148
 	pop	edi
 	pop	esi
 	pop	ebx
-; Line 148
 	ret	0
 _vec3_dot ENDP
 _TEXT	ENDS
@@ -1571,79 +1554,86 @@ _dest$ = 16
 _mat3_mul PROC NEAR					; COMDAT
 ; Line 149
 	push	ebx
-	push	ebp
 	push	esi
-; Line 150
-	mov	esi, DWORD PTR _b$[esp+8]
+	mov	ebx, DWORD PTR _a$[esp+4]
 	push	edi
-	mov	edi, DWORD PTR _a$[esp+12]
-	mov	eax, DWORD PTR [esi+8]
-	mov	ecx, DWORD PTR [edi+8]
+	mov	edi, DWORD PTR _b$[esp+8]
+	push	ebp
+; Line 150
+	mov	ecx, DWORD PTR [ebx]
+	mov	eax, DWORD PTR [edi]
 	push	eax
 	push	ecx
 	call	_fixed_mul
-	mov	edx, DWORD PTR [esi+4]
+	add	esp, 8
 	mov	ebp, eax
-	mov	eax, DWORD PTR [edi+4]
-	push	edx
-	push	eax
-	call	_fixed_mul
-	mov	ecx, DWORD PTR [esi]
-	mov	edx, DWORD PTR [edi]
-	push	ecx
-	push	edx
-	add	ebp, eax
-	call	_fixed_mul
-	mov	ebx, DWORD PTR _dest$[esp+36]
-	add	ebp, eax
-	mov	DWORD PTR [ebx], ebp
-; Line 151
-	mov	eax, DWORD PTR [esi+8]
-	mov	ecx, DWORD PTR [edi+20]
+	mov	eax, DWORD PTR [edi+8]
+	mov	ecx, DWORD PTR [ebx+8]
 	push	eax
 	push	ecx
-	call	_fixed_mul
-	mov	edx, DWORD PTR [esi+4]
-	mov	ebp, eax
-	mov	eax, DWORD PTR [edi+16]
-	push	edx
-	push	eax
-	call	_fixed_mul
-	mov	ecx, DWORD PTR [esi]
-	mov	edx, DWORD PTR [edi+12]
-	push	ecx
-	push	edx
-	add	ebp, eax
-	call	_fixed_mul
-	add	ebp, eax
-	mov	DWORD PTR [ebx+4], ebp
-; Line 152
-	mov	eax, DWORD PTR [esi+8]
-	mov	ecx, DWORD PTR [edi+32]
-	push	eax
-	push	ecx
-	call	_fixed_mul
-	mov	edx, DWORD PTR [esi+4]
-	mov	ebp, eax
-	mov	eax, DWORD PTR [edi+28]
-	push	edx
-	push	eax
-	call	_fixed_mul
-	mov	ecx, DWORD PTR [esi]
-	mov	edx, DWORD PTR [edi+24]
-	add	esp, 64					; 00000040H
-	add	ebp, eax
-	push	ecx
-	push	edx
 	call	_fixed_mul
 	add	esp, 8
 	add	ebp, eax
-	mov	DWORD PTR [ebx+8], ebp
+	mov	ecx, DWORD PTR [edi+4]
+	mov	eax, DWORD PTR [ebx+4]
+	push	ecx
+	push	eax
+	call	_fixed_mul
+	mov	esi, DWORD PTR _dest$[esp+20]
+	add	esp, 8
+	add	ebp, eax
+	mov	DWORD PTR [esi], ebp
+; Line 151
+	mov	eax, DWORD PTR [edi]
+	mov	ecx, DWORD PTR [ebx+12]
+	push	eax
+	push	ecx
+	call	_fixed_mul
+	add	esp, 8
+	mov	ebp, eax
+	mov	ecx, DWORD PTR [edi+8]
+	mov	eax, DWORD PTR [ebx+20]
+	push	ecx
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	add	ebp, eax
+	mov	ecx, DWORD PTR [edi+4]
+	mov	eax, DWORD PTR [ebx+16]
+	push	ecx
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	add	ebp, eax
+	mov	DWORD PTR [esi+4], ebp
+; Line 152
+	mov	ecx, DWORD PTR [edi]
+	mov	eax, DWORD PTR [ebx+24]
+	push	ecx
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	mov	ebp, eax
+	mov	ecx, DWORD PTR [edi+8]
+	push	ecx
+	mov	eax, DWORD PTR [ebx+32]
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	add	ebp, eax
+	mov	ecx, DWORD PTR [edi+4]
+	mov	eax, DWORD PTR [ebx+28]
+	push	ecx
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	add	ebp, eax
+	mov	DWORD PTR [esi+8], ebp
+; Line 153
+	pop	ebp
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-; Line 153
 	ret	0
 _mat3_mul ENDP
 _TEXT	ENDS
@@ -1660,90 +1650,93 @@ PUBLIC	_quat_pitch
 _TEXT	SEGMENT
 _pitch$ = 8
 _a$ = 12
-_w$ = -4
-_x$ = -8
-_y$ = 12
-_z$ = 8
+_w$ = -12
+_y$ = -4
+_z$ = -8
 _quat_pitch PROC NEAR					; COMDAT
 ; Line 158
-	sub	esp, 12					; 0000000cH
-; Line 159
-	mov	eax, DWORD PTR _pitch$[esp+8]
+	sub	esp, 16					; 00000010H
+	xor	eax, eax
+	mov	al, BYTE PTR _pitch$[esp+12]
 	push	ebx
-	and	eax, 255				; 000000ffH
-	push	ebp
-	push	esi
-; Line 161
-	mov	esi, DWORD PTR _a$[esp+20]
 	shl	eax, 2
-	mov	ebp, DWORD PTR [esi+12]
-; Line 163
-	mov	ecx, DWORD PTR [esi+4]
-	mov	ebx, DWORD PTR _SIN_LUT_SMALL[eax]
-; Line 164
-	mov	edx, DWORD PTR [esi+8]
+	push	esi
+	mov	esi, DWORD PTR _a$[esp+20]
 	push	edi
-	mov	edi, DWORD PTR _COS_LUT_SMALL[eax]
-	mov	eax, DWORD PTR [esi]
-	mov	DWORD PTR _w$[esp+28], ebp
-; Line 168
-	push	eax
-	push	ebx
-	mov	DWORD PTR _x$[esp+36], eax
+	push	ebp
+	mov	ebx, DWORD PTR _COS_LUT_SMALL[eax]
+; Line 160
+	mov	edi, DWORD PTR _SIN_LUT_SMALL[eax]
+	mov	ebp, DWORD PTR [esi]
+; Line 161
+	mov	eax, DWORD PTR [esi+12]
+	mov	ecx, DWORD PTR [esi+4]
+	mov	DWORD PTR _w$[esp+32], eax
 	mov	DWORD PTR _y$[esp+32], ecx
-	mov	DWORD PTR _z$[esp+32], edx
+; Line 164
+	mov	eax, DWORD PTR [esi+8]
+	mov	edx, DWORD PTR _w$[esp+32]
+	mov	DWORD PTR _z$[esp+32], eax
+	push	edx
+; Line 168
+	push	ebx
 	call	_fixed_mul
-	mov	edx, eax
+	mov	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
 	push	ebp
 	push	edi
-	mov	DWORD PTR -12+[esp+44], edx
 	call	_fixed_mul
-	mov	ecx, DWORD PTR -12+[esp+44]
+	sub	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
+	mov	ecx, DWORD PTR -16+[esp+32]
+	push	ebp
+	push	ebx
+	mov	DWORD PTR [esi+12], ecx
 ; Line 169
-	mov	edx, DWORD PTR _x$[esp+44]
-	sub	eax, ecx
-	push	edx
-	push	edi
-	mov	DWORD PTR [esi+12], eax
 	call	_fixed_mul
+	mov	ecx, DWORD PTR _w$[esp+40]
+	add	esp, 8
 	mov	ebp, eax
-	mov	eax, DWORD PTR _w$[esp+52]
-	push	eax
-	push	ebx
-	call	_fixed_mul
-; Line 170
-	mov	ecx, DWORD PTR _z$[esp+56]
-	add	ebp, eax
 	push	ecx
-	push	ebx
+	push	edi
+	call	_fixed_mul
+	add	esp, 8
+	add	ebp, eax
 	mov	DWORD PTR [esi], ebp
-	call	_fixed_mul
-	mov	edx, DWORD PTR _y$[esp+64]
-	mov	ebp, eax
-	push	edx
-	push	edi
-	call	_fixed_mul
-	add	ebp, eax
-; Line 171
-	mov	eax, DWORD PTR _z$[esp+72]
+; Line 170
+	mov	eax, DWORD PTR _z$[esp+32]
 	push	eax
 	push	edi
-	mov	DWORD PTR [esi+4], ebp
 	call	_fixed_mul
-	mov	ecx, DWORD PTR _y$[esp+80]
-	mov	edi, eax
-	push	ecx
+	add	esp, 8
+	mov	ebp, eax
+	mov	eax, DWORD PTR _y$[esp+32]
+	push	eax
 	push	ebx
 	call	_fixed_mul
-	add	esp, 64					; 00000040H
-	sub	edi, eax
-	mov	DWORD PTR [esi+8], edi
+	add	esp, 8
+	add	ebp, eax
+	mov	DWORD PTR [esi+4], ebp
+; Line 171
+	mov	eax, DWORD PTR _z$[esp+32]
+	push	eax
+	push	ebx
+	call	_fixed_mul
+	add	esp, 8
+	mov	ebx, eax
+	mov	eax, DWORD PTR _y$[esp+32]
+	push	eax
+	push	edi
+	call	_fixed_mul
+	add	esp, 8
+	sub	ebx, eax
+	mov	DWORD PTR [esi+8], ebx
+; Line 172
+	pop	ebp
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-; Line 172
-	add	esp, 12					; 0000000cH
+	add	esp, 16					; 00000010H
 	ret	0
 _quat_pitch ENDP
 _TEXT	ENDS
@@ -1752,89 +1745,94 @@ PUBLIC	_quat_yaw
 _TEXT	SEGMENT
 _yaw$ = 8
 _a$ = 12
-_w$ = -4
-_x$ = 12
-_y$ = -8
-_z$ = 8
+_w$ = -12
+_x$ = -4
+_z$ = -8
 _quat_yaw PROC NEAR					; COMDAT
 ; Line 173
-	sub	esp, 12					; 0000000cH
-; Line 174
-	mov	eax, DWORD PTR _yaw$[esp+8]
+	sub	esp, 16					; 00000010H
+	xor	eax, eax
+	mov	al, BYTE PTR _yaw$[esp+12]
 	push	ebx
-	and	eax, 255				; 000000ffH
-	push	ebp
-	push	esi
-; Line 176
-	mov	esi, DWORD PTR _a$[esp+20]
 	shl	eax, 2
-	mov	ebp, DWORD PTR [esi+12]
-; Line 179
-	mov	ecx, DWORD PTR [esi+8]
-	mov	ebx, DWORD PTR _SIN_LUT_SMALL[eax]
+	push	esi
+	mov	esi, DWORD PTR _a$[esp+20]
 	push	edi
-	mov	edi, DWORD PTR _COS_LUT_SMALL[eax]
-	mov	eax, DWORD PTR [esi]
-	mov	DWORD PTR _x$[esp+24], eax
-	mov	eax, DWORD PTR [esi+4]
+	push	ebp
+	mov	ebx, DWORD PTR _COS_LUT_SMALL[eax]
+; Line 175
+	mov	edi, DWORD PTR _SIN_LUT_SMALL[eax]
+	mov	ecx, DWORD PTR [esi]
+; Line 176
+	mov	eax, DWORD PTR [esi+12]
+	mov	ebp, DWORD PTR [esi+4]
+	mov	DWORD PTR _w$[esp+32], eax
+	mov	DWORD PTR _x$[esp+32], ecx
+; Line 179
+	mov	eax, DWORD PTR [esi+8]
+	mov	ecx, DWORD PTR _w$[esp+32]
+	mov	DWORD PTR _z$[esp+32], eax
+	push	ecx
 ; Line 183
-	push	eax
 	push	ebx
-	mov	DWORD PTR _w$[esp+36], ebp
-	mov	DWORD PTR _y$[esp+36], eax
-	mov	DWORD PTR _z$[esp+32], ecx
 	call	_fixed_mul
-	mov	edx, eax
+	mov	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
 	push	ebp
 	push	edi
-	mov	DWORD PTR -12+[esp+44], edx
 	call	_fixed_mul
-	mov	edx, DWORD PTR -12+[esp+44]
-	sub	eax, edx
-	mov	DWORD PTR [esi+12], eax
+	mov	edx, DWORD PTR _x$[esp+40]
+	sub	DWORD PTR -16+[esp+40], eax
+	mov	ecx, DWORD PTR -16+[esp+40]
+	add	esp, 8
+	mov	DWORD PTR [esi+12], ecx
 ; Line 184
-	mov	eax, DWORD PTR _z$[esp+40]
-	push	eax
+	push	edx
 	push	ebx
 	call	_fixed_mul
-	mov	ecx, DWORD PTR _x$[esp+48]
-	mov	ebp, eax
+	mov	ecx, DWORD PTR _z$[esp+40]
+	mov	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
 	push	ecx
 	push	edi
 	call	_fixed_mul
+	sub	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
+	mov	ecx, DWORD PTR -16+[esp+32]
+	push	ebp
+	push	ebx
+	mov	DWORD PTR [esi], ecx
 ; Line 185
-	mov	edx, DWORD PTR _y$[esp+60]
-	sub	eax, ebp
-	push	edx
-	push	edi
-	mov	DWORD PTR [esi], eax
 	call	_fixed_mul
+	mov	ecx, DWORD PTR _w$[esp+40]
+	add	esp, 8
 	mov	ebp, eax
-	mov	eax, DWORD PTR _w$[esp+68]
+	push	ecx
+	push	edi
+	call	_fixed_mul
+	add	esp, 8
+	add	ebp, eax
+	mov	DWORD PTR [esi+4], ebp
+; Line 186
+	mov	eax, DWORD PTR _z$[esp+32]
 	push	eax
 	push	ebx
 	call	_fixed_mul
-; Line 186
-	mov	ecx, DWORD PTR _z$[esp+72]
-	add	ebp, eax
-	push	ecx
+	add	esp, 8
+	mov	ebx, eax
+	mov	eax, DWORD PTR _x$[esp+32]
+	push	eax
 	push	edi
-	mov	DWORD PTR [esi+4], ebp
 	call	_fixed_mul
-	mov	edx, DWORD PTR _x$[esp+80]
-	mov	edi, eax
-	push	edx
-	push	ebx
-	call	_fixed_mul
-	add	esp, 64					; 00000040H
-	add	edi, eax
-	mov	DWORD PTR [esi+8], edi
+	add	esp, 8
+	add	ebx, eax
+	mov	DWORD PTR [esi+8], ebx
+; Line 187
+	pop	ebp
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-; Line 187
-	add	esp, 12					; 0000000cH
+	add	esp, 16					; 00000010H
 	ret	0
 _quat_yaw ENDP
 _TEXT	ENDS
@@ -1843,90 +1841,94 @@ PUBLIC	_quat_roll
 _TEXT	SEGMENT
 _roll$ = 8
 _a$ = 12
-_w$ = -4
-_x$ = 12
-_y$ = 8
-_z$ = -8
+_w$ = -8
+_x$ = -12
+_z$ = -4
 _quat_roll PROC NEAR					; COMDAT
 ; Line 188
-	sub	esp, 12					; 0000000cH
-; Line 189
-	mov	eax, DWORD PTR _roll$[esp+8]
+	sub	esp, 16					; 00000010H
+	xor	eax, eax
+	mov	al, BYTE PTR _roll$[esp+12]
 	push	ebx
-	and	eax, 255				; 000000ffH
-	push	ebp
-	push	esi
-; Line 191
-	mov	esi, DWORD PTR _a$[esp+20]
 	shl	eax, 2
-	mov	ebp, DWORD PTR [esi+12]
-; Line 193
-	mov	ecx, DWORD PTR [esi+4]
-	mov	ebx, DWORD PTR _SIN_LUT_SMALL[eax]
+	push	esi
+	mov	esi, DWORD PTR _a$[esp+20]
 	push	edi
-	mov	edi, DWORD PTR _COS_LUT_SMALL[eax]
-	mov	eax, DWORD PTR [esi]
-	mov	DWORD PTR _x$[esp+24], eax
+	push	ebp
+	mov	ebx, DWORD PTR _COS_LUT_SMALL[eax]
+; Line 190
+	mov	edi, DWORD PTR _SIN_LUT_SMALL[eax]
+	mov	ecx, DWORD PTR [esi]
+; Line 191
+	mov	eax, DWORD PTR [esi+12]
+	mov	ebp, DWORD PTR [esi+4]
+	mov	DWORD PTR _w$[esp+32], eax
+	mov	DWORD PTR _x$[esp+32], ecx
 ; Line 194
 	mov	eax, DWORD PTR [esi+8]
+	mov	ecx, DWORD PTR _w$[esp+32]
+	mov	DWORD PTR _z$[esp+32], eax
+	push	ecx
 ; Line 198
-	push	eax
 	push	ebx
-	mov	DWORD PTR _w$[esp+36], ebp
-	mov	DWORD PTR _y$[esp+32], ecx
-	mov	DWORD PTR _z$[esp+36], eax
 	call	_fixed_mul
-	mov	edx, eax
+	mov	ecx, DWORD PTR _z$[esp+40]
+	mov	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
+	push	ecx
+	push	edi
+	call	_fixed_mul
+	sub	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
+	mov	ecx, DWORD PTR -16+[esp+32]
 	push	ebp
 	push	edi
-	mov	DWORD PTR -12+[esp+44], edx
-	call	_fixed_mul
-	mov	edx, DWORD PTR -12+[esp+44]
-	sub	eax, edx
-	mov	DWORD PTR [esi+12], eax
+	mov	DWORD PTR [esi+12], ecx
 ; Line 199
-	mov	eax, DWORD PTR _y$[esp+40]
-	push	eax
+	call	_fixed_mul
+	mov	ecx, DWORD PTR _x$[esp+40]
+	mov	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
+	push	ecx
 	push	ebx
 	call	_fixed_mul
-	mov	ecx, DWORD PTR _x$[esp+48]
-	mov	ebp, eax
-	push	ecx
-	push	edi
-	call	_fixed_mul
+	add	DWORD PTR -16+[esp+40], eax
+	add	esp, 8
+	mov	ecx, DWORD PTR -16+[esp+32]
+	push	ebp
+	push	ebx
+	mov	DWORD PTR [esi], ecx
 ; Line 200
-	mov	edx, DWORD PTR _y$[esp+56]
-	add	ebp, eax
-	push	edx
-	push	edi
-	mov	DWORD PTR [esi], ebp
 	call	_fixed_mul
+	mov	ecx, DWORD PTR _x$[esp+40]
+	add	esp, 8
 	mov	ebp, eax
-	mov	eax, DWORD PTR _x$[esp+64]
+	push	ecx
+	push	edi
+	call	_fixed_mul
+	add	esp, 8
+	sub	ebp, eax
+	mov	DWORD PTR [esi+4], ebp
+; Line 201
+	mov	eax, DWORD PTR _w$[esp+32]
+	push	eax
+	push	edi
+	call	_fixed_mul
+	add	esp, 8
+	mov	edi, eax
+	mov	eax, DWORD PTR _z$[esp+32]
 	push	eax
 	push	ebx
 	call	_fixed_mul
-; Line 201
-	mov	ecx, DWORD PTR _z$[esp+76]
-	sub	ebp, eax
-	push	ecx
-	push	edi
-	mov	DWORD PTR [esi+4], ebp
-	call	_fixed_mul
-	mov	edx, DWORD PTR _w$[esp+84]
-	mov	edi, eax
-	push	edx
-	push	ebx
-	call	_fixed_mul
-	add	esp, 64					; 00000040H
+	add	esp, 8
 	add	edi, eax
 	mov	DWORD PTR [esi+8], edi
+; Line 202
+	pop	ebp
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-; Line 202
-	add	esp, 12					; 0000000cH
+	add	esp, 16					; 00000010H
 	ret	0
 _quat_roll ENDP
 _TEXT	ENDS
@@ -1935,164 +1937,177 @@ PUBLIC	_quat_tomat
 _TEXT	SEGMENT
 _from$ = 8
 _to$ = 12
-_d$ = -16
-_bs$ = -20
-_cs$ = 8
-_ab$ = -4
+_d$ = -20
+_bs$ = -24
+_cs$ = -28
+_ab$ = -8
 _ac$ = -12
-_bb$ = -8
-_bc$ = -20
-_cc$ = 8
+_ad$ = -16
+_bb$ = -4
+_bc$ = -24
+_cc$ = -28
 _quat_tomat PROC NEAR					; COMDAT
 ; Line 203
-	sub	esp, 20					; 00000014H
-; Line 204
-	mov	eax, DWORD PTR _from$[esp+16]
+	mov	eax, DWORD PTR _from$[esp-4]
+	sub	esp, 28					; 0000001cH
 	push	ebx
-	push	ebp
 	push	esi
-; Line 205
-	mov	esi, DWORD PTR [eax]
-; Line 206
-	mov	ebx, DWORD PTR [eax+4]
 	push	edi
-	mov	edi, DWORD PTR [eax+12]
+	mov	esi, DWORD PTR [eax+12]
+	push	ebp
+	mov	edi, DWORD PTR [eax]
+; Line 206
+	mov	ebp, DWORD PTR [eax+4]
 ; Line 207
 	mov	eax, DWORD PTR [eax+8]
+	mov	DWORD PTR _d$[esp+44], eax
+	push	eax
 ; Line 208
 	push	eax
-	push	eax
-	mov	DWORD PTR _d$[esp+44], eax
 	call	_fixed_mul
-	push	ebx
-	push	ebx
-	mov	ebp, eax
-	call	_fixed_mul
-	push	esi
-	push	esi
-	add	ebp, eax
-	call	_fixed_mul
-	push	edi
-	push	edi
-	add	ebp, eax
-	call	_fixed_mul
-	add	ebp, eax
+	add	esp, 8
+	mov	ebx, eax
 	push	ebp
+	push	ebp
+	call	_fixed_mul
+	add	esp, 8
+	add	ebx, eax
+	push	edi
+	push	edi
+	call	_fixed_mul
+	add	esp, 8
+	add	ebx, eax
+	push	esi
+	push	esi
+	call	_fixed_mul
+	add	esp, 8
+	add	ebx, eax
+	push	ebx
 	push	131072					; 00020000H
 	call	_fixed_div
-	mov	ebp, eax
-; Line 209
-	push	ebp
-	push	esi
-	call	_fixed_mul
-; Line 210
-	push	ebp
-	push	ebx
-	mov	DWORD PTR _bs$[esp+92], eax
-	call	_fixed_mul
-	mov	DWORD PTR _cs$[esp+88], eax
-; Line 211
-	mov	eax, DWORD PTR _d$[esp+92]
-	push	ebp
-	push	eax
-	call	_fixed_mul
-; Line 212
-	mov	ecx, DWORD PTR _bs$[esp+100]
-	add	esp, 64					; 00000040H
-	mov	ebp, eax
-	push	ecx
-	push	edi
-	call	_fixed_mul
-; Line 213
-	mov	edx, DWORD PTR _cs$[esp+40]
-	mov	DWORD PTR _ab$[esp+44], eax
-	push	edx
-	push	edi
-	call	_fixed_mul
-; Line 214
-	push	ebp
-	push	edi
-	mov	DWORD PTR _ac$[esp+60], eax
-	call	_fixed_mul
-	mov	edi, eax
-; Line 215
-	mov	eax, DWORD PTR _bs$[esp+60]
-	push	eax
-	push	esi
-	call	_fixed_mul
-; Line 216
-	mov	ecx, DWORD PTR _cs$[esp+64]
-	mov	DWORD PTR _bb$[esp+68], eax
-	push	ecx
-	push	esi
-	call	_fixed_mul
-; Line 217
-	push	ebp
-	push	esi
-	mov	DWORD PTR _bc$[esp+84], eax
-	call	_fixed_mul
-; Line 218
-	mov	edx, DWORD PTR _cs$[esp+80]
-	mov	esi, eax
-	push	edx
-	push	ebx
-	call	_fixed_mul
-; Line 219
-	push	ebp
-	push	ebx
-	mov	DWORD PTR _cc$[esp+96], eax
-	call	_fixed_mul
-	add	esp, 64					; 00000040H
-	mov	ebx, eax
-; Line 220
-	mov	eax, DWORD PTR _d$[esp+36]
-	push	ebp
-	push	eax
-	call	_fixed_mul
-; Line 221
-	mov	ecx, 65536				; 00010000H
 	add	esp, 8
-	sub	ecx, eax
-	mov	eax, DWORD PTR _cc$[esp+32]
-	mov	edx, ecx
+	mov	ebx, eax
+; Line 209
+	push	ebx
+	push	edi
+	call	_fixed_mul
+	mov	DWORD PTR _bs$[esp+52], eax
+	add	esp, 8
+; Line 210
+	push	ebx
+	push	ebp
+	call	_fixed_mul
+	mov	DWORD PTR _cs$[esp+52], eax
+	add	esp, 8
+; Line 211
+	mov	eax, DWORD PTR _d$[esp+44]
+	push	ebx
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	mov	ebx, eax
+; Line 212
+	mov	eax, DWORD PTR _bs$[esp+44]
+	push	eax
+	push	esi
+	call	_fixed_mul
+	mov	DWORD PTR _ab$[esp+52], eax
+; Line 213
+	mov	eax, DWORD PTR _cs$[esp+52]
+	add	esp, 8
+	push	eax
+	push	esi
+	call	_fixed_mul
+	mov	DWORD PTR _ac$[esp+52], eax
+	add	esp, 8
+; Line 214
+	push	ebx
+	push	esi
+	call	_fixed_mul
+	mov	DWORD PTR _ad$[esp+52], eax
+; Line 215
+	mov	eax, DWORD PTR _bs$[esp+52]
+	add	esp, 8
+	push	eax
+	push	edi
+	call	_fixed_mul
+	mov	DWORD PTR _bb$[esp+52], eax
+; Line 216
+	mov	eax, DWORD PTR _cs$[esp+52]
+	add	esp, 8
+	push	eax
+	push	edi
+	call	_fixed_mul
+	mov	DWORD PTR _bc$[esp+52], eax
+	add	esp, 8
+; Line 217
+	push	ebx
+	push	edi
+	call	_fixed_mul
+	add	esp, 8
+	mov	edi, eax
+; Line 218
+	mov	eax, DWORD PTR _cs$[esp+44]
+	push	eax
+	push	ebp
+	call	_fixed_mul
+	mov	DWORD PTR _cc$[esp+52], eax
+	add	esp, 8
+; Line 219
+	push	ebx
+	push	ebp
+	call	_fixed_mul
+	add	esp, 8
+	mov	esi, eax
+; Line 220
+	mov	eax, DWORD PTR _d$[esp+44]
+	push	ebx
+	push	eax
+	call	_fixed_mul
+	mov	ecx, DWORD PTR _to$[esp+48]
+	add	esp, 8
+	mov	edx, 65536				; 00010000H
 	sub	edx, eax
-	mov	eax, DWORD PTR _to$[esp+32]
-	mov	DWORD PTR [eax], edx
+; Line 221
+	mov	eax, edx
+	sub	eax, DWORD PTR _cc$[esp+44]
+	mov	DWORD PTR [ecx], eax
 ; Line 222
-	mov	edx, DWORD PTR _bc$[esp+36]
-	sub	edx, edi
-	mov	DWORD PTR [eax+4], edx
+	mov	eax, DWORD PTR _bc$[esp+44]
+	sub	eax, DWORD PTR _ad$[esp+44]
+	mov	DWORD PTR [ecx+4], eax
 ; Line 223
-	mov	edx, DWORD PTR _ac$[esp+36]
-	lea	ebp, DWORD PTR [esi+edx]
+	mov	eax, DWORD PTR _ac$[esp+44]
+	add	eax, edi
+	sub	edx, DWORD PTR _bb$[esp+44]
+	mov	DWORD PTR [ecx+8], eax
+	mov	DWORD PTR [ecx+16], edx
+; Line 224
+	mov	eax, DWORD PTR _bc$[esp+44]
+	add	eax, DWORD PTR _ad$[esp+44]
+	mov	DWORD PTR [ecx+12], eax
+; Line 226
+	mov	eax, esi
+	sub	eax, DWORD PTR _ab$[esp+44]
+	mov	DWORD PTR [ecx+20], eax
 ; Line 227
-	sub	esi, edx
-	mov	DWORD PTR [eax+8], ebp
-	mov	ebp, DWORD PTR _bc$[esp+36]
-	add	ebp, edi
-	mov	edi, DWORD PTR _bb$[esp+36]
-	sub	ecx, edi
-	mov	DWORD PTR [eax+12], ebp
-	mov	DWORD PTR [eax+16], ecx
-	mov	ecx, DWORD PTR _ab$[esp+36]
-	mov	ebp, ebx
-	mov	DWORD PTR [eax+24], esi
+	sub	edi, DWORD PTR _ac$[esp+44]
+	mov	eax, DWORD PTR _ab$[esp+44]
+	add	eax, esi
+	mov	DWORD PTR [ecx+24], edi
+; Line 228
+	mov	DWORD PTR [ecx+28], eax
 ; Line 229
-	mov	esi, DWORD PTR _cc$[esp+32]
-	sub	ebp, ecx
-	add	ebx, ecx
-	mov	ecx, 65536				; 00010000H
-	sub	ecx, esi
-	mov	DWORD PTR [eax+20], ebp
-	sub	ecx, edi
-	pop	edi
-	pop	esi
-	mov	DWORD PTR [eax+28], ebx
+	mov	eax, 65536				; 00010000H
+	sub	eax, DWORD PTR _cc$[esp+44]
+	sub	eax, DWORD PTR _bb$[esp+44]
 	pop	ebp
-	mov	DWORD PTR [eax+32], ecx
-	pop	ebx
+	pop	edi
+	mov	DWORD PTR [ecx+32], eax
 ; Line 230
-	add	esp, 20					; 00000014H
+	pop	esi
+	pop	ebx
+	add	esp, 28					; 0000001cH
 	ret	0
 _quat_tomat ENDP
 _TEXT	ENDS
@@ -2103,123 +2118,134 @@ _pitch$ = 8
 _yaw$ = 12
 _roll$ = 16
 _a$ = 20
-_cy$ = 12
-_sy$ = 8
+_cp$ = -16
+_sp$ = -12
 _cc$ = -4
-_cs$ = 16
-_sc$ = 12
-_ss$ = 8
+_cs$ = -16
+_sc$ = -8
+_ss$ = -12
 _quat_create PROC NEAR					; COMDAT
 ; Line 231
-	push	ecx
-; Line 236
-	mov	eax, DWORD PTR _pitch$[esp]
+	sub	esp, 16					; 00000010H
+	xor	eax, eax
+	mov	al, BYTE PTR _pitch$[esp+12]
 	push	ebx
-	and	eax, 255				; 000000ffH
-	push	ebp
-	shr	eax, 1
-	shl	eax, 2
 	push	esi
+	and	eax, -2					; fffffffeH
 	push	edi
-	mov	ebx, DWORD PTR _COS_LUT[eax]
-; Line 237
-	mov	ebp, DWORD PTR _SIN_LUT[eax]
-; Line 238
-	mov	eax, DWORD PTR _yaw$[esp+16]
-	and	eax, 255				; 000000ffH
-	shr	eax, 1
-	shl	eax, 2
-	mov	ecx, DWORD PTR _COS_LUT[eax]
-; Line 239
-	mov	eax, DWORD PTR _SIN_LUT[eax]
-	mov	DWORD PTR _sy$[esp+16], eax
-; Line 240
-	mov	eax, DWORD PTR _roll$[esp+16]
-	and	eax, 255				; 000000ffH
-; Line 242
-	push	ecx
-	shr	eax, 1
-	shl	eax, 2
-	push	ebx
-	mov	DWORD PTR _cy$[esp+24], ecx
-	mov	esi, DWORD PTR _COS_LUT[eax]
-	mov	edi, DWORD PTR _SIN_LUT[eax]
-	call	_fixed_mul
-; Line 243
-	mov	ecx, DWORD PTR _sy$[esp+24]
-	mov	DWORD PTR _cc$[esp+28], eax
-	push	ecx
-	push	ebx
-	call	_fixed_mul
-; Line 244
-	mov	edx, DWORD PTR _cy$[esp+32]
-	mov	DWORD PTR _cs$[esp+32], eax
-	push	edx
+	add	eax, eax
 	push	ebp
+; Line 236
+	mov	ecx, DWORD PTR _COS_LUT[eax]
+	mov	edx, DWORD PTR _SIN_LUT[eax]
+	mov	DWORD PTR _cp$[esp+32], ecx
+; Line 237
+	xor	eax, eax
+	mov	DWORD PTR _sp$[esp+32], edx
+	mov	al, BYTE PTR _yaw$[esp+28]
+	and	eax, -2					; fffffffeH
+	add	eax, eax
+; Line 238
+	mov	esi, DWORD PTR _COS_LUT[eax]
+	mov	ebp, DWORD PTR _SIN_LUT[eax]
+; Line 239
+	xor	eax, eax
+	push	esi
+	mov	al, BYTE PTR _roll$[esp+32]
+	push	ecx
+	and	eax, -2					; fffffffeH
+	add	eax, eax
+; Line 240
+	mov	edi, DWORD PTR _COS_LUT[eax]
+	mov	ebx, DWORD PTR _SIN_LUT[eax]
+; Line 242
+	call	_fixed_mul
+	mov	ecx, DWORD PTR _cp$[esp+40]
+	mov	DWORD PTR _cc$[esp+40], eax
+	add	esp, 8
+; Line 243
+	push	ebp
+	push	ecx
+	call	_fixed_mul
+	mov	DWORD PTR _cs$[esp+40], eax
+	add	esp, 8
+; Line 244
+	mov	eax, DWORD PTR _sp$[esp+32]
+	push	esi
+	push	eax
 	call	_fixed_mul
 	mov	DWORD PTR _sc$[esp+40], eax
+	add	esp, 8
 ; Line 245
-	mov	eax, DWORD PTR _sy$[esp+40]
-	push	eax
+	mov	eax, DWORD PTR _sp$[esp+32]
 	push	ebp
+	push	eax
 	call	_fixed_mul
+	mov	DWORD PTR _ss$[esp+40], eax
+	add	esp, 8
 ; Line 246
+	mov	eax, DWORD PTR _cc$[esp+32]
 	push	edi
 	push	eax
-	mov	DWORD PTR _ss$[esp+56], eax
 	call	_fixed_mul
-	mov	ecx, DWORD PTR _cc$[esp+60]
-	push	esi
-	push	ecx
-	mov	ebx, eax
+	add	esp, 8
+	mov	ebp, eax
+	mov	eax, DWORD PTR _ss$[esp+32]
+	push	ebx
+	push	eax
 	call	_fixed_mul
+	add	esp, 8
+	sub	ebp, eax
+	mov	esi, DWORD PTR _a$[esp+28]
+	mov	eax, DWORD PTR _cs$[esp+32]
+	push	ebx
+	push	eax
+	mov	DWORD PTR [esi+12], ebp
 ; Line 247
-	mov	edx, DWORD PTR _cs$[esp+64]
-	sub	eax, ebx
-	mov	ebx, DWORD PTR _a$[esp+64]
-	push	edi
-	push	edx
-	mov	DWORD PTR [ebx+12], eax
 	call	_fixed_mul
+	add	esp, 8
 	mov	ebp, eax
-	mov	eax, DWORD PTR _sc$[esp+72]
-	push	esi
+	mov	eax, DWORD PTR _sc$[esp+32]
+	push	edi
 	push	eax
 	call	_fixed_mul
-; Line 248
-	mov	ecx, DWORD PTR _sc$[esp+80]
-	add	esp, 64					; 00000040H
+	add	esp, 8
 	add	ebp, eax
+	mov	DWORD PTR [esi], ebp
+; Line 248
 	push	edi
-	push	ecx
-	mov	DWORD PTR [ebx], ebp
-	call	_fixed_mul
-	mov	edx, DWORD PTR _cs$[esp+24]
-	push	esi
-	push	edx
-	mov	ebp, eax
-	call	_fixed_mul
-	sub	eax, ebp
-; Line 249
-	push	esi
-	mov	DWORD PTR [ebx+4], eax
-	mov	eax, DWORD PTR _ss$[esp+36]
+	mov	eax, DWORD PTR _cs$[esp+36]
 	push	eax
 	call	_fixed_mul
-	mov	ecx, DWORD PTR _cc$[esp+44]
-	push	edi
-	push	ecx
-	mov	esi, eax
+	add	esp, 8
+	mov	ebp, eax
+	mov	eax, DWORD PTR _sc$[esp+32]
+	push	ebx
+	push	eax
 	call	_fixed_mul
-	add	esp, 32					; 00000020H
-	add	esi, eax
-	mov	DWORD PTR [ebx+8], esi
+	add	esp, 8
+	sub	ebp, eax
+	mov	DWORD PTR [esi+4], ebp
+; Line 249
+	push	ebx
+	mov	eax, DWORD PTR _cc$[esp+36]
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	mov	ebx, eax
+	mov	eax, DWORD PTR _ss$[esp+32]
+	push	edi
+	push	eax
+	call	_fixed_mul
+	add	esp, 8
+	add	ebx, eax
+	mov	DWORD PTR [esi+8], ebx
+; Line 250
+	pop	ebp
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-; Line 250
-	pop	ecx
+	add	esp, 16					; 00000010H
 	ret	0
 _quat_create ENDP
 _TEXT	ENDS
@@ -2237,18 +2263,18 @@ _TEXT	SEGMENT
 _q$ = 8
 _quat_conjugate PROC NEAR				; COMDAT
 ; Line 256
-	mov	eax, DWORD PTR _q$[esp-4]
-	mov	ecx, DWORD PTR [eax]
+	mov	ecx, DWORD PTR _q$[esp-4]
+	mov	eax, DWORD PTR [ecx]
+	neg	eax
+	mov	DWORD PTR [ecx], eax
 ; Line 257
-	mov	edx, DWORD PTR [eax+4]
-	neg	ecx
-	mov	DWORD PTR [eax], ecx
+	mov	eax, DWORD PTR [ecx+4]
+	neg	eax
+	mov	DWORD PTR [ecx+4], eax
 ; Line 258
-	mov	ecx, DWORD PTR [eax+8]
-	neg	edx
-	neg	ecx
-	mov	DWORD PTR [eax+4], edx
-	mov	DWORD PTR [eax+8], ecx
+	mov	eax, DWORD PTR [ecx+8]
+	neg	eax
+	mov	DWORD PTR [ecx+8], eax
 ; Line 259
 	ret	0
 _quat_conjugate ENDP

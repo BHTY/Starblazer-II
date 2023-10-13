@@ -7,8 +7,10 @@
 extern void title_draw();
 extern void title_module();
 
+int SLEEP_TIME = 0;
 int current_frame = 0;
 uint8 BG_COLOR = 0;
+int tick_counter = 0;
 
 int LAST_TICK_TIME = 14;
 int LAST_FRAME_TIME = 14;
@@ -31,7 +33,10 @@ void SG_PresentFrame(){
 void SG_Tick(){
 	uint32 current_time;
 
-	SG_Module();
+	while(tick_counter){
+		SG_Module();
+		tick_counter--;
+	}
 
 	//GAME_SETTINGS.vid_settings.frameskip = 0;
 
@@ -46,7 +51,13 @@ void SG_Tick(){
 		current_frame++;
 	}
 
-	SG_WaitBlank();
+	//SG_WaitBlank();
+	SG_ProcessEvents();
+
+	if(SLEEP_TIME){
+		SG_Sleep(SLEEP_TIME);
+	}
+	//SG_Sleep(10);
 }
 
 void SG_LoadConfig(SG_config_t* cfg){

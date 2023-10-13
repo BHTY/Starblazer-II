@@ -61,78 +61,90 @@ EXTRN	_SND_LASER_ENEMY:DWORD
 EXTRN	_play_soundfx:NEAR
 ;	COMDAT _spawn_enemy_laser
 _TEXT	SEGMENT
+; File src\net.c
 _index$ = 8
+_pos$ = -28
 _ori$ = -16
 _spawn_enemy_laser PROC NEAR				; COMDAT
-; File src\net.c
 ; Line 17
-	sub	esp, 16					; 00000010H
+	sub	esp, 28					; 0000001cH
 	push	ebx
-	push	ebp
 	push	esi
+	mov	esi, DWORD PTR _index$[esp+32]
 	push	edi
-; Line 18
-	mov	edi, DWORD PTR _index$[esp+28]
-; Line 20
-	push	0
-	mov	esi, edi
-	push	0
-	shl	esi, 5
-	push	0
-	mov	eax, DWORD PTR _players[esi+4]
-	mov	eax, DWORD PTR _StarblazerEntities[eax*4]
-	lea	ecx, DWORD PTR [eax+4]
-	add	eax, 16					; 00000010H
-	mov	ebx, ecx
-	mov	ebp, DWORD PTR [eax]
-	mov	ecx, DWORD PTR [ebx]
-	mov	DWORD PTR _ori$[esp+44], ebp
-	mov	ebp, DWORD PTR [eax+4]
-	mov	edx, DWORD PTR [ebx+4]
-	mov	DWORD PTR _ori$[esp+48], ebp
-	mov	ebp, DWORD PTR [eax+8]
-	mov	ebx, DWORD PTR [ebx+8]
-	mov	eax, DWORD PTR [eax+12]
-	push	ebx
-	push	edx
-	push	ecx
-	mov	ecx, DWORD PTR _players[esi+12]
-	mov	DWORD PTR _ori$[esp+68], eax
-	mov	edx, DWORD PTR [ecx+12]
-	push	edx
-	call	_spawn_entity
-; Line 22
+	mov	edi, esi
+	lea	edx, DWORD PTR _pos$[esp+40]
+	shl	edi, 5
+	mov	eax, DWORD PTR _players[edi+4]
 	mov	ecx, DWORD PTR _StarblazerEntities[eax*4]
-	mov	edx, DWORD PTR _ori$[esp+60]
+; Line 18
+	lea	ebx, DWORD PTR [ecx+4]
 	add	ecx, 16					; 00000010H
-	mov	DWORD PTR [ecx], edx
-	mov	edx, DWORD PTR _ori$[esp+64]
-	mov	DWORD PTR [ecx+4], edx
-	mov	edx, DWORD PTR _ori$[esp+72]
-	mov	DWORD PTR [ecx+8], ebp
-	mov	DWORD PTR [ecx+12], edx
-; Line 23
-	mov	ecx, DWORD PTR _players[esi+12]
-	mov	edx, DWORD PTR _StarblazerEntities[eax*4]
-	mov	ecx, DWORD PTR [ecx+8]
-	mov	DWORD PTR [edx+92], ecx
-; Line 24
-	mov	edx, DWORD PTR _StarblazerEntities[eax*4]
-	mov	DWORD PTR [edx+32], 280			; 00000118H
-; Line 25
-	mov	eax, DWORD PTR _StarblazerEntities[eax*4]
-	mov	DWORD PTR [eax+84], edi
-; Line 26
-	mov	ecx, DWORD PTR _SND_LASER_ENEMY
+	mov	eax, DWORD PTR [ebx]
+	mov	DWORD PTR [edx], eax
+	mov	eax, DWORD PTR [ebx+4]
+	mov	ebx, DWORD PTR [ebx+8]
+	mov	DWORD PTR [edx+4], eax
+	mov	eax, DWORD PTR [ecx]
+	mov	DWORD PTR [edx+8], ebx
+; Line 19
+	lea	edx, DWORD PTR _ori$[esp+40]
+	mov	ebx, DWORD PTR [ecx+4]
+	push	0
+	push	0
+	push	0
+	mov	DWORD PTR [edx], eax
+	mov	eax, DWORD PTR [ecx+8]
+	mov	DWORD PTR [edx+4], ebx
+	mov	ecx, DWORD PTR [ecx+12]
+	mov	DWORD PTR [edx+8], eax
+	mov	eax, DWORD PTR _pos$[esp+56]
+	mov	DWORD PTR [edx+12], ecx
+; Line 20
+	mov	edx, DWORD PTR _pos$[esp+60]
+	mov	ecx, DWORD PTR _pos$[esp+52]
+	push	edx
+	push	eax
 	push	ecx
+	mov	edx, DWORD PTR _players[edi+12]
+	mov	eax, DWORD PTR [edx+12]
+	push	eax
+	call	_spawn_entity
+	lea	ebx, DWORD PTR _ori$[esp+68]
+	add	esp, 28					; 0000001cH
+	lea	ecx, DWORD PTR _StarblazerEntities[eax*4]
+; Line 22
+	mov	eax, DWORD PTR [ebx]
+	mov	edx, DWORD PTR [ecx]
+	mov	DWORD PTR [edx+16], eax
+	add	edx, 16					; 00000010H
+	mov	eax, DWORD PTR [ebx+4]
+	mov	DWORD PTR [edx+4], eax
+	mov	eax, DWORD PTR [ebx+8]
+	mov	ebx, DWORD PTR [ebx+12]
+	mov	DWORD PTR [edx+8], eax
+	mov	DWORD PTR [edx+12], ebx
+; Line 23
+	mov	edx, DWORD PTR _players[edi+12]
+	mov	ebx, DWORD PTR [ecx]
+	mov	eax, DWORD PTR [edx+8]
+	mov	DWORD PTR [ebx+92], eax
+; Line 24
+	mov	ebx, DWORD PTR [ecx]
+	mov	DWORD PTR [ebx+32], 280			; 00000118H
+; Line 25
+	mov	ebx, DWORD PTR [ecx]
+	mov	DWORD PTR [ebx+84], esi
+; Line 26
+	mov	eax, DWORD PTR _SND_LASER_ENEMY
+	push	eax
 	call	_play_soundfx
-	add	esp, 32					; 00000020H
+	add	esp, 4
+; Line 27
 	pop	edi
 	pop	esi
-	pop	ebp
 	pop	ebx
-; Line 27
-	add	esp, 16					; 00000010H
+	add	esp, 28					; 0000001cH
 	ret	0
 _spawn_enemy_laser ENDP
 _TEXT	ENDS
@@ -150,7 +162,6 @@ EXTRN	_SG_SendPacket:NEAR
 EXTRN	_SG_CloseConnection:NEAR
 EXTRN	_printf:NEAR
 ;	COMDAT ??_C@_0L@OENN@STARBLAZER?$AA@
-; File src\net.c
 _DATA	SEGMENT
 ??_C@_0L@OENN@STARBLAZER?$AA@ DB 'STARBLAZER', 00H	; `string'
 _DATA	ENDS
@@ -178,161 +189,151 @@ _DATA	ENDS
 _TEXT	SEGMENT
 _addr$ = 8
 _auth_token$ = -48
-_ret_token$ = -56
+_ret_token$ = -52
 _net_connect PROC NEAR					; COMDAT
-; File src\net.c
 ; Line 42
-	sub	esp, 56					; 00000038H
+	sub	esp, 52					; 00000034H
 	push	ebx
 	push	esi
 	push	edi
 ; Line 46
 	call	_SG_GetTicks
-; Line 48
-	mov	ecx, DWORD PTR ??_C@_0L@OENN@STARBLAZER?$AA@+4
 	mov	ebx, eax
-	mov	eax, DWORD PTR ??_C@_0L@OENN@STARBLAZER?$AA@
-	mov	DWORD PTR _auth_token$[esp+72], ecx
-	mov	DWORD PTR _auth_token$[esp+68], eax
-	mov	al, BYTE PTR ??_C@_0L@OENN@STARBLAZER?$AA@+10
-	mov	BYTE PTR _auth_token$[esp+78], al
-; Line 49
+	mov	ecx, OFFSET FLAT:??_C@_0L@OENN@STARBLAZER?$AA@ ; `string'
+; Line 48
+	lea	edx, DWORD PTR _auth_token$[esp+64]
+	mov	eax, DWORD PTR [ecx]
+	mov	DWORD PTR [edx], eax
+	mov	eax, DWORD PTR [ecx+4]
 	mov	edi, OFFSET FLAT:_GAME_SETTINGS+14
-	or	ecx, -1
-	xor	eax, eax
-	repne scasb
-	mov	dx, WORD PTR ??_C@_0L@OENN@STARBLAZER?$AA@+8
+	mov	DWORD PTR [edx+4], eax
+	mov	ax, WORD PTR [ecx+8]
+	mov	cl, BYTE PTR [ecx+10]
+	mov	WORD PTR [edx+8], ax
+	sub	eax, eax
+	mov	BYTE PTR [edx+10], cl
+; Line 49
+	mov	ecx, -1
+	repnz	scasb
 	not	ecx
 	sub	edi, ecx
-	mov	WORD PTR _auth_token$[esp+76], dx
-	lea	edx, DWORD PTR _auth_token$[esp+81]
-	mov	eax, ecx
-	mov	esi, edi
-	mov	edi, edx
+	mov	edx, ecx
 	shr	ecx, 2
-	rep movsd
-	mov	ecx, eax
+	mov	esi, edi
+	lea	edi, DWORD PTR _auth_token$[esp+77]
+	rep	movsd
+	mov	ecx, edx
+	and	ecx, 3
+	rep	movsb
 ; Line 50
-	xor	eax, eax
-	and	ecx, 3
-	lea	edx, DWORD PTR _auth_token$[esp+97]
-	rep movsb
 	mov	edi, OFFSET FLAT:_GAME_SETTINGS+30
-	or	ecx, -1
-	repne scasb
+	mov	ecx, -1
+	sub	eax, eax
+	repnz	scasb
 	not	ecx
 	sub	edi, ecx
 	mov	eax, ecx
-	mov	esi, edi
-	mov	edi, edx
 	shr	ecx, 2
-	rep movsd
+	mov	esi, edi
+	lea	edi, DWORD PTR _auth_token$[esp+93]
+	rep	movsd
 	mov	ecx, eax
 	and	ecx, 3
-	rep movsb
+	rep	movsb
 ; Line 54
-	mov	ecx, DWORD PTR _addr$[esp+64]
+	mov	ecx, DWORD PTR _addr$[esp+60]
 	push	ecx
 	call	_SG_OpenConnection
 	add	esp, 4
 	test	al, al
-	jne	SHORT $L370
+	jne	SHORT $L375
 ; Line 55
 	push	OFFSET FLAT:??_C@_0BJ@CGNO@NET?3?5Connection?5failed?4?6?$AA@ ; `string'
 	call	_printf
 	add	esp, 4
-; Line 56
 	mov	al, 1
+; Line 56
 	pop	edi
 	pop	esi
 	pop	ebx
-; Line 79
-	add	esp, 56					; 00000038H
+	add	esp, 52					; 00000034H
 	ret	0
-$L370:
 ; Line 59
-	lea	edx, DWORD PTR _auth_token$[esp+68]
+$L375:
+	lea	eax, DWORD PTR _auth_token$[esp+64]
 	push	45					; 0000002dH
-	push	edx
+	push	eax
 	call	_SG_SendPacket
+	add	esp, 8
 ; Line 61
-	lea	eax, DWORD PTR _ret_token$[esp+76]
+$L379:
+	lea	eax, DWORD PTR _ret_token$[esp+64]
 	push	3
 	push	eax
 	call	_SG_RecievePacket
-	add	esp, 16					; 00000010H
+	add	esp, 8
 	test	eax, eax
-	jne	SHORT $L375
-$L374:
+	jne	SHORT $L380
 ; Line 62
 	call	_SG_GetTicks
 	sub	eax, ebx
 	cmp	eax, 3000				; 00000bb8H
-	ja	SHORT $L417
-	lea	ecx, DWORD PTR _ret_token$[esp+68]
-	push	3
-	push	ecx
-	call	_SG_RecievePacket
-	add	esp, 8
-	test	eax, eax
-	je	SHORT $L374
-$L375:
-; Line 69
-	mov	al, BYTE PTR _ret_token$[esp+68]
-	test	al, al
-	jne	SHORT $L378
-; Line 70
-	push	OFFSET FLAT:??_C@_0BN@OHPO@NET?3?5Authentication?5failed?4?6?$AA@ ; `string'
-	call	_printf
-	add	esp, 4
-; Line 71
-	call	_SG_CloseConnection
-	pop	edi
-	pop	esi
-; Line 72
-	mov	al, 2
-	pop	ebx
-; Line 79
-	add	esp, 56					; 00000038H
-	ret	0
-$L417:
+	jbe	SHORT $L379
 ; Line 63
 	push	OFFSET FLAT:??_C@_0BI@JKII@NET?3?5Server?5timed?5out?4?6?$AA@ ; `string'
 	call	_printf
 	add	esp, 4
 ; Line 64
 	call	_SG_CloseConnection
-	pop	edi
-	pop	esi
 ; Line 65
 	mov	al, 1
-	pop	ebx
-; Line 79
-	add	esp, 56					; 00000038H
-	ret	0
-$L378:
-; Line 75
-	mov	eax, DWORD PTR _ret_token$[esp+70]
-; Line 77
-	push	OFFSET FLAT:??_C@_0BN@FEMK@NET?3?5Successful?5connection?4?6?$AA@ ; `string'
-	and	eax, 255				; 000000ffH
-	lea	ecx, DWORD PTR [eax*8]
-	sub	ecx, eax
-	mov	eax, DWORD PTR _ret_token$[esp+73]
-	and	eax, 255				; 000000ffH
-	lea	edx, DWORD PTR [ecx+ecx*4]
-	mov	DWORD PTR _player_id, eax
-	shl	edx, 1
-	mov	DWORD PTR _timeout, edx
-	call	_printf
-	add	esp, 4
-; Line 78
-	xor	al, al
 	pop	edi
 	pop	esi
 	pop	ebx
+	add	esp, 52					; 00000034H
+	ret	0
+; Line 67
+$L380:
+; Line 69
+	cmp	BYTE PTR _ret_token$[esp+64], 0
+	jne	SHORT $L383
+; Line 70
+	push	OFFSET FLAT:??_C@_0BN@OHPO@NET?3?5Authentication?5failed?4?6?$AA@ ; `string'
+	call	_printf
+	add	esp, 4
+; Line 71
+	call	_SG_CloseConnection
+; Line 72
+	mov	al, 2
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 52					; 00000034H
+	ret	0
+; Line 75
+$L383:
+	xor	ecx, ecx
+	mov	cl, BYTE PTR _ret_token$[esp+66]
+	mov	eax, ecx
+	shl	ecx, 3
+	sub	ecx, eax
+	push	OFFSET FLAT:??_C@_0BN@FEMK@NET?3?5Successful?5connection?4?6?$AA@ ; `string'
+	lea	edx, DWORD PTR [ecx+ecx*4]
+	lea	eax, DWORD PTR [edx*2]
+	mov	DWORD PTR _timeout, eax
+; Line 76
+	xor	eax, eax
+	mov	al, BYTE PTR _ret_token$[esp+69]
+	mov	DWORD PTR _player_id, eax
+; Line 77
+	call	_printf
+	add	esp, 4
+	xor	al, al
 ; Line 79
-	add	esp, 56					; 00000038H
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 52					; 00000034H
 	ret	0
 _net_connect ENDP
 _TEXT	ENDS
@@ -352,245 +353,239 @@ _packet$ = -32
 _net_syncstate PROC NEAR				; COMDAT
 ; Line 81
 	sub	esp, 32					; 00000020H
+	mov	ecx, DWORD PTR _StarblazerEntities
+	add	ecx, 4
+	push	ebx
+	lea	edx, DWORD PTR _packet$[esp+36]
+	push	esi
+	push	edi
+	mov	eax, DWORD PTR [ecx]
 ; Line 85
-	mov	eax, DWORD PTR _StarblazerEntities
-	lea	ecx, DWORD PTR [eax+4]
-; Line 86
-	add	eax, 16					; 00000010H
-	mov	edx, DWORD PTR [ecx]
-	mov	DWORD PTR _packet$[esp+32], edx
-	mov	edx, DWORD PTR [ecx+4]
-	mov	DWORD PTR _packet$[esp+36], edx
+	mov	DWORD PTR [edx], eax
+	mov	ebx, DWORD PTR [ecx+4]
+	mov	DWORD PTR [edx+4], ebx
 	mov	ecx, DWORD PTR [ecx+8]
-	mov	DWORD PTR _packet$[esp+40], ecx
-	mov	edx, DWORD PTR [eax]
-	mov	DWORD PTR _packet$[esp+44], edx
-	mov	ecx, DWORD PTR [eax+4]
-	mov	DWORD PTR _packet$[esp+48], ecx
-; Line 87
+	mov	DWORD PTR [edx+8], ecx
+; Line 86
+	mov	ecx, DWORD PTR _StarblazerEntities
+	mov	eax, DWORD PTR [ecx+16]
+	add	ecx, 16					; 00000010H
+	lea	edx, DWORD PTR _packet$[esp+56]
+	mov	DWORD PTR [edx], eax
+	mov	ebx, DWORD PTR [ecx+4]
+	mov	DWORD PTR [edx+4], ebx
+	mov	esi, DWORD PTR [ecx+8]
+	mov	DWORD PTR [edx+8], esi
+	mov	eax, DWORD PTR [ecx+12]
 	mov	ecx, DWORD PTR _player_id
-	mov	edx, DWORD PTR [eax+8]
-	mov	DWORD PTR _packet$[esp+52], edx
-	mov	eax, DWORD PTR [eax+12]
-	movzx	dx, BYTE PTR _laser_type
-	mov	DWORD PTR _packet$[esp+56], eax
-	lea	eax, DWORD PTR [ecx+ecx]
-	movzx	cx, BYTE PTR _firing
-	or	eax, edx
-	shl	eax, 3
-	or	eax, ecx
+	add	cx, cx
+	mov	DWORD PTR [edx+12], eax
+; Line 87
+	movzx	ax, BYTE PTR _laser_type
+	or	cx, ax
+	shl	cx, 3
+	movzx	ax, BYTE PTR _firing
+	or	cx, ax
+	cmp	BYTE PTR _dying, 0
+	mov	WORD PTR _packet$[esp+72], cx
 ; Line 89
-	mov	cl, BYTE PTR _dying
-	test	cl, cl
-	mov	WORD PTR _packet$[esp+60], ax
-	je	SHORT $L383
+	je	SHORT $L388
 ; Line 91
-	mov	edx, DWORD PTR _impact_id
-; Line 92
 	mov	BYTE PTR _dying, 0
-	shl	edx, 12					; 0000000cH
-	or	edx, 2
-	or	ax, dx
-	mov	WORD PTR _packet$[esp+60], ax
-$L383:
+	mov	eax, DWORD PTR _impact_id
+	or	BYTE PTR _packet$[esp+72], 2
+	shl	ax, 12					; 0000000cH
+	or	WORD PTR _packet$[esp+72], ax
 ; Line 93
-	mov	ecx, DWORD PTR _frames_respawning
-	test	ecx, ecx
-	je	SHORT $L384
+$L388:
+	cmp	DWORD PTR _frames_respawning, 0
+	je	SHORT $L389
 ; Line 94
-	or	al, 4
-	mov	WORD PTR _packet$[esp+60], ax
-$L384:
+	or	BYTE PTR _packet$[esp+72], 4
 ; Line 97
-	lea	eax, DWORD PTR _packet$[esp+32]
+$L389:
+	lea	eax, DWORD PTR _packet$[esp+44]
 	push	32					; 00000020H
 	push	eax
 	call	_SG_SendPacket
+	lea	eax, DWORD PTR _packet$[esp+52]
+	add	esp, 8
 ; Line 102
-	lea	ecx, DWORD PTR _packet$[esp+40]
-	push	32					; 00000020H
-	push	ecx
-	call	_SG_RecievePacket
-	add	esp, 16					; 00000010H
-	test	eax, eax
-	je	$L387
-	push	ebx
-	push	esi
-	mov	bl, 1
-$L386:
-; Line 105
-	mov	ecx, DWORD PTR _packet$[esp+68]
-	mov	eax, ecx
-	and	eax, 65535				; 0000ffffH
-	mov	edx, eax
-	mov	esi, eax
-	shr	edx, 8
-	and	edx, -16				; fffffff0H
-	and	esi, 240				; 000000f0H
-	xor	edx, esi
-	mov	dl, BYTE PTR _packet$[esp+68]
-	jne	SHORT $L388
-	test	dl, 2
-	je	SHORT $L388
-; Line 106
-	shr	eax, 4
-	and	eax, 15					; 0000000fH
-	shl	eax, 5
-	cmp	BYTE PTR _players[eax], bl
-	jne	SHORT $L389
-; Line 107
-	mov	eax, DWORD PTR _players[eax+4]
-	lea	ecx, DWORD PTR _StarblazerEntities[eax*4]
-	push	ecx
-	call	_explode_entity
-	mov	ecx, DWORD PTR _packet$[esp+72]
-	add	esp, 4
-$L389:
-; Line 109
-	shr	ecx, 4
-	and	ecx, 15					; 0000000fH
-	shl	ecx, 5
-	mov	BYTE PTR _players[ecx], 0
-; Line 111
-	jmp	$L397
-$L388:
-	test	dl, 4
-	je	SHORT $L391
-; Line 112
-	shr	eax, 4
-	and	eax, 15					; 0000000fH
-	shl	eax, 5
-	cmp	BYTE PTR _players[eax], bl
-	jne	SHORT $L392
-; Line 113
-	mov	edx, DWORD PTR _players[eax+4]
-	lea	eax, DWORD PTR _StarblazerEntities[edx*4]
-	push	eax
-	call	_explode_entity
-	mov	ecx, DWORD PTR _packet$[esp+72]
-	add	esp, 4
-$L392:
-; Line 115
-	shr	ecx, 4
-	and	ecx, 15					; 0000000fH
-	shl	ecx, 5
-	mov	BYTE PTR _players[ecx], 2
-; Line 117
-	jmp	$L397
-$L391:
-; Line 119
-	shr	eax, 4
-	and	eax, 15					; 0000000fH
-	shl	eax, 5
-	mov	esi, eax
-	cmp	BYTE PTR _players[esi], bl
-	je	SHORT $L394
-; Line 121
-	mov	edx, DWORD PTR _AX5
-	lea	eax, DWORD PTR _players[esi+8]
-; Line 123
-	push	0
-	push	0
-	shr	ecx, 4
-	push	0
-	mov	DWORD PTR [eax], edx
-	and	ecx, 15					; 0000000fH
-	push	0
-	push	0
-	mov	eax, edx
-	shl	ecx, 5
-	push	0
-	push	eax
-	mov	esi, ecx
-	call	_spawn_entity
-; Line 124
-	mov	dl, BYTE PTR _packet$[esp+96]
-	mov	DWORD PTR _players[esi+4], eax
-	add	esp, 28					; 0000001cH
-	mov	BYTE PTR _players[esi], bl
-$L394:
-; Line 128
-	mov	ecx, DWORD PTR _players[esi+4]
-	test	dl, 2
-	je	SHORT $L395
-	lea	edx, DWORD PTR _StarblazerEntities[ecx*4]
-	push	edx
-	call	_explode_entity
-; Line 129
-	mov	eax, DWORD PTR _packet$[esp+72]
-	add	esp, 4
-	shr	eax, 4
-	and	eax, 15					; 0000000fH
-	shl	eax, 5
-	mov	BYTE PTR _players[eax], 2
-; Line 131
-	jmp	$L397
-$L395:
-; Line 133
-	mov	edx, DWORD PTR _StarblazerEntities[ecx*4]
-	mov	eax, DWORD PTR _packet$[esp+40]
-	add	edx, 4
-	mov	DWORD PTR [edx], eax
-	mov	ecx, DWORD PTR _packet$[esp+44]
-	mov	DWORD PTR [edx+4], ecx
-	mov	eax, DWORD PTR _packet$[esp+48]
-	mov	DWORD PTR [edx+8], eax
-; Line 134
-	mov	ecx, DWORD PTR _packet$[esp+68]
-	shr	ecx, 4
-	and	ecx, 15					; 0000000fH
-	shl	ecx, 5
-	mov	edx, DWORD PTR _players[ecx+4]
-	mov	ecx, DWORD PTR _packet$[esp+52]
-	mov	eax, DWORD PTR _StarblazerEntities[edx*4]
-	add	eax, 16					; 00000010H
-	mov	DWORD PTR [eax], ecx
-	mov	edx, DWORD PTR _packet$[esp+56]
-	mov	DWORD PTR [eax+4], edx
-	mov	ecx, DWORD PTR _packet$[esp+60]
-	mov	DWORD PTR [eax+8], ecx
-	mov	edx, DWORD PTR _packet$[esp+64]
-	mov	DWORD PTR [eax+12], edx
-; Line 136
-	mov	al, BYTE PTR _packet$[esp+68]
-	test	al, bl
-	je	SHORT $L397
-; Line 137
-	test	al, 8
-; Line 138
-	mov	eax, DWORD PTR _packet$[esp+68]
-	jne	SHORT $L398
-	shr	eax, 4
-	and	eax, 15					; 0000000fH
-	mov	ecx, eax
-	shl	ecx, 5
-	mov	DWORD PTR _players[ecx+12], OFFSET FLAT:_ENEMY_LASER_SHREDDER
-; Line 140
-	jmp	SHORT $L399
-$L398:
-; Line 141
-	shr	eax, 4
-	and	eax, 15					; 0000000fH
-	mov	edx, eax
-	shl	edx, 5
-	mov	DWORD PTR _players[edx+12], OFFSET FLAT:_ENEMY_LASER_DRAGONBREATH
-$L399:
-; Line 144
-	push	eax
-	call	_spawn_enemy_laser
-	add	esp, 4
-$L397:
-	lea	eax, DWORD PTR _packet$[esp+40]
 	push	32					; 00000020H
 	push	eax
 	call	_SG_RecievePacket
 	add	esp, 8
 	test	eax, eax
-	jne	$L386
+	je	$L386
+	mov	ebx, 1
+	mov	esi, 4
+$L391:
+	mov	ax, WORD PTR _packet$[esp+72]
+	xor	ecx, ecx
+	mov	cx, WORD PTR _packet$[esp+72]
+	shr	ax, 8
+	and	ecx, 240				; 000000f0H
+; Line 105
+	movzx	eax, ax
+	and	eax, -16				; fffffff0H
+	cmp	eax, ecx
+	jne	SHORT $L393
+	test	BYTE PTR _packet$[esp+72], 2
+	je	SHORT $L393
+	cmp	BYTE PTR _players[ecx*2], bl
+	lea	eax, DWORD PTR [ecx*2]
+; Line 106
+	jne	SHORT $L394
+; Line 107
+	mov	eax, DWORD PTR _players[eax+4]
+	lea	ecx, DWORD PTR _StarblazerEntities[eax*4]
+	push	ecx
+	call	_explode_entity
+	add	esp, 4
+; Line 109
+$L394:
+	xor	eax, eax
+	mov	ax, WORD PTR _packet$[esp+72]
+	and	eax, 240				; 000000f0H
+	mov	BYTE PTR _players[eax*2], 0
+; Line 111
+	jmp	$L423
+$L393:
+	test	WORD PTR _packet$[esp+72], si
+	je	SHORT $L396
+	cmp	BYTE PTR _players[ecx*2], bl
+	lea	eax, DWORD PTR [ecx*2]
+; Line 112
+	jne	SHORT $L397
+; Line 113
+	mov	eax, DWORD PTR _players[eax+4]
+	lea	ecx, DWORD PTR _StarblazerEntities[eax*4]
+	push	ecx
+	call	_explode_entity
+	add	esp, 4
+; Line 115
+$L397:
+	xor	eax, eax
+	mov	ax, WORD PTR _packet$[esp+72]
+	and	eax, 240				; 000000f0H
+	mov	BYTE PTR _players[eax*2], 2
+; Line 117
+	jmp	$L423
+$L396:
+	cmp	BYTE PTR _players[ecx*2], bl
+	lea	edi, DWORD PTR [ecx*2]
+; Line 119
+	je	SHORT $L399
+	mov	eax, DWORD PTR _AX5
+	push	0
+; Line 121
+	push	0
+	mov	DWORD PTR _players[edi+8], eax
+; Line 123
+	push	0
+	push	0
+	push	0
+	push	0
+	push	eax
+	call	_spawn_entity
+	add	esp, 28					; 0000001cH
+	mov	DWORD PTR _players[edi+4], eax
+; Line 124
+	xor	eax, eax
+	mov	ax, WORD PTR _packet$[esp+72]
+	and	eax, 240				; 000000f0H
+	mov	BYTE PTR _players[eax*2], bl
+; Line 127
+$L399:
+	test	BYTE PTR _packet$[esp+72], 2
+	je	SHORT $L400
+; Line 128
+	xor	eax, eax
+	mov	ax, WORD PTR _packet$[esp+72]
+	and	eax, 240				; 000000f0H
+	mov	ecx, DWORD PTR _players[eax*2+4]
+	lea	edx, DWORD PTR _StarblazerEntities[ecx*4]
+	push	edx
+	call	_explode_entity
+	add	esp, 4
+	xor	eax, eax
+; Line 129
+	mov	ax, WORD PTR _packet$[esp+72]
+	and	eax, 240				; 000000f0H
+	mov	BYTE PTR _players[eax*2], 2
+; Line 131
+	jmp	$L423
+$L400:
+; Line 133
+	lea	ecx, DWORD PTR _packet$[esp+44]
+	xor	eax, eax
+	mov	ax, WORD PTR _packet$[esp+72]
+	and	eax, 240				; 000000f0H
+	mov	edi, DWORD PTR _players[eax*2+4]
+	mov	eax, DWORD PTR [ecx]
+	mov	edx, DWORD PTR _StarblazerEntities[edi*4]
+	add	edx, esi
+	mov	DWORD PTR [edx], eax
+	xor	eax, eax
+	mov	edi, DWORD PTR [ecx+4]
+	mov	DWORD PTR [edx+4], edi
+	mov	ecx, DWORD PTR [ecx+8]
+	mov	DWORD PTR [edx+8], ecx
+; Line 134
+	lea	ecx, DWORD PTR _packet$[esp+56]
+	mov	ax, WORD PTR _packet$[esp+72]
+	and	eax, 240				; 000000f0H
+	mov	edi, DWORD PTR _players[eax*2+4]
+	mov	eax, DWORD PTR [ecx]
+	mov	edx, DWORD PTR _StarblazerEntities[edi*4]
+	mov	DWORD PTR [edx+16], eax
+	add	edx, 16					; 00000010H
+	mov	edi, DWORD PTR [ecx+4]
+	mov	DWORD PTR [edx+4], edi
+	mov	eax, DWORD PTR [ecx+8]
+	mov	DWORD PTR [edx+8], eax
+	mov	ecx, DWORD PTR [ecx+12]
+	mov	DWORD PTR [edx+12], ecx
+; Line 136
+	test	WORD PTR _packet$[esp+72], bx
+	je	SHORT $L423
+; Line 137
+	test	BYTE PTR _packet$[esp+72], 8
+	mov	cx, WORD PTR _packet$[esp+72]
+	jne	SHORT $L403
+	and	cx, 240					; 000000f0H
+; Line 138
+	movzx	eax, cx
+	mov	DWORD PTR _players[eax*2+12], OFFSET FLAT:_ENEMY_LASER_SHREDDER
+; Line 140
+	jmp	SHORT $L404
+$L403:
+	and	cx, 240					; 000000f0H
+; Line 141
+	movzx	eax, cx
+	mov	DWORD PTR _players[eax*2+12], OFFSET FLAT:_ENEMY_LASER_DRAGONBREATH
+; Line 142
+$L404:
+; Line 144
+	shr	cx, 4
+	movzx	eax, cx
+	push	eax
+	call	_spawn_enemy_laser
+	add	esp, 4
+$L423:
+; Line 149
+	lea	eax, DWORD PTR _packet$[esp+44]
+	push	32					; 00000020H
+	push	eax
+	call	_SG_RecievePacket
+	add	esp, 8
+	test	eax, eax
+	jne	$L391
+; Line 172
+$L386:
+	pop	edi
 	pop	esi
 	pop	ebx
-$L387:
-; Line 172
 	add	esp, 32					; 00000020H
 	ret	0
 _net_syncstate ENDP

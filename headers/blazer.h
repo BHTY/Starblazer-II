@@ -77,5 +77,7 @@ void SG_SaveConfig(SG_config_t*);
 extern SG_config_t GAME_SETTINGS;
 extern uint8 BG_COLOR;
 extern int LAST_TICK_TIME, LAST_FRAME_TIME;
+extern int tick_counter;
+extern int SLEEP_TIME;
 
 #endif
