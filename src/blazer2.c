@@ -549,6 +549,20 @@ void blazer2_module(){
 
 	//exit back to title screen if the exit key is pressed
 	frames++;
+
+	//handle drawing stuff
+	barcycle += 2;
+	if (barcycle == 64) barcycle = 0;
+
+	//account for screenshake
+	if (shake_frames){
+		SL_CENTER_X += (rand() % 20) - 10;
+		SL_CENTER_Y += (rand() % 20) - 10;
+	}
+	else{
+		SL_CENTER_X = 160;
+		SL_CENTER_Y = 100;
+	}
 }
 
 void blazer2_screencrack(){
@@ -596,7 +610,9 @@ void draw_debug(){
 	vputs(num, 15, 7, 1, 1, 239, 1);
 	//draw tickrate
 	vputs("FPS", 0, 14, 1, 1, 239, 1);
-	if (LAST_FRAME_TIME != 0){ sprintf(num, "%d", 1000 / LAST_FRAME_TIME); }
+	if (LAST_FRAME_TIME != 0){ sprintf(num, "%d", 1000 / LAST_FRAME_TIME); }else{
+		sprintf(num, "INF");
+	}
 	vputs(num, 15, 14, 1, 1, 239, 1);
 
 	//draw position
@@ -822,16 +838,6 @@ void draw_nametags() {
 void blazer2_draw(){
 	char text[80];
 
-	//account for screenshake
-	if (shake_frames){
-		SL_CENTER_X += (rand() % 20) - 10;
-		SL_CENTER_Y += (rand() % 20) - 10;
-	}
-	else{
-		SL_CENTER_X = 160;
-		SL_CENTER_Y = 100;
-	}
-
 	//draw starfield bg
 	camera_translate(&(StarblazerEntities[0]->pos));
 	quat_tomat(&(StarblazerEntities[0]->orientation), &SL_CAMERA_ORIENTATION);
@@ -870,9 +876,6 @@ void blazer2_draw(){
 
 	//draw debug display
 	draw_debug();
-
-	barcycle += 2;
-	if (barcycle == 64) barcycle = 0;
 
 	//draw hypercraft
 	set_hypercraft_orientation(StarblazerEntities[0]->orientation);
