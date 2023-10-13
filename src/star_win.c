@@ -278,7 +278,7 @@ What SG_Init needs to do
 */
 
 void SG_Init(int argc, char** argv){
-	int num_devs;
+	int num_devs, r;
 	RECT winRect;
 	HDC hdcScreen;
 	WNDCLASS wc;
@@ -357,10 +357,17 @@ void SG_Init(int argc, char** argv){
 
 	if (SOUND_ENABLE){
 		num_devs = waveOutGetNumDevs();
+
 		initWave(&global_wave, WAVE_FORMAT_PCM, 1, 22050, 22050, 1, 8, 0);
 
 		if (num_devs){
-			while (waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION) != MMSYSERR_NOERROR);
+			/*while (1){
+				r = waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION);
+				printf("waveOutOpen returns %d\n", r);
+				if(r == MMSYSERR_NOERROR) break;
+			}*/
+
+			while(waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION) != MMSYSERR_NOERROR);
 		}
 
 		win_initialize_wave(&waveHdrA, buffer1);

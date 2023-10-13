@@ -41,16 +41,16 @@ FLAT	GROUP _DATA, CONST, _BSS
 endif
 PUBLIC	_MAX_ROT
 _DATA	SEGMENT
-COMM	_shading:BYTE
 COMM	_hypercraft:DWORD
 COMM	_hc_template:DWORD
 COMM	_hyptest_ori:BYTE:010H
+COMM	_shading:BYTE
 _MAX_ROT DB	01fH
 _DATA	ENDS
-PUBLIC	_init_hypercraft
 PUBLIC	??_C@_0BB@BDIL@assets?1hyper?4obj?$AA@		; `string'
-EXTRN	_quat_create:NEAR
+PUBLIC	_init_hypercraft
 EXTRN	_StarblazerEntities:BYTE
+EXTRN	_quat_create:NEAR
 EXTRN	_spawn_entity:NEAR
 EXTRN	_load_model:NEAR
 ;	COMDAT ??_C@_0BB@BDIL@assets?1hyper?4obj?$AA@
@@ -117,11 +117,11 @@ _set_hypercraft_orientation PROC NEAR			; COMDAT
 _set_hypercraft_orientation ENDP
 _TEXT	ENDS
 PUBLIC	_rot_hypercraft
+EXTRN	_vjoy_read:NEAR
+EXTRN	_angle_multiply:NEAR
 EXTRN	_quat_pitch:NEAR
 EXTRN	_quat_yaw:NEAR
 EXTRN	_quat_roll:NEAR
-EXTRN	_vjoy_read:NEAR
-EXTRN	_angle_multiply:NEAR
 ;	COMDAT _rot_hypercraft
 _TEXT	SEGMENT
 _joy$ = -8
@@ -132,7 +132,7 @@ _rot_hypercraft PROC NEAR				; COMDAT
 	lea	eax, DWORD PTR _joy$[esp+8]
 	push	eax
 	call	_vjoy_read
-	mov	ecx, DWORD PTR _joy$[esp+12]
+	mov	cl, BYTE PTR _joy$[esp+12]
 	add	esp, 4
 ; Line 39
 	mov	eax, DWORD PTR _hypercraft
@@ -145,7 +145,7 @@ _rot_hypercraft PROC NEAR				; COMDAT
 	add	esp, 8
 	push	eax
 	call	_quat_pitch
-	mov	ecx, DWORD PTR _joy$[esp+17]
+	mov	cl, BYTE PTR _joy$[esp+17]
 	add	esp, 8
 ; Line 41
 	mov	eax, DWORD PTR _hypercraft
@@ -158,7 +158,7 @@ _rot_hypercraft PROC NEAR				; COMDAT
 	add	esp, 8
 	push	eax
 	call	_quat_yaw
-	mov	ecx, DWORD PTR _joy$[esp+18]
+	mov	cl, BYTE PTR _joy$[esp+18]
 	add	esp, 8
 ; Line 43
 	mov	eax, DWORD PTR _hypercraft
@@ -177,18 +177,18 @@ _rot_hypercraft PROC NEAR				; COMDAT
 _rot_hypercraft ENDP
 _TEXT	ENDS
 PUBLIC	_draw_hypercraft
-EXTRN	_vec3_add:NEAR
-EXTRN	_mat3_mul:NEAR
-EXTRN	_quat_tomat:NEAR
-EXTRN	_SL_CAMERA_ORIENTATION:BYTE
-EXTRN	_SL_CENTER_X:WORD
 EXTRN	_SL_CENTER_Y:WORD
+EXTRN	_vec3_add:NEAR
 EXTRN	_render_begin:NEAR
 EXTRN	_camera_translate:NEAR
 EXTRN	_put_vertex:NEAR
 EXTRN	_put_triangles:NEAR
 EXTRN	_polygon_zsort:NEAR
+EXTRN	_mat3_mul:NEAR
 EXTRN	_render_end:NEAR
+EXTRN	_quat_tomat:NEAR
+EXTRN	_SL_CAMERA_ORIENTATION:BYTE
+EXTRN	_SL_CENTER_X:WORD
 ;	COMDAT _draw_hypercraft
 _TEXT	SEGMENT
 _centerX$ = 8
@@ -235,9 +235,9 @@ _draw_hypercraft PROC NEAR				; COMDAT
 	mov	ecx, DWORD PTR _hc_template
 ; Line 68
 	cmp	WORD PTR [ecx+8], bx
-	jbe	SHORT $L305
+	jbe	SHORT $L369
 	xor	ebp, ebp
-$L303:
+$L367:
 ; Line 69
 	lea	eax, DWORD PTR _vec$[esp+64]
 	mov	ecx, DWORD PTR _hc_template
@@ -269,9 +269,9 @@ $L303:
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+8]
 	cmp	ecx, ebx
-	jg	SHORT $L303
+	jg	SHORT $L367
 ; Line 72
-$L305:
+$L369:
 ; Line 74
 	push	0
 	mov	eax, DWORD PTR _hc_template

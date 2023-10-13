@@ -24,7 +24,7 @@ _DATA	ENDS
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
-;	COMDAT ??_C@_08MCKH@09?320?351?$AA@
+;	COMDAT ??_C@_08KJGF@10?350?303?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
 ;	COMDAT ??_C@_0M@IAK@Oct?513?52023?$AA@
@@ -60,6 +60,8 @@ _TEXT	ENDS
 FLAT	GROUP _DATA, CONST, _BSS
 	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
 endif
+PUBLIC	_current_frame
+PUBLIC	_time_at_which_last_frame_was_rendered
 PUBLIC	_BG_COLOR
 PUBLIC	_LAST_TICK_TIME
 PUBLIC	_LAST_FRAME_TIME
@@ -67,14 +69,12 @@ PUBLIC	_tick_counter
 PUBLIC	_SLEEP_TIME
 PUBLIC	_FRAME_CAP
 PUBLIC	_ready_frame
-PUBLIC	_current_frame
-PUBLIC	_time_at_which_last_frame_was_rendered
 _DATA	SEGMENT
+COMM	_time_last_tick:DWORD
+COMM	_start_time:DWORD
 COMM	_SG_Draw:DWORD
 COMM	_SG_Module:DWORD
 COMM	_GAME_SETTINGS:BYTE:058H
-COMM	_time_last_tick:DWORD
-COMM	_start_time:DWORD
 _SLEEP_TIME DD	00H
 _current_frame DD 00H
 _BG_COLOR DB	00H
@@ -116,27 +116,27 @@ _TEXT	SEGMENT
 _SG_Tick PROC NEAR					; COMDAT
 ; Line 38
 	cmp	DWORD PTR _tick_counter, 0
-	je	SHORT $L357
-$L356:
+	je	SHORT $L420
+$L419:
 ; Line 39
 	call	DWORD PTR _SG_Module
 ; Line 40
 	dec	DWORD PTR _tick_counter
 ; Line 41
-	jne	SHORT $L356
-$L357:
+	jne	SHORT $L419
+$L420:
 ; Line 45
 	cmp	DWORD PTR _FRAME_CAP, 0
-	je	SHORT $L358
+	je	SHORT $L421
 ; Line 46
 	cmp	DWORD PTR _ready_frame, 0
-	je	$L362
+	je	$L425
 ; Line 47
-	xor	ecx, ecx
-	mov	eax, DWORD PTR _current_frame
-	mov	cl, BYTE PTR _GAME_SETTINGS+4
-	cmp	ecx, eax
-	jne	SHORT $L360
+	xor	eax, eax
+	mov	ecx, DWORD PTR _current_frame
+	mov	al, BYTE PTR _GAME_SETTINGS+4
+	cmp	eax, ecx
+	jne	SHORT $L423
 ; Line 48
 	mov	DWORD PTR _current_frame, 0
 ; Line 49
@@ -149,24 +149,24 @@ $L357:
 	mov	DWORD PTR _LAST_FRAME_TIME, edx
 	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
 ; Line 54
-	jmp	SHORT $L361
-$L360:
+	jmp	SHORT $L424
+$L423:
 ; Line 55
-	inc	eax
-	mov	DWORD PTR _current_frame, eax
+	inc	ecx
+	mov	DWORD PTR _current_frame, ecx
 ; Line 56
-$L361:
+$L424:
 ; Line 57
 	mov	DWORD PTR _ready_frame, 0
 ; Line 59
-	jmp	SHORT $L362
-$L358:
+	jmp	SHORT $L425
+$L421:
 ; Line 61
-	xor	ecx, ecx
-	mov	eax, DWORD PTR _current_frame
-	mov	cl, BYTE PTR _GAME_SETTINGS+4
-	cmp	ecx, eax
-	jne	SHORT $L363
+	xor	eax, eax
+	mov	ecx, DWORD PTR _current_frame
+	mov	al, BYTE PTR _GAME_SETTINGS+4
+	cmp	eax, ecx
+	jne	SHORT $L426
 ; Line 62
 	mov	DWORD PTR _current_frame, 0
 ; Line 63
@@ -179,25 +179,25 @@ $L358:
 	mov	DWORD PTR _LAST_FRAME_TIME, edx
 	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
 ; Line 68
-	jmp	SHORT $L362
-$L363:
+	jmp	SHORT $L425
+$L426:
 ; Line 69
-	inc	eax
-	mov	DWORD PTR _current_frame, eax
+	inc	ecx
+	mov	DWORD PTR _current_frame, ecx
 ; Line 71
-$L362:
+$L425:
 ; Line 74
 	call	_SG_ProcessEvents
 ; Line 76
 	mov	eax, DWORD PTR _SLEEP_TIME
 	test	eax, eax
-	je	SHORT $L353
+	je	SHORT $L416
 ; Line 77
 	push	eax
 	call	_SG_Sleep
 	add	esp, 4
 ; Line 80
-$L353:
+$L416:
 	ret	0
 _SG_Tick ENDP
 _TEXT	ENDS
@@ -217,8 +217,8 @@ _SG_SaveConfig PROC NEAR				; COMDAT
 	ret	0
 _SG_SaveConfig ENDP
 _TEXT	ENDS
-PUBLIC	_SG_GameInit
 PUBLIC	??_C@_0N@GJDG@starfont?4fnt?$AA@		; `string'
+PUBLIC	_SG_GameInit
 EXTRN	_unpack_glyphs:NEAR
 EXTRN	_title_draw:NEAR
 EXTRN	_title_module:NEAR
@@ -256,9 +256,9 @@ PUBLIC	_SG_InitPalette
 EXTRN	_SG_SetPaletteIndex:NEAR
 ;	COMDAT _SG_InitPalette
 _TEXT	SEGMENT
-_r$ = -5
+_r$ = -7
 _g$ = -6
-_b$ = -7
+_b$ = -5
 _SG_InitPalette PROC NEAR				; COMDAT
 ; Line 99
 	sub	esp, 8
@@ -266,10 +266,10 @@ _SG_InitPalette PROC NEAR				; COMDAT
 	push	esi
 ; Line 119
 	xor	esi, esi
-$L382:
+$L445:
 ; Line 120
 	test	esi, 4
-	je	SHORT $L422
+	je	SHORT $L485
 	mov	eax, esi
 	and	eax, 8
 	cmp	eax, 1
@@ -277,13 +277,13 @@ $L382:
 	and	al, -8					; fffffff8H
 	add	al, 16					; 00000010H
 	mov	BYTE PTR _r$[esp+16], al
-	jmp	SHORT $L423
-$L422:
+	jmp	SHORT $L486
+$L485:
 	mov	BYTE PTR _r$[esp+16], 0
-$L423:
+$L486:
 ; Line 121
 	test	esi, 2
-	je	SHORT $L424
+	je	SHORT $L487
 	mov	eax, esi
 	and	eax, 8
 	cmp	eax, 1
@@ -291,13 +291,13 @@ $L423:
 	and	al, -8					; fffffff8H
 	add	al, 16					; 00000010H
 	mov	BYTE PTR _g$[esp+16], al
-	jmp	SHORT $L425
-$L424:
+	jmp	SHORT $L488
+$L487:
 	mov	BYTE PTR _g$[esp+16], 0
-$L425:
+$L488:
 ; Line 122
 	test	esi, 1
-	je	SHORT $L426
+	je	SHORT $L489
 	mov	eax, esi
 	and	eax, 8
 	cmp	eax, 1
@@ -305,13 +305,13 @@ $L425:
 	and	al, -8					; fffffff8H
 	add	al, 16					; 00000010H
 	mov	BYTE PTR _b$[esp+16], al
-	jmp	SHORT $L427
-$L426:
+	jmp	SHORT $L490
+$L489:
 	mov	BYTE PTR _b$[esp+16], 0
-$L427:
+$L490:
 ; Line 125
 	cmp	esi, 7
-	jne	SHORT $L385
+	jne	SHORT $L448
 ; Line 126
 	mov	BYTE PTR _r$[esp+16], 16		; 00000010H
 ; Line 127
@@ -319,21 +319,21 @@ $L427:
 ; Line 128
 	mov	BYTE PTR _b$[esp+16], 0
 ; Line 131
-$L385:
+$L448:
 	xor	ebx, ebx
 	mov	eax, esi
 	shl	al, 4
 	mov	BYTE PTR -4+[esp+16], al
-$L386:
+$L449:
 ; Line 132
-	mov	al, BYTE PTR _b$[esp+16]
-	imul	bl
+	mov	al, bl
+	imul	BYTE PTR _b$[esp+16]
 	push	eax
-	mov	al, BYTE PTR _g$[esp+20]
-	imul	bl
+	mov	al, bl
+	imul	BYTE PTR _g$[esp+20]
 	push	eax
-	mov	al, BYTE PTR _r$[esp+24]
-	imul	bl
+	mov	al, bl
+	imul	BYTE PTR _r$[esp+24]
 	push	eax
 	mov	al, BYTE PTR -4+[esp+28]
 	add	al, bl
@@ -343,11 +343,11 @@ $L386:
 	add	esp, 16					; 00000010H
 ; Line 131
 	cmp	ebx, 16					; 00000010H
-	jl	SHORT $L386
+	jl	SHORT $L449
 ; Line 119
 	inc	esi
 	cmp	esi, 16					; 00000010H
-	jl	$L382
+	jl	$L445
 ; Line 135
 	pop	esi
 	pop	ebx
@@ -355,21 +355,21 @@ $L386:
 	ret	0
 _SG_InitPalette ENDP
 _TEXT	ENDS
-PUBLIC	_SG_WelcomeMessage
 PUBLIC	??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
-PUBLIC	??_C@_08MCKH@09?320?351?$AA@			; `string'
+PUBLIC	??_C@_08KJGF@10?350?303?$AA@			; `string'
 PUBLIC	??_C@_0M@IAK@Oct?513?52023?$AA@			; `string'
 PUBLIC	??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 PUBLIC	??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@ ; `string'
+PUBLIC	_SG_WelcomeMessage
 EXTRN	_printf:NEAR
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 _DATA	SEGMENT
 ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ DB 'Starblazer II Bet'
 	DB	'a Version', 0aH, 00H			; `string'
 _DATA	ENDS
-;	COMDAT ??_C@_08MCKH@09?320?351?$AA@
+;	COMDAT ??_C@_08KJGF@10?350?303?$AA@
 _DATA	SEGMENT
-??_C@_08MCKH@09?320?351?$AA@ DB '09:20:51', 00H		; `string'
+??_C@_08KJGF@10?350?303?$AA@ DB '10:50:03', 00H		; `string'
 _DATA	ENDS
 ;	COMDAT ??_C@_0M@IAK@Oct?513?52023?$AA@
 _DATA	SEGMENT
@@ -393,7 +393,7 @@ _SG_WelcomeMessage PROC NEAR				; COMDAT
 	call	_printf
 	add	esp, 4
 ; Line 139
-	push	OFFSET FLAT:??_C@_08MCKH@09?320?351?$AA@ ; `string'
+	push	OFFSET FLAT:??_C@_08KJGF@10?350?303?$AA@ ; `string'
 	push	OFFSET FLAT:??_C@_0M@IAK@Oct?513?52023?$AA@ ; `string'
 	push	OFFSET FLAT:??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 	call	_printf

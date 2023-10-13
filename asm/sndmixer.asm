@@ -52,6 +52,11 @@ FLAT	GROUP _DATA, CONST, _BSS
 	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
 endif
 _DATA	SEGMENT
+COMM	_sounds:BYTE:0100H
+COMM	_channels:BYTE:0c0H
+COMM	_music_buffer:DWORD
+COMM	_mix_buffer:DWORD
+COMM	_musicfp:DWORD
 COMM	_BUFFER_SIZE:DWORD
 COMM	_MUSIC_ENABLE:DWORD
 COMM	_SOUND_ENABLE:DWORD
@@ -60,11 +65,6 @@ COMM	_buffer1:DWORD
 COMM	_buffer2:DWORD
 COMM	_current_buffer:DWORD
 COMM	_sfx_enable:BYTE
-COMM	_sounds:BYTE:0100H
-COMM	_channels:BYTE:0c0H
-COMM	_music_buffer:DWORD
-COMM	_mix_buffer:DWORD
-COMM	_musicfp:DWORD
 _DATA	ENDS
 PUBLIC	_init_sound
 EXTRN	_malloc:NEAR
@@ -168,7 +168,7 @@ _filename$ = 8
 _play_music PROC NEAR					; COMDAT
 ; Line 38
 	cmp	DWORD PTR _MUSIC_ENABLE, 0
-	je	SHORT $L400
+	je	SHORT $L463
 ; Line 39
 	mov	eax, DWORD PTR _filename$[esp-4]
 	push	OFFSET FLAT:??_C@_02JKAF@rb?$AA@	; `string'
@@ -177,7 +177,7 @@ _play_music PROC NEAR					; COMDAT
 	add	esp, 8
 	mov	DWORD PTR _musicfp, eax
 ; Line 41
-$L400:
+$L463:
 	ret	0
 _play_music ENDP
 _TEXT	ENDS
@@ -189,12 +189,12 @@ _stop_music PROC NEAR					; COMDAT
 ; Line 44
 	mov	eax, DWORD PTR _musicfp
 	test	eax, eax
-	je	SHORT $L405
+	je	SHORT $L468
 	push	eax
 	call	_fclose
 	add	esp, 4
 ; Line 45
-$L405:
+$L468:
 	mov	DWORD PTR _musicfp, 0
 ; Line 46
 	ret	0
@@ -225,15 +225,15 @@ _load_soundfx PROC NEAR					; COMDAT
 	mov	esi, eax
 ; Line 61
 	mov	eax, OFFSET FLAT:_sounds
-$L414:
+$L477:
 ; Line 62
 	cmp	DWORD PTR [eax], 0
-	je	SHORT $L490
+	je	SHORT $L553
 	add	eax, 16					; 00000010H
 	inc	edi
 ; Line 61
 	cmp	eax, OFFSET FLAT:_sounds+256
-	jb	SHORT $L414
+	jb	SHORT $L477
 ; Line 77
 	push	esi
 	call	_fclose
@@ -245,19 +245,19 @@ $L414:
 	pop	esi
 	pop	ebx
 	ret	0
-$L490:
+$L553:
 	mov	ebx, edi
 	mov	al, BYTE PTR _loop$[esp+12]
 	shl	ebx, 4
-	push	2
+	xor	ecx, ecx
 ; Line 63
+	mov	cl, BYTE PTR _priority$[esp+12]
+	push	2
 	push	0
-	push	esi
 	mov	BYTE PTR _sounds[ebx+12], al
 ; Line 64
-	xor	eax, eax
-	mov	al, BYTE PTR _priority$[esp+24]
-	mov	DWORD PTR _sounds[ebx+8], eax
+	push	esi
+	mov	DWORD PTR _sounds[ebx+8], ecx
 ; Line 65
 	call	_fseek
 	add	esp, 12					; 0000000cH
@@ -313,15 +313,15 @@ _play_soundfx PROC NEAR					; COMDAT
 	push	edi
 	mov	ecx, OFFSET FLAT:_channels
 ; Line 92
-$L422:
+$L485:
 ; Line 93
 	cmp	BYTE PTR [ecx], 0
-	je	SHORT $L496
+	je	SHORT $L559
 	add	ecx, 12					; 0000000cH
 	inc	eax
 ; Line 92
 	cmp	ecx, OFFSET FLAT:_channels+192
-	jb	SHORT $L422
+	jb	SHORT $L485
 ; Line 102
 	mov	edx, DWORD PTR _index$[esp+4]
 	mov	ecx, edx
@@ -329,24 +329,24 @@ $L422:
 	xor	eax, eax
 	mov	edi, OFFSET FLAT:_channels+4
 	mov	ecx, DWORD PTR _sounds[ecx+8]
-$L426:
+$L489:
 ; Line 103
 	mov	esi, DWORD PTR [edi]
 	shl	esi, 4
 	cmp	DWORD PTR _sounds[esi+8], ecx
-	jge	SHORT $L497
+	jge	SHORT $L560
 	add	edi, 12					; 0000000cH
 	inc	eax
 ; Line 102
 	cmp	edi, OFFSET FLAT:_channels+196
-	jb	SHORT $L426
+	jb	SHORT $L489
 ; Line 112
 	mov	eax, -1
 	pop	edi
 ; Line 113
 	pop	esi
 	ret	0
-$L496:
+$L559:
 	lea	ecx, DWORD PTR [eax+eax*2]
 	mov	edx, DWORD PTR _index$[esp+4]
 	shl	ecx, 2
@@ -361,7 +361,7 @@ $L496:
 ; Line 97
 	ret	0
 ; Line 99
-$L497:
+$L560:
 	lea	ecx, DWORD PTR [eax+eax*2]
 	pop	edi
 	shl	ecx, 2
@@ -388,48 +388,48 @@ _mix_channel PROC NEAR					; COMDAT
 	push	edi
 	push	ebp
 	lea	ecx, DWORD PTR [eax+eax*2]
-	lea	esi, DWORD PTR [ecx*4]
+	lea	edi, DWORD PTR [ecx*4]
 ; Line 120
-	cmp	BYTE PTR _channels[esi], 0
-	je	SHORT $L440
+	cmp	BYTE PTR _channels[edi], 0
+	je	SHORT $L503
 ; Line 124
-	mov	eax, DWORD PTR _channels[esi+4]
+	mov	eax, DWORD PTR _channels[edi+4]
+	mov	ecx, DWORD PTR _BUFFER_SIZE
 	shl	eax, 4
-	mov	edi, DWORD PTR _sounds[eax+4]
-	mov	eax, DWORD PTR _BUFFER_SIZE
-	sub	edi, DWORD PTR _channels[esi+8]
+	mov	esi, DWORD PTR _sounds[eax+4]
+	sub	esi, DWORD PTR _channels[edi+8]
 ; Line 125
-	cmp	edi, eax
-	mov	edx, edi
-	jb	SHORT $L504
-	mov	edx, eax
-$L504:
+	cmp	ecx, esi
+	jb	SHORT $L567
+	mov	ecx, esi
+$L567:
 ; Line 127
-	test	edx, edx
-	je	SHORT $L439
-	xor	ecx, ecx
-$L437:
+	test	ecx, ecx
+	je	SHORT $L502
+	xor	edx, edx
+$L500:
 	mov	ebx, DWORD PTR _mix_buffer
-	mov	eax, DWORD PTR _channels[esi+4]
+	mov	eax, DWORD PTR _channels[edi+4]
 ; Line 128
 	shl	eax, 4
-	add	ecx, 2
+	add	edx, 2
 	mov	ebp, DWORD PTR _sounds[eax]
-	mov	eax, DWORD PTR _channels[esi+8]
-	movzx	ax, BYTE PTR [ebp+eax]
-	add	WORD PTR [ebx+ecx-2], ax
-	inc	DWORD PTR _channels[esi+8]
-	dec	edx
-	jne	SHORT $L437
+	mov	eax, DWORD PTR _channels[edi+8]
+	mov	al, BYTE PTR [ebp+eax]
+	and	eax, -65281				; ffff00ffH
+	add	WORD PTR [ebx+edx-2], ax
+	inc	DWORD PTR _channels[edi+8]
+	dec	ecx
+	jne	SHORT $L500
 ; Line 129
-$L439:
+$L502:
 ; Line 131
-	cmp	edi, DWORD PTR _BUFFER_SIZE
-	ja	SHORT $L440
+	cmp	DWORD PTR _BUFFER_SIZE, esi
+	jb	SHORT $L503
 ; Line 132
-	mov	BYTE PTR _channels[esi], 0
+	mov	BYTE PTR _channels[edi], 0
 ; Line 135
-$L440:
+$L503:
 ; Line 137
 	pop	ebp
 	pop	edi
@@ -458,8 +458,8 @@ _copy_music PROC NEAR					; COMDAT
 	add	esp, 16					; 00000010H
 	mov	edi, eax
 ; Line 142
-	cmp	DWORD PTR _BUFFER_SIZE, edi
-	jle	SHORT $L444
+	cmp	edi, DWORD PTR _BUFFER_SIZE
+	jge	SHORT $L507
 ; Line 143
 	push	0
 	mov	eax, DWORD PTR _musicfp
@@ -479,7 +479,7 @@ _copy_music PROC NEAR					; COMDAT
 	call	_fread
 	add	esp, 16					; 00000010H
 ; Line 146
-$L444:
+$L507:
 	pop	edi
 	pop	esi
 	ret	0
@@ -489,8 +489,8 @@ PUBLIC	_mix_music
 EXTRN	__ftol:NEAR
 EXTRN	__fltused:NEAR
 CONST	SEGMENT
-$T511	DQ	03fe8000000000000r		; 0.75
-$T512	DQ	03fd0000000000000r		; 0.25
+$T574	DQ	03fe8000000000000r		; 0.75
+$T575	DQ	03fd0000000000000r		; 0.25
 CONST	ENDS
 ;	COMDAT _mix_music
 _TEXT	SEGMENT
@@ -512,8 +512,8 @@ _mix_music PROC NEAR					; COMDAT
 	add	esp, 16					; 00000010H
 	mov	esi, eax
 ; Line 154
-	cmp	esi, DWORD PTR _BUFFER_SIZE
-	jge	SHORT $L452
+	cmp	DWORD PTR _BUFFER_SIZE, esi
+	jle	SHORT $L515
 ; Line 155
 	push	0
 	mov	eax, DWORD PTR _musicfp
@@ -534,35 +534,36 @@ _mix_music PROC NEAR					; COMDAT
 	call	_fread
 	add	esp, 16					; 00000010H
 ; Line 159
-$L452:
+$L515:
 	xor	esi, esi
 	cmp	DWORD PTR _BUFFER_SIZE, esi
-	jle	SHORT $L449
+	jle	SHORT $L512
 	mov	edi, DWORD PTR _ptr$[esp+8]
-$L453:
+$L516:
 ; Line 160
 	mov	eax, DWORD PTR _mix_buffer
 	mov	edx, DWORD PTR _music_buffer
 	mov	ax, WORD PTR [eax+esi*2]
 	inc	esi
 	shr	ax, 4
-	movzx	ecx, ax
+	mov	ecx, eax
+	xor	eax, eax
+	and	ecx, 65535				; 0000ffffH
+	mov	al, BYTE PTR [edx+esi-1]
 	mov	DWORD PTR -4+[esp+12], ecx
-	xor	ecx, ecx
 	fild	DWORD PTR -4+[esp+12]
-	mov	cl, BYTE PTR [edx+esi-1]
-	mov	DWORD PTR -4+[esp+12], ecx
-	fmul	QWORD PTR $T511
+	mov	DWORD PTR -4+[esp+12], eax
+	fmul	QWORD PTR $T574
 	fild	DWORD PTR -4+[esp+12]
-	fmul	QWORD PTR $T512
+	fmul	QWORD PTR $T575
 	faddp	ST(1), ST(0)
 	call	__ftol
 	mov	BYTE PTR [edi+esi-1], al
 ; Line 159
-	cmp	esi, DWORD PTR _BUFFER_SIZE
-	jl	SHORT $L453
+	cmp	DWORD PTR _BUFFER_SIZE, esi
+	jg	SHORT $L516
 ; Line 162
-$L449:
+$L512:
 	pop	edi
 	pop	esi
 	add	esp, 4
@@ -578,31 +579,30 @@ _mix	PROC NEAR					; COMDAT
 	push	esi
 	push	edi
 ; Line 168
-	je	SHORT $L517
+	je	SHORT $L580
 	cmp	DWORD PTR _SFX_ENABLE, 0
-	je	SHORT $L517
 	mov	BYTE PTR _sfx_enable, 1
-	jmp	SHORT $L518
-$L517:
+	jne	SHORT $L581
+$L580:
 	mov	BYTE PTR _sfx_enable, 0
-$L518:
+$L581:
 ; Line 170
 	cmp	DWORD PTR _current_buffer, 0
-	jne	SHORT $L460
+	jne	SHORT $L523
 ; Line 171
 	mov	esi, DWORD PTR _buffer1
 ; Line 172
-	jmp	SHORT $L461
-$L460:
+	jmp	SHORT $L524
+$L523:
 ; Line 173
 	mov	esi, DWORD PTR _buffer2
 ; Line 174
-$L461:
+$L524:
 ; Line 176
 	cmp	BYTE PTR _sfx_enable, 0
-	jne	SHORT $L462
+	jne	SHORT $L525
 	cmp	DWORD PTR _musicfp, 0
-	je	SHORT $L462
+	je	SHORT $L525
 ; Line 177
 	push	esi
 	call	_copy_music
@@ -612,7 +612,7 @@ $L461:
 	pop	esi
 	ret	0
 ; Line 181
-$L462:
+$L525:
 	mov	edx, DWORD PTR _BUFFER_SIZE
 	mov	edi, DWORD PTR _mix_buffer
 	add	edx, edx
@@ -625,7 +625,7 @@ $L462:
 	rep	stosb
 ; Line 183
 	xor	edi, edi
-$L463:
+$L526:
 ; Line 184
 	push	edi
 	call	_mix_channel
@@ -633,10 +633,10 @@ $L463:
 	inc	edi
 ; Line 183
 	cmp	edi, 16					; 00000010H
-	jl	SHORT $L463
+	jl	SHORT $L526
 ; Line 187
 	cmp	DWORD PTR _musicfp, 0
-	je	SHORT $L466
+	je	SHORT $L529
 ; Line 188
 	push	esi
 	call	_mix_music
@@ -645,23 +645,23 @@ $L463:
 	pop	edi
 	pop	esi
 	ret	0
-$L466:
+$L529:
 ; Line 190
 	xor	eax, eax
 	cmp	DWORD PTR _BUFFER_SIZE, eax
-	jle	SHORT $L457
-$L468:
+	jle	SHORT $L520
+$L531:
 ; Line 191
 	mov	ecx, DWORD PTR _mix_buffer
 	inc	eax
 	mov	cx, WORD PTR [ecx+eax*2-2]
 	shr	cx, 4
-	mov	BYTE PTR [esi+eax-1], cl
+	mov	BYTE PTR [eax+esi-1], cl
 ; Line 190
 	cmp	eax, DWORD PTR _BUFFER_SIZE
-	jl	SHORT $L468
+	jl	SHORT $L531
 ; Line 194
-$L457:
+$L520:
 	pop	edi
 	pop	esi
 	ret	0

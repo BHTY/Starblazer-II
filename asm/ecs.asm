@@ -77,25 +77,25 @@ _first_open_slot PROC NEAR				; COMDAT
 ; Line 23
 	xor	eax, eax
 	mov	ecx, OFFSET FLAT:_StarblazerEntities
-$L523:
+$L584:
 ; Line 24
 	cmp	DWORD PTR [ecx], 0
-	je	SHORT $L521
+	je	SHORT $L581
 	add	ecx, 4
 	inc	eax
 ; Line 23
 	cmp	ecx, OFFSET FLAT:_StarblazerEntities+4000
-	jb	SHORT $L523
+	jb	SHORT $L584
 ; Line 29
 	mov	eax, -559038737				; deadbeefH
 ; Line 30
-$L521:
+$L581:
 	ret	0
 _first_open_slot ENDP
 _TEXT	ENDS
 PUBLIC	_spawn_entity
-EXTRN	_quat_create:NEAR
 EXTRN	_malloc:NEAR
+EXTRN	_quat_create:NEAR
 ;	COMDAT _spawn_entity
 _TEXT	SEGMENT
 _type$ = 8
@@ -175,19 +175,19 @@ _spawn_entity PROC NEAR					; COMDAT
 _spawn_entity ENDP
 _TEXT	ENDS
 PUBLIC	_draw_scene
+EXTRN	_camera_translate:NEAR
 EXTRN	_vec3_add:NEAR
+EXTRN	_put_vertex:NEAR
+EXTRN	_put_triangles:NEAR
+EXTRN	_polygon_zsort:NEAR
+EXTRN	_plotpoint_3d:NEAR
 EXTRN	_mat3_mul:NEAR
+EXTRN	_render_end:NEAR
 EXTRN	_quat_tomat:NEAR
 EXTRN	_quat_conjugate:NEAR
 EXTRN	_SL_VERTEX_INDEX:WORD
 EXTRN	_SL_CAMERA_ORIENTATION:BYTE
 EXTRN	_render_begin:NEAR
-EXTRN	_camera_translate:NEAR
-EXTRN	_put_vertex:NEAR
-EXTRN	_put_triangles:NEAR
-EXTRN	_polygon_zsort:NEAR
-EXTRN	_plotpoint_3d:NEAR
-EXTRN	_render_end:NEAR
 ;	COMDAT _draw_scene
 _TEXT	SEGMENT
 _cam_pos$ = 8
@@ -223,9 +223,9 @@ _draw_scene PROC NEAR					; COMDAT
 	add	esp, 8
 ; Line 72
 	test	edi, edi
-	jle	SHORT $L549
+	jle	SHORT $L610
 	mov	esi, DWORD PTR _star_ptr$[esp+60]
-$L547:
+$L608:
 ; Line 73
 	mov	eax, DWORD PTR [esi+8]
 	mov	ecx, DWORD PTR [esi+4]
@@ -238,30 +238,30 @@ $L547:
 	call	_plotpoint_3d
 	add	esp, 16					; 00000010H
 	dec	edi
-	jne	SHORT $L547
+	jne	SHORT $L608
 ; Line 74
-$L549:
+$L610:
 ; Line 76
 	mov	esi, OFFSET FLAT:_StarblazerEntities
 	call	_render_begin
 ; Line 78
-$L550:
+$L611:
 	mov	eax, DWORD PTR [esi]
 ; Line 79
 	test	eax, eax
-	je	$L551
+	je	$L612
 ; Line 81
 	cmp	DWORD PTR [eax+104], 0
-	je	SHORT $L554
+	je	SHORT $L615
 ; Line 82
 	mov	DWORD PTR [eax+104], 0
 ; Line 84
-	jmp	SHORT $L555
-$L554:
+	jmp	SHORT $L616
+$L615:
 ; Line 85
 	mov	BYTE PTR [eax+100], 0
 ; Line 86
-$L555:
+$L616:
 ; Line 88
 	xor	edi, edi
 	lea	eax, DWORD PTR _model_rotation_matrix$[esp+64]
@@ -278,9 +278,9 @@ $L555:
 ; Line 94
 	mov	eax, DWORD PTR [ecx]
 	cmp	WORD PTR [eax+8], bx
-	jbe	SHORT $L558
+	jbe	SHORT $L619
 	xor	ebp, ebp
-$L556:
+$L617:
 ; Line 95
 	lea	eax, DWORD PTR _temp_vert$[esp+64]
 	mov	ecx, DWORD PTR [esi]
@@ -310,13 +310,13 @@ $L556:
 	add	esp, 4
 	mov	eax, DWORD PTR [esi]
 ; Line 94
-	xor	ecx, ecx
-	mov	edx, DWORD PTR [eax]
-	mov	cx, WORD PTR [edx+8]
-	cmp	ecx, ebx
-	jg	SHORT $L556
+	xor	edx, edx
+	mov	ecx, DWORD PTR [eax]
+	mov	dx, WORD PTR [ecx+8]
+	cmp	edx, ebx
+	jg	SHORT $L617
 ; Line 98
-$L558:
+$L619:
 	mov	eax, DWORD PTR [esi]
 	mov	ecx, DWORD PTR [eax]
 ; Line 101
@@ -330,10 +330,10 @@ $L558:
 	call	_put_triangles
 	add	esp, 16					; 00000010H
 ; Line 78
-$L551:
+$L612:
 	add	esi, 4
 	cmp	esi, OFFSET FLAT:_StarblazerEntities+4000
-	jb	$L550
+	jb	$L611
 ; Line 104
 	call	_polygon_zsort
 ; Line 105
@@ -358,21 +358,21 @@ _run_entity_scripts PROC NEAR				; COMDAT
 	push	esi
 	mov	esi, OFFSET FLAT:_StarblazerEntities
 ; Line 118
-$L561:
+$L622:
 	mov	eax, DWORD PTR [esi]
 ; Line 119
 	test	eax, eax
-	je	SHORT $L562
+	je	SHORT $L623
 ; Line 120
 	push	esi
 	mov	eax, DWORD PTR [eax]
 	call	DWORD PTR [eax+12]
 	add	esp, 4
 ; Line 118
-$L562:
+$L623:
 	add	esi, 4
 	cmp	esi, OFFSET FLAT:_StarblazerEntities+4000
-	jb	SHORT $L561
+	jb	SHORT $L622
 ; Line 123
 	pop	esi
 	ret	0
@@ -400,7 +400,7 @@ _test_collisions PROC NEAR				; COMDAT
 	xor	eax, edx
 	sub	eax, edx
 	cmp	eax, ecx
-	jge	SHORT $L568
+	jge	SHORT $L629
 ; Line 135
 	mov	eax, DWORD PTR [esi+8]
 	mov	ecx, DWORD PTR [ebx+20]
@@ -410,7 +410,7 @@ _test_collisions PROC NEAR				; COMDAT
 	xor	eax, edx
 	sub	eax, edx
 	cmp	eax, ecx
-	jge	SHORT $L568
+	jge	SHORT $L629
 ; Line 136
 	mov	eax, DWORD PTR [esi+12]
 	mov	ecx, DWORD PTR [ebx+24]
@@ -420,7 +420,7 @@ _test_collisions PROC NEAR				; COMDAT
 	xor	eax, edx
 	sub	eax, edx
 	cmp	eax, ecx
-	jge	SHORT $L568
+	jge	SHORT $L629
 ; Line 137
 	mov	al, 1
 	pop	edi
@@ -428,7 +428,7 @@ _test_collisions PROC NEAR				; COMDAT
 	pop	ebx
 	ret	0
 ; Line 141
-$L568:
+$L629:
 	xor	al, al
 	pop	edi
 ; Line 142
@@ -459,7 +459,6 @@ _create_hitbox PROC NEAR				; COMDAT
 	ret	0
 _create_hitbox ENDP
 _TEXT	ENDS
-PUBLIC	_load_model
 PUBLIC	??_C@_01LHO@r?$AA@				; `string'
 PUBLIC	??_C@_02DILL@?$CFs?$AA@				; `string'
 PUBLIC	??_C@_01KBCC@v?$AA@				; `string'
@@ -468,12 +467,13 @@ PUBLIC	??_C@_01IFC@f?$AA@				; `string'
 PUBLIC	??_C@_09FCEL@?$CFd?5?$CFd?5?$CFd?6?$AA@		; `string'
 PUBLIC	??_C@_06OPIA@usemtl?$AA@			; `string'
 PUBLIC	??_C@_02MECO@?$CFd?$AA@				; `string'
+PUBLIC	_load_model
+EXTRN	__ftol:NEAR
+EXTRN	__fltused:NEAR
 EXTRN	_free:NEAR
 EXTRN	_fclose:NEAR
 EXTRN	_fopen:NEAR
 EXTRN	_fscanf:NEAR
-EXTRN	__ftol:NEAR
-EXTRN	__fltused:NEAR
 ;	COMDAT ??_C@_01LHO@r?$AA@
 _DATA	SEGMENT
 ??_C@_01LHO@r?$AA@ DB 'r', 00H				; `string'
@@ -507,25 +507,25 @@ _DATA	SEGMENT
 ??_C@_02MECO@?$CFd?$AA@ DB '%d', 00H			; `string'
 _DATA	ENDS
 CONST	SEGMENT
-$T653	DD	047800000r			; 65536
+$T714	DD	047800000r			; 65536
 CONST	ENDS
 ;	COMDAT _load_model
 _TEXT	SEGMENT
-_filename$ = 8
-_fp$ = -560
 _lineHeader$ = -512
-_currentVert$ = -556
-_currentFace$ = -552
-_face1$ = -528
-_face2$ = -524
-_face3$ = -520
-_x$ = -540
-_y$ = -536
-_z$ = -532
-_current_color$ = -516
-_polys$ = -544
-_verts$ = -548
-_tpl$ = -564
+_currentVert$ = -524
+_currentFace$ = -528
+_face1$ = -548
+_face2$ = -552
+_face3$ = -556
+_x$ = -536
+_y$ = -540
+_z$ = -544
+_current_color$ = -560
+_polys$ = -520
+_verts$ = -516
+_tpl$ = -532
+_filename$ = 8
+_fp$ = -564
 _load_model PROC NEAR					; COMDAT
 ; Line 170
 	mov	eax, DWORD PTR _filename$[esp-4]
@@ -563,7 +563,7 @@ _load_model PROC NEAR					; COMDAT
 	add	esp, 4
 	add	ebx, 6
 ; Line 185
-$L596:
+$L657:
 ; Line 186
 	lea	eax, DWORD PTR _lineHeader$[esp+580]
 	mov	ecx, DWORD PTR _fp$[esp+580]
@@ -574,13 +574,13 @@ $L596:
 	add	esp, 12					; 0000000cH
 ; Line 187
 	cmp	eax, -1
-	je	$L650
+	je	$L711
 ; Line 189
 	lea	esi, DWORD PTR _lineHeader$[esp+580]
 	mov	edi, OFFSET FLAT:??_C@_01KBCC@v?$AA@	; `string'
 	mov	ecx, 2
 	rep	cmpsb
-	jne	SHORT $L600
+	jne	SHORT $L661
 ; Line 190
 	lea	eax, DWORD PTR _z$[esp+580]
 	lea	ecx, DWORD PTR _y$[esp+580]
@@ -594,29 +594,29 @@ $L596:
 	push	eax
 	call	_fscanf
 	fld	DWORD PTR _x$[esp+600]
-	fmul	DWORD PTR $T653
+	fmul	DWORD PTR $T714
 	add	esp, 20					; 00000014H
 ; Line 191
 	call	__ftol
 	mov	DWORD PTR [ebp-12], eax
 ; Line 192
 	fld	DWORD PTR _y$[esp+580]
-	fmul	DWORD PTR $T653
+	fmul	DWORD PTR $T714
 	call	__ftol
 	mov	DWORD PTR [ebp-8], eax
 ; Line 193
 	fld	DWORD PTR _z$[esp+580]
-	fmul	DWORD PTR $T653
+	fmul	DWORD PTR $T714
 	call	__ftol
 	mov	DWORD PTR [ebp-4], eax
 	inc	DWORD PTR _currentVert$[esp+580]
 ; Line 197
-$L600:
+$L661:
 	lea	esi, DWORD PTR _lineHeader$[esp+580]
 	mov	edi, OFFSET FLAT:??_C@_01IFC@f?$AA@	; `string'
 	mov	ecx, 2
 	rep	cmpsb
-	jne	SHORT $L603
+	jne	SHORT $L664
 ; Line 198
 	lea	eax, DWORD PTR _face3$[esp+580]
 	lea	ecx, DWORD PTR _face2$[esp+580]
@@ -647,12 +647,12 @@ $L600:
 	inc	DWORD PTR _currentFace$[esp+580]
 	mov	WORD PTR [ebx-14], ax
 ; Line 206
-$L603:
+$L664:
 	lea	esi, DWORD PTR _lineHeader$[esp+580]
 	mov	edi, OFFSET FLAT:??_C@_06OPIA@usemtl?$AA@ ; `string'
 	mov	ecx, 7
 	rep	cmpsb
-	jne	$L596
+	jne	$L657
 ; Line 207
 	lea	eax, DWORD PTR _current_color$[esp+580]
 	mov	ecx, DWORD PTR _fp$[esp+580]
@@ -662,8 +662,8 @@ $L603:
 	call	_fscanf
 	add	esp, 12					; 0000000cH
 ; Line 209
-	jmp	$L596
-$L650:
+	jmp	$L657
+$L711:
 ; Line 211
 	mov	ax, WORD PTR _currentFace$[esp+580]
 	mov	ecx, DWORD PTR _tpl$[esp+580]
