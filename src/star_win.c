@@ -137,6 +137,10 @@ void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, unsigned int* dw
 	tick_counter++;
 }
 
+void __stdcall mmproc_2(unsigned int uTimerID, unsigned int uMsg, unsigned int* dwUser, unsigned int* dw, unsigned int* dw2){
+	ready_frame = 1;
+}
+
 VOID initWaveHeader(WAVEHDR* wvHdr, char* lpData, DWORD dwBufferLength, DWORD dwBytesRecorded, DWORD dwUser, DWORD dwFlags, DWORD dwLoops){
     wvHdr->lpData = lpData;
     wvHdr->dwBufferLength = dwBufferLength;
@@ -260,6 +264,7 @@ void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, 
 	fscanf(fp, "music= %d\n", &MUSIC_ENABLE);
 	fscanf(fp, "sound= %d\n", &SOUND_ENABLE);
 	fscanf(fp, "sleep= %d\n", &SLEEP_TIME);
+	fscanf(fp, "framecap= %d\n", &FRAME_CAP);
 	fclose(fp);
 
 	*addr = inet_addr(taddr);
@@ -340,6 +345,11 @@ void SG_Init(int argc, char** argv){
 	FBPTR = malloc(64000);
 	timeSetEvent(14, 1, (LPTIMECALLBACK)&mmproc, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
 	memset(keys, 0, 256 * sizeof(bool_t));
+
+	if(FRAME_CAP){
+		timeSetEvent(FRAME_CAP, 1, (LPTIMECALLBACK)&mmproc_2, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
+	}
+
 	//joystick stuff...
 
 	//setup sound code

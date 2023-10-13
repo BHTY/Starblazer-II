@@ -11,6 +11,8 @@ int SLEEP_TIME = 0;
 int current_frame = 0;
 uint8 BG_COLOR = 0;
 int tick_counter = 0;
+int FRAME_CAP = 0;
+int ready_frame = 0;
 
 int LAST_TICK_TIME = 14;
 int LAST_FRAME_TIME = 14;
@@ -40,15 +42,32 @@ void SG_Tick(){
 
 	//GAME_SETTINGS.vid_settings.frameskip = 0;
 
-	if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
-		current_frame = 0;
-		SG_PresentFrame();
-		current_time = SG_GetTicks();
-		LAST_FRAME_TIME = current_time - time_at_which_last_frame_was_rendered;
-		time_at_which_last_frame_was_rendered = current_time;
-	}
-	else{
-		current_frame++;
+	if(FRAME_CAP){
+		if(ready_frame){
+			if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
+				current_frame = 0;
+				SG_PresentFrame();
+				current_time = SG_GetTicks();
+				LAST_FRAME_TIME = current_time - time_at_which_last_frame_was_rendered;
+				time_at_which_last_frame_was_rendered = current_time;
+			}
+			else{
+				current_frame++;
+			}
+			ready_frame = 0;
+		}
+	}else{
+
+		if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
+			current_frame = 0;
+			SG_PresentFrame();
+			current_time = SG_GetTicks();
+			LAST_FRAME_TIME = current_time - time_at_which_last_frame_was_rendered;
+			time_at_which_last_frame_was_rendered = current_time;
+		}
+		else{
+			current_frame++;
+		}
 	}
 
 	//SG_WaitBlank();

@@ -79,5 +79,6 @@ extern uint8 BG_COLOR;
 extern int LAST_TICK_TIME, LAST_FRAME_TIME;
 extern int tick_counter;
 extern int SLEEP_TIME;
+extern int FRAME_CAP, ready_frame;
 
 #endif
