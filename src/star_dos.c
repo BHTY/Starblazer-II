@@ -9,13 +9,25 @@
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
 
+#define PIC_EOI 0x20
+#define PIC2_COMMAND 0xA0
+#define PIC1_COMMAND 0x20
+
 void setmode(char mode){ //sets the VGA card to the given display mode
 	union REGS regs;
 	regs.x.eax = mode;
 	int386(0x10, &regs, &regs);
 }
 
+int interrupt_tick = 0;
 uint8* frontbuffer;
+
+void interrupt timer_irq() {
+	//cam_pos.z+=0x5C666;//0x18000;
+	interrupt_tick++;
+	outp(PIC2_COMMAND, PIC_EOI);
+	outp(PIC1_COMMAND, PIC_EOI);
+}
 
 unsigned char keys[256];
 static unsigned char kbdus[128] =
@@ -72,6 +84,16 @@ void interrupt keyirq() {
 	outp(0x20, 0x20);
 }
 
+void init_timer() {
+	_dos_setvect(0x08, timer_irq);
+
+	outp(0x43, 52);
+	outp(0x40, 0xA6);
+	outp(0x40, 0x04);
+
+	srand(time(NULL));
+}
+
 void SG_Init(int argc, char** argv){
 	memset(keys, 0, 256);
 
@@ -81,6 +103,7 @@ void SG_Init(int argc, char** argv){
 	setmode(0x13);
 
 	_dos_setvect(9, keyirq);
+	init_timer();
 }
 
 void SG_Close(){
@@ -114,12 +137,20 @@ void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){
 }
 
 uint32 SG_GetTicks(){
-	return 0;
+	return interrupt_tick;
 }
 
 void SG_WaitBlank(){
 	while ((inp(0x03da) & 8));
 	while (!(inp(0x3DA) & 8));
+}
+
+void SG_ProcessEvents() {
+	SG_WaitBlank();
+}
+
+void SG_Sleep(int ms) {
+
 }
 
 int main(int argc, char** argv){

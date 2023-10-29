@@ -55,6 +55,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 	HDC hdc;
 	//HDC hdc_bmp;
 	HGDIOBJ old_bmp;
+	PAINTSTRUCT ps;
 
 	switch (msg){
 		case WM_DESTROY:{
@@ -98,9 +99,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 		}
 
 		case WM_PAINT:{
+			hdc = BeginPaint(hwnd, &ps);
 			old_bmp = SelectObject(hdc_bmp, backBitmap);
-			StretchBlt(globalHdc, 0, 0, GAME_SETTINGS.vid_settings.window_size_x, GAME_SETTINGS.vid_settings.window_size_y, hdc_bmp, 0, 0, 320, 200, SRCCOPY);
+			StretchBlt(hdc, 0, 0, GAME_SETTINGS.vid_settings.window_size_x, GAME_SETTINGS.vid_settings.window_size_y, hdc_bmp, 0, 0, 320, 200, SRCCOPY);
 			DeleteObject(old_bmp);
+			EndPaint(hwnd, &ps);
 			return DefWindowProc(hWnd, msg, wParam, lParam);
 		}
 

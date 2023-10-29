@@ -1,5 +1,5 @@
-wcl386 -cc blazer.c graphics.c title.c sl_math.c font.c ui.c blazer2.c slipstr.c ecs.c hyptest.c net_dos.c star_dos.c -fe=star2.exe > output.txt
+wcl386 -cc blazer.c graphics.c title.c sl_math.c font.c ui.c blazer2.c slipstr.c ecs.c hyptest.c sndmixer.c net_dos.c star_dos.c -ot -fe=star2.exe > output.txt
 del *.obj
 del *.err
-copy star2.exe \release\star2.exe
-del star2.exe
+copy blazer.exe \release\blazer.exe
+del blazer.exe

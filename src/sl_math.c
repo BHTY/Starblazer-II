@@ -12,7 +12,7 @@ uint32 int_abs(uint32 x){
 }
 
 FIXED muldiv(FIXED a, FIXED b, FIXED c){
-#ifdef _M_IX86
+#if defined(_M_IX86) && defined(WIN32)
 	__asm{
 		//store sign in ecx
 		mov ecx, a
