@@ -97,6 +97,7 @@ void fire_laser(){
 	StarblazerEntities[id]->state[0] = 280; //lifetime in ticks
 	StarblazerEntities[id]->state[15] = player_weapon.damage; //damage
 	StarblazerEntities[id]->orientation = StarblazerEntities[0]->orientation;
+	rotate_object(StarblazerEntities[id]);
 	firing = 1;
 	play_soundfx(SND_LASER);
 }
@@ -204,6 +205,7 @@ void debris_script(ENTITY** ptr){
 	quat_pitch(32, &((*ptr)->orientation));
 	quat_yaw(32, &((*ptr)->orientation));
 	quat_roll(32, &((*ptr)->orientation));
+	rotate_object(*ptr);
 
 	if (!(rand() % 45))
 	{
@@ -377,10 +379,10 @@ SANGLE angle_multiply(SANGLE angle, int8 joy_amount){
 }
 
 void vjoy_read(joystick_t* joy){
-	SG_mouse_t mouse;
+	SG_joystick_t stick;
 
-	//scan the mouse and joystick
-	SG_ReadMouse(&mouse);
+	//scan the and joystick
+	SG_ReadStick(&stick);
 
 	joy->fire = SG_KeyDown('J');
 	joy->exit = 0;

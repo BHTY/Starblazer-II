@@ -81,7 +81,7 @@ void title_init(){
 	quat_create(0, 0, 0, &stars_cam_ori);
 
 	logo = load_model("assets/star.obj");
-	spawn_entity(logo, 0, 0, int_fixed(10), 0, 128, 0); //10
+	spawn_entity(logo, 0, 0, int_fixed(10), 0, 128, 0);
 
 	SL_CENTER_Y = 45;
 
@@ -130,6 +130,7 @@ void title_draw(){
 	vputs("    II", 0, 10, 3, 2, 239, 0); //252
 	vputs("BY WILL KLEES AND JOSH PIETY", 30, 100, 3, 2, 255, 0);
 
+	rotate_object(StarblazerEntities[0]);
 	draw_scene(&title_camera, title_cam_ori, 0, 0, 0);
 	/*quat_yaw(16, &(StarblazerEntities[0]->orientation));
 

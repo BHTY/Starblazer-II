@@ -11,18 +11,21 @@ typedef struct{
 	uint16 window_size_x;
 	uint16 window_size_y;
 	uint8 frameskip;
-	bool_t shading;
 } video_settings_t;
 
 typedef struct{
-	uint16 io;
-	uint8 irq;
+	uint32 port; //16
+	uint32 irq; //8
+} io_settings_t;
+
+typedef struct {
+	io_settings_t dos;
+	uint32 sfx, music, sound, buf_size;
 } snd_settings_t;
 
 typedef struct{
-	uint16 recv_port;
-	uint16 send_port;
-	snd_settings_t dos;
+	uint16 port;
+	io_settings_t dos;
 	char player_name[16];
 	char player_pin[16];
 } com_settings_t;
@@ -52,6 +55,7 @@ typedef struct{
 	axis_control_t roll;
 	trigger_control_t fire;
 	trigger_control_t boost;
+	trigger_control_t brake;
 	trigger_control_t radar;
 	trigger_control_t exit;
 } ctrl_settings_t;
@@ -61,6 +65,7 @@ typedef struct{
 	com_settings_t com_settings;
 	snd_settings_t snd_settings;
 	ctrl_settings_t ctrl_settings;
+	int sleep_time;
 } SG_config_t;
 
 extern void (*SG_Draw)();
@@ -77,8 +82,5 @@ void SG_SaveConfig(SG_config_t*);
 extern SG_config_t GAME_SETTINGS;
 extern uint8 BG_COLOR;
 extern int LAST_TICK_TIME, LAST_FRAME_TIME;
-extern int tick_counter;
-extern int SLEEP_TIME;
-extern int FRAME_CAP, ready_frame;
 
 #endif

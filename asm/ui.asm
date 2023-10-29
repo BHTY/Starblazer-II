@@ -960,16 +960,14 @@ $L635:
 	push	eax
 	push	esi
 	call	_UI_GET_RECT
-	mov	eax, DWORD PTR _mouse$[esp+40]
+	movsx	eax, WORD PTR _mouse$[esp+40]
 	add	esp, 8
-	and	eax, 65535				; 0000ffffH
 ; Line 330
 	cmp	eax, DWORD PTR _rect$[esp+32]
 	jl	SHORT $L636
 	cmp	eax, DWORD PTR _rect$[esp+36]
 	jg	SHORT $L636
-	xor	eax, eax
-	mov	ax, WORD PTR _mouse$[esp+34]
+	movsx	eax, WORD PTR _mouse$[esp+34]
 	cmp	eax, DWORD PTR _rect$[esp+40]
 	jl	SHORT $L636
 	cmp	eax, DWORD PTR _rect$[esp+44]

@@ -18,11 +18,12 @@ Description: Starblazer II for Windows 95/NT
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
 #include "../headers/sndmixer.h"
+#include <assert.h>
 
 char* SG_platform = "win32";
 extern bool_t laser_type;
 
-#ifdef _WIN64
+#ifdef _WIN64 //ia64/axp64/amd64
 	char *SG_title = "Starblazer II for Win64";
 #elif _M_IX86 //win32 for x86
 	char *SG_title = "Starblazer II for Windows 95";
@@ -39,14 +40,10 @@ BITMAPINFO* bmi;
 HBITMAP backBitmap;
 HPALETTE hPalette;
 RECT rectScreen;
-int newFrame = 0;
 
 HDC hdc_bmp;
 
 uint32 mplayer_addr;
-
-int window_height;
-int window_width;
 
 float mouseFactorX, mouseFactorY;
 bool_t mouseDownLeft = 0;
@@ -81,6 +78,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
 		case WM_KEYDOWN:{
 			keys[(uint8)wParam] = 1;
+
 			break;
 		}
 
@@ -90,10 +88,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 		}
 
 		case WM_SIZE:{
-			window_width = lParam & 0xffff;
-			window_height = (lParam & 0xffff0000) >> 16;
-			mouseFactorX = 320.0 / window_width;
-			mouseFactorY = 200.0 / window_height;
+			GAME_SETTINGS.vid_settings.window_size_x = lParam & 0xffff;
+			GAME_SETTINGS.vid_settings.window_size_y = (lParam & 0xffff0000) >> 16;
+			mouseFactorX = 320.0 / GAME_SETTINGS.vid_settings.window_size_x;
+			mouseFactorY = 200.0 / GAME_SETTINGS.vid_settings.window_size_y;
 			GetWindowRect(hwnd, &rectScreen);
 			ClipCursor(&rectScreen);
 			break;
@@ -101,7 +99,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 
 		case WM_PAINT:{
 			old_bmp = SelectObject(hdc_bmp, backBitmap);
-			StretchBlt(globalHdc, 0, 0, window_width, window_height, hdc_bmp, 0, 0, 320, 200, SRCCOPY);
+			StretchBlt(globalHdc, 0, 0, GAME_SETTINGS.vid_settings.window_size_x, GAME_SETTINGS.vid_settings.window_size_y, hdc_bmp, 0, 0, 320, 200, SRCCOPY);
 			DeleteObject(old_bmp);
 			return DefWindowProc(hWnd, msg, wParam, lParam);
 		}
@@ -132,15 +130,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 	}
 }
 
-void __stdcall mmproc(unsigned int uTimerID, unsigned int uMsg, unsigned int* dwUser, unsigned int* dw, unsigned int* dw2){
-	newFrame = 1;
-	tick_counter++;
-}
-
-void __stdcall mmproc_2(unsigned int uTimerID, unsigned int uMsg, unsigned int* dwUser, unsigned int* dw, unsigned int* dw2){
-	ready_frame = 1;
-}
-
 VOID initWaveHeader(WAVEHDR* wvHdr, char* lpData, DWORD dwBufferLength, DWORD dwBytesRecorded, DWORD dwUser, DWORD dwFlags, DWORD dwLoops){
     wvHdr->lpData = lpData;
     wvHdr->dwBufferLength = dwBufferLength;
@@ -167,15 +156,11 @@ WSADATA init_networking(){
 	if (WSAStartup(winsock_version, &winsock_data))
 	{
 		printf("WSAStartup failed: %d", WSAGetLastError());
-		exit(0);
 	}
 
 	return winsock_data;
 }
 
-
-int PORT = 9999;
-int OTHER_PORT = 23456;
 SOCKET server_connection;
 SOCKADDR_IN server_addr;
 int size_response;
@@ -186,7 +171,8 @@ WAVEFORMATEX global_wave;
 HWAVEOUT global_hWaveOut = 0;
 
 void win_initialize_wave(WAVEHDR* wvHdr, uint8* buf){
-	initWaveHeader(wvHdr, buf, BUFFER_SIZE, 0, 0, 0, 0);
+	//assert(GAME_SETTINGS.snd_settings.buf_size == 1024);
+	initWaveHeader(wvHdr, buf, GAME_SETTINGS.snd_settings.buf_size, 0, 0, 0, 0);
 	waveOutPrepareHeader(global_hWaveOut, wvHdr, sizeof(WAVEHDR));
 	waveOutWrite(global_hWaveOut, wvHdr, sizeof(WAVEHDR));
 	waveOutUnprepareHeader(global_hWaveOut, wvHdr, sizeof(WAVEHDR));
@@ -214,7 +200,7 @@ bool_t SG_OpenConnection(uint32 addr){
 	ULONG iMode = 1;
 
 	server_addr.sin_family = AF_INET;
-	server_addr.sin_port = htons(PORT);
+	server_addr.sin_port = htons(GAME_SETTINGS.com_settings.port);
 	server_addr.sin_addr.s_addr = mplayer_addr;
 		
 	server_connection = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -247,28 +233,6 @@ void SG_CloseConnection(){
 	closesocket(server_connection);
 }
 
-void SG_TempLoadConfig(uint32* addr, int* x, int* y, int* port, int* otherport, char* name, char* pin){
-	char taddr[50];
-
-	FILE* fp = fopen("config.ini", "r");
-	fscanf(fp, "addr= %s\n", taddr);
-	fscanf(fp, "port= %d\n", port);
-	fscanf(fp, "name= %s\n", name);
-	fscanf(fp, "pin= %s\n", pin);
-	fscanf(fp, "x= %d\n", x);
-	fscanf(fp, "y= %d\n", y);
-	fscanf(fp, "laser= %d\n", &laser_type);
-	fscanf(fp, "frameskip= %d\n", &(GAME_SETTINGS.vid_settings.frameskip));
-	fscanf(fp, "block= %d\n", &BUFFER_SIZE);
-	fscanf(fp, "sfx= %d\n", &SFX_ENABLE);
-	fscanf(fp, "music= %d\n", &MUSIC_ENABLE);
-	fscanf(fp, "sound= %d\n", &SOUND_ENABLE);
-	fscanf(fp, "sleep= %d\n", &SLEEP_TIME);
-	fscanf(fp, "framecap= %d\n", &FRAME_CAP);
-	fclose(fp);
-
-	*addr = inet_addr(taddr);
-}
 
 /*
 What SG_Init needs to do
@@ -283,23 +247,19 @@ void SG_Init(int argc, char** argv){
 	HDC hdcScreen;
 	WNDCLASS wc;
 	DWORD version = GetVersion();
+	HBRUSH brush = CreateSolidBrush(RGB(255, 0, 0));
 
 	printf("Running on Windows version %d.%02d\n", version & 0xFF, (version >> 8) & 0xFF);
 
 	//do the generic initialization
 	SG_GameInit();
 
-	SG_TempLoadConfig(&mplayer_addr, &window_width, &window_height, &PORT, &OTHER_PORT, GAME_SETTINGS.com_settings.player_name, GAME_SETTINGS.com_settings.player_pin);
-
 	init_networking();
-
-	/*window_width = 640;
-	window_height = 480;*/
 
 	winRect.left = 0;
 	winRect.top = 0;
-	winRect.bottom = window_height;
-	winRect.right = window_width;
+	winRect.bottom = GAME_SETTINGS.vid_settings.window_size_y;
+	winRect.right = GAME_SETTINGS.vid_settings.window_size_x;
 
 	AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, FALSE);
 
@@ -337,35 +297,25 @@ void SG_Init(int argc, char** argv){
 
 	timeBeginPeriod(1);
 
-	mouseFactorX = 320.0 / window_width;
-	mouseFactorY = 200.0 / window_height;
+	mouseFactorX = 320.0 / GAME_SETTINGS.vid_settings.window_size_x;
+	mouseFactorY = 200.0 / GAME_SETTINGS.vid_settings.window_size_y;
 
 	ClipCursor(&rectScreen);
 
 	FBPTR = malloc(64000);
-	timeSetEvent(14, 1, (LPTIMECALLBACK)&mmproc, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
 	memset(keys, 0, 256 * sizeof(bool_t));
-
-	if(FRAME_CAP){
-		timeSetEvent(FRAME_CAP, 1, (LPTIMECALLBACK)&mmproc_2, 0, TIME_CALLBACK_FUNCTION | TIME_PERIODIC);
-	}
 
 	//joystick stuff...
 
 	//setup sound code
 	init_sound();
 
-	if (SOUND_ENABLE){
+	if (GAME_SETTINGS.snd_settings.sound){
 		num_devs = waveOutGetNumDevs();
 
 		initWave(&global_wave, WAVE_FORMAT_PCM, 1, 22050, 22050, 1, 8, 0);
 
 		if (num_devs){
-			/*while (1){
-				r = waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION);
-				printf("waveOutOpen returns %d\n", r);
-				if(r == MMSYSERR_NOERROR) break;
-			}*/
 
 			while(waveOutOpen(&global_hWaveOut, WAVE_MAPPER, &global_wave, &sound_callback, 0, CALLBACK_FUNCTION) != MMSYSERR_NOERROR);
 		}
@@ -375,6 +325,7 @@ void SG_Init(int argc, char** argv){
 	}
 
 	globalHdc = GetDC(hwnd);
+	SelectObject(globalHdc, brush);
 	hdc_bmp = CreateCompatibleDC(globalHdc);
 }
 
@@ -386,6 +337,10 @@ void SG_ReadMouse(SG_mouse_t* mouse){
 	mouse->y = p.y * mouseFactorY;
 	mouse->buttons[0] = mouseDownLeft;
 	mouse->buttons[1] = mouseDownRight;
+}
+
+void SG_ReadStick(SG_joystick_t* joy) {
+
 }
 
 bool_t SG_KeyDown(uint8 key){
@@ -426,23 +381,6 @@ uint32 SG_GetTicks(){
 }
 
 void SG_WaitBlank(){
-	MSG Msg;
-
-	//Sleep(10);
-
-	/*while (PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)) {
-		TranslateMessage(&Msg);
-		DispatchMessage(&Msg);
-	}*/
-
-	while (!newFrame) {
-		if (PeekMessage(&Msg, hwnd, 0, 0, PM_REMOVE)){
-			TranslateMessage(&Msg);
-			DispatchMessage(&Msg);
-		}
-		//newFrame = 1;
-	}
-	newFrame = 0;
 }
 
 void SG_Sleep(int ms){

@@ -18,16 +18,121 @@ $$TYPES	SEGMENT BYTE USE32 'DEBTYP'
 $$TYPES	ENDS
 _TLS	SEGMENT DWORD USE32 PUBLIC 'TLS'
 _TLS	ENDS
+;	COMDAT ??_C@_01LHO@r?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@BGHG@config?4ini?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_09KNMH@addr?$DN?5?$CFs?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_09KKBB@port?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_09HALA@name?$DN?5?$CFs?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_08FHDP@pin?$DN?5?$CFs?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_06NKHL@x?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_06EPNL@y?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@LLEO@laser?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0P@JNCH@frameskip?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@FKAB@block?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_08BODH@sfx?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@BIHH@music?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@JJPA@sound?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@FGFA@sleep?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@GOKH@sndport?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0M@ECAD@sndirq?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@KLFA@comport?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0M@LFDE@comirq?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0BL@BEKN@joycal?$DN?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@NHMH@pitch?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@FAOK@pitchup?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0P@MGC@pitchdown?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_08EDJH@yaw?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@HEFE@yawup?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@PGLF@yawdown?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_09KDAI@roll?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0M@OFNB@rollup?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0O@IABO@rolldown?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_09HMGG@fire?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@EGII@firekey?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@OKOA@boost?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0O@IGAC@boostkey?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@LEIN@brake?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
+;	COMDAT ??_C@_0O@KCBM@brakekey?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
+_DATA	ENDS
 ;	COMDAT ??_C@_0N@GJDG@starfont?4fnt?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
-;	COMDAT ??_C@_08KJGF@10?350?303?$AA@
+;	COMDAT ??_C@_08HOPB@21?355?332?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
-;	COMDAT ??_C@_0M@IAK@Oct?513?52023?$AA@
+;	COMDAT ??_C@_0M@GIFF@Oct?528?52023?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
 ;	COMDAT ??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@
@@ -36,6 +141,9 @@ _DATA	ENDS
 ;	COMDAT ??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
+;	COMDAT _blazer_calcticks
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
 ;	COMDAT _SG_PresentFrame
 _TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
 _TEXT	ENDS
@@ -61,151 +169,597 @@ FLAT	GROUP _DATA, CONST, _BSS
 	ASSUME	CS: FLAT, DS: FLAT, SS: FLAT
 endif
 PUBLIC	_current_frame
+PUBLIC	_tick_counter
 PUBLIC	_time_at_which_last_frame_was_rendered
 PUBLIC	_BG_COLOR
 PUBLIC	_LAST_TICK_TIME
 PUBLIC	_LAST_FRAME_TIME
-PUBLIC	_tick_counter
-PUBLIC	_SLEEP_TIME
-PUBLIC	_FRAME_CAP
-PUBLIC	_ready_frame
 _DATA	SEGMENT
+COMM	_last_ticks:DWORD
+COMM	_current_ticks:DWORD
+COMM	_leftover_ticks:DWORD
 COMM	_time_last_tick:DWORD
 COMM	_start_time:DWORD
 COMM	_SG_Draw:DWORD
 COMM	_SG_Module:DWORD
-COMM	_GAME_SETTINGS:BYTE:058H
-_SLEEP_TIME DD	00H
+COMM	_GAME_SETTINGS:BYTE:074H
 _current_frame DD 00H
 _BG_COLOR DB	00H
 	ORG $+3
 _tick_counter DD 00H
-_FRAME_CAP DD	00H
-_ready_frame DD	00H
 _LAST_TICK_TIME DD 0eH
 _LAST_FRAME_TIME DD 0eH
 _time_at_which_last_frame_was_rendered DD 00H
 _DATA	ENDS
-PUBLIC	_SG_PresentFrame
-EXTRN	_frontbuffer:DWORD
-EXTRN	_SG_DrawFrame:NEAR
-EXTRN	_swap_buffers:NEAR
-;	COMDAT _SG_PresentFrame
+PUBLIC	_blazer_calcticks
+EXTRN	_SG_GetTicks:NEAR
+;	COMDAT _blazer_calcticks
 _TEXT	SEGMENT
 ; File src\blazer.c
+_blazer_calcticks PROC NEAR				; COMDAT
+; Line 14
+	push	esi
+	mov	eax, DWORD PTR _current_ticks
+; Line 16
+	mov	DWORD PTR _last_ticks, eax
+; Line 17
+	call	_SG_GetTicks
+	mov	edx, DWORD PTR _leftover_ticks
+	mov	ecx, 14					; 0000000eH
+	sub	edx, DWORD PTR _last_ticks
+	mov	DWORD PTR _current_ticks, eax
+; Line 18
+	lea	esi, DWORD PTR [edx+eax]
+; Line 20
+	sub	edx, edx
+	mov	eax, esi
+	div	ecx
+	mov	eax, esi
+	mov	DWORD PTR _leftover_ticks, edx
+; Line 21
+	sub	edx, edx
+	pop	esi
+	div	ecx
+; Line 22
+	ret	0
+_blazer_calcticks ENDP
+_TEXT	ENDS
+PUBLIC	_SG_PresentFrame
+EXTRN	_SG_DrawFrame:NEAR
+EXTRN	_swap_buffers:NEAR
+EXTRN	_frontbuffer:DWORD
+;	COMDAT _SG_PresentFrame
+_TEXT	SEGMENT
 _SG_PresentFrame PROC NEAR				; COMDAT
-; Line 30
+; Line 41
 	call	DWORD PTR _SG_Draw
-; Line 31
+; Line 42
 	mov	al, BYTE PTR _BG_COLOR
 	mov	ecx, DWORD PTR _frontbuffer
 	push	eax
 	push	ecx
 	call	_swap_buffers
 	add	esp, 8
-; Line 32
+; Line 43
 	jmp	_SG_DrawFrame
 _SG_PresentFrame ENDP
 _TEXT	ENDS
 PUBLIC	_SG_Tick
-EXTRN	_SG_GetTicks:NEAR
 EXTRN	_SG_ProcessEvents:NEAR
 EXTRN	_SG_Sleep:NEAR
 ;	COMDAT _SG_Tick
 _TEXT	SEGMENT
 _SG_Tick PROC NEAR					; COMDAT
-; Line 38
-	cmp	DWORD PTR _tick_counter, 0
-	je	SHORT $L420
-$L419:
-; Line 39
-	call	DWORD PTR _SG_Module
-; Line 40
-	dec	DWORD PTR _tick_counter
-; Line 41
-	jne	SHORT $L419
-$L420:
-; Line 45
-	cmp	DWORD PTR _FRAME_CAP, 0
-	je	SHORT $L421
-; Line 46
-	cmp	DWORD PTR _ready_frame, 0
-	je	$L425
-; Line 47
-	xor	eax, eax
-	mov	ecx, DWORD PTR _current_frame
-	mov	al, BYTE PTR _GAME_SETTINGS+4
-	cmp	eax, ecx
-	jne	SHORT $L423
-; Line 48
-	mov	DWORD PTR _current_frame, 0
 ; Line 49
-	call	_SG_PresentFrame
-; Line 50
-	call	_SG_GetTicks
-; Line 51
-	mov	edx, eax
-	sub	edx, DWORD PTR _time_at_which_last_frame_was_rendered
-	mov	DWORD PTR _LAST_FRAME_TIME, edx
-	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
-; Line 54
-	jmp	SHORT $L424
-$L423:
-; Line 55
-	inc	ecx
-	mov	DWORD PTR _current_frame, ecx
-; Line 56
-$L424:
-; Line 57
-	mov	DWORD PTR _ready_frame, 0
-; Line 59
-	jmp	SHORT $L425
-$L421:
-; Line 61
-	xor	eax, eax
-	mov	ecx, DWORD PTR _current_frame
-	mov	al, BYTE PTR _GAME_SETTINGS+4
-	cmp	eax, ecx
-	jne	SHORT $L426
-; Line 62
-	mov	DWORD PTR _current_frame, 0
-; Line 63
-	call	_SG_PresentFrame
-; Line 64
-	call	_SG_GetTicks
-; Line 65
-	mov	edx, eax
-	sub	edx, DWORD PTR _time_at_which_last_frame_was_rendered
-	mov	DWORD PTR _LAST_FRAME_TIME, edx
-	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
-; Line 68
-	jmp	SHORT $L425
-$L426:
-; Line 69
-	inc	ecx
-	mov	DWORD PTR _current_frame, ecx
-; Line 71
-$L425:
-; Line 74
-	call	_SG_ProcessEvents
-; Line 76
-	mov	eax, DWORD PTR _SLEEP_TIME
+	call	_blazer_calcticks
+	mov	DWORD PTR _tick_counter, eax
 	test	eax, eax
-	je	SHORT $L416
-; Line 77
+; Line 51
+	je	SHORT $L426
+$L425:
+; Line 52
+	call	DWORD PTR _SG_Module
+; Line 53
+	dec	DWORD PTR _tick_counter
+; Line 54
+	jne	SHORT $L425
+$L426:
+; Line 58
+	xor	ecx, ecx
+	mov	eax, DWORD PTR _current_frame
+	mov	cl, BYTE PTR _GAME_SETTINGS+4
+	cmp	ecx, eax
+	jne	SHORT $L427
+; Line 59
+	mov	DWORD PTR _current_frame, 0
+; Line 60
+	call	_SG_PresentFrame
+; Line 61
+	call	_SG_GetTicks
+; Line 62
+	mov	edx, eax
+	sub	edx, DWORD PTR _time_at_which_last_frame_was_rendered
+	mov	DWORD PTR _LAST_FRAME_TIME, edx
+	mov	DWORD PTR _time_at_which_last_frame_was_rendered, eax
+; Line 65
+	jmp	SHORT $L428
+$L427:
+; Line 66
+	inc	eax
+	mov	DWORD PTR _current_frame, eax
+; Line 67
+$L428:
+; Line 70
+	call	_SG_ProcessEvents
+; Line 72
+	cmp	DWORD PTR _GAME_SETTINGS+112, 0
+	je	SHORT $L422
+; Line 73
+	mov	eax, DWORD PTR _GAME_SETTINGS+112
 	push	eax
 	call	_SG_Sleep
 	add	esp, 4
-; Line 80
-$L416:
+; Line 76
+$L422:
 	ret	0
 _SG_Tick ENDP
 _TEXT	ENDS
+PUBLIC	??_C@_09KKBB@port?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_09HALA@name?$DN?5?$CFs?6?$AA@		; `string'
+PUBLIC	??_C@_08FHDP@pin?$DN?5?$CFs?6?$AA@		; `string'
+PUBLIC	??_C@_06NKHL@x?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_06EPNL@y?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0L@LLEO@laser?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0P@JNCH@frameskip?$DN?5?$CFd?6?$AA@	; `string'
+PUBLIC	??_C@_0L@FKAB@block?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_08BODH@sfx?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0L@BIHH@music?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0L@JJPA@sound?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0L@FGFA@sleep?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0N@GOKH@sndport?$DN?5?$CFx?6?$AA@		; `string'
+PUBLIC	??_C@_0M@ECAD@sndirq?$DN?5?$CFx?6?$AA@		; `string'
+PUBLIC	??_C@_0N@KLFA@comport?$DN?5?$CFx?6?$AA@		; `string'
+PUBLIC	??_C@_0M@LFDE@comirq?$DN?5?$CFx?6?$AA@		; `string'
+PUBLIC	??_C@_0BL@BEKN@joycal?$DN?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?6?$AA@ ; `string'
+PUBLIC	??_C@_0L@NHMH@pitch?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0N@FAOK@pitchup?$DN?5?$CFc?6?$AA@		; `string'
+PUBLIC	??_C@_0P@MGC@pitchdown?$DN?5?$CFc?6?$AA@	; `string'
+PUBLIC	??_C@_08EDJH@yaw?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0L@HEFE@yawup?$DN?5?$CFc?6?$AA@		; `string'
+PUBLIC	??_C@_0N@PGLF@yawdown?$DN?5?$CFc?6?$AA@		; `string'
+PUBLIC	??_C@_09KDAI@roll?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0M@OFNB@rollup?$DN?5?$CFc?6?$AA@		; `string'
+PUBLIC	??_C@_0O@IABO@rolldown?$DN?5?$CFc?6?$AA@	; `string'
+PUBLIC	??_C@_09HMGG@fire?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0N@EGII@firekey?$DN?5?$CFc?6?$AA@		; `string'
+PUBLIC	??_C@_0L@OKOA@boost?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0O@IGAC@boostkey?$DN?5?$CFc?6?$AA@	; `string'
+PUBLIC	??_C@_0L@LEIN@brake?$DN?5?$CFd?6?$AA@		; `string'
+PUBLIC	??_C@_0O@KCBM@brakekey?$DN?5?$CFc?6?$AA@	; `string'
 PUBLIC	_SG_LoadConfig
+PUBLIC	??_C@_01LHO@r?$AA@				; `string'
+PUBLIC	??_C@_0L@BGHG@config?4ini?$AA@			; `string'
+PUBLIC	??_C@_09KNMH@addr?$DN?5?$CFs?6?$AA@		; `string'
+EXTRN	_mplayer_addr:DWORD
+EXTRN	_fscanf:NEAR
+EXTRN	_laser_type:BYTE
+EXTRN	_inet_addr@4:NEAR
+EXTRN	_fclose:NEAR
+EXTRN	_fopen:NEAR
+;	COMDAT ??_C@_01LHO@r?$AA@
+_DATA	SEGMENT
+??_C@_01LHO@r?$AA@ DB 'r', 00H				; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@BGHG@config?4ini?$AA@
+_DATA	SEGMENT
+??_C@_0L@BGHG@config?4ini?$AA@ DB 'config.ini', 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_09KNMH@addr?$DN?5?$CFs?6?$AA@
+_DATA	SEGMENT
+??_C@_09KNMH@addr?$DN?5?$CFs?6?$AA@ DB 'addr= %s', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_09KKBB@port?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_09KKBB@port?$DN?5?$CFd?6?$AA@ DB 'port= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_09HALA@name?$DN?5?$CFs?6?$AA@
+_DATA	SEGMENT
+??_C@_09HALA@name?$DN?5?$CFs?6?$AA@ DB 'name= %s', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_08FHDP@pin?$DN?5?$CFs?6?$AA@
+_DATA	SEGMENT
+??_C@_08FHDP@pin?$DN?5?$CFs?6?$AA@ DB 'pin= %s', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_06NKHL@x?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_06NKHL@x?$DN?5?$CFd?6?$AA@ DB 'x= %d', 0aH, 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_06EPNL@y?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_06EPNL@y?$DN?5?$CFd?6?$AA@ DB 'y= %d', 0aH, 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@LLEO@laser?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@LLEO@laser?$DN?5?$CFd?6?$AA@ DB 'laser= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0P@JNCH@frameskip?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0P@JNCH@frameskip?$DN?5?$CFd?6?$AA@ DB 'frameskip= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@FKAB@block?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@FKAB@block?$DN?5?$CFd?6?$AA@ DB 'block= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_08BODH@sfx?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_08BODH@sfx?$DN?5?$CFd?6?$AA@ DB 'sfx= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@BIHH@music?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@BIHH@music?$DN?5?$CFd?6?$AA@ DB 'music= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@JJPA@sound?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@JJPA@sound?$DN?5?$CFd?6?$AA@ DB 'sound= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@FGFA@sleep?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@FGFA@sleep?$DN?5?$CFd?6?$AA@ DB 'sleep= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@GOKH@sndport?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT
+??_C@_0N@GOKH@sndport?$DN?5?$CFx?6?$AA@ DB 'sndport= %x', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0M@ECAD@sndirq?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT
+??_C@_0M@ECAD@sndirq?$DN?5?$CFx?6?$AA@ DB 'sndirq= %x', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@KLFA@comport?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT
+??_C@_0N@KLFA@comport?$DN?5?$CFx?6?$AA@ DB 'comport= %x', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0M@LFDE@comirq?$DN?5?$CFx?6?$AA@
+_DATA	SEGMENT
+??_C@_0M@LFDE@comirq?$DN?5?$CFx?6?$AA@ DB 'comirq= %x', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0BL@BEKN@joycal?$DN?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0BL@BEKN@joycal?$DN?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?6?$AA@ DB 
+	DB	'joycal= %d %d %d %d %d %d', 0aH, 00H	; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@NHMH@pitch?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@NHMH@pitch?$DN?5?$CFd?6?$AA@ DB 'pitch= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@FAOK@pitchup?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0N@FAOK@pitchup?$DN?5?$CFc?6?$AA@ DB 'pitchup= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0P@MGC@pitchdown?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0P@MGC@pitchdown?$DN?5?$CFc?6?$AA@ DB 'pitchdown= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_08EDJH@yaw?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_08EDJH@yaw?$DN?5?$CFd?6?$AA@ DB 'yaw= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@HEFE@yawup?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@HEFE@yawup?$DN?5?$CFc?6?$AA@ DB 'yawup= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@PGLF@yawdown?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0N@PGLF@yawdown?$DN?5?$CFc?6?$AA@ DB 'yawdown= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_09KDAI@roll?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_09KDAI@roll?$DN?5?$CFd?6?$AA@ DB 'roll= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0M@OFNB@rollup?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0M@OFNB@rollup?$DN?5?$CFc?6?$AA@ DB 'rollup= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0O@IABO@rolldown?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0O@IABO@rolldown?$DN?5?$CFc?6?$AA@ DB 'rolldown= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_09HMGG@fire?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_09HMGG@fire?$DN?5?$CFd?6?$AA@ DB 'fire= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0N@EGII@firekey?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0N@EGII@firekey?$DN?5?$CFc?6?$AA@ DB 'firekey= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@OKOA@boost?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@OKOA@boost?$DN?5?$CFd?6?$AA@ DB 'boost= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0O@IGAC@boostkey?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0O@IGAC@boostkey?$DN?5?$CFc?6?$AA@ DB 'boostkey= %c', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0L@LEIN@brake?$DN?5?$CFd?6?$AA@
+_DATA	SEGMENT
+??_C@_0L@LEIN@brake?$DN?5?$CFd?6?$AA@ DB 'brake= %d', 0aH, 00H ; `string'
+_DATA	ENDS
+;	COMDAT ??_C@_0O@KCBM@brakekey?$DN?5?$CFc?6?$AA@
+_DATA	SEGMENT
+??_C@_0O@KCBM@brakekey?$DN?5?$CFc?6?$AA@ DB 'brakekey= %c', 0aH, 00H ; `string'
+_DATA	ENDS
 ;	COMDAT _SG_LoadConfig
 _TEXT	SEGMENT
+_cfg$ = 8
+_taddr$ = -52
+_pitchup$ = -61
+_pitchdown$ = -60
+_yawup$ = -59
+_yawdown$ = -58
+_rollup$ = -57
+_rolldown$ = -56
+_fire$ = -55
+_boost$ = -54
+_brake$ = -53
 _SG_LoadConfig PROC NEAR				; COMDAT
-; Line 84
+; Line 82
+	sub	esp, 64					; 00000040H
+	push	esi
+	push	edi
+; Line 86
+	push	OFFSET FLAT:??_C@_01LHO@r?$AA@		; `string'
+	push	OFFSET FLAT:??_C@_0L@BGHG@config?4ini?$AA@ ; `string'
+	call	_fopen
+	add	esp, 8
+	mov	esi, eax
+; Line 87
+	lea	eax, DWORD PTR _taddr$[esp+72]
+	push	eax
+	push	OFFSET FLAT:??_C@_09KNMH@addr?$DN?5?$CFs?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	mov	edi, DWORD PTR _cfg$[esp+80]
+	add	esp, 12					; 0000000cH
+; Line 88
+	lea	eax, DWORD PTR [edi+8]
+	push	eax
+	push	OFFSET FLAT:??_C@_09KKBB@port?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+20]
+; Line 89
+	push	eax
+	push	OFFSET FLAT:??_C@_09HALA@name?$DN?5?$CFs?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+36]
+; Line 90
+	push	eax
+	push	OFFSET FLAT:??_C@_08FHDP@pin?$DN?5?$CFs?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+; Line 91
+	push	edi
+	push	OFFSET FLAT:??_C@_06NKHL@x?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+2]
+; Line 92
+	push	eax
+	push	OFFSET FLAT:??_C@_06EPNL@y?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+; Line 93
+	push	OFFSET FLAT:_laser_type
+	push	OFFSET FLAT:??_C@_0L@LLEO@laser?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+4]
+; Line 94
+	push	eax
+	push	OFFSET FLAT:??_C@_0P@JNCH@frameskip?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+72]
+; Line 95
+	push	eax
+	push	OFFSET FLAT:??_C@_0L@FKAB@block?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+; Line 96
+	lea	eax, DWORD PTR [edi+60]
+	push	eax
+	push	OFFSET FLAT:??_C@_08BODH@sfx?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+64]
+; Line 97
+	push	eax
+	push	OFFSET FLAT:??_C@_0L@BIHH@music?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+68]
+; Line 98
+	push	eax
+	push	OFFSET FLAT:??_C@_0L@JJPA@sound?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+112]
+; Line 99
+	push	eax
+	push	OFFSET FLAT:??_C@_0L@FGFA@sleep?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+52]
+; Line 101
+	push	eax
+	push	OFFSET FLAT:??_C@_0N@GOKH@sndport?$DN?5?$CFx?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+56]
+; Line 102
+	push	eax
+	push	OFFSET FLAT:??_C@_0M@ECAD@sndirq?$DN?5?$CFx?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+12]
+; Line 103
+	push	eax
+	push	OFFSET FLAT:??_C@_0N@KLFA@comport?$DN?5?$CFx?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+16]
+; Line 104
+	push	eax
+	push	OFFSET FLAT:??_C@_0M@LFDE@comirq?$DN?5?$CFx?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	eax, DWORD PTR [edi+84]
+; Line 106
+	lea	ecx, DWORD PTR [edi+88]
+	lea	edx, DWORD PTR [edi+76]
+	push	eax
+	push	ecx
+	push	edx
+	lea	eax, DWORD PTR [edi+80]
+	push	eax
+	push	OFFSET FLAT:??_C@_0BL@BEKN@joycal?$DN?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 24					; 00000018H
+; Line 108
+	lea	ecx, DWORD PTR [edi+92]
+	push	ecx
+	push	OFFSET FLAT:??_C@_0L@NHMH@pitch?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _pitchup$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 109
+	push	ecx
+	push	OFFSET FLAT:??_C@_0N@FAOK@pitchup?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _pitchdown$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 110
+	push	ecx
+	push	OFFSET FLAT:??_C@_0P@MGC@pitchdown?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	ecx, DWORD PTR [edi+95]
+; Line 112
+	push	ecx
+	push	OFFSET FLAT:??_C@_08EDJH@yaw?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _yawup$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 113
+	push	ecx
+	push	OFFSET FLAT:??_C@_0L@HEFE@yawup?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _yawdown$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 114
+	push	ecx
+	push	OFFSET FLAT:??_C@_0N@PGLF@yawdown?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	ecx, DWORD PTR [edi+98]
+; Line 116
+	push	ecx
+	push	OFFSET FLAT:??_C@_09KDAI@roll?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _rollup$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 117
+	push	ecx
+	push	OFFSET FLAT:??_C@_0M@OFNB@rollup?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _rolldown$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 118
+	push	ecx
+	push	OFFSET FLAT:??_C@_0O@IABO@rolldown?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	ecx, DWORD PTR [edi+101]
+; Line 120
+	push	ecx
+	push	OFFSET FLAT:??_C@_09HMGG@fire?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _fire$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 121
+	push	ecx
+	push	OFFSET FLAT:??_C@_0N@EGII@firekey?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+	lea	ecx, DWORD PTR [edi+103]
+; Line 123
+	push	ecx
+	push	OFFSET FLAT:??_C@_0L@OKOA@boost?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _boost$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 124
+	add	edi, 105				; 00000069H
+	push	ecx
+	push	OFFSET FLAT:??_C@_0O@IGAC@boostkey?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+; Line 126
+	push	edi
+	push	OFFSET FLAT:??_C@_0L@LEIN@brake?$DN?5?$CFd?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	lea	ecx, DWORD PTR _brake$[esp+84]
+	add	esp, 12					; 0000000cH
+; Line 127
+	push	ecx
+	push	OFFSET FLAT:??_C@_0O@KCBM@brakekey?$DN?5?$CFc?6?$AA@ ; `string'
+	push	esi
+	call	_fscanf
+	add	esp, 12					; 0000000cH
+; Line 129
+	push	esi
+	call	_fclose
+	lea	eax, DWORD PTR _taddr$[esp+76]
+	add	esp, 4
+; Line 131
+	push	eax
+	call	_inet_addr@4
+	pop	edi
+	mov	DWORD PTR _mplayer_addr, eax
+; Line 132
+	pop	esi
+	add	esp, 64					; 00000040H
 	ret	0
 _SG_LoadConfig ENDP
 _TEXT	ENDS
@@ -213,7 +767,7 @@ PUBLIC	_SG_SaveConfig
 ;	COMDAT _SG_SaveConfig
 _TEXT	SEGMENT
 _SG_SaveConfig PROC NEAR				; COMDAT
-; Line 88
+; Line 136
 	ret	0
 _SG_SaveConfig ENDP
 _TEXT	ENDS
@@ -231,24 +785,28 @@ _DATA	ENDS
 ;	COMDAT _SG_GameInit
 _TEXT	SEGMENT
 _SG_GameInit PROC NEAR					; COMDAT
-; Line 91
+; Line 139
 	push	OFFSET FLAT:_GAME_SETTINGS
 	call	_SG_LoadConfig
 	mov	DWORD PTR _SG_Draw, OFFSET FLAT:_title_draw
 	add	esp, 4
 	mov	DWORD PTR _SG_Module, OFFSET FLAT:_title_module
-; Line 95
+; Line 143
 	push	OFFSET FLAT:??_C@_0N@GJDG@starfont?4fnt?$AA@ ; `string'
 	call	_unpack_glyphs
 	add	esp, 4
-; Line 96
+; Line 144
 	push	0
 	call	_time
 	add	esp, 4
 	push	eax
 	call	_srand
 	add	esp, 4
-; Line 97
+; Line 146
+	call	_SG_GetTicks
+	mov	DWORD PTR _leftover_ticks, 0
+	mov	DWORD PTR _current_ticks, eax
+; Line 148
 	ret	0
 _SG_GameInit ENDP
 _TEXT	ENDS
@@ -260,16 +818,16 @@ _r$ = -7
 _g$ = -6
 _b$ = -5
 _SG_InitPalette PROC NEAR				; COMDAT
-; Line 99
+; Line 150
 	sub	esp, 8
 	push	ebx
 	push	esi
-; Line 119
+; Line 170
 	xor	esi, esi
-$L445:
-; Line 120
+$L494:
+; Line 171
 	test	esi, 4
-	je	SHORT $L485
+	je	SHORT $L572
 	mov	eax, esi
 	and	eax, 8
 	cmp	eax, 1
@@ -277,13 +835,13 @@ $L445:
 	and	al, -8					; fffffff8H
 	add	al, 16					; 00000010H
 	mov	BYTE PTR _r$[esp+16], al
-	jmp	SHORT $L486
-$L485:
+	jmp	SHORT $L573
+$L572:
 	mov	BYTE PTR _r$[esp+16], 0
-$L486:
-; Line 121
+$L573:
+; Line 172
 	test	esi, 2
-	je	SHORT $L487
+	je	SHORT $L574
 	mov	eax, esi
 	and	eax, 8
 	cmp	eax, 1
@@ -291,13 +849,13 @@ $L486:
 	and	al, -8					; fffffff8H
 	add	al, 16					; 00000010H
 	mov	BYTE PTR _g$[esp+16], al
-	jmp	SHORT $L488
-$L487:
+	jmp	SHORT $L575
+$L574:
 	mov	BYTE PTR _g$[esp+16], 0
-$L488:
-; Line 122
+$L575:
+; Line 173
 	test	esi, 1
-	je	SHORT $L489
+	je	SHORT $L576
 	mov	eax, esi
 	and	eax, 8
 	cmp	eax, 1
@@ -305,35 +863,35 @@ $L488:
 	and	al, -8					; fffffff8H
 	add	al, 16					; 00000010H
 	mov	BYTE PTR _b$[esp+16], al
-	jmp	SHORT $L490
-$L489:
+	jmp	SHORT $L577
+$L576:
 	mov	BYTE PTR _b$[esp+16], 0
-$L490:
-; Line 125
+$L577:
+; Line 176
 	cmp	esi, 7
-	jne	SHORT $L448
-; Line 126
+	jne	SHORT $L497
+; Line 177
 	mov	BYTE PTR _r$[esp+16], 16		; 00000010H
-; Line 127
+; Line 178
 	mov	BYTE PTR _g$[esp+16], 8
-; Line 128
+; Line 179
 	mov	BYTE PTR _b$[esp+16], 0
-; Line 131
-$L448:
+; Line 182
+$L497:
 	xor	ebx, ebx
 	mov	eax, esi
 	shl	al, 4
 	mov	BYTE PTR -4+[esp+16], al
-$L449:
-; Line 132
+$L498:
+; Line 183
 	mov	al, bl
 	imul	BYTE PTR _b$[esp+16]
 	push	eax
-	mov	al, bl
-	imul	BYTE PTR _g$[esp+20]
+	mov	al, BYTE PTR _g$[esp+20]
+	imul	bl
 	push	eax
-	mov	al, bl
-	imul	BYTE PTR _r$[esp+24]
+	mov	al, BYTE PTR _r$[esp+24]
+	imul	bl
 	push	eax
 	mov	al, BYTE PTR -4+[esp+28]
 	add	al, bl
@@ -341,39 +899,39 @@ $L449:
 	push	eax
 	call	_SG_SetPaletteIndex
 	add	esp, 16					; 00000010H
-; Line 131
+; Line 182
 	cmp	ebx, 16					; 00000010H
-	jl	SHORT $L449
-; Line 119
+	jl	SHORT $L498
+; Line 170
 	inc	esi
 	cmp	esi, 16					; 00000010H
-	jl	$L445
-; Line 135
+	jl	$L494
+; Line 186
 	pop	esi
 	pop	ebx
 	add	esp, 8
 	ret	0
 _SG_InitPalette ENDP
 _TEXT	ENDS
+PUBLIC	_SG_WelcomeMessage
 PUBLIC	??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
-PUBLIC	??_C@_08KJGF@10?350?303?$AA@			; `string'
-PUBLIC	??_C@_0M@IAK@Oct?513?52023?$AA@			; `string'
+PUBLIC	??_C@_08HOPB@21?355?332?$AA@			; `string'
+PUBLIC	??_C@_0M@GIFF@Oct?528?52023?$AA@		; `string'
 PUBLIC	??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 PUBLIC	??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@ ; `string'
-PUBLIC	_SG_WelcomeMessage
 EXTRN	_printf:NEAR
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 _DATA	SEGMENT
 ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ DB 'Starblazer II Bet'
 	DB	'a Version', 0aH, 00H			; `string'
 _DATA	ENDS
-;	COMDAT ??_C@_08KJGF@10?350?303?$AA@
+;	COMDAT ??_C@_08HOPB@21?355?332?$AA@
 _DATA	SEGMENT
-??_C@_08KJGF@10?350?303?$AA@ DB '10:50:03', 00H		; `string'
+??_C@_08HOPB@21?355?332?$AA@ DB '21:55:32', 00H		; `string'
 _DATA	ENDS
-;	COMDAT ??_C@_0M@IAK@Oct?513?52023?$AA@
+;	COMDAT ??_C@_0M@GIFF@Oct?528?52023?$AA@
 _DATA	SEGMENT
-??_C@_0M@IAK@Oct?513?52023?$AA@ DB 'Oct 13 2023', 00H	; `string'
+??_C@_0M@GIFF@Oct?528?52023?$AA@ DB 'Oct 28 2023', 00H	; `string'
 _DATA	ENDS
 ;	COMDAT ??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@
 _DATA	SEGMENT
@@ -388,21 +946,21 @@ _DATA	ENDS
 ;	COMDAT _SG_WelcomeMessage
 _TEXT	SEGMENT
 _SG_WelcomeMessage PROC NEAR				; COMDAT
-; Line 138
+; Line 189
 	push	OFFSET FLAT:??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
 	call	_printf
 	add	esp, 4
-; Line 139
-	push	OFFSET FLAT:??_C@_08KJGF@10?350?303?$AA@ ; `string'
-	push	OFFSET FLAT:??_C@_0M@IAK@Oct?513?52023?$AA@ ; `string'
+; Line 190
+	push	OFFSET FLAT:??_C@_08HOPB@21?355?332?$AA@ ; `string'
+	push	OFFSET FLAT:??_C@_0M@GIFF@Oct?528?52023?$AA@ ; `string'
 	push	OFFSET FLAT:??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 	call	_printf
 	add	esp, 12					; 0000000cH
-; Line 140
+; Line 191
 	push	OFFSET FLAT:??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@ ; `string'
 	call	_printf
 	add	esp, 4
-; Line 141
+; Line 192
 	ret	0
 _SG_WelcomeMessage ENDP
 _TEXT	ENDS

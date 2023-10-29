@@ -8,13 +8,13 @@ extern char* SG_platform;
 extern uint32 mplayer_addr;
 
 typedef struct{
-	uint16 x, y;
-	bool_t buttons[2];
+	int16 x, y;
+	bool_t buttons[4];
 } SG_joystick_t;
 
 typedef struct{
-	uint16 x, y;
-	bool_t buttons[2];
+	int16 x, y;
+	bool_t buttons[4];
 } SG_mouse_t;
 
 //Misc functions

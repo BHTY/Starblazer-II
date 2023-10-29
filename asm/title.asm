@@ -91,13 +91,13 @@ _init_stars PROC NEAR					; COMDAT
 	push	esi
 	mov	esi, OFFSET FLAT:_title_stars
 ; Line 24
-$L805:
+$L804:
 	push	esi
 	call	_init_star
 	add	esp, 4
 	add	esi, 12					; 0000000cH
 	cmp	esi, OFFSET FLAT:_title_stars+6000
-	jb	SHORT $L805
+	jb	SHORT $L804
 ; Line 25
 	pop	esi
 	ret	0
@@ -126,7 +126,7 @@ _multiplayer_button PROC NEAR				; COMDAT
 	call	_net_connect
 	add	esp, 4
 	test	al, al
-	jne	SHORT $L813
+	jne	SHORT $L812
 ; Line 33
 	mov	BYTE PTR _multiplayer, 1
 ; Line 34
@@ -134,7 +134,7 @@ _multiplayer_button PROC NEAR				; COMDAT
 ; Line 35
 	jmp	_blazer2_init
 ; Line 37
-$L813:
+$L812:
 	ret	0
 _multiplayer_button ENDP
 _TEXT	ENDS
@@ -268,15 +268,15 @@ _create_buttons PROC NEAR				; COMDAT
 	ret	0
 _create_buttons ENDP
 _TEXT	ENDS
-PUBLIC	??_C@_0N@JEHG@sfx?1menu?4wav?$AA@		; `string'
 PUBLIC	_title_init
 PUBLIC	??_C@_0BA@KPAO@assets?1star?4obj?$AA@		; `string'
+PUBLIC	??_C@_0N@JEHG@sfx?1menu?4wav?$AA@		; `string'
 EXTRN	_spawn_entity:NEAR
 EXTRN	_quat_create:NEAR
 EXTRN	_load_model:NEAR
 EXTRN	_SL_CENTER_Y:WORD
-EXTRN	_init_hypercraft:NEAR
 EXTRN	_play_music:NEAR
+EXTRN	_init_hypercraft:NEAR
 ;	COMDAT ??_C@_0BA@KPAO@assets?1star?4obj?$AA@
 _DATA	SEGMENT
 ??_C@_0BA@KPAO@assets?1star?4obj?$AA@ DB 'assets/star.obj', 00H ; `string'
@@ -448,6 +448,7 @@ EXTRN	_SG_ReadMouse:NEAR
 EXTRN	_quat_tomat:NEAR
 EXTRN	_draw_scene:NEAR
 EXTRN	_draw_stars:NEAR
+EXTRN	_rotate_object:NEAR
 EXTRN	_SL_CAMERA_ORIENTATION:BYTE
 EXTRN	_vputs:NEAR
 EXTRN	_ui_display_widgets:NEAR
@@ -505,8 +506,13 @@ _title_draw PROC NEAR					; COMDAT
 	push	OFFSET FLAT:??_C@_0BN@POOO@BY?5WILL?5KLEES?5AND?5JOSH?5PIETY?$AA@ ; `string'
 	call	_vputs
 	add	esp, 28					; 0000001cH
-	mov	eax, DWORD PTR _title_cam_ori+12
+	mov	eax, DWORD PTR _StarblazerEntities
 ; Line 133
+	push	eax
+	call	_rotate_object
+	add	esp, 4
+	mov	eax, DWORD PTR _title_cam_ori+12
+; Line 134
 	mov	ecx, DWORD PTR _title_cam_ori+8
 	mov	edx, DWORD PTR _title_cam_ori+4
 	push	0
@@ -520,16 +526,16 @@ _title_draw PROC NEAR					; COMDAT
 	push	OFFSET FLAT:_title_camera
 	call	_draw_scene
 	add	esp, 32					; 00000020H
-; Line 139
+; Line 140
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	push	OFFSET FLAT:_stars_cam_ori
 	call	_quat_tomat
 	add	esp, 8
-; Line 140
+; Line 141
 	call	_draw_stars
-; Line 142
+; Line 143
 	call	_ui_display_widgets
-; Line 145
+; Line 146
 	add	esp, 8
 	ret	0
 _title_draw ENDP

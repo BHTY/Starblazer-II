@@ -235,9 +235,9 @@ _draw_hypercraft PROC NEAR				; COMDAT
 	mov	ecx, DWORD PTR _hc_template
 ; Line 68
 	cmp	WORD PTR [ecx+8], bx
-	jbe	SHORT $L369
+	jbe	SHORT $L370
 	xor	ebp, ebp
-$L367:
+$L368:
 ; Line 69
 	lea	eax, DWORD PTR _vec$[esp+64]
 	mov	ecx, DWORD PTR _hc_template
@@ -269,9 +269,9 @@ $L367:
 	xor	ecx, ecx
 	mov	cx, WORD PTR [eax+8]
 	cmp	ecx, ebx
-	jg	SHORT $L367
+	jg	SHORT $L368
 ; Line 72
-$L369:
+$L370:
 ; Line 74
 	push	0
 	mov	eax, DWORD PTR _hc_template

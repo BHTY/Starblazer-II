@@ -1,13 +1,11 @@
 #include "../headers/sndmixer.h"
+#include "../headers/blazer.h"
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
 
 cached_sound sounds[MAX_SOUNDS];
 mixer_channel channels[MAX_CHANNELS];
-
-int BUFFER_SIZE;
-int MUSIC_ENABLE, SOUND_ENABLE, SFX_ENABLE;
 
 uint8* buffer1;
 uint8* buffer2;
@@ -21,21 +19,21 @@ bool_t sfx_enable;
 void init_sound(){
 	memset(sounds, 0, sizeof(sounds));
 	memset(channels, 0, sizeof(channels));
-	buffer1 = malloc(BUFFER_SIZE);
-	buffer2 = malloc(BUFFER_SIZE);
-	music_buffer = malloc(BUFFER_SIZE);
-	mix_buffer = malloc(BUFFER_SIZE * 2);
-	memset(buffer1, 0, BUFFER_SIZE);
-	memset(buffer2, 0, BUFFER_SIZE);
-	memset(music_buffer, 0, BUFFER_SIZE);
-	memset(mix_buffer, 0, BUFFER_SIZE * 2);
+	buffer1 = malloc(GAME_SETTINGS.snd_settings.buf_size);
+	buffer2 = malloc(GAME_SETTINGS.snd_settings.buf_size);
+	music_buffer = malloc(GAME_SETTINGS.snd_settings.buf_size);
+	mix_buffer = malloc(GAME_SETTINGS.snd_settings.buf_size * 2);
+	memset(buffer1, 0, GAME_SETTINGS.snd_settings.buf_size);
+	memset(buffer2, 0, GAME_SETTINGS.snd_settings.buf_size);
+	memset(music_buffer, 0, GAME_SETTINGS.snd_settings.buf_size);
+	memset(mix_buffer, 0, GAME_SETTINGS.snd_settings.buf_size * 2);
 
 	current_buffer = 0;
 	sfx_enable = 0;
 }
 
 void play_music(char* filename){
-	if (MUSIC_ENABLE){
+	if (GAME_SETTINGS.snd_settings.music){
 		musicfp = fopen(filename, "rb");
 	}
 }
@@ -122,13 +120,13 @@ void mix_channel(int ch){
 	}
 
 	samples_remaining = sounds[channels[ch].sound_index].num_samples - channels[ch].playback_position;
-	samples = snd_min(BUFFER_SIZE, samples_remaining);
+	samples = snd_min(GAME_SETTINGS.snd_settings.buf_size, samples_remaining);
 
 	for(i = 0; i < samples; i++){
 		mix_buffer[i] += sounds[channels[ch].sound_index].samples[channels[ch].playback_position++];
 	}
 
-	if(BUFFER_SIZE >= samples_remaining){ //release this channel
+	if(GAME_SETTINGS.snd_settings.buf_size >= samples_remaining){ //release this channel
 		channels[ch].playing = 0;
 	}
 
@@ -137,11 +135,11 @@ void mix_channel(int ch){
 }
 
 void copy_music(uint8* ptr){
-	int bytes_read = fread(ptr, 1, BUFFER_SIZE, musicfp);
+	int bytes_read = fread(ptr, 1, GAME_SETTINGS.snd_settings.buf_size, musicfp);
 
-	if (bytes_read < BUFFER_SIZE){
+	if (bytes_read < GAME_SETTINGS.snd_settings.buf_size){
 		fseek(musicfp, 0, SEEK_SET);
-		fread(ptr + bytes_read, 1, BUFFER_SIZE - bytes_read, musicfp);
+		fread(ptr + bytes_read, 1, GAME_SETTINGS.snd_settings.buf_size - bytes_read, musicfp);
 	}
 }
 
@@ -149,14 +147,14 @@ void mix_music(uint8* ptr){
 	int i;
 
 	//first, read in the music
-	int bytes_read = fread(music_buffer, 1, BUFFER_SIZE, musicfp);
+	int bytes_read = fread(music_buffer, 1, GAME_SETTINGS.snd_settings.buf_size, musicfp);
 
-	if(bytes_read < BUFFER_SIZE){
+	if(bytes_read < GAME_SETTINGS.snd_settings.buf_size){
 		fseek(musicfp, 0, SEEK_SET);
-		fread(music_buffer + bytes_read, 1, BUFFER_SIZE - bytes_read, musicfp);
+		fread(music_buffer + bytes_read, 1, GAME_SETTINGS.snd_settings.buf_size - bytes_read, musicfp);
 	}
 
-	for(i = 0; i < BUFFER_SIZE; i++){
+	for(i = 0; i < GAME_SETTINGS.snd_settings.buf_size; i++){
 		ptr[i] = 0.75 * (mix_buffer[i] >> 4) + 0.25 * music_buffer[i];//(music_buffer[i] + (mix_buffer[i] >> 4)) >> 1;
 	}
 }
@@ -165,7 +163,7 @@ void mix(){
 	int i;
 	uint8* ptr;
 
-	sfx_enable = sfx_enable && SFX_ENABLE;
+	sfx_enable = sfx_enable && GAME_SETTINGS.snd_settings.sfx;
 
 	if(current_buffer == 0){
 		ptr = buffer1;
@@ -178,7 +176,7 @@ void mix(){
 		return;
 	}
 
-	memset(mix_buffer, 0, BUFFER_SIZE * 2);
+	memset(mix_buffer, 0, GAME_SETTINGS.snd_settings.buf_size * 2);
 
 	for(i = 0; i < MAX_CHANNELS; i++){
 		mix_channel(i);
@@ -187,7 +185,7 @@ void mix(){
 	if(musicfp){
 		mix_music(ptr);
 	}else{
-		for(i = 0; i < BUFFER_SIZE; i++){
+		for(i = 0; i < GAME_SETTINGS.snd_settings.buf_size; i++){
 			ptr[i] = mix_buffer[i] >> 4;
 		}
 	}

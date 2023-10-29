@@ -7,12 +7,23 @@
 extern void title_draw();
 extern void title_module();
 
-int SLEEP_TIME = 0;
+uint32 last_ticks;
+uint32 current_ticks;
+uint32 leftover_ticks;
+
+uint32 blazer_calcticks() {
+	uint32 ms_elapsed, ticks_elapsed;
+	last_ticks = current_ticks;
+	current_ticks = SG_GetTicks();
+	ms_elapsed = current_ticks + leftover_ticks - last_ticks;
+	ticks_elapsed = ms_elapsed / 14;
+	leftover_ticks = ms_elapsed % 14;
+	return ticks_elapsed;
+}
+
 int current_frame = 0;
 uint8 BG_COLOR = 0;
 int tick_counter = 0;
-int FRAME_CAP = 0;
-int ready_frame = 0;
 
 int LAST_TICK_TIME = 14;
 int LAST_FRAME_TIME = 14;
@@ -35,6 +46,8 @@ void SG_PresentFrame(){
 void SG_Tick(){
 	uint32 current_time;
 
+	tick_counter = blazer_calcticks();
+
 	while(tick_counter){
 		SG_Module();
 		tick_counter--;
@@ -42,45 +55,78 @@ void SG_Tick(){
 
 	//GAME_SETTINGS.vid_settings.frameskip = 0;
 
-	if(FRAME_CAP){
-		if(ready_frame){
-			if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
-				current_frame = 0;
-				SG_PresentFrame();
-				current_time = SG_GetTicks();
-				LAST_FRAME_TIME = current_time - time_at_which_last_frame_was_rendered;
-				time_at_which_last_frame_was_rendered = current_time;
-			}
-			else{
-				current_frame++;
-			}
-			ready_frame = 0;
-		}
-	}else{
-
-		if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
-			current_frame = 0;
-			SG_PresentFrame();
-			current_time = SG_GetTicks();
-			LAST_FRAME_TIME = current_time - time_at_which_last_frame_was_rendered;
-			time_at_which_last_frame_was_rendered = current_time;
-		}
-		else{
-			current_frame++;
-		}
+	if (current_frame == GAME_SETTINGS.vid_settings.frameskip){
+		current_frame = 0;
+		SG_PresentFrame();
+		current_time = SG_GetTicks();
+		LAST_FRAME_TIME = current_time - time_at_which_last_frame_was_rendered;
+		time_at_which_last_frame_was_rendered = current_time;
+	}
+	else{
+		current_frame++;
 	}
 
-	//SG_WaitBlank();
 	SG_ProcessEvents();
 
-	if(SLEEP_TIME){
-		SG_Sleep(SLEEP_TIME);
+	if(GAME_SETTINGS.sleep_time){
+		SG_Sleep(GAME_SETTINGS.sleep_time);
 	}
-	//SG_Sleep(10);
 }
 
-void SG_LoadConfig(SG_config_t* cfg){
+extern bool_t laser_type;
+extern uint32 mplayer_addr;
+int __stdcall inet_addr(char*);
 
+void SG_LoadConfig(SG_config_t* cfg){
+	char taddr[50];
+	char pitchup, pitchdown, yawup, yawdown, rollup, rolldown, fire, boost, brake;
+
+	FILE* fp = fopen("config.ini", "r");
+	fscanf(fp, "addr= %s\n", taddr);
+	fscanf(fp, "port= %d\n", &(cfg->com_settings.port));
+	fscanf(fp, "name= %s\n", &(cfg->com_settings.player_name));
+	fscanf(fp, "pin= %s\n", &(cfg->com_settings.player_pin));
+	fscanf(fp, "x= %d\n", &(cfg->vid_settings.window_size_x));
+	fscanf(fp, "y= %d\n", &(cfg->vid_settings.window_size_y));
+	fscanf(fp, "laser= %d\n", &laser_type);
+	fscanf(fp, "frameskip= %d\n", &(cfg->vid_settings.frameskip));
+	fscanf(fp, "block= %d\n", &(cfg->snd_settings.buf_size));
+	fscanf(fp, "sfx= %d\n", &(cfg->snd_settings.sfx));
+	fscanf(fp, "music= %d\n", &(cfg->snd_settings.music));
+	fscanf(fp, "sound= %d\n", &(cfg->snd_settings.sound));
+	fscanf(fp, "sleep= %d\n", &(cfg->sleep_time));
+
+	fscanf(fp, "sndport= %x\n", &(cfg->snd_settings.dos.port));
+	fscanf(fp, "sndirq= %x\n", &(cfg->snd_settings.dos.irq));
+	fscanf(fp, "comport= %x\n", &(cfg->com_settings.dos.port));
+	fscanf(fp, "comirq= %x\n", &(cfg->com_settings.dos.irq));
+
+	fscanf(fp, "joycal= %d %d %d %d %d %d\n", &(cfg->ctrl_settings.joystick.min_X), &(cfg->ctrl_settings.joystick.max_X), &(cfg->ctrl_settings.joystick.min_Y), &(cfg->ctrl_settings.joystick.max_Y));
+	
+	fscanf(fp, "pitch= %d\n", &(cfg->ctrl_settings.pitch.control_type));
+	fscanf(fp, "pitchup= %c\n", &pitchup);
+	fscanf(fp, "pitchdown= %c\n", &pitchdown);
+
+	fscanf(fp, "yaw= %d\n", &(cfg->ctrl_settings.yaw.control_type));
+	fscanf(fp, "yawup= %c\n", &yawup);
+	fscanf(fp, "yawdown= %c\n", &yawdown);
+
+	fscanf(fp, "roll= %d\n", &(cfg->ctrl_settings.roll.control_type));
+	fscanf(fp, "rollup= %c\n", &rollup);
+	fscanf(fp, "rolldown= %c\n", &rolldown);
+
+	fscanf(fp, "fire= %d\n", &(cfg->ctrl_settings.fire.control_type));
+	fscanf(fp, "firekey= %c\n", &fire);
+
+	fscanf(fp, "boost= %d\n", &(cfg->ctrl_settings.boost.control_type));
+	fscanf(fp, "boostkey= %c\n", &boost);
+
+	fscanf(fp, "brake= %d\n", &(cfg->ctrl_settings.brake.control_type));
+	fscanf(fp, "brakekey= %c\n", &brake);
+
+	fclose(fp);
+
+	mplayer_addr = inet_addr(taddr);
 }
 
 void SG_SaveConfig(SG_config_t* cfg){
@@ -94,6 +140,9 @@ void SG_GameInit(){
 
 	unpack_glyphs("starfont.fnt");
 	srand(time(NULL));
+
+	current_ticks = SG_GetTicks();
+	leftover_ticks = 0;
 }
 
 void SG_InitPalette(){

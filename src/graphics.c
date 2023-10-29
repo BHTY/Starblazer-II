@@ -13,7 +13,6 @@ uint8* FBPTR;
 
 void plot_pixel(uint16 x, uint16 y, uint8 color){
 	if ((x < 320) && (y < 200)){
-		//FBPTR[y*320+x] = color;
 		FBPTR[ADDR(x, y)] = color;
 	}
 }
@@ -24,7 +23,7 @@ void bitset_pixel(uint16 x, uint16 y, char c){
 	}
 }
 
-void draw_line(int x, int y, int x2, int y2, unsigned char color) {
+void _draw_line(int x, int y, int x2, int y2, unsigned char color) {
 	int j, decInc;
 	int i;
 	char *address;
@@ -197,6 +196,10 @@ void drawline(short x1, short y1, short x2, short y2, char color)
 }
 
 
+void draw_line(int x, int y, int x2, int y2, unsigned char color){
+	drawline(x, y, x2, y2, color);
+}
+
 void swap_buffers(uint8* front_buffer, uint8 clear_color){
 	memcpy(front_buffer, FBPTR, 64000);
 	memset(FBPTR, clear_color, 64000);
@@ -214,6 +217,8 @@ void draw_span(int x1, int x2, int y, uint8 color) {
 	}
 	memset(FBPTR + (y * 320 + x1), color, x2 - x1);
 }
+
+
 void fill_tri(int x1, int y1, int x2, int y2, int x3, int y3, uint8 color) {
 	int t;
 	FIXED s1, s2, s3;

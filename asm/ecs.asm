@@ -48,6 +48,9 @@ _TEXT	ENDS
 ;	COMDAT _spawn_entity
 _TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
 _TEXT	ENDS
+;	COMDAT _rotate_object
+_TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
+_TEXT	ENDS
 ;	COMDAT _draw_scene
 _TEXT	SEGMENT PARA USE32 PUBLIC 'CODE'
 _TEXT	ENDS
@@ -77,23 +80,24 @@ _first_open_slot PROC NEAR				; COMDAT
 ; Line 23
 	xor	eax, eax
 	mov	ecx, OFFSET FLAT:_StarblazerEntities
-$L584:
+$L585:
 ; Line 24
 	cmp	DWORD PTR [ecx], 0
-	je	SHORT $L581
+	je	SHORT $L582
 	add	ecx, 4
 	inc	eax
 ; Line 23
 	cmp	ecx, OFFSET FLAT:_StarblazerEntities+4000
-	jb	SHORT $L584
+	jb	SHORT $L585
 ; Line 29
 	mov	eax, -559038737				; deadbeefH
 ; Line 30
-$L581:
+$L582:
 	ret	0
 _first_open_slot ENDP
 _TEXT	ENDS
 PUBLIC	_spawn_entity
+PUBLIC	_rotate_object
 EXTRN	_malloc:NEAR
 EXTRN	_quat_create:NEAR
 ;	COMDAT _spawn_entity
@@ -116,30 +120,34 @@ _spawn_entity PROC NEAR					; COMDAT
 	lea	ebx, DWORD PTR _StarblazerEntities[eax*4]
 	mov	esi, eax
 ; Line 42
-	push	108					; 0000006cH
+	mov	ebp, DWORD PTR _type$[esp+12]
+	xor	eax, eax
+	mov	ax, WORD PTR [ebp+8]
+	lea	eax, DWORD PTR [eax+eax*2+27]
+	shl	eax, 2
+	push	eax
 	call	_malloc
-	mov	ebp, DWORD PTR _type$[esp+16]
-	add	esp, 4
 	mov	DWORD PTR [ebx], eax
 ; Line 43
-	mov	edx, DWORD PTR _y$[esp+12]
 	mov	DWORD PTR [eax], ebp
 ; Line 44
-	mov	eax, DWORD PTR _x$[esp+12]
+	mov	eax, DWORD PTR _y$[esp+16]
 	mov	ecx, DWORD PTR [ebx]
-	mov	DWORD PTR [ecx+4], eax
+	mov	edx, DWORD PTR _x$[esp+16]
+	add	esp, 4
+	mov	DWORD PTR [ecx+4], edx
 ; Line 45
 	mov	ecx, DWORD PTR [ebx]
-	mov	eax, DWORD PTR _z$[esp+12]
-	mov	DWORD PTR [ecx+8], edx
+	mov	edx, DWORD PTR _z$[esp+12]
+	mov	DWORD PTR [ecx+8], eax
 ; Line 46
 	mov	ecx, DWORD PTR [ebx]
-	mov	dl, BYTE PTR _yaw$[esp+12]
-	mov	DWORD PTR [ecx+12], eax
+	mov	DWORD PTR [ecx+12], edx
 ; Line 47
-	mov	eax, DWORD PTR [ebx]
-	add	eax, 16					; 00000010H
 	mov	cl, BYTE PTR _roll$[esp+12]
+	mov	eax, DWORD PTR [ebx]
+	mov	dl, BYTE PTR _yaw$[esp+12]
+	add	eax, 16					; 00000010H
 	push	eax
 	push	ecx
 	mov	al, BYTE PTR _pitch$[esp+20]
@@ -160,19 +168,81 @@ _spawn_entity PROC NEAR					; COMDAT
 ; Line 50
 	xor	ecx, ecx
 	mov	eax, DWORD PTR [ebx]
-	pop	ebp
-	pop	edi
 	mov	BYTE PTR [eax+100], cl
 ; Line 51
 	mov	eax, DWORD PTR [ebx]
 	mov	DWORD PTR [eax+104], ecx
-; Line 53
+; Line 52
+	mov	eax, DWORD PTR [ebx]
+	push	eax
+	call	_rotate_object
+	add	esp, 4
 	mov	eax, esi
-; Line 54
+; Line 55
+	pop	ebp
+	pop	edi
 	pop	esi
 	pop	ebx
 	ret	0
 _spawn_entity ENDP
+_TEXT	ENDS
+EXTRN	_mat3_mul:NEAR
+EXTRN	_quat_tomat:NEAR
+;	COMDAT _rotate_object
+_TEXT	SEGMENT
+_ent$ = 8
+_model_rotation_matrix$ = -36
+_rotate_object PROC NEAR				; COMDAT
+; Line 57
+	sub	esp, 36					; 00000024H
+	lea	eax, DWORD PTR _model_rotation_matrix$[esp+36]
+	push	ebx
+	push	esi
+	push	edi
+	mov	edi, DWORD PTR _ent$[esp+44]
+	push	ebp
+; Line 61
+	push	eax
+	xor	ebx, ebx
+	lea	ecx, DWORD PTR [edi+16]
+	push	ecx
+	call	_quat_tomat
+	add	esp, 8
+	mov	eax, DWORD PTR [edi]
+; Line 63
+	cmp	WORD PTR [eax+8], bx
+	jbe	SHORT $L599
+	xor	ebp, ebp
+	lea	esi, DWORD PTR [edi+108]
+$L602:
+; Line 64
+	push	esi
+	mov	eax, DWORD PTR [edi]
+	lea	ecx, DWORD PTR _model_rotation_matrix$[esp+56]
+	add	esi, 12					; 0000000cH
+	mov	eax, DWORD PTR [eax+4]
+	inc	ebx
+	add	eax, ebp
+	add	ebp, 12					; 0000000cH
+	push	eax
+	push	ecx
+	call	_mat3_mul
+	add	esp, 12					; 0000000cH
+	mov	eax, DWORD PTR [edi]
+; Line 63
+	xor	ecx, ecx
+	mov	cx, WORD PTR [eax+8]
+	cmp	ecx, ebx
+	jg	SHORT $L602
+; Line 66
+$L599:
+	pop	ebp
+	pop	edi
+	pop	esi
+	pop	ebx
+	add	esp, 36					; 00000024H
+	ret	0
+_rotate_object ENDP
 _TEXT	ENDS
 PUBLIC	_draw_scene
 EXTRN	_camera_translate:NEAR
@@ -181,9 +251,7 @@ EXTRN	_put_vertex:NEAR
 EXTRN	_put_triangles:NEAR
 EXTRN	_polygon_zsort:NEAR
 EXTRN	_plotpoint_3d:NEAR
-EXTRN	_mat3_mul:NEAR
 EXTRN	_render_end:NEAR
-EXTRN	_quat_tomat:NEAR
 EXTRN	_quat_conjugate:NEAR
 EXTRN	_SL_VERTEX_INDEX:WORD
 EXTRN	_SL_CAMERA_ORIENTATION:BYTE
@@ -195,38 +263,39 @@ _cam_ori$ = 12
 _shading$ = 28
 _star_ptr$ = 32
 _num_stars$ = 36
+_cur_index$ = -52
 _temp_vert$ = -48
 _model_rotation_matrix$ = -36
 _draw_scene PROC NEAR					; COMDAT
-; Line 63
+; Line 75
 	mov	eax, DWORD PTR _cam_pos$[esp-4]
-	sub	esp, 48					; 00000030H
+	sub	esp, 52					; 00000034H
 	push	ebx
 	push	esi
 	push	edi
 	push	ebp
-; Line 68
+; Line 80
 	push	eax
 	call	_camera_translate
-	lea	eax, DWORD PTR _cam_ori$[esp+64]
+	lea	eax, DWORD PTR _cam_ori$[esp+68]
 	add	esp, 4
-; Line 69
+; Line 81
 	push	eax
 	call	_quat_conjugate
-	lea	eax, DWORD PTR _cam_ori$[esp+64]
+	lea	eax, DWORD PTR _cam_ori$[esp+68]
 	add	esp, 4
-; Line 70
+; Line 82
 	push	OFFSET FLAT:_SL_CAMERA_ORIENTATION
 	push	eax
 	call	_quat_tomat
-	mov	edi, DWORD PTR _num_stars$[esp+68]
+	mov	edi, DWORD PTR _num_stars$[esp+72]
 	add	esp, 8
-; Line 72
+; Line 84
 	test	edi, edi
-	jle	SHORT $L610
-	mov	esi, DWORD PTR _star_ptr$[esp+60]
-$L608:
-; Line 73
+	jle	SHORT $L618
+	mov	esi, DWORD PTR _star_ptr$[esp+64]
+$L616:
+; Line 85
 	mov	eax, DWORD PTR [esi+8]
 	mov	ecx, DWORD PTR [esi+4]
 	mov	edx, DWORD PTR [esi]
@@ -238,115 +307,114 @@ $L608:
 	call	_plotpoint_3d
 	add	esp, 16					; 00000010H
 	dec	edi
-	jne	SHORT $L608
-; Line 74
-$L610:
-; Line 76
+	jne	SHORT $L616
+; Line 86
+$L618:
+; Line 88
 	mov	esi, OFFSET FLAT:_StarblazerEntities
 	call	_render_begin
-; Line 78
-$L611:
+; Line 90
+$L619:
 	mov	eax, DWORD PTR [esi]
-; Line 79
-	test	eax, eax
-	je	$L612
-; Line 81
-	cmp	DWORD PTR [eax+104], 0
-	je	SHORT $L615
-; Line 82
-	mov	DWORD PTR [eax+104], 0
-; Line 84
-	jmp	SHORT $L616
-$L615:
-; Line 85
-	mov	BYTE PTR [eax+100], 0
-; Line 86
-$L616:
-; Line 88
-	xor	edi, edi
-	lea	eax, DWORD PTR _model_rotation_matrix$[esp+64]
-	mov	di, WORD PTR _SL_VERTEX_INDEX
-	push	eax
 ; Line 91
+	test	eax, eax
+	je	$L620
+; Line 93
+	cmp	DWORD PTR [eax+104], 0
+	je	SHORT $L623
+; Line 94
+	mov	DWORD PTR [eax+104], 0
+; Line 96
+	jmp	SHORT $L624
+$L623:
+; Line 97
+	mov	BYTE PTR [eax+100], 0
+; Line 98
+$L624:
+; Line 100
+	xor	eax, eax
+	lea	ecx, DWORD PTR _model_rotation_matrix$[esp+68]
+	mov	ax, WORD PTR _SL_VERTEX_INDEX
+	push	ecx
+	xor	edi, edi
+	mov	DWORD PTR _cur_index$[esp+72], eax
+; Line 103
 	mov	eax, DWORD PTR [esi]
-	xor	ebx, ebx
 	add	eax, 16					; 00000010H
 	push	eax
 	call	_quat_tomat
 	add	esp, 8
 	mov	ecx, DWORD PTR [esi]
-; Line 94
+; Line 106
 	mov	eax, DWORD PTR [ecx]
-	cmp	WORD PTR [eax+8], bx
-	jbe	SHORT $L619
-	xor	ebp, ebp
-$L617:
-; Line 95
-	lea	eax, DWORD PTR _temp_vert$[esp+64]
+	cmp	WORD PTR [eax+8], di
+	jbe	SHORT $L627
+	xor	ebx, ebx
+$L625:
 	mov	ecx, DWORD PTR [esi]
-	mov	edx, DWORD PTR [ecx]
-	lea	ecx, DWORD PTR _model_rotation_matrix$[esp+64]
-	push	eax
-	inc	ebx
-	mov	eax, DWORD PTR [edx+4]
-	add	eax, ebp
-	add	ebp, 12					; 0000000cH
-	push	eax
+	lea	edx, DWORD PTR _temp_vert$[esp+68]
+; Line 108
+	push	edx
+	add	ecx, 4
+	inc	edi
+	lea	eax, DWORD PTR [ebx+ecx-4]
+	mov	ebp, DWORD PTR [eax+108]
+	add	eax, 108				; 0000006cH
+	mov	DWORD PTR [edx], ebp
 	push	ecx
-	call	_mat3_mul
-	lea	ecx, DWORD PTR _temp_vert$[esp+76]
-	add	esp, 12					; 0000000cH
-; Line 96
-	mov	eax, DWORD PTR [esi]
-	push	ecx
-	add	eax, 4
-	push	eax
+	add	ebx, 12					; 0000000cH
+	mov	ebp, DWORD PTR [eax+4]
+	mov	DWORD PTR [edx+4], ebp
+	mov	eax, DWORD PTR [eax+8]
+	mov	DWORD PTR [edx+8], eax
+; Line 109
 	call	_vec3_add
-	lea	ecx, DWORD PTR _temp_vert$[esp+72]
+	lea	ecx, DWORD PTR _temp_vert$[esp+76]
 	add	esp, 8
-; Line 97
+; Line 110
 	push	ecx
 	call	_put_vertex
 	add	esp, 4
 	mov	eax, DWORD PTR [esi]
-; Line 94
+; Line 106
 	xor	edx, edx
 	mov	ecx, DWORD PTR [eax]
 	mov	dx, WORD PTR [ecx+8]
-	cmp	edx, ebx
-	jg	SHORT $L617
-; Line 98
-$L619:
+	cmp	edx, edi
+	jg	SHORT $L625
+; Line 111
+$L627:
 	mov	eax, DWORD PTR [esi]
+	mov	edx, DWORD PTR _cur_index$[esp+68]
 	mov	ecx, DWORD PTR [eax]
-; Line 101
+; Line 114
 	mov	al, BYTE PTR [eax+100]
-	mov	dx, WORD PTR [ecx+10]
+	mov	bx, WORD PTR [ecx+10]
 	push	eax
-	push	edi
-	mov	ecx, DWORD PTR [ecx]
 	push	edx
-	push	ecx
+	mov	eax, DWORD PTR [ecx]
+	push	ebx
+	push	eax
 	call	_put_triangles
 	add	esp, 16					; 00000010H
-; Line 78
-$L612:
+; Line 90
+$L620:
 	add	esi, 4
 	cmp	esi, OFFSET FLAT:_StarblazerEntities+4000
-	jb	$L611
-; Line 104
+	jb	$L619
+; Line 117
 	call	_polygon_zsort
-; Line 105
-	mov	al, BYTE PTR _shading$[esp+60]
+; Line 118
+	mov	al, BYTE PTR _shading$[esp+64]
 	push	eax
 	call	_render_end
 	add	esp, 4
-; Line 106
+; Line 119
 	pop	ebp
 	pop	edi
 	pop	esi
 	pop	ebx
-	add	esp, 48					; 00000030H
+	add	esp, 52					; 00000034H
 	ret	0
 _draw_scene ENDP
 _TEXT	ENDS
@@ -354,26 +422,26 @@ PUBLIC	_run_entity_scripts
 ;	COMDAT _run_entity_scripts
 _TEXT	SEGMENT
 _run_entity_scripts PROC NEAR				; COMDAT
-; Line 115
+; Line 128
 	push	esi
 	mov	esi, OFFSET FLAT:_StarblazerEntities
-; Line 118
-$L622:
+; Line 131
+$L630:
 	mov	eax, DWORD PTR [esi]
-; Line 119
+; Line 132
 	test	eax, eax
-	je	SHORT $L623
-; Line 120
+	je	SHORT $L631
+; Line 133
 	push	esi
 	mov	eax, DWORD PTR [eax]
 	call	DWORD PTR [eax+12]
 	add	esp, 4
-; Line 118
-$L623:
+; Line 131
+$L631:
 	add	esi, 4
 	cmp	esi, OFFSET FLAT:_StarblazerEntities+4000
-	jb	SHORT $L622
-; Line 123
+	jb	SHORT $L630
+; Line 136
 	pop	esi
 	ret	0
 _run_entity_scripts ENDP
@@ -384,14 +452,14 @@ _TEXT	SEGMENT
 _ent1$ = 8
 _ent2$ = 12
 _test_collisions PROC NEAR				; COMDAT
-; Line 133
+; Line 146
 	push	ebx
 	push	esi
 	mov	esi, DWORD PTR _ent1$[esp+4]
 	push	edi
 	mov	edi, DWORD PTR _ent2$[esp+8]
 	mov	ebx, DWORD PTR [esi]
-; Line 134
+; Line 147
 	mov	eax, DWORD PTR [esi+4]
 	mov	ecx, DWORD PTR [ebx+16]
 	sar	ecx, 1
@@ -400,8 +468,8 @@ _test_collisions PROC NEAR				; COMDAT
 	xor	eax, edx
 	sub	eax, edx
 	cmp	eax, ecx
-	jge	SHORT $L629
-; Line 135
+	jge	SHORT $L637
+; Line 148
 	mov	eax, DWORD PTR [esi+8]
 	mov	ecx, DWORD PTR [ebx+20]
 	sar	ecx, 1
@@ -410,8 +478,8 @@ _test_collisions PROC NEAR				; COMDAT
 	xor	eax, edx
 	sub	eax, edx
 	cmp	eax, ecx
-	jge	SHORT $L629
-; Line 136
+	jge	SHORT $L637
+; Line 149
 	mov	eax, DWORD PTR [esi+12]
 	mov	ecx, DWORD PTR [ebx+24]
 	sar	ecx, 1
@@ -420,18 +488,18 @@ _test_collisions PROC NEAR				; COMDAT
 	xor	eax, edx
 	sub	eax, edx
 	cmp	eax, ecx
-	jge	SHORT $L629
-; Line 137
+	jge	SHORT $L637
+; Line 150
 	mov	al, 1
 	pop	edi
 	pop	esi
 	pop	ebx
 	ret	0
-; Line 141
-$L629:
+; Line 154
+$L637:
 	xor	al, al
 	pop	edi
-; Line 142
+; Line 155
 	pop	esi
 	pop	ebx
 	ret	0
@@ -445,17 +513,17 @@ _x$ = 12
 _y$ = 16
 _z$ = 20
 _create_hitbox PROC NEAR				; COMDAT
-; Line 152
+; Line 165
 	mov	eax, DWORD PTR _x$[esp-4]
 	mov	ecx, DWORD PTR _tpl$[esp-4]
 	mov	edx, DWORD PTR _y$[esp-4]
 	mov	DWORD PTR [ecx+16], eax
-; Line 153
+; Line 166
 	mov	eax, DWORD PTR _z$[esp-4]
 	mov	DWORD PTR [ecx+20], edx
-; Line 154
+; Line 167
 	mov	DWORD PTR [ecx+24], eax
-; Line 155
+; Line 168
 	ret	0
 _create_hitbox ENDP
 _TEXT	ENDS
@@ -468,9 +536,9 @@ PUBLIC	??_C@_09FCEL@?$CFd?5?$CFd?5?$CFd?6?$AA@		; `string'
 PUBLIC	??_C@_06OPIA@usemtl?$AA@			; `string'
 PUBLIC	??_C@_02MECO@?$CFd?$AA@				; `string'
 PUBLIC	_load_model
+EXTRN	_free:NEAR
 EXTRN	__ftol:NEAR
 EXTRN	__fltused:NEAR
-EXTRN	_free:NEAR
 EXTRN	_fclose:NEAR
 EXTRN	_fopen:NEAR
 EXTRN	_fscanf:NEAR
@@ -507,10 +575,12 @@ _DATA	SEGMENT
 ??_C@_02MECO@?$CFd?$AA@ DB '%d', 00H			; `string'
 _DATA	ENDS
 CONST	SEGMENT
-$T714	DD	047800000r			; 65536
+$T727	DD	047800000r			; 65536
 CONST	ENDS
 ;	COMDAT _load_model
 _TEXT	SEGMENT
+_filename$ = 8
+_fp$ = -564
 _lineHeader$ = -512
 _currentVert$ = -524
 _currentFace$ = -528
@@ -524,37 +594,35 @@ _current_color$ = -560
 _polys$ = -520
 _verts$ = -516
 _tpl$ = -532
-_filename$ = 8
-_fp$ = -564
 _load_model PROC NEAR					; COMDAT
-; Line 170
+; Line 183
 	mov	eax, DWORD PTR _filename$[esp-4]
 	sub	esp, 564				; 00000234H
 	push	ebx
 	push	esi
 	push	edi
 	push	ebp
-; Line 171
+; Line 184
 	push	OFFSET FLAT:??_C@_01LHO@r?$AA@		; `string'
 	push	eax
 	call	_fopen
 	mov	DWORD PTR _fp$[esp+588], eax
 	add	esp, 8
-; Line 175
+; Line 188
 	xor	eax, eax
 	push	12000					; 00002ee0H
 	mov	DWORD PTR _currentVert$[esp+584], eax
 	mov	DWORD PTR _currentFace$[esp+584], eax
-; Line 181
+; Line 194
 	call	_malloc
 	mov	DWORD PTR _polys$[esp+584], eax
 	add	esp, 4
-; Line 182
+; Line 195
 	push	12000					; 00002ee0H
 	call	_malloc
 	mov	DWORD PTR _verts$[esp+584], eax
 	add	esp, 4
-; Line 183
+; Line 196
 	push	40					; 00000028H
 	call	_malloc
 	mov	ebx, DWORD PTR _polys$[esp+584]
@@ -562,9 +630,9 @@ _load_model PROC NEAR					; COMDAT
 	mov	DWORD PTR _tpl$[esp+584], eax
 	add	esp, 4
 	add	ebx, 6
-; Line 185
-$L657:
-; Line 186
+; Line 198
+$L665:
+; Line 199
 	lea	eax, DWORD PTR _lineHeader$[esp+580]
 	mov	ecx, DWORD PTR _fp$[esp+580]
 	push	eax
@@ -572,16 +640,16 @@ $L657:
 	push	ecx
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 187
+; Line 200
 	cmp	eax, -1
-	je	$L711
-; Line 189
+	je	$L724
+; Line 202
 	lea	esi, DWORD PTR _lineHeader$[esp+580]
 	mov	edi, OFFSET FLAT:??_C@_01KBCC@v?$AA@	; `string'
 	mov	ecx, 2
 	rep	cmpsb
-	jne	SHORT $L661
-; Line 190
+	jne	SHORT $L669
+; Line 203
 	lea	eax, DWORD PTR _z$[esp+580]
 	lea	ecx, DWORD PTR _y$[esp+580]
 	lea	edx, DWORD PTR _x$[esp+580]
@@ -594,30 +662,30 @@ $L657:
 	push	eax
 	call	_fscanf
 	fld	DWORD PTR _x$[esp+600]
-	fmul	DWORD PTR $T714
+	fmul	DWORD PTR $T727
 	add	esp, 20					; 00000014H
-; Line 191
+; Line 204
 	call	__ftol
 	mov	DWORD PTR [ebp-12], eax
-; Line 192
+; Line 205
 	fld	DWORD PTR _y$[esp+580]
-	fmul	DWORD PTR $T714
+	fmul	DWORD PTR $T727
 	call	__ftol
 	mov	DWORD PTR [ebp-8], eax
-; Line 193
+; Line 206
 	fld	DWORD PTR _z$[esp+580]
-	fmul	DWORD PTR $T714
+	fmul	DWORD PTR $T727
 	call	__ftol
 	mov	DWORD PTR [ebp-4], eax
 	inc	DWORD PTR _currentVert$[esp+580]
-; Line 197
-$L661:
+; Line 210
+$L669:
 	lea	esi, DWORD PTR _lineHeader$[esp+580]
 	mov	edi, OFFSET FLAT:??_C@_01IFC@f?$AA@	; `string'
 	mov	ecx, 2
 	rep	cmpsb
-	jne	SHORT $L664
-; Line 198
+	jne	SHORT $L672
+; Line 211
 	lea	eax, DWORD PTR _face3$[esp+580]
 	lea	ecx, DWORD PTR _face2$[esp+580]
 	lea	edx, DWORD PTR _face1$[esp+580]
@@ -631,29 +699,29 @@ $L661:
 	call	_fscanf
 	mov	cl, BYTE PTR _current_color$[esp+600]
 	add	esp, 20					; 00000014H
-; Line 199
+; Line 212
 	mov	BYTE PTR [ebx-12], cl
-; Line 200
+; Line 213
 	mov	eax, DWORD PTR _face1$[esp+580]
 	dec	ax
 	mov	WORD PTR [ebx-18], ax
-; Line 201
+; Line 214
 	mov	eax, DWORD PTR _face2$[esp+580]
 	dec	ax
 	mov	WORD PTR [ebx-16], ax
-; Line 202
+; Line 215
 	mov	eax, DWORD PTR _face3$[esp+580]
 	dec	ax
 	inc	DWORD PTR _currentFace$[esp+580]
 	mov	WORD PTR [ebx-14], ax
-; Line 206
-$L664:
+; Line 219
+$L672:
 	lea	esi, DWORD PTR _lineHeader$[esp+580]
 	mov	edi, OFFSET FLAT:??_C@_06OPIA@usemtl?$AA@ ; `string'
 	mov	ecx, 7
 	rep	cmpsb
-	jne	$L657
-; Line 207
+	jne	$L665
+; Line 220
 	lea	eax, DWORD PTR _current_color$[esp+580]
 	mov	ecx, DWORD PTR _fp$[esp+580]
 	push	eax
@@ -661,20 +729,20 @@ $L664:
 	push	ecx
 	call	_fscanf
 	add	esp, 12					; 0000000cH
-; Line 209
-	jmp	$L657
-$L711:
-; Line 211
+; Line 222
+	jmp	$L665
+$L724:
+; Line 224
 	mov	ax, WORD PTR _currentFace$[esp+580]
 	mov	ecx, DWORD PTR _tpl$[esp+580]
 	mov	dx, WORD PTR _currentVert$[esp+580]
 	mov	WORD PTR [ecx+10], ax
-; Line 212
+; Line 225
 	mov	WORD PTR [ecx+8], dx
 	mov	edx, DWORD PTR _currentVert$[esp+580]
 	lea	eax, DWORD PTR [edx+edx*2]
 	lea	ebx, DWORD PTR [eax*4]
-; Line 213
+; Line 226
 	push	ebx
 	call	_malloc
 	mov	ecx, DWORD PTR _tpl$[esp+584]
@@ -683,14 +751,14 @@ $L711:
 	mov	eax, DWORD PTR _currentFace$[esp+580]
 	lea	edx, DWORD PTR [eax+eax*2]
 	lea	ebp, DWORD PTR [edx*4]
-; Line 214
+; Line 227
 	push	ebp
 	call	_malloc
 	mov	ecx, DWORD PTR _tpl$[esp+584]
 	mov	esi, DWORD PTR _verts$[esp+584]
 	add	esp, 4
 	mov	DWORD PTR [ecx], eax
-; Line 216
+; Line 229
 	mov	edi, DWORD PTR [ecx+4]
 	mov	ecx, ebx
 	shr	ecx, 2
@@ -698,7 +766,7 @@ $L711:
 	mov	ecx, ebx
 	and	ecx, 3
 	rep	movsb
-; Line 217
+; Line 230
 	mov	ecx, DWORD PTR _tpl$[esp+580]
 	mov	esi, DWORD PTR _polys$[esp+580]
 	mov	edi, DWORD PTR [ecx]
@@ -708,26 +776,26 @@ $L711:
 	mov	ecx, ebp
 	and	ecx, 3
 	rep	movsb
-; Line 219
+; Line 232
 	mov	eax, DWORD PTR _verts$[esp+580]
 	push	eax
 	call	_free
 	mov	ecx, DWORD PTR _polys$[esp+584]
 	add	esp, 4
-; Line 220
+; Line 233
 	push	ecx
 	call	_free
 	mov	ecx, DWORD PTR _tpl$[esp+584]
 	mov	edx, DWORD PTR _fp$[esp+584]
 	add	esp, 4
-; Line 221
+; Line 234
 	mov	DWORD PTR [ecx+32], 0
-; Line 223
+; Line 236
 	push	edx
 	call	_fclose
 	mov	eax, DWORD PTR _tpl$[esp+584]
 	add	esp, 4
-; Line 226
+; Line 239
 	pop	ebp
 	pop	edi
 	pop	esi

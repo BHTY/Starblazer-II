@@ -23,6 +23,7 @@ void spawn_enemy_laser(uint32 index){ //index= index into connected players tabl
 	StarblazerEntities[id]->state[15] = players[index].laser->damage;
 	StarblazerEntities[id]->state[0] = 280;
 	StarblazerEntities[id]->state[13] = index;
+	rotate_object(StarblazerEntities[id]);
 	play_soundfx(SND_LASER_ENEMY);
 }
 
@@ -132,6 +133,7 @@ void net_syncstate(){
 				//otherwise, they've been here for a bit and there's no funny business, so set the appropriate state
 				StarblazerEntities[players[SENDER_ID(packet)].entity_id]->pos = packet.pos;
 				StarblazerEntities[players[SENDER_ID(packet)].entity_id]->orientation = packet.rot;
+				rotate_object(StarblazerEntities[players[SENDER_ID(packet)].entity_id]);
 
 				if (SHOOTING(packet)){ //fire a laser from their position if they did
 					if (LASER_TYPE(packet) == 0) {

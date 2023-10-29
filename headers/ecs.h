@@ -13,6 +13,7 @@ typedef struct ENTITY{
 	int32 health;
 	uint8 color_override;
 	int override_frames;
+	VEC3 verts[1];
 } ENTITY;
 
 typedef struct TEMPLATE{
@@ -37,5 +38,6 @@ void run_entity_scripts(); //iterates over every entity in a loop and runs its s
 bool_t test_collisions(ENTITY*, ENTITY*);
 void create_hitbox(TEMPLATE* tpl, FIXED x, FIXED y, FIXED z);
 TEMPLATE* load_model(char* filename);
+void rotate_object(ENTITY*);
 
 #endif
