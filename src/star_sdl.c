@@ -9,6 +9,8 @@ Description: Starblazer II for SDL2 on Linux
 #include <time.h>
 #include <SDL2/SDL.h>
 
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
 #include "../headers/star_gen.h"
 #include "../headers/blazer.h"
@@ -32,20 +34,43 @@ bool_t mouseDownRight = 0;
 bool_t keys[256];
 
 
+struct sockaddr_in server_addr;
+int server_connection;
+
 bool_t SG_OpenConnection(uint32 addr){
-	return 0;
+	int iMode = 1;
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_port = htons(GAME_SETTINGS.com_settings.port);
+	server_addr.sin_addr.s_addr = mplayer_addr;
+	
+	server_connection = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	
+	if(server_connection == 0){
+		return 0;
+	}
+	
+	ioctl(server_connection, SOCK_NONBLOCK, &iMode);
+	
+	return 1;
 }
 
 int SG_RecievePacket(void* buf, int num_bytes){
-	return 0;
+	int return_value = recvfrom(server_connection, buf, num_bytes, MSG_DONTWAIT, 0, 0);
+	
+	if(return_value == -1){
+		return 0;
+	}
+	else{
+		return return_value;
+	}
 }
 
 void SG_SendPacket(void* buf, int num_bytes){
-	
+	sendto(server_connection, buf, num_bytes, 0, &server_addr, sizeof(server_addr));
 }
 
 void SG_CloseConnection(){
-	
+	close(server_connection);
 }
 
 /*
