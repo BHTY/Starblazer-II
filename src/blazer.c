@@ -75,7 +75,12 @@ void SG_Tick(){
 
 extern bool_t laser_type;
 extern uint32 mplayer_addr;
+
+#ifdef __unix__
+int inet_addr(char*);
+#else
 int __stdcall inet_addr(char*);
+#endif
 
 void SG_LoadConfig(SG_config_t* cfg){
 	char taddr[50];

@@ -6,6 +6,7 @@ Description: Starblazer II for SDL2 on Linux
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include <SDL2/SDL.h>
 
 
@@ -118,7 +119,9 @@ void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){ //do the window
 }
 
 uint32 SG_GetTicks(){
-	return 0;
+	struct timespec cur;
+	clock_gettime(CLOCK_MONOTONIC, &cur);
+	return cur.tv_sec * 1000 + cur.tv_nsec / 1000000;
 }
 
 SDL_Event event;
@@ -134,8 +137,17 @@ void SG_WaitBlank(){
 			}
 		}
 	}
-	SDL_Delay(10);
-	newFrame = 0;
+}
+
+void SG_ProcessEvents(){
+	SG_WaitBlank();
+}
+
+void SG_ReadStick(SG_joystick_t* joy){
+}
+
+void SG_Sleep(int ms){
+	SDL_Delay(ms);
 }
 
 int main(int argc, char** argv){
