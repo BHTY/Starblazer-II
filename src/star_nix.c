@@ -19,11 +19,6 @@ char* SG_title = "Starblazer II for SDL2";
 uint8* frontbuffer;
 
 uint32 mplayer_addr;
-int newFrame = 0;
-
-int window_height;
-int window_width;
-
 SDL_Window *window;
 SDL_Renderer *renderer;
 SDL_Surface *surface;
@@ -65,15 +60,12 @@ void SG_Init(int argc, char** argv){
 	//do the generic initialization
 	SG_GameInit();
 
-	window_width = 640;
-	window_height = 480;
 
-
-	SDL_CreateWindowAndRenderer(window_width, window_height, 0, &window, &renderer);
+	SDL_CreateWindowAndRenderer(GAME_SETTINGS.vid_settings.window_size_x, GAME_SETTINGS.vid_settings.window_size_y, 0, &window, &renderer);
 	SDL_SetWindowTitle(window, SG_title);
 	
-	mouseFactorX = 320.0 / window_width;
-	mouseFactorY = 200.0 / window_height;
+	mouseFactorX = 320.0 / GAME_SETTINGS.vid_settings.window_size_x;
+	mouseFactorY = 200.0 / GAME_SETTINGS.vid_settings.window_size_y;
 	//texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, 320, 200);
 	surface = SDL_CreateRGBSurfaceWithFormat(0, 320, 200, 8, SDL_PIXELFORMAT_INDEX8);
 	palette = SDL_AllocPalette(256);
