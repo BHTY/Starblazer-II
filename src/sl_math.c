@@ -11,6 +11,54 @@ uint32 int_abs(uint32 x){
 	return (x ^ y) - y;
 }
 
+#if defined(__WATCOMC__)
+extern FIXED _fixed_mul(FIXED n1, FIXED n2);
+extern FIXED _fixed_div(FIXED n1, FIXED n2);
+
+FIXED fixed_mul(FIXED n1, FIXED n2) {
+	return _fixed_mul(n1, n2);
+}
+
+FIXED fixed_div(FIXED n1, FIXED n2) {
+	return _fixed_div(n1, n2);
+}
+
+#pragma aux _fixed_mul = \
+        "imul ebx" \
+        "shr eax, 16" \
+        "shl edx, 16" \
+        "or eax, edx" \
+        parm [eax] [ebx] \
+        modify [edx] \
+        value [eax];
+
+#pragma aux _fixed_div = \
+        "mov edx, eax" \
+        "shr edx, 16" \
+        "movsx edx, dx" \
+        "shl eax, 16" \
+        "idiv ebx" \
+        parm [eax] [ebx] \
+        modify [edx] \
+        value [eax];
+
+FIXED muldiv(FIXED a, FIXED b, FIXED c) {
+	int32 result;
+	//int64 temp = (int64)a * b;
+
+	/*if (c == 0){
+		return ((a ^ b) < 0) ? -1 : 2147483647;
+	}*/
+
+	result = ((int64)a * b) / c;
+
+	/*if (abs(*(int32*)((int32*)&temp + 1)) >= abs(c)){
+		return ((a ^ b) < 0) ? 2147483648 : 2147483647;//return 0;// printf("a=%d b=%d c=%d hh=%d result=%d\n", a, b, c, *(int32*)((uint8*)&temp + 1), result);
+	}*/
+
+	return result;
+}
+#else
 FIXED muldiv(FIXED a, FIXED b, FIXED c){
 #if defined(_M_IX86) && defined(WIN32)
 	__asm{
@@ -72,7 +120,7 @@ FIXED muldiv(FIXED a, FIXED b, FIXED c){
 }
 
 FIXED fixed_mul(FIXED a, FIXED b) {
-#ifdef _M_IX86
+#if defined(_M_IX86) && defined(WIN32)
 	__asm{
 		mov eax, a
 		imul b
@@ -86,7 +134,7 @@ FIXED fixed_mul(FIXED a, FIXED b) {
 }
 
 FIXED fixed_div(FIXED a, FIXED b) {
-#ifdef _M_IX86
+#if defined (_M_IX86) && defined(WIN32)
 	__asm{
 		mov eax, a
 		mov edx, eax
@@ -99,6 +147,7 @@ FIXED fixed_div(FIXED a, FIXED b) {
 	return ((int64)a << 16) / b;
 #endif
 }
+#endif
 
 ANGLE angle_atan2(FIXED y, FIXED x) {
 	// TODO!

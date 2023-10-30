@@ -122,6 +122,8 @@ void SG_ReadMouse(SG_mouse_t* mouse){
 }
 
 bool_t SG_KeyDown(char key){
+	if (keys['x']) exit(0);
+
 	return keys[key];
 }
 
