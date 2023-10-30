@@ -106,9 +106,11 @@ void put_triangles(TRI* tris, uint16 num_tris, uint16 vert_offset, uint8 color_o
 		SL_TRIANGLES[SL_TRIANGLE_INDEX].v0 = v0index;
 		SL_TRIANGLES[SL_TRIANGLE_INDEX].v1 = v1index;
 		SL_TRIANGLES[SL_TRIANGLE_INDEX].v2 = v2index;
-		SL_TRIANGLES[SL_TRIANGLE_INDEX].z = (SL_VERTS[v0index].z + SL_VERTS[v1index].z + SL_VERTS[v2index].z) / 3;
+		SL_TRIANGLES[SL_TRIANGLE_INDEX].z = (SL_VERTS[v0index].z + SL_VERTS[v1index].z + SL_VERTS[v2index].z);
 
-		SL_TRIANGLE_INDEX++;
+		if (clip_polygon(&SL_TRIANGLES[SL_TRIANGLE_INDEX])) {
+			SL_TRIANGLE_INDEX++;
+		}
 	}
 }
 
@@ -239,42 +241,42 @@ bool_t clip_polygon(TRI* tri){
 void render_end(bool_t shading){
 	int i;
 	uint8 c;
-	FIXED illum, r, g, b;
+	FIXED illum;
 	int x1, y1, x2, y2, x3, y3;
 
 	for (i = 0; i < SL_TRIANGLE_INDEX; i++){
-		if (clip_polygon(&SL_TRIANGLES[i])){ //only drawing this polygon if it's onscreen!
-			c = SL_TRIANGLES[i].color;
+		c = SL_TRIANGLES[i].color;
 
-			x1 = SL_VERTS[SL_TRIANGLES[i].v0].x;
-			y1 = SL_VERTS[SL_TRIANGLES[i].v0].y;
-			x2 = SL_VERTS[SL_TRIANGLES[i].v1].x;
-			y2 = SL_VERTS[SL_TRIANGLES[i].v1].y;
-			x3 = SL_VERTS[SL_TRIANGLES[i].v2].x;
-			y3 = SL_VERTS[SL_TRIANGLES[i].v2].y;
+		x1 = SL_VERTS[SL_TRIANGLES[i].v0].x;
+		y1 = SL_VERTS[SL_TRIANGLES[i].v0].y;
+		x2 = SL_VERTS[SL_TRIANGLES[i].v1].x;
+		y2 = SL_VERTS[SL_TRIANGLES[i].v1].y;
+		x3 = SL_VERTS[SL_TRIANGLES[i].v2].x;
+		y3 = SL_VERTS[SL_TRIANGLES[i].v2].y;
 
-			if (shading){
-				illum = (3*find_illumination(&(SL_ORIG_VERTS[SL_TRIANGLES[i].v0]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v1]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS)) + int_fixed(1)) >> 14; ///4
-				//illum = int_fixed(1);
-				//r = (((c >> 5) & 7) * illum) >> 16;
-				//g = (((c >> 2) & 7) * illum) >> 16;
-				//b = ((c & 3) * illum) >> 16;
+		if (shading){
+			illum = (3*find_illumination(&(SL_ORIG_VERTS[SL_TRIANGLES[i].v0]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v1]), &(SL_ORIG_VERTS[SL_TRIANGLES[i].v2]), &(SL_CAMERA_POS)) + int_fixed(1)) >> 14; ///4
+			//illum = int_fixed(1);
+			//r = (((c >> 5) & 7) * illum) >> 16;
+			//g = (((c >> 2) & 7) * illum) >> 16;
+			//b = ((c & 3) * illum) >> 16;
 
-				/*r = ((c / 36)) * illum >> 16;
-				g = ((c % 36) / 6) * illum >> 16;
-				b = (c % 6) * illum >> 16;*/
+			/*r = ((c / 36)) * illum >> 16;
+			g = ((c % 36) / 6) * illum >> 16;
+			b = (c % 6) * illum >> 16;*/
 
-				//fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
-				//fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
-				fill_tri(x1, y1, x2, y2, x3, y3, (c) | illum); //>>12
-			}
-			else{
-				//printf("Color: %d\n", c);
-				//printf("About to draw triangle with verts (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
-				draw_line(x1, y1, x2, y2, c | 15);
-				draw_line(x1, y1, x3, y3, c | 15);
-				draw_line(x2, y2, x3, y3, c | 15);
-			}
+			//fill_tri(x1, y1, x2, y2, x3, y3, (r << 5) | (g << 2) | b);
+			//fill_tri(x1, y1, x2, y2, x3, y3, r * 36 + g * 6 + b);
+				
+			fill_tri(x1, y1, x2, y2, x3, y3, (c) | illum); //>>12
 		}
+		else{
+			//printf("Color: %d\n", c);
+			//printf("About to draw triangle with verts (%d, %d) (%d, %d) (%d, %d)\n", x1, y1, x2, y2, x3, y3);
+			draw_line(x1, y1, x2, y2, c | 15);
+			draw_line(x1, y1, x3, y3, c | 15);
+			draw_line(x2, y2, x3, y3, c | 15);
+		}
+		
 	}
 }

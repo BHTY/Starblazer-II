@@ -22,6 +22,9 @@ void setmode(char mode){ //sets the VGA card to the given display mode
 int interrupt_tick = 0;
 uint8* frontbuffer;
 
+void (__interrupt __far* prev_int_08)();
+void (__interrupt __far* prev_int_09)();
+
 void interrupt timer_irq() {
 	//cam_pos.z+=0x5C666;//0x18000;
 	interrupt_tick++;
@@ -85,6 +88,7 @@ void interrupt keyirq() {
 }
 
 void init_timer() {
+	prev_int_08 = _dos_getvect(0x08);
 	_dos_setvect(0x08, timer_irq);
 
 	outp(0x43, 52);
@@ -102,6 +106,7 @@ void SG_Init(int argc, char** argv){
 	FBPTR = malloc(64000);
 	setmode(0x13);
 
+	prev_int_09 = _dos_getvect(0x09);
 	_dos_setvect(9, keyirq);
 	init_timer();
 }
@@ -122,8 +127,6 @@ void SG_ReadMouse(SG_mouse_t* mouse){
 }
 
 bool_t SG_KeyDown(char key){
-	if (keys['x']) exit(0);
-
 	return keys[key];
 }
 
@@ -155,6 +158,12 @@ void SG_Sleep(int ms) {
 
 }
 
+void dos_exit() {
+	_dos_setvect(0x09, prev_int_09); //reset ps2 irq
+	_dos_setvect(0x08, prev_int_08); //reset pit irq
+	setmode(0x03); //back to text mode!
+}
+
 int main(int argc, char** argv){
 	SG_WelcomeMessage();
 	getch();
@@ -164,5 +173,10 @@ int main(int argc, char** argv){
 
 	while (1){
 		SG_Tick();
+
+		if (SG_KeyDown('x')) break;
 	}
+
+	dos_exit();
+	printf("Thank you for playing Starblazer II!\n");
 }

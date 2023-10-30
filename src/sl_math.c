@@ -44,23 +44,16 @@ FIXED fixed_div(FIXED n1, FIXED n2) {
 
 FIXED muldiv(FIXED a, FIXED b, FIXED c) {
 	int32 result;
-	//int64 temp = (int64)a * b;
-
-	/*if (c == 0){
-		return ((a ^ b) < 0) ? -1 : 2147483647;
-	}*/
 
 	result = ((int64)a * b) / c;
-
-	/*if (abs(*(int32*)((int32*)&temp + 1)) >= abs(c)){
-		return ((a ^ b) < 0) ? 2147483648 : 2147483647;//return 0;// printf("a=%d b=%d c=%d hh=%d result=%d\n", a, b, c, *(int32*)((uint8*)&temp + 1), result);
-	}*/
 
 	return result;
 }
 #else
 FIXED muldiv(FIXED a, FIXED b, FIXED c){
 #if defined(_M_IX86) && defined(WIN32)
+#pragma warning (push)
+#pragma warning (disable: 4033)
 	__asm{
 		//store sign in ecx
 		mov ecx, a
@@ -101,6 +94,7 @@ FIXED muldiv(FIXED a, FIXED b, FIXED c){
 		mov eax, 2147483647
 
 	}
+#pragma warning(pop)
 #else
 	int32 result;
 	//int64 temp = (int64)a * b;

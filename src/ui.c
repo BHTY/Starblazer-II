@@ -84,7 +84,7 @@ void UI_DRAW_CHECKBOX(uint32 widget_handle){
 	//draw the text
 	vputs(checkbox_data->text.text, ptr->posX + box_size_x + checkbox_data->text.props.spacing, ptr->posY, checkbox_data->text.props.scale_x, checkbox_data->text.props.scale_y, checkbox_data->text.props.color, checkbox_data->text.props.spacing);
 
-	if (ptr->state == 1){ //checked, so we’re drawing a check
+	if ((int)(ptr->state) == 1){ //checked, so we’re drawing a check
 
 	}
 }

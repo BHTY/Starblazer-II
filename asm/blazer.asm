@@ -129,10 +129,10 @@ _DATA	ENDS
 ;	COMDAT ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
-;	COMDAT ??_C@_08LDJG@02?334?346?$AA@
+;	COMDAT ??_C@_08FCED@16?333?355?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
-;	COMDAT ??_C@_0M@PNPF@Oct?529?52023?$AA@
+;	COMDAT ??_C@_0M@OLMB@Oct?530?52023?$AA@
 _DATA	SEGMENT DWORD USE32 PUBLIC 'DATA'
 _DATA	ENDS
 ;	COMDAT ??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@
@@ -915,8 +915,8 @@ _SG_InitPalette ENDP
 _TEXT	ENDS
 PUBLIC	_SG_WelcomeMessage
 PUBLIC	??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ ; `string'
-PUBLIC	??_C@_08LDJG@02?334?346?$AA@			; `string'
-PUBLIC	??_C@_0M@PNPF@Oct?529?52023?$AA@		; `string'
+PUBLIC	??_C@_08FCED@16?333?355?$AA@			; `string'
+PUBLIC	??_C@_0M@OLMB@Oct?530?52023?$AA@		; `string'
 PUBLIC	??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 PUBLIC	??_C@_0EA@GNDN@By?5Will?5Klees?5?$CICaptain?5Will?5Star@ ; `string'
 EXTRN	_printf:NEAR
@@ -925,13 +925,13 @@ _DATA	SEGMENT
 ??_C@_0BM@ILLE@Starblazer?5II?5Beta?5Version?6?$AA@ DB 'Starblazer II Bet'
 	DB	'a Version', 0aH, 00H			; `string'
 _DATA	ENDS
-;	COMDAT ??_C@_08LDJG@02?334?346?$AA@
+;	COMDAT ??_C@_08FCED@16?333?355?$AA@
 _DATA	SEGMENT
-??_C@_08LDJG@02?334?346?$AA@ DB '02:34:46', 00H		; `string'
+??_C@_08FCED@16?333?355?$AA@ DB '16:33:55', 00H		; `string'
 _DATA	ENDS
-;	COMDAT ??_C@_0M@PNPF@Oct?529?52023?$AA@
+;	COMDAT ??_C@_0M@OLMB@Oct?530?52023?$AA@
 _DATA	SEGMENT
-??_C@_0M@PNPF@Oct?529?52023?$AA@ DB 'Oct 29 2023', 00H	; `string'
+??_C@_0M@OLMB@Oct?530?52023?$AA@ DB 'Oct 30 2023', 00H	; `string'
 _DATA	ENDS
 ;	COMDAT ??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@
 _DATA	SEGMENT
@@ -951,8 +951,8 @@ _SG_WelcomeMessage PROC NEAR				; COMDAT
 	call	_printf
 	add	esp, 4
 ; Line 193
-	push	OFFSET FLAT:??_C@_08LDJG@02?334?346?$AA@ ; `string'
-	push	OFFSET FLAT:??_C@_0M@PNPF@Oct?529?52023?$AA@ ; `string'
+	push	OFFSET FLAT:??_C@_08FCED@16?333?355?$AA@ ; `string'
+	push	OFFSET FLAT:??_C@_0M@OLMB@Oct?530?52023?$AA@ ; `string'
 	push	OFFSET FLAT:??_C@_0BD@MCLM@Build?5Time?3?5?$CFs?5?$CFs?6?$AA@ ; `string'
 	call	_printf
 	add	esp, 12					; 0000000cH

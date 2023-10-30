@@ -66,8 +66,6 @@ bool_t SG_OpenConnection(uint32 addr){
 		return 0;
 	}
 	
-	ioctl(server_connection, SOCK_NONBLOCK, &iMode);
-	
 	return 1;
 }
 
