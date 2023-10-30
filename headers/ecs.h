@@ -13,6 +13,7 @@ typedef struct ENTITY{
 	int32 health;
 	uint8 color_override;
 	int override_frames;
+	int rotating;
 	VEC3 verts[1];
 } ENTITY;
 

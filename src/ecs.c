@@ -49,12 +49,17 @@ uint32 spawn_entity(TEMPLATE* type, FIXED x, FIXED y, FIXED z, ANGLE pitch, ANGL
 	StarblazerEntities[id]->health = type->maxhp;
 	StarblazerEntities[id]->color_override = 0;
 	StarblazerEntities[id]->override_frames = 0;
+	StarblazerEntities[id]->rotating = 0;
 	rotate_object(StarblazerEntities[id]);
 
 	return id;
 }
 
 void rotate_object(ENTITY* ent) {
+	ent->rotating = 1;
+}
+
+void perform_rotation(ENTITY* ent) {
 	int i;
 	MAT3 model_rotation_matrix;
 
@@ -63,6 +68,8 @@ void rotate_object(ENTITY* ent) {
 	for (i = 0; i < ent->type->num_verts; i++) {
 		mat3_mul(&model_rotation_matrix, &(ent->type->verts[i]), &(ent->verts[i]));
 	}
+
+	ent->rotating = 0;
 }
 
 /*
@@ -101,6 +108,10 @@ void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int
 
 		//convert per-model rotation quaternion into matrix
 		quat_tomat(&(StarblazerEntities[i]->orientation), &model_rotation_matrix);
+
+		if (StarblazerEntities[i]->rotating) {
+			perform_rotation(StarblazerEntities[i]);
+		}
 
 		//rotate every vertex about the local origin and vertex it in
 		for (p = 0; p < StarblazerEntities[i]->type->num_verts; p++){

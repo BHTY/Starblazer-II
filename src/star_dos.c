@@ -8,6 +8,7 @@
 #include "../headers/star_gen.h"
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
+#include "../headers/blazer2.h"
 
 #define PIC_EOI 0x20
 #define PIC2_COMMAND 0xA0
@@ -119,11 +120,32 @@ void SG_ReadStick(SG_joystick_t* joy){
 
 }
 
+int mouseX = 160;
+int mouseY = 100;
+
 void SG_ReadMouse(SG_mouse_t* mouse){
+	joystick_t joy;
 	memset(mouse, 0, sizeof(SG_mouse_t));
-	mouse->x = 160;
-	mouse->y = 120;
-	mouse->buttons[0] = SG_KeyDown(' ');
+	vjoy_read(&joy);
+
+	if (joy.yaw > 1) {
+		mouseX -= 1;
+	}
+	else if (joy.yaw < -1) {
+		mouseX += 1;
+	}
+
+	if (joy.pitch < -1) {
+		mouseY += 1;
+	}
+	else if (joy.pitch > 1) {
+		mouseY -= 1;
+	}
+
+	mouse->buttons[0] = joy.fire;
+
+	mouse->x = mouseX;
+	mouse->y = mouseY;
 }
 
 bool_t SG_KeyDown(char key){
