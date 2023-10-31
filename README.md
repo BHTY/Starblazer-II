@@ -5,7 +5,7 @@ To-do List
 - make the game
 
 **Win32 Version**  
-Supported Operating Systems: Windows 95 or higher, Windows NT 3.50 or higher (x86, MIPS, PowerPC, Alpha, AXP64, IA-64), ReactOS, Wine  
+Supported Operating Systems: Windows 95 or higher, Windows NT 3.50 or higher (x86, MIPS, Alpha, PowerPC, AXP64, IA-64, AMD64), ReactOS, Wine  
 Supported Compilers: Visual C++ 2.0 or higher, MinGW  
 Build Instructions: Run make.bat 
 ![image info](pics/win32.jpg) 
