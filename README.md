@@ -28,6 +28,10 @@ Build Instructions: make -f Makefile.nix
 
 **StarblazerGeneric Info**
 To make a barebones port of Starblazer II to a new platform, only a few platform-specific functions are needed to be implemented.
-- int main()
+- 
+
+Here's an example ``main`` function:
+```int main(){
+}```
 
 Networking, sound, and joystick support are optional features.
