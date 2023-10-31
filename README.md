@@ -3,6 +3,20 @@ By Will Klees & Josh Piety
 
 To-do List
 - make the game
+More Specifically
+- Clean up controls code (add joystick support)
+- Win32: Resource file w/ version & icon resources
+- Purge FP math from the sound mixer
+- Bring other platforms up to speed
+  - ASM ``muldiv`` for DOS?
+  - MS-DOS serialblazer: The config file will contain the serial port IRQ and I/O port. Keep as much netcode as possible. Both players record their number of deaths and will print that out on exit. (ANSWER/ORIGINATE)
+  - Get sound working on SDL & DOS ports
+  - Get a native Linux build of the server program
+  - Move the Wii port into the same codebase (should only require endianness fixes and deciding how to address path loading)
+- AI opponent?
+  - https://www.reddit.com/r/gamedev/comments/revl6/ai_for_airplane_and_space_games_what_do_you_do/
+  - https://www.reddit.com/r/Unity3D/comments/rlpx6l/how_to_make_enemy_ai_in_a_dogfighting_game/
+  - https://www.reddit.com/r/gamedev/comments/6yczfs/does_anyone_know_how_to_program_flying_ai_for/
 
 **Win32 Version**  
 Supported Operating Systems: Windows 95 or higher, Windows NT 3.50 or higher (x86, MIPS, Alpha, PowerPC, AXP64, IA-64, AMD64), ReactOS, Wine  
