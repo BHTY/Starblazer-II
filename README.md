@@ -2,7 +2,7 @@
 By Will Klees & Josh Piety
 
 To-do List
-- make the game
+- make the game  
 More Specifically
 - Clean up controls code (add joystick support)
 - Win32: Resource file w/ version & icon resources
