@@ -31,7 +31,15 @@ To make a barebones port of Starblazer II to a new platform, only a few platform
 - 
 
 Here's an example ``main`` function:
-```int main(){
-}```
+```
+int main(){
+  SG_WelcomeMessage();
+  SG_Init(0, 0);
+  SG_InitPalette();
+  title_init();
+
+  while(1){SG_Tick();}
+}
+```
 
 Networking, sound, and joystick support are optional features.
