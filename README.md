@@ -28,12 +28,13 @@ Build Instructions: make -f Makefile.nix
 
 **StarblazerGeneric Info**  
 To make a barebones port of Starblazer II to a new platform, only a few platform-specific functions are needed to be implemented. Take one of the existing build scripts and replace the platform file (e.g. ``star_win.c``) with your own.
-- ``void SG_Init(int argc, char** argv)``:
-- ``bool_t SG_KeyDown(char key)``: 
-- ``void SG_ReadMouse(SG_mouse_t* mouse)``: 
-- ``void SG_DrawFrame()``: 
-- ``void SG_ProcessEvents()``: 
-- ``void SG_Sleep(int ms)``: 
+- ``void SG_Init(int argc, char** argv)``: Performs any platform-specific initialization (i.e. creating a window) and calls ``SG_GameInit()`` to initialize some game state
+- ``bool_t SG_KeyDown(char key)``: Returns whether a given key is currently being held down or not
+- ``void SG_ReadMouse(SG_mouse_t* mouse)``: Returns the mouse position between (0,0) and (319,199) in ``mouse->x`` and ``mouse->y`` and the state of the left mouse button in ``mouse->buttons[0]``
+- ``void SG_DrawFrame()``: Blits the 8bpp palletized bitmap pointed to by ``frontbuffer`` to the screen
+- ``void SG_ProcessEvents()``: Does any event processing (i.e. updating event queues, etc.) necessary for the system
+- ``void SG_Sleep(int ms)``: Halt execution for a specified number of miliseconds (and in a multitasking environment, yield CPU control to the scheduler for that time)
+- ``uint32 SG_GetTicks()``: Return the current time with milisecond precision
 
 Here's an example ``main`` function:
 ```c
