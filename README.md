@@ -28,18 +28,22 @@ Build Instructions: make -f Makefile.nix
 
 **StarblazerGeneric Info**  
 To make a barebones port of Starblazer II to a new platform, only a few platform-specific functions are needed to be implemented. Take one of the existing build scripts and replace the platform file (e.g. ``star_win.c``) with your own.
-- s
-- 
+- ``void SG_Init(int argc, char** argv)``:
+- ``bool_t SG_KeyDown(char key)``: 
+- ``void SG_ReadMouse(SG_mouse_t* mouse)``: 
+- ``void SG_DrawFrame()``: 
+- ``void SG_ProcessEvents()``: 
+- ``void SG_Sleep(int ms)``: 
 
 Here's an example ``main`` function:
-```
+```c
 int main(){
-  SG_WelcomeMessage();
-  SG_Init(0, 0);
-  SG_InitPalette();
-  title_init();
+  SG_WelcomeMessage(); //display the welcome message
+  SG_Init(0, 0); //initialize the game
+  SG_InitPalette(); //initialize the palette
+  title_init(); //prepare to go to the title screen
 
-  while(1){SG_Tick();}
+  while(1){SG_Tick();} //tick the game
 }
 ```
 
