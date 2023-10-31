@@ -21,5 +21,6 @@ Build Instructions: make -f Makefile.sdl
 Supported Operating Systems: Any POSIX-compliant UNIX with an X Server  
 Supported Compilers: GCC  
 Build Instructions: make -f Makefile.nix
+![image info](pics/x.png)
 
 **StarblazerGeneric Info**
