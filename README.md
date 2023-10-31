@@ -32,6 +32,7 @@ To make a barebones port of Starblazer II to a new platform, only a few platform
 - ``bool_t SG_KeyDown(char key)``: Returns whether a given key is currently being held down or not
 - ``void SG_ReadMouse(SG_mouse_t* mouse)``: Returns the mouse position between (0,0) and (319,199) in ``mouse->x`` and ``mouse->y`` and the state of the left mouse button in ``mouse->buttons[0]``
 - ``void SG_DrawFrame()``: Blits the 8bpp palletized bitmap pointed to by ``frontbuffer`` to the screen
+- ``void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b)``: Sets the given index in the palette of the display device to the specified color
 - ``void SG_ProcessEvents()``: Does any event processing (i.e. updating event queues, etc.) necessary for the system
 - ``void SG_Sleep(int ms)``: Halt execution for a specified number of miliseconds (and in a multitasking environment, yield CPU control to the scheduler for that time)
 - ``uint32 SG_GetTicks()``: Return the current time with milisecond precision
