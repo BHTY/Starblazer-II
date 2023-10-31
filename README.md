@@ -26,7 +26,7 @@ Supported Compilers: GCC
 Build Instructions: make -f Makefile.nix
 ![image info](pics/x.png)
 
-StarblazerGeneric Info
+StarblazerGeneric Info  
 To make a barebones port of Starblazer II to a new platform, only a few platform-specific functions are needed to be implemented.
 - 
 
