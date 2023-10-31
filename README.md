@@ -13,7 +13,7 @@ Build Instructions: Run make.bat
 Supported Compilers: Open Watcom  
 Build Instructions: Run src/dosmake.bat
 
-**Linux (SDL) Version**  
+**Linux (SDL2) Version**  
 Supported Compilers: GCC  
 Build Instructions: make -f Makefile.sdl  
 
@@ -21,5 +21,6 @@ Build Instructions: make -f Makefile.sdl
 Supported Operating Systems: Any POSIX-compliant UNIX with an X Server  
 Supported Compilers: GCC  
 Build Instructions: make -f Makefile.nix
+![image info](pics/x.png)
 
 **StarblazerGeneric Info**
