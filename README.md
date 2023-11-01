@@ -14,7 +14,8 @@ More Specifically
   - MS-DOS serialblazer: The config file will contain the serial port IRQ and I/O port. Keep as much netcode as possible. Both players record their number of deaths and will print that out on exit. (ANSWER/ORIGINATE)
   - Get sound working on SDL & DOS ports
   - Get a native Linux build of the server program
-  - Move the Wii port into the same codebase (should only require endianness fixes and deciding how to address path loading)
+  - Move asset loading to involve operations on an opaque ``ASSET*`` data structure (mirroring many of those currently done on ``FILE*``s)
+    - This will allow us to pack all game files into a TAR file and address paths on the Wii port (which can be moved into the main codebase with just this and an endianness fix in ``FONT.C``)
 - AI opponent?
   - https://www.reddit.com/r/gamedev/comments/revl6/ai_for_airplane_and_space_games_what_do_you_do/
   - https://www.reddit.com/r/Unity3D/comments/rlpx6l/how_to_make_enemy_ai_in_a_dogfighting_game/
@@ -41,6 +42,7 @@ Supported Operating Systems: Any POSIX-compliant UNIX with an X Server
 Supported Compilers: GCC  
 Build Instructions: make -f Makefile.nix
 ![image info](pics/x.png)
+![image info](pics/x2.png)
 
 **StarblazerGeneric Info**  
 To make a barebones port of Starblazer II to a new platform, only a few platform-specific functions are needed to be implemented. Take one of the existing build scripts and replace the platform file (e.g. ``star_win.c``) with your own. The DOS port is an excellent simple version to study.
