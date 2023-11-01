@@ -42,6 +42,7 @@ Supported Operating Systems: Any POSIX-compliant UNIX with an X Server
 Supported Compilers: GCC  
 Build Instructions: make -f Makefile.nix
 ![image info](pics/x.png)
+![image info](pics/x2.png)
 
 **StarblazerGeneric Info**  
 To make a barebones port of Starblazer II to a new platform, only a few platform-specific functions are needed to be implemented. Take one of the existing build scripts and replace the platform file (e.g. ``star_win.c``) with your own. The DOS port is an excellent simple version to study.
