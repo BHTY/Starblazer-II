@@ -7,8 +7,9 @@ To-do List
 
 More Specifically
 - Clean up controls code (add joystick support)
-- Win32: Resource file w/ version & icon resources
+- Win32: Resource file w/ version & icon resources and finish code for running on 8bpp palletized displays 
 - Purge FP math from the sound mixer
+- WebAssembly/Emscripten port (based on SDL version)
 - Bring other platforms up to speed
   - ASM ``muldiv`` for DOS?
   - MS-DOS serialblazer: The config file will contain the serial port IRQ and I/O port. Keep as much netcode as possible. Both players record their number of deaths and will print that out on exit. (ANSWER/ORIGINATE)
