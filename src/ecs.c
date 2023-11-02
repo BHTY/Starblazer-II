@@ -79,7 +79,7 @@ void perform_rotation(ENTITY* ent) {
 	All of the entities in the scene graph are rendered from the camera position and orientation. (shading settings dependent on flag)
 */
 
-void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int num_stars){
+void draw_scene_actual(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int num_stars) {
 	int i, p, cur_index;
 	VEC3 temp_vert;
 	MAT3 model_rotation_matrix;
@@ -88,19 +88,19 @@ void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int
 	quat_conjugate(&cam_ori);
 	quat_tomat(&cam_ori, &SL_CAMERA_ORIENTATION); //convert the camera quaternion into the slipstream rotation matrix
 
-	for (i = 0; i < num_stars; i++){
+	for (i = 0; i < num_stars; i++) {
 		plotpoint_3d(star_ptr[i], 255);
 	}
 
 	render_begin();
 
-	for (i = 0; i < MAX_ENTITIES; i++){
-		if (StarblazerEntities[i] == NULL){ continue; }
+	for (i = 0; i < MAX_ENTITIES; i++) {
+		if (StarblazerEntities[i] == NULL) { continue; }
 
-		if (StarblazerEntities[i]->override_frames){
+		if (StarblazerEntities[i]->override_frames) {
 			StarblazerEntities[i]->override_frames = 0;
 		}
-		else{
+		else {
 			StarblazerEntities[i]->color_override = 0;
 		}
 
@@ -114,7 +114,7 @@ void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int
 		}
 
 		//rotate every vertex about the local origin and vertex it in
-		for (p = 0; p < StarblazerEntities[i]->type->num_verts; p++){
+		for (p = 0; p < StarblazerEntities[i]->type->num_verts; p++) {
 			//mat3_mul(&model_rotation_matrix, &(StarblazerEntities[i]->type->verts[p]), &temp_vert); //rotate
 			temp_vert = StarblazerEntities[i]->verts[p];
 			vec3_add(&(StarblazerEntities[i]->pos), &temp_vert);
@@ -127,6 +127,37 @@ void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int
 
 	polygon_zsort();
 	render_end(shading);
+}
+
+extern uint8* FBPTR;
+extern uint32 palette_left[256];
+extern uint32 palette_right[256];
+extern uint32* buffer_left_eye;
+extern uint32* buffer_right_eye;
+
+#define EYE_DISTANCE 12500
+
+void draw_scene(VEC3* cam_pos, QUAT cam_ori, bool_t shading, VEC3* star_ptr, int num_stars) {
+	int i;
+	VEC3 cam = *cam_pos;
+	
+	cam.x = cam_pos->x - EYE_DISTANCE;
+	draw_scene_actual(&cam, cam_ori, shading, star_ptr, num_stars);
+
+	for (i = 0; i < 64000; i++) {
+		buffer_left_eye[i] = palette_left[FBPTR[i]];
+	}
+
+	memset(FBPTR, 0, 64000);
+
+	cam.x = cam_pos->x + EYE_DISTANCE;
+	draw_scene_actual(&cam, cam_ori, shading, star_ptr, num_stars);
+
+	for (i = 0; i < 64000; i++) {
+		buffer_right_eye[i] = palette_right[FBPTR[i]];
+	}
+
+	memset(FBPTR, 0, 64000);
 }
 
 /*

@@ -20,6 +20,10 @@ Description: Starblazer II for Windows 95/NT
 #include "../headers/sndmixer.h"
 #include <assert.h>
 
+uint32 palette[256];
+uint32 palette_left[256];
+uint32 palette_right[256];
+
 char* SG_platform = "win32";
 extern bool_t laser_type;
 
@@ -50,6 +54,8 @@ bool_t mouseDownLeft = 0;
 bool_t mouseDownRight = 0;
 
 bool_t keys[256];
+uint32* buffer_left_eye;
+uint32* buffer_right_eye;
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam){
 	HDC hdc;
@@ -268,11 +274,16 @@ void SG_Init(int argc, char** argv){
 
 	bmi = malloc(sizeof(BITMAPINFO)+256 * sizeof(RGBQUAD));
 
+	buffer_left_eye = malloc(320 * 200 * 4);
+	buffer_right_eye = malloc(320 * 200 * 4);
+	memset(buffer_left_eye, 0, 320 * 200 * 4);
+	memset(buffer_right_eye, 0, 320 * 200 * 4);
+
 	bmi->bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
 	bmi->bmiHeader.biWidth = 320;
 	bmi->bmiHeader.biHeight = -200;
 	bmi->bmiHeader.biPlanes = 1;
-	bmi->bmiHeader.biBitCount = 8;
+	bmi->bmiHeader.biBitCount = 32;
 	bmi->bmiHeader.biClrUsed = 256;
 	bmi->bmiHeader.biCompression = BI_RGB;
 
@@ -355,7 +366,7 @@ void SG_DrawFrame(){
 }
 
 void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){ 
-	RGBQUAD col;
+	/*RGBQUAD col;
 	RGBQUAD *willPalette = &(bmi->bmiColors[0]);
 
 	HDC tempHDC = CreateCompatibleDC(NULL);
@@ -365,7 +376,11 @@ void SG_SetPaletteIndex(uint8 index, uint8 r, uint8 g, uint8 b){
 	col.rgbBlue = b;
 	willPalette[index] = col;
 	SetDIBColorTable(tempHDC, index, 1, willPalette + index);
-	DeleteDC(tempHDC);
+	DeleteDC(tempHDC);*/
+	palette[index] = (r << 16) | (g << 8) | b;
+	palette_right[index] = (g << 8) | b;
+	palette_left[index] = r << 16;
+
 }
 
 /* The way to handle this on 256 color Windows

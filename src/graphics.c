@@ -200,9 +200,30 @@ void draw_line(int x, int y, int x2, int y2, unsigned char color){
 	drawline(x, y, x2, y2, color);
 }
 
+extern uint32 palette[256];
+extern uint32 palette_left[256];
+extern uint32 palette_right[256];
+extern uint32 *buffer_left_eye;
+extern uint32 *buffer_right_eye;
+
 void swap_buffers(uint8* front_buffer, uint8 clear_color){
-	memcpy(front_buffer, FBPTR, 64000);
+	int i;
+
+	for (i = 0; i < 64000; i++) {
+		if (FBPTR[i]) {
+			buffer_left_eye[i] = palette_left[FBPTR[i]];
+			buffer_right_eye[i] = palette_right[FBPTR[i]];
+		}
+		((uint32*)front_buffer)[i] = buffer_left_eye[i] + buffer_right_eye[i];
+	}
+
+	/*for (i = 0; i < 64000; i++) {
+		((uint32*)front_buffer)[i] = palette[FBPTR[i]];// palette[FBPTR[i]];
+	}*/
+	
 	memset(FBPTR, clear_color, 64000);
+	memset(buffer_left_eye, 0, 320 * 200 * 4);
+	memset(buffer_right_eye, 0, 320 * 200 * 4);
 }
 #define SWAP_T(a, b) t = a; a = b; b = t
 void draw_span(int x1, int x2, int y, uint8 color) {
