@@ -1,3 +1,5 @@
+#include <string.h>
+#include <stdio.h>
 #include "../headers/net.h"
 #include "../headers/blazer.h"
 #include "../headers/ecs.h"

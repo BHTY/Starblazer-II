@@ -3,6 +3,8 @@
 #include "../headers/graphics.h"
 #include "../headers/font.h"
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 
 extern void title_draw();
 extern void title_module();
@@ -87,6 +89,7 @@ void SG_LoadConfig(SG_config_t* cfg){
 	char pitchup, pitchdown, yawup, yawdown, rollup, rolldown, fire, boost, brake;
 
 	FILE* fp = fopen("config.ini", "r");
+	printf("%d\n", fp);
 	fscanf(fp, "addr= %s\n", taddr);
 	fscanf(fp, "port= %d\n", &(cfg->com_settings.port));
 	fscanf(fp, "name= %s\n", &(cfg->com_settings.player_name));
@@ -139,9 +142,11 @@ void SG_SaveConfig(SG_config_t* cfg){
 }
 
 void SG_GameInit(){
+	printf("Loading config\n");
 	SG_LoadConfig(&GAME_SETTINGS);
 	SG_Draw = title_draw;
 	SG_Module = title_module;
+	printf("Config loaded\n");
 
 	unpack_glyphs("starfont.fnt");
 	srand(time(NULL));

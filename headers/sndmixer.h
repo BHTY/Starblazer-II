@@ -7,6 +7,10 @@
 
 void init_sound();
 void mix();
+void play_music(char*);
+int play_soundfx(int);
+void stop_music();
+int load_soundfx(char*, uint8, bool_t);
 
 typedef struct{
 	uint8* samples;

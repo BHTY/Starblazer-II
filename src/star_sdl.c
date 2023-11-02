@@ -11,10 +11,13 @@ Description: Starblazer II for SDL2 on Linux
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 #include "../headers/star_gen.h"
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
+
+extern void title_init();
 
 char* SG_platform = "nix";
 char* SG_title = "Starblazer II for SDL2";
@@ -49,7 +52,7 @@ bool_t SG_OpenConnection(uint32 addr){
 		return 0;
 	}
 	
-	ioctl(server_connection, SOCK_NONBLOCK, &iMode);
+	//ioctl(server_connection, SOCK_NONBLOCK, &iMode);
 	
 	return 1;
 }
@@ -82,13 +85,15 @@ What SG_Init needs to do
 
 void SG_Init(int argc, char** argv){
 
+	printf("About to do generic init\n");
 	//do the generic initialization
 	SG_GameInit();
 
-
+	printf("Initializing video\n");
+	SDL_Init(SDL_INIT_VIDEO);
 	SDL_CreateWindowAndRenderer(GAME_SETTINGS.vid_settings.window_size_x, GAME_SETTINGS.vid_settings.window_size_y, 0, &window, &renderer);
 	SDL_SetWindowTitle(window, SG_title);
-	
+	printf("Done initializing video\n");
 	mouseFactorX = 320.0 / GAME_SETTINGS.vid_settings.window_size_x;
 	mouseFactorY = 200.0 / GAME_SETTINGS.vid_settings.window_size_y;
 	//texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB332, SDL_TEXTUREACCESS_STREAMING, 320, 200);
@@ -170,8 +175,11 @@ void SG_Sleep(int ms){
 int main(int argc, char** argv){
 	SG_WelcomeMessage();
 	SG_Init(argc, argv);
+	printf("Makes it through init!\n");
 	SG_InitPalette();
+	printf("Init palette!\n");
 	title_init();
+	printf("Title init!\n");
 
 	while (gamerunning){
 		SG_Tick();
