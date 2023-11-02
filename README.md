@@ -1,5 +1,7 @@
 # Starblazer-II
-By Will Klees & Josh Piety
+By Will Klees & Josh Piety  
+
+Anaglyph 3D branch  
 
 To-do List
 - make the game
