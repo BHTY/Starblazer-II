@@ -100,9 +100,9 @@ PUBLIC	??_C@_05PFD@win32?$AA@				; `string'
 PUBLIC	_SG_title
 PUBLIC	??_C@_0BN@NNBE@Starblazer?5II?5for?5Windows?595?$AA@ ; `string'
 PUBLIC	_global_hWaveOut
+PUBLIC	_SG_platform
 PUBLIC	_mouseDownLeft
 PUBLIC	_mouseDownRight
-PUBLIC	_SG_platform
 _DATA	SEGMENT
 COMM	_server_connection:DWORD
 COMM	_hwnd:DWORD
@@ -117,11 +117,11 @@ COMM	_hPalette:DWORD
 COMM	_global_wave:BYTE:012H
 COMM	_rectScreen:BYTE:010H
 COMM	_hdc_bmp:DWORD
+COMM	_frontbuffer:DWORD
 COMM	_mouseFactorX:DWORD
 COMM	_mouseFactorY:DWORD
-COMM	_keys:BYTE:0100H
-COMM	_frontbuffer:DWORD
 COMM	_mplayer_addr:DWORD
+COMM	_keys:BYTE:0100H
 _DATA	ENDS
 ;	COMDAT ??_C@_05PFD@win32?$AA@
 _DATA	SEGMENT
@@ -156,11 +156,11 @@ EXTRN	__imp__StretchBlt@44:NEAR
 EXTRN	_GAME_SETTINGS:BYTE
 EXTRN	__imp__BeginPaint@8:NEAR
 EXTRN	__imp__EndPaint@8:NEAR
-EXTRN	__fltused:NEAR
 EXTRN	__imp__GetWindowRect@8:NEAR
+EXTRN	__fltused:NEAR
 CONST	SEGMENT
-$T8559	DQ	04074000000000000r		; 320
-$T8560	DQ	04069000000000000r		; 200
+$T8569	DQ	04074000000000000r		; 320
+$T8570	DQ	04069000000000000r		; 200
 CONST	ENDS
 ;	COMDAT _WndProc@16
 _TEXT	SEGMENT
@@ -179,38 +179,38 @@ _WndProc@16 PROC NEAR					; COMDAT
 	push	edi
 ; Line 60
 	cmp	esi, 5
-	ja	SHORT $L8556
-	je	$L8378
+	ja	SHORT $L8566
+	je	$L8389
 	cmp	esi, 2
-	je	$L8373
-	jmp	SHORT $L8384
-$L8556:
+	je	$L8384
+	jmp	SHORT $L8395
+$L8566:
 	cmp	esi, 256				; 00000100H
-	ja	SHORT $L8557
-	je	$L8376
+	ja	SHORT $L8567
+	je	$L8387
 	cmp	esi, 15					; 0000000fH
-	je	$L8379
+	je	$L8390
 	cmp	esi, 16					; 00000010H
-	je	$L8374
+	je	$L8385
 	cmp	esi, 18					; 00000012H
-	je	$L8375
-	jmp	SHORT $L8384
-$L8557:
+	je	$L8386
+	jmp	SHORT $L8395
+$L8567:
 	cmp	esi, 513				; 00000201H
-	ja	SHORT $L8558
-	je	$L8380
+	ja	SHORT $L8568
+	je	$L8391
 	cmp	esi, 257				; 00000101H
-	je	$L8377
-	jmp	SHORT $L8384
-$L8558:
+	je	$L8388
+	jmp	SHORT $L8395
+$L8568:
 	cmp	esi, 514				; 00000202H
-	je	$L8381
+	je	$L8392
 	cmp	esi, 516				; 00000204H
-	je	$L8382
+	je	$L8393
 	cmp	esi, 517				; 00000205H
-	je	$L8383
+	je	$L8394
 ; Line 130
-$L8384:
+$L8395:
 ; Line 131
 	mov	eax, DWORD PTR _lParam$[esp+72]
 	mov	ecx, DWORD PTR _wParam$[esp+72]
@@ -226,7 +226,7 @@ $L8384:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 61
-$L8373:
+$L8384:
 ; Line 62
 	push	0
 	call	DWORD PTR __imp__PostQuitMessage@4
@@ -239,9 +239,9 @@ $L8373:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 91
-$L8378:
+$L8389:
 ; Line 92
-	fld	QWORD PTR $T8559
+	fld	QWORD PTR $T8569
 	mov	eax, DWORD PTR _lParam$[esp+72]
 	xor	ecx, ecx
 	mov	WORD PTR _GAME_SETTINGS, ax
@@ -260,7 +260,7 @@ $L8378:
 	push	eax
 	fstp	DWORD PTR _mouseFactorX
 ; Line 95
-	fld	QWORD PTR $T8560
+	fld	QWORD PTR $T8570
 	fidiv	DWORD PTR -64+[esp+84]
 	fstp	DWORD PTR _mouseFactorY
 ; Line 96
@@ -275,7 +275,7 @@ $L8378:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 101
-$L8379:
+$L8390:
 ; Line 102
 	lea	eax, DWORD PTR _ps$[esp+76]
 	mov	ecx, DWORD PTR _hwnd
@@ -332,7 +332,7 @@ $L8379:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 67
-$L8374:
+$L8385:
 ; Line 68
 	mov	eax, DWORD PTR _hWnd$[esp+72]
 	push	eax
@@ -349,7 +349,7 @@ $L8374:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 74
-$L8375:
+$L8386:
 ; Line 75
 	push	0
 	call	DWORD PTR __imp__ExitProcess@4
@@ -362,7 +362,7 @@ $L8375:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 80
-$L8376:
+$L8387:
 ; Line 81
 	xor	eax, eax
 	mov	al, BYTE PTR _wParam$[esp+72]
@@ -374,7 +374,7 @@ $L8376:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 86
-$L8377:
+$L8388:
 ; Line 87
 	xor	eax, eax
 	mov	al, BYTE PTR _wParam$[esp+72]
@@ -386,7 +386,7 @@ $L8377:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 110
-$L8380:
+$L8391:
 ; Line 111
 	mov	BYTE PTR _mouseDownLeft, 1
 ; Line 112
@@ -396,7 +396,7 @@ $L8380:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 115
-$L8381:
+$L8392:
 ; Line 116
 	mov	BYTE PTR _mouseDownLeft, 0
 ; Line 117
@@ -406,7 +406,7 @@ $L8381:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 120
-$L8382:
+$L8393:
 ; Line 121
 	mov	BYTE PTR _mouseDownRight, 1
 ; Line 122
@@ -416,7 +416,7 @@ $L8382:
 	add	esp, 64					; 00000040H
 	ret	16					; 00000010H
 ; Line 125
-$L8383:
+$L8394:
 ; Line 126
 	mov	BYTE PTR _mouseDownRight, 0
 ; Line 134
@@ -508,8 +508,8 @@ _DATA	SEGMENT
 _DATA	ENDS
 ;	COMDAT _init_networking
 _TEXT	SEGMENT
+$T8578 = 8
 _winsock_data$ = -400
-$T8568 = 8
 _init_networking PROC NEAR				; COMDAT
 ; Line 155
 	sub	esp, 400				; 00000190H
@@ -521,7 +521,7 @@ _init_networking PROC NEAR				; COMDAT
 	push	514					; 00000202H
 	call	_WSAStartup@8
 	test	eax, eax
-	je	SHORT $L8408
+	je	SHORT $L8419
 ; Line 161
 	call	_WSAGetLastError@0
 	push	eax
@@ -529,9 +529,9 @@ _init_networking PROC NEAR				; COMDAT
 	call	_printf
 	add	esp, 8
 ; Line 164
-$L8408:
+$L8419:
 	lea	esi, DWORD PTR _winsock_data$[esp+408]
-	mov	eax, DWORD PTR $T8568[esp+404]
+	mov	eax, DWORD PTR $T8578[esp+404]
 	mov	edi, eax
 	mov	ecx, 100				; 00000064H
 	rep	movsd
@@ -600,22 +600,22 @@ _msg$ = 12
 _sound_callback@20 PROC NEAR				; COMDAT
 ; Line 185
 	cmp	DWORD PTR _msg$[esp-4], 955		; 000003bbH
-	je	SHORT $L8427
+	je	SHORT $L8438
 ; Line 189
 	cmp	DWORD PTR _current_buffer, 0
-	jne	SHORT $L8429
+	jne	SHORT $L8440
 ; Line 190
 	mov	eax, DWORD PTR _buffer1
 	push	eax
 	push	OFFSET FLAT:_waveHdrA
-	jmp	SHORT $L8573
+	jmp	SHORT $L8583
 ; Line 191
-$L8429:
+$L8440:
 ; Line 192
 	mov	eax, DWORD PTR _buffer2
 	push	eax
 	push	OFFSET FLAT:_waveHdrB
-$L8573:
+$L8583:
 	call	_win_initialize_wave
 	add	esp, 8
 ; Line 195
@@ -626,7 +626,7 @@ $L8573:
 	neg	eax
 	mov	DWORD PTR _current_buffer, eax
 ; Line 198
-$L8427:
+$L8438:
 	ret	20					; 00000014H
 _sound_callback@20 ENDP
 _TEXT	ENDS
@@ -659,13 +659,13 @@ _SG_OpenConnection PROC NEAR				; COMDAT
 	mov	DWORD PTR _server_connection, eax
 	cmp	eax, -1
 ; Line 211
-	jne	SHORT $L8434
+	jne	SHORT $L8445
 ; Line 212
 	xor	al, al
 	add	esp, 4
 	ret	0
 ; Line 215
-$L8434:
+$L8445:
 	lea	ecx, DWORD PTR _iMode$[esp+4]
 	mov	DWORD PTR _server_connection, eax
 	push	ecx
@@ -747,10 +747,10 @@ PUBLIC	_SG_Init
 EXTRN	_waveOutGetNumDevs@0:NEAR
 EXTRN	__imp__CreateWindowExA@48:NEAR
 EXTRN	_malloc:NEAR
-EXTRN	_init_sound:NEAR
 EXTRN	__imp__LoadIconA@8:NEAR
 EXTRN	__imp__UpdateWindow@4:NEAR
 EXTRN	__imp__CreateDIBSection@24:NEAR
+EXTRN	_init_sound:NEAR
 EXTRN	__imp__GetVersion@0:NEAR
 EXTRN	__imp__CreateSolidBrush@4:NEAR
 EXTRN	__imp__GetDC@4:NEAR
@@ -758,8 +758,8 @@ EXTRN	__imp__ShowWindow@8:NEAR
 EXTRN	_SG_GameInit:NEAR
 EXTRN	_waveOutOpen@24:NEAR
 EXTRN	__imp__ReleaseDC@8:NEAR
-EXTRN	_FBPTR:DWORD
 EXTRN	__imp__RegisterClassA@4:NEAR
+EXTRN	_FBPTR:DWORD
 EXTRN	__imp__GetModuleHandleA@4:NEAR
 EXTRN	_timeBeginPeriod@4:NEAR
 EXTRN	__imp__AdjustWindowRect@12:NEAR
@@ -774,7 +774,7 @@ _DATA	ENDS
 _TEXT	SEGMENT
 _winRect$ = -456
 _wc$ = -440
-$T8584 = -400
+$T8594 = -400
 _SG_Init PROC NEAR					; COMDAT
 ; Line 247
 	sub	esp, 456				; 000001c8H
@@ -802,7 +802,7 @@ _SG_Init PROC NEAR					; COMDAT
 ; Line 258
 	call	_SG_GameInit
 ; Line 260
-	lea	eax, DWORD PTR $T8584[esp+472]
+	lea	eax, DWORD PTR $T8594[esp+472]
 	push	eax
 	call	_init_networking
 	mov	DWORD PTR _winRect$[esp+476], ebx
@@ -938,7 +938,7 @@ _SG_Init PROC NEAR					; COMDAT
 	push	1
 	call	_timeBeginPeriod@4
 ; Line 303
-	fld	QWORD PTR $T8559
+	fld	QWORD PTR $T8569
 	xor	ecx, ecx
 	xor	eax, eax
 	mov	cx, WORD PTR _GAME_SETTINGS
@@ -949,7 +949,7 @@ _SG_Init PROC NEAR					; COMDAT
 	push	OFFSET FLAT:_rectScreen
 	fstp	DWORD PTR _mouseFactorX
 ; Line 304
-	fld	QWORD PTR $T8560
+	fld	QWORD PTR $T8570
 	fidiv	DWORD PTR -400+[esp+476]
 	mov	edi, OFFSET FLAT:_keys
 	fstp	DWORD PTR _mouseFactorY
@@ -968,7 +968,7 @@ _SG_Init PROC NEAR					; COMDAT
 	call	_init_sound
 ; Line 316
 	cmp	DWORD PTR _GAME_SETTINGS+68, ebx
-	je	SHORT $L8456
+	je	SHORT $L8467
 ; Line 317
 	call	_waveOutGetNumDevs@0
 	mov	edi, eax
@@ -985,9 +985,9 @@ _SG_Init PROC NEAR					; COMDAT
 	add	esp, 32					; 00000020H
 ; Line 321
 	test	edi, edi
-	je	SHORT $L8457
+	je	SHORT $L8468
 ; Line 323
-$L8459:
+$L8470:
 	push	196608					; 00030000H
 	push	0
 	push	OFFSET FLAT:_sound_callback@20
@@ -996,9 +996,9 @@ $L8459:
 	push	OFFSET FLAT:_global_hWaveOut
 	call	_waveOutOpen@24
 	test	eax, eax
-	jne	SHORT $L8459
+	jne	SHORT $L8470
 ; Line 326
-$L8457:
+$L8468:
 	mov	eax, DWORD PTR _buffer1
 	push	eax
 	push	OFFSET FLAT:_waveHdrA
@@ -1011,7 +1011,7 @@ $L8457:
 	call	_win_initialize_wave
 	add	esp, 8
 ; Line 330
-$L8456:
+$L8467:
 	mov	eax, DWORD PTR _hwnd
 	push	eax
 	call	ebp
@@ -1229,10 +1229,10 @@ _SG_ProcessEvents PROC NEAR				; COMDAT
 	push	ecx
 	call	esi
 	test	eax, eax
-	je	SHORT $L8481
+	je	SHORT $L8492
 	mov	edi, DWORD PTR __imp__TranslateMessage@4
 	mov	ebx, DWORD PTR __imp__DispatchMessageA@4
-$L8484:
+$L8495:
 ; Line 397
 	lea	eax, DWORD PTR _Msg$[esp+40]
 	push	eax
@@ -1251,9 +1251,9 @@ $L8484:
 	push	ecx
 	call	esi
 	test	eax, eax
-	jne	SHORT $L8484
+	jne	SHORT $L8495
 ; Line 400
-$L8481:
+$L8492:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -1285,11 +1285,11 @@ _main	PROC NEAR					; COMDAT
 ; Line 406
 	call	_title_init
 ; Line 408
-$L8493:
+$L8503:
 ; Line 409
 	call	_SG_Tick
 ; Line 410
-	jmp	SHORT $L8493
+	jmp	SHORT $L8503
 _main	ENDP
 _TEXT	ENDS
 END

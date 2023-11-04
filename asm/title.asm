@@ -91,13 +91,13 @@ _init_stars PROC NEAR					; COMDAT
 	push	esi
 	mov	esi, OFFSET FLAT:_title_stars
 ; Line 24
-$L804:
+$L817:
 	push	esi
 	call	_init_star
 	add	esp, 4
 	add	esi, 12					; 0000000cH
 	cmp	esi, OFFSET FLAT:_title_stars+6000
-	jb	SHORT $L804
+	jb	SHORT $L817
 ; Line 25
 	pop	esi
 	ret	0
@@ -112,11 +112,11 @@ _options_button PROC NEAR				; COMDAT
 _options_button ENDP
 _TEXT	ENDS
 PUBLIC	_multiplayer_button
+EXTRN	_mplayer_addr:DWORD
 EXTRN	_destroy_hypercraft:NEAR
 EXTRN	_multiplayer:BYTE
 EXTRN	_blazer2_init:NEAR
 EXTRN	_net_connect:NEAR
-EXTRN	_mplayer_addr:DWORD
 ;	COMDAT _multiplayer_button
 _TEXT	SEGMENT
 _multiplayer_button PROC NEAR				; COMDAT
@@ -126,7 +126,7 @@ _multiplayer_button PROC NEAR				; COMDAT
 	call	_net_connect
 	add	esp, 4
 	test	al, al
-	jne	SHORT $L812
+	jne	SHORT $L825
 ; Line 33
 	mov	BYTE PTR _multiplayer, 1
 ; Line 34
@@ -134,7 +134,7 @@ _multiplayer_button PROC NEAR				; COMDAT
 ; Line 35
 	jmp	_blazer2_init
 ; Line 37
-$L812:
+$L825:
 	ret	0
 _multiplayer_button ENDP
 _TEXT	ENDS
@@ -148,10 +148,10 @@ _campaign_button PROC NEAR				; COMDAT
 	jmp	_blazer2_init
 _campaign_button ENDP
 _TEXT	ENDS
-PUBLIC	_create_buttons
 PUBLIC	??_C@_08KGCG@CAMPAIGN?$AA@			; `string'
 PUBLIC	??_C@_0M@MGOA@MULTIPLAYER?$AA@			; `string'
 PUBLIC	??_C@_07MKIM@OPTIONS?$AA@			; `string'
+PUBLIC	_create_buttons
 EXTRN	_malloc:NEAR
 EXTRN	_ui_create_widget:NEAR
 ;	COMDAT ??_C@_08KGCG@CAMPAIGN?$AA@
@@ -271,12 +271,12 @@ _TEXT	ENDS
 PUBLIC	_title_init
 PUBLIC	??_C@_0BA@KPAO@assets?1star?4obj?$AA@		; `string'
 PUBLIC	??_C@_0N@JEHG@sfx?1menu?4wav?$AA@		; `string'
+EXTRN	_play_music:NEAR
+EXTRN	_init_hypercraft:NEAR
 EXTRN	_spawn_entity:NEAR
 EXTRN	_quat_create:NEAR
 EXTRN	_load_model:NEAR
 EXTRN	_SL_CENTER_Y:WORD
-EXTRN	_play_music:NEAR
-EXTRN	_init_hypercraft:NEAR
 ;	COMDAT ??_C@_0BA@KPAO@assets?1star?4obj?$AA@
 _DATA	SEGMENT
 ??_C@_0BA@KPAO@assets?1star?4obj?$AA@ DB 'assets/star.obj', 00H ; `string'
@@ -339,11 +339,11 @@ _title_init PROC NEAR					; COMDAT
 _title_init ENDP
 _TEXT	ENDS
 PUBLIC	_title_module
-EXTRN	_quat_pitch:NEAR
-EXTRN	_StarblazerEntities:BYTE
-EXTRN	_quat_yaw:NEAR
-EXTRN	_quat_roll:NEAR
 EXTRN	_ui_process_widgets:NEAR
+EXTRN	_quat_pitch:NEAR
+EXTRN	_quat_yaw:NEAR
+EXTRN	_StarblazerEntities:BYTE
+EXTRN	_quat_roll:NEAR
 ;	COMDAT _title_module
 _TEXT	SEGMENT
 _title_module PROC NEAR					; COMDAT
@@ -444,14 +444,14 @@ PUBLIC	_title_draw
 PUBLIC	??_C@_0L@OENN@STARBLAZER?$AA@			; `string'
 PUBLIC	??_C@_06KIN@?5?5?5?5II?$AA@			; `string'
 PUBLIC	??_C@_0BN@POOO@BY?5WILL?5KLEES?5AND?5JOSH?5PIETY?$AA@ ; `string'
+EXTRN	_vputs:NEAR
+EXTRN	_ui_display_widgets:NEAR
 EXTRN	_SG_ReadMouse:NEAR
 EXTRN	_quat_tomat:NEAR
 EXTRN	_draw_scene:NEAR
-EXTRN	_draw_stars:NEAR
 EXTRN	_rotate_object:NEAR
+EXTRN	_draw_stars:NEAR
 EXTRN	_SL_CAMERA_ORIENTATION:BYTE
-EXTRN	_vputs:NEAR
-EXTRN	_ui_display_widgets:NEAR
 ;	COMDAT ??_C@_0L@OENN@STARBLAZER?$AA@
 _DATA	SEGMENT
 ??_C@_0L@OENN@STARBLAZER?$AA@ DB 'STARBLAZER', 00H	; `string'

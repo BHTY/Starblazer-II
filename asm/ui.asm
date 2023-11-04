@@ -103,22 +103,22 @@ _UI_OPEN_SLOT PROC NEAR					; COMDAT
 ; Line 31
 	mov	eax, DWORD PTR _starting$[esp-4]
 	cmp	eax, 200				; 000000c8H
-	jge	SHORT $L489
+	jge	SHORT $L495
 	lea	ecx, DWORD PTR _widgets[eax*4]
-$L487:
+$L493:
 ; Line 32
 	cmp	DWORD PTR [ecx], 0
-	je	SHORT $L484
+	je	SHORT $L490
 	add	ecx, 4
 	inc	eax
 ; Line 31
 	cmp	ecx, OFFSET FLAT:_widgets+800
-	jb	SHORT $L487
-$L489:
+	jb	SHORT $L493
+$L495:
 ; Line 35
 	xor	eax, eax
 ; Line 36
-$L484:
+$L490:
 	ret	0
 _UI_OPEN_SLOT ENDP
 _TEXT	ENDS
@@ -201,92 +201,92 @@ PUBLIC	_UI_DRAW_BOX
 EXTRN	_vputs:NEAR
 ;	COMDAT _UI_DRAW_BOX
 _TEXT	SEGMENT
+_id$ = 8
+_ptr$ = 12
+_text$ = 16
 _x$ = 20
 _y$ = 24
 _px_offset$ = 28
 _txt$ = 32
 _text_size_y$ = -4
-_id$ = 8
-_ptr$ = 12
-_text$ = 16
 _UI_DRAW_BOX PROC NEAR					; COMDAT
 ; Line 54
 	sub	esp, 4
 	xor	eax, eax
 	push	ebx
 	push	esi
-	mov	ebx, DWORD PTR _ptr$[esp+8]
+	mov	esi, DWORD PTR _ptr$[esp+8]
 	push	edi
+	mov	edi, DWORD PTR _text$[esp+12]
 	push	ebp
-	mov	ebp, DWORD PTR _text$[esp+16]
 ; Line 55
-	mov	al, BYTE PTR [ebp+1]
+	mov	al, BYTE PTR [edi+1]
 	lea	ecx, DWORD PTR [eax*4+1]
-	mov	al, BYTE PTR [ebx+4]
+	mov	al, BYTE PTR [esi+4]
 	mov	DWORD PTR _text_size_y$[esp+20], ecx
-	cmp	BYTE PTR [ebp+2], al
+	cmp	BYTE PTR [edi+2], al
 ; Line 58
-	je	SHORT $L674
+	je	SHORT $L680
 ; Line 59
-	mov	di, WORD PTR _y$[esp+16]
+	mov	bp, WORD PTR _y$[esp+16]
 	push	eax
-	mov	ax, WORD PTR [ebx+2]
-	add	ax, di
-	mov	si, WORD PTR _x$[esp+20]
+	mov	ax, WORD PTR [esi+2]
+	add	ax, bp
+	mov	bx, WORD PTR _x$[esp+20]
 	push	eax
-	mov	ax, WORD PTR [ebx]
-	add	ax, si
+	mov	ax, WORD PTR [esi]
+	add	ax, bx
 	push	eax
-	push	edi
-	push	esi
+	push	ebp
+	push	ebx
 	call	_UI_FILL_RECT
 	add	esp, 20					; 00000014H
-	jmp	SHORT $L519
-$L674:
-	mov	si, WORD PTR _x$[esp+16]
-	mov	di, WORD PTR _y$[esp+16]
+	jmp	SHORT $L525
+$L680:
+	mov	bx, WORD PTR _x$[esp+16]
+	mov	bp, WORD PTR _y$[esp+16]
 ; Line 63
-$L519:
+$L525:
 	mov	eax, DWORD PTR _id$[esp+16]
-	cmp	eax, DWORD PTR _current_widget_focus
-	jne	SHORT $L672
+	cmp	DWORD PTR _current_widget_focus, eax
+	jne	SHORT $L678
 	xor	eax, eax
-	mov	al, BYTE PTR [ebx+6]
-	jmp	SHORT $L673
-$L672:
+	mov	al, BYTE PTR [esi+6]
+	jmp	SHORT $L679
+$L678:
 	xor	eax, eax
-	mov	al, BYTE PTR [ebx+5]
-$L673:
+	mov	al, BYTE PTR [esi+5]
+$L679:
 	push	eax
-	mov	ax, WORD PTR [ebx+2]
-	add	ax, di
+	mov	ax, WORD PTR [esi+2]
+	add	ax, bp
 	push	eax
-	mov	ax, WORD PTR [ebx]
-	add	ax, si
+	mov	ax, WORD PTR [esi]
+	add	ax, bx
 	push	eax
-	push	edi
-	push	esi
+	push	ebp
+	push	ebx
 	call	_UI_DRAW_RECT
 	add	esp, 20					; 00000014H
-	mov	cl, BYTE PTR [ebp+3]
+	mov	cl, BYTE PTR [edi+3]
 ; Line 66
-	mov	dl, BYTE PTR [ebp+2]
+	mov	dl, BYTE PTR [edi+2]
 	xor	eax, eax
 	push	ecx
-	mov	al, BYTE PTR [ebp+1]
+	mov	al, BYTE PTR [edi+1]
 	push	edx
 	xor	ecx, ecx
 	push	eax
-	mov	cl, BYTE PTR [ebp]
+	mov	cl, BYTE PTR [edi]
 	push	ecx
-	mov	eax, edi
+	mov	eax, ebp
 	xor	ecx, ecx
 	and	eax, 65535				; 0000ffffH
-	mov	cx, WORD PTR [ebx+2]
+	mov	cx, WORD PTR [esi+2]
 	sub	ecx, DWORD PTR _text_size_y$[esp+36]
 	sar	ecx, 1
 	add	ecx, eax
-	mov	eax, esi
+	mov	eax, ebx
 	push	ecx
 	and	eax, 65535				; 0000ffffH
 	mov	ecx, DWORD PTR _px_offset$[esp+36]
@@ -367,8 +367,7 @@ _UI_DRAW_CHECKBOX PROC NEAR				; COMDAT
 	mov	al, BYTE PTR [edi+2]
 	push	eax
 	push	ebp
-	mov	ax, dx
-	add	ax, bx
+	lea	eax, DWORD PTR [edx+ebx]
 	push	eax
 	push	ecx
 	push	edx
@@ -428,94 +427,93 @@ _UI_DRAW_RADIO PROC NEAR				; COMDAT
 	push	ebx
 	push	esi
 	push	edi
+	mov	esi, DWORD PTR _widgets[eax*4]
 	push	ebp
-; Line 106
-	mov	edi, DWORD PTR _widgets[eax*4]
-	xor	edx, edx
-; Line 107
 	xor	eax, eax
-	mov	ebx, DWORD PTR [edi+12]
+; Line 107
+	mov	edi, DWORD PTR [esi+12]
+	xor	edx, edx
 ; Line 110
-	xor	esi, esi
-	mov	al, BYTE PTR [ebx]
-	mov	si, WORD PTR [edi+10]
-	mov	dl, BYTE PTR [ebx+1]
-	lea	ecx, DWORD PTR [eax*2+1]
 	xor	ebp, ebp
+	mov	al, BYTE PTR [edi]
+	mov	bp, WORD PTR [esi+10]
+	mov	dl, BYTE PTR [edi+1]
+	lea	ecx, DWORD PTR [eax*2+1]
+	xor	ebx, ebx
 	lea	eax, DWORD PTR [edx*4+1]
 	mov	DWORD PTR _box_size_x$[esp+24], ecx
 ; Line 111
-	cmp	BYTE PTR [ebx+4], 0
 	mov	DWORD PTR _box_size_y$[esp+24], eax
+	cmp	BYTE PTR [edi+4], bl
 ; Line 114
-	jbe	$L540
-$L547:
-	mov	cx, WORD PTR [edi+8]
-	mov	al, BYTE PTR [ebx+2]
+	jbe	$L546
+$L553:
+	mov	cx, WORD PTR [esi+8]
+	mov	al, BYTE PTR [edi+2]
 ; Line 116
 	push	eax
 	mov	ax, WORD PTR _box_size_y$[esp+28]
-	add	ax, si
+	add	ax, bp
 	push	eax
 	mov	ax, WORD PTR _box_size_x$[esp+32]
 	add	ax, cx
 	push	eax
-	push	esi
+	push	ebp
 	push	ecx
 	call	_UI_DRAW_RECT
 	add	esp, 20					; 00000014H
 ; Line 119
-	cmp	DWORD PTR [edi+16], ebp
-	jne	SHORT $L550
+	cmp	DWORD PTR [esi+16], ebx
+	jne	SHORT $L556
 ; Line 120
-	mov	al, BYTE PTR [ebx+2]
+	mov	al, BYTE PTR [edi+2]
 	push	eax
 	mov	eax, DWORD PTR _box_size_y$[esp+28]
-	add	eax, esi
+	add	eax, ebp
 	sar	eax, 1
 	push	eax
 	xor	eax, eax
-	mov	ax, WORD PTR [edi+8]
+	mov	ax, WORD PTR [esi+8]
 	add	eax, DWORD PTR _box_size_x$[esp+32]
 	sar	eax, 1
 	push	eax
 	call	_plot_pixel
 	add	esp, 12					; 0000000cH
 ; Line 124
-$L550:
-	mov	al, BYTE PTR [ebx+3]
-	mov	cl, BYTE PTR [ebx+2]
+$L556:
+	mov	al, BYTE PTR [edi+3]
+	mov	cl, BYTE PTR [edi+2]
 	push	eax
 	xor	edx, edx
 	push	ecx
-	mov	dl, BYTE PTR [ebx+1]
+	mov	dl, BYTE PTR [edi+1]
 	push	edx
 	xor	ecx, ecx
-	mov	cl, BYTE PTR [ebx]
+	mov	cl, BYTE PTR [edi]
 	and	eax, 255				; 000000ffH
 	push	ecx
 	xor	edx, edx
-	mov	dx, WORD PTR [edi+8]
-	push	esi
+	mov	dx, WORD PTR [esi+8]
+	push	ebp
 	add	eax, edx
-	mov	ecx, DWORD PTR [ebx+8]
+	mov	ecx, DWORD PTR [edi+8]
 	add	eax, DWORD PTR _box_size_x$[esp+44]
-	inc	ebp
+	inc	ebx
 	push	eax
-	mov	edx, DWORD PTR [ecx+ebp*4-4]
+	mov	edx, DWORD PTR [ecx+ebx*4-4]
 	push	edx
 	call	_vputs
 	mov	ecx, DWORD PTR _box_size_y$[esp+52]
 	add	esp, 28					; 0000001cH
 ; Line 126
 	xor	eax, eax
-	lea	esi, DWORD PTR [ecx+esi+1]
+	lea	ebp, DWORD PTR [ecx+ebp+1]
 ; Line 114
-	mov	al, BYTE PTR [ebx+4]
-	cmp	eax, ebp
-	jg	$L547
+	mov	al, BYTE PTR [edi+4]
+	cmp	eax, ebx
+	jg	$L553
 ; Line 128
-$L540:
+$L546:
 	pop	ebp
 	pop	edi
 	pop	esi
@@ -532,14 +530,14 @@ _UI_DRAW_TEXTBOX PROC NEAR				; COMDAT
 ; Line 138
 	mov	eax, DWORD PTR _widget_handle$[esp-4]
 	cmp	eax, DWORD PTR _current_widget_focus
-	jne	SHORT $L553
+	jne	SHORT $L559
 ; Line 142
 	cmp	BYTE PTR _cursor, 1
 	sbb	al, al
 	neg	al
 	mov	BYTE PTR _cursor, al
 ; Line 144
-$L553:
+$L559:
 	ret	0
 _UI_DRAW_TEXTBOX ENDP
 _TEXT	ENDS
@@ -616,13 +614,13 @@ _ui_create_widget PROC NEAR				; COMDAT
 	mov	esi, eax
 ; Line 160
 	test	esi, esi
-	jne	SHORT $L571
+	jne	SHORT $L577
 	mov	eax, esi
 	pop	edi
 	pop	esi
 	ret	0
 ; Line 162
-$L571:
+$L577:
 	lea	edi, DWORD PTR _widgets[esi*4]
 	push	20					; 00000014H
 	call	_malloc
@@ -650,7 +648,7 @@ $L571:
 	mov	eax, DWORD PTR _widgetData$[esp+4]
 	mov	DWORD PTR [edx+12], eax
 ; Line 169
-	je	SHORT $L576
+	je	SHORT $L582
 ; Line 175
 	mov	eax, DWORD PTR [edi]
 	pop	edi
@@ -661,7 +659,7 @@ $L571:
 	pop	esi
 	ret	0
 ; Line 170
-$L576:
+$L582:
 ; Line 171
 	push	80					; 00000050H
 	call	_malloc
@@ -696,14 +694,14 @@ _ui_destroy_widget PROC NEAR				; COMDAT
 	mov	DWORD PTR [eax], 0
 ; Line 186
 	cmp	BYTE PTR [esi], 5
-	jne	SHORT $L581
+	jne	SHORT $L587
 ; Line 187
 	mov	eax, DWORD PTR [esi+16]
 	push	eax
 	call	_free
 	add	esp, 4
 ; Line 190
-$L581:
+$L587:
 	push	esi
 	call	_free
 	add	esp, 4
@@ -723,24 +721,24 @@ _ui_get_handle_by_id PROC NEAR				; COMDAT
 ; Line 196
 	mov	esi, OFFSET FLAT:_widgets+4
 	mov	ecx, DWORD PTR _widgetID$[esp]
-$L585:
+$L591:
 	mov	edx, DWORD PTR [esi]
 ; Line 197
 	test	edx, edx
-	je	SHORT $L586
+	je	SHORT $L592
 ; Line 198
 	cmp	DWORD PTR [edx+4], ecx
-	je	SHORT $L583
+	je	SHORT $L589
 ; Line 196
-$L586:
+$L592:
 	add	esi, 4
 	inc	eax
 	cmp	esi, OFFSET FLAT:_widgets+800
-	jb	SHORT $L585
+	jb	SHORT $L591
 ; Line 204
 	xor	eax, eax
 ; Line 205
-$L583:
+$L589:
 	pop	esi
 	ret	0
 _ui_get_handle_by_id ENDP
@@ -790,72 +788,72 @@ _ui_display_widgets PROC NEAR				; COMDAT
 	call	_UI_DRAW_RECT
 	add	esp, 20					; 00000014H
 ; Line 219
-$L595:
+$L601:
 	mov	eax, DWORD PTR _widgets[esi*4]
 ; Line 220
 	test	eax, eax
-	je	SHORT $L596
+	je	SHORT $L602
 ; Line 222
 	mov	al, BYTE PTR [eax]
 	and	eax, 255				; 000000ffH
 	dec	eax
 	cmp	eax, 5
-	ja	SHORT $L596
-	jmp	DWORD PTR $L704[eax*4]
+	ja	SHORT $L602
+	jmp	DWORD PTR $L710[eax*4]
 ; Line 223
-$L603:
+$L609:
 ; Line 224
 	push	esi
 	call	_UI_DRAW_LABEL
-	jmp	SHORT $L709
+	jmp	SHORT $L715
 ; Line 228
-$L604:
+$L610:
 ; Line 229
 	push	esi
 	call	_UI_DRAW_CHECKBOX
-	jmp	SHORT $L709
+	jmp	SHORT $L715
 ; Line 233
-$L605:
+$L611:
 ; Line 234
 	push	esi
 	call	_UI_DRAW_DROPDOWN
-	jmp	SHORT $L709
+	jmp	SHORT $L715
 ; Line 238
-$L606:
+$L612:
 ; Line 239
 	push	esi
 	call	_UI_DRAW_RADIO
-	jmp	SHORT $L709
+	jmp	SHORT $L715
 ; Line 243
-$L607:
+$L613:
 ; Line 244
 	push	esi
 	call	_UI_DRAW_TEXTBOX
-	jmp	SHORT $L709
+	jmp	SHORT $L715
 ; Line 248
-$L608:
+$L614:
 ; Line 249
 	push	esi
 	call	_UI_DRAW_BUTTON
-$L709:
+$L715:
 	add	esp, 4
 ; Line 219
-$L596:
+$L602:
 	inc	esi
 	cmp	esi, 200				; 000000c8H
-	jl	SHORT $L595
+	jl	SHORT $L601
 ; Line 259
 	pop	esi
 	add	esp, 8
 	ret	0
 	npad	3
-$L704:
-	DD	OFFSET FLAT:$L603
-	DD	OFFSET FLAT:$L604
-	DD	OFFSET FLAT:$L605
-	DD	OFFSET FLAT:$L606
-	DD	OFFSET FLAT:$L607
-	DD	OFFSET FLAT:$L608
+$L710:
+	DD	OFFSET FLAT:$L609
+	DD	OFFSET FLAT:$L610
+	DD	OFFSET FLAT:$L611
+	DD	OFFSET FLAT:$L612
+	DD	OFFSET FLAT:$L613
+	DD	OFFSET FLAT:$L614
 _ui_display_widgets ENDP
 _TEXT	ENDS
 PUBLIC	_UI_GET_RECT
@@ -888,7 +886,7 @@ _UI_GET_RECT PROC NEAR					; COMDAT
 	xor	ebx, ebx
 	mov	bl, BYTE PTR [eax]
 	cmp	ebx, 6
-	jne	SHORT $L613
+	jne	SHORT $L619
 ; Line 271
 	xor	eax, eax
 	mov	ax, WORD PTR [esi+4]
@@ -900,7 +898,7 @@ _UI_GET_RECT PROC NEAR					; COMDAT
 	add	eax, ecx
 	mov	DWORD PTR [edx+12], eax
 ; Line 280
-$L613:
+$L619:
 	pop	edi
 	pop	esi
 	pop	ebx
@@ -919,14 +917,14 @@ _UI_HANDLE_CLICK PROC NEAR				; COMDAT
 ; Line 284
 	mov	dl, BYTE PTR [ecx]
 	cmp	edx, 6
-	jne	SHORT $L623
+	jne	SHORT $L629
 ; Line 286
 	push	eax
 	mov	eax, DWORD PTR [ecx+12]
 	call	DWORD PTR [eax+16]
 	add	esp, 4
 ; Line 293
-$L623:
+$L629:
 	ret	0
 _UI_HANDLE_CLICK ENDP
 _TEXT	ENDS
@@ -947,14 +945,14 @@ _ui_process_widgets PROC NEAR				; COMDAT
 	add	esp, 4
 ; Line 324
 	cmp	BYTE PTR _mouse$[esp+36], 0
-	je	SHORT $L630
+	je	SHORT $L636
 ; Line 325
 	mov	esi, 1
 	xor	edi, edi
-$L635:
+$L641:
 ; Line 326
 	cmp	DWORD PTR _widgets[esi*4], edi
-	je	SHORT $L636
+	je	SHORT $L642
 ; Line 328
 	lea	eax, DWORD PTR _rect$[esp+32]
 	push	eax
@@ -963,31 +961,31 @@ $L635:
 	movsx	eax, WORD PTR _mouse$[esp+40]
 	add	esp, 8
 ; Line 330
-	cmp	eax, DWORD PTR _rect$[esp+32]
-	jl	SHORT $L636
-	cmp	eax, DWORD PTR _rect$[esp+36]
-	jg	SHORT $L636
+	cmp	DWORD PTR _rect$[esp+32], eax
+	jg	SHORT $L642
+	cmp	DWORD PTR _rect$[esp+36], eax
+	jl	SHORT $L642
 	movsx	eax, WORD PTR _mouse$[esp+34]
-	cmp	eax, DWORD PTR _rect$[esp+40]
-	jl	SHORT $L636
-	cmp	eax, DWORD PTR _rect$[esp+44]
-	jle	SHORT $L717
+	cmp	DWORD PTR _rect$[esp+40], eax
+	jg	SHORT $L642
+	cmp	DWORD PTR _rect$[esp+44], eax
+	jge	SHORT $L723
 ; Line 325
-$L636:
+$L642:
 	inc	esi
 	cmp	esi, 200				; 000000c8H
-	jl	SHORT $L635
+	jl	SHORT $L641
 	pop	edi
 	pop	esi
 	add	esp, 24					; 00000018H
 	ret	0
-$L717:
+$L723:
 ; Line 331
 	push	esi
 	call	_UI_HANDLE_CLICK
 	add	esp, 4
 ; Line 336
-$L630:
+$L636:
 	pop	edi
 	pop	esi
 	add	esp, 24					; 00000018H
