@@ -15,6 +15,7 @@ Description: Starblazer II for SDL2 on Linux
 #include "../headers/star_gen.h"
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
+#include "../headers/sndmixer.h"
 
 char* SG_platform = "nix";
 char* SG_title = "Starblazer II for SDL2";
@@ -80,6 +81,13 @@ What SG_Init needs to do
 - Set timer
 */
 
+void sound_callback(void *userdata, unsigned char *stream, int len) {
+	//printf("I'm so cool remixing the buffer and all that\n");
+	memcpy(stream, (current_buffer == 0 ? buffer1 : buffer2), len);
+	mix();
+	current_buffer = !current_buffer;
+}
+
 void SG_Init(int argc, char** argv){
 
 	//do the generic initialization
@@ -100,6 +108,26 @@ void SG_Init(int argc, char** argv){
 	frontbuffer = surface->pixels;
 	memset(keys, 0, 256 * sizeof(bool_t));
 	//joystick stuff...
+	
+	init_sound();
+	if (GAME_SETTINGS.snd_settings.sound){
+		SDL_AudioSpec *desired, *obtained;
+		desired = malloc(sizeof(SDL_AudioSpec));
+		obtained = malloc(sizeof(SDL_AudioSpec));
+		desired->freq = 22050;
+		desired->format = AUDIO_U8;
+		desired->channels = 1;
+		desired->samples = GAME_SETTINGS.snd_settings.buf_size * 2; // not sure why * 2 is necessary
+		desired->callback = &sound_callback;
+		SDL_OpenAudio(desired, obtained);
+		//printf("Piety audio system up and running\n");
+		printf("audio: %d Hz, buffer is %d bytes\n", obtained->freq, obtained->samples);
+		if (obtained->samples != GAME_SETTINGS.snd_settings.buf_size) {
+			printf("WARNING: couldn't get the proper audio buffer size!\n");
+		}
+		free(desired);
+		SDL_PauseAudio(0);
+	}
 }
 
 void SG_ReadMouse(SG_mouse_t* mouse){
