@@ -1,0 +1,178 @@
+Open Watcom C/C++ x86 32-bit Compile and Link Utility
+Version 2.0 beta Aug  3 2022 00:58:06 (16-bit)
+Copyright (c) 2002-2022 The Open Watcom Contributors. All Rights Reserved.
+Portions Copyright (c) 1988-2002 Sybase, Inc. All Rights Reserved.
+Source code is available under the Sybase Open Watcom Public License.
+See http://www.openwatcom.org/ for details.
+
+Usage:  wcl386 [options] file(s)
+ 
+Options:
+          ( /option is also accepted )
+-c    compile only, no link
+-cc   treat source files as C code
+-cc++ treat source files as C++ code
+-y    ignore the WCL386 environment variable
+        [Processor options]
+-3r 386 register calling conventions
+-3s 386 stack calling conventions
+-4r 486 register calling conventions
+-4s 486 stack calling conventions
+-5r Pentium register calling conv.
+-5s Pentium stack calling conventions
+-6r Pentium Pro register call conven.
+-6s Pentium Pro stack call conven.
+        [Floating-point processor options]
+-fp2   generate 287 floating-point code
+-fp3   generate 387 floating-point code
+-fp5   optimize f-p for Pentium
+-fp6   optimize f-p for Pentium Pro
+-fpc   calls to floating-point library
+-fpd   enable Pentium FDIV check
+-fpi   inline 80x87 with emulation
+-fpi87 inline 80x87
+-fpr   use old floating-point conventions
+        [Compiler options]
+-bcl=<os>         compile and link for <os>
+-bt=<os>          compile for target <os>
+-db               generate browsing information
+-e=<num>          set error limit number <num>
+-ecc              set calling conv. to __cdecl
+-ecd              set calling conv. to __stdcall
+-ecf              set calling conv. to __fastcall
+-ecp              set calling conv. to __pascal
+-ecr              set calling conv. to __fortran
+-ecs              set calling conv. to __syscall
+-ecw              set calling conv. to __watcall
+-ee               call epilogue hook routine
+-ef               full paths in messages
+-ei               force enums to be type int
+-em               minimum base type for enum is int
+-en               emit routine names in the code
+-ep[=<num>]       call prologue hook routine <num>
+-eq               do not display error messages
+-et               P5 profiling
+-ez               generate PharLap EZ-OMF object
+-fh=<file>        pre-compiled headers
+-fhq[=<file>]     -fh without warnings
+-fhr              (C++) only read PCH
+-fhw              (C++) only write PCH
+-fhwe             (C++) don't count PCH warnings
+-fi=<file>        force include of file
+-fo=<file>        set object file name
+-fr=<file>        set error file name
+-ft               (C++) check for 8.3 file names
+-fx               (C++) no check for 8.3 file names
+-g=<name>         set code group name
+-hc               codeview debug format
+-hd               dwarf debug format
+-hw               watcom debug format
+-j                change char default to signed
+-m{f,s,m,c,l}     memory model
+-nc=<name>        set CODE class name
+-nd=<name>        set data segment name
+-nm=<name>        set module name
+-nt=<name>        set text segment name
+-q                operate quietly
+-r                save/restore segregs across calls
+-ri               promote function args/rets to int
+-s                remove stack overflow checks
+-sg               generate calls to grow the stack
+-st               touch stack through SS first
+-v                output func declarations to .def
+-vcap             VC++ compat: alloca in arg lists
+-w=<num>          set warning level number <num>
+-wcd=<num>        disable warning message <num>
+-wce=<num>        enable warning message <num>
+-we               treat all warnings as errors
+-wx               set warning level to max
+-x                preprocessor ignores env.variables
+-xr               (C++) enable RTTI
+-zc               place strings in CODE segment
+-zdl              load DS directly from DGROUP
+-zd{f,p}          DS floats vs DS pegged to DGROUP
+-zf{f,p}          FS floats vs FS pegged to seg
+-zg               function prototype using base type
+-zg{f,p}          GS floats vs GS pegged to seg
+-zku=<codepage>   UNICODE support
+-zk{0,0u,1,2,3,l} double-byte support
+-zl               remove default library information
+-zld              remove file dependency information
+-zm               place functions in separate segments
+-zmf              (C++) -zm with near calls allowed
+-zp=<num>         struct packing align {1,2,4,8,16}
+-zpw              warning when padding a struct
+-zq               operate quietly
+-zs               check syntax only
+-zt=<num>         set data threshold to <num>
+-zu               SS != DGROUP
+-zv               (C++) enable virt. fun. removal opt
+-zw               generate code for MS Windows
+-zz               remove @size from __stdcall func.
+-z{a,e}           disable/enable extensions
+        [Debugging options]
+-d0  no debugging information
+-d1  line number debugging info
+-d1+ (C) line number and types debugging info
+-d2  full symbolic debugging info
+-d2i (C++) -d2 and inlines as COMDATs
+-d2s (C++) -d2 and inlines as statics
+-d2t (C++) -d2 but without type names
+-d3  debug info with unref'd type names
+-d3i (C++) -d3 and inlines as COMDATs
+-d3s (C++) -d3 and inlines as statics
+        [Optimization options]
+-oa         relax alias checking
+-ob         branch prediction
+-oc         disable call/ret optimization
+-od         disable optimizations
+-oe[=<num>] expand functions inline (<num> max size)
+-of[+]      generate traceable stack frames
+-oh         enable repeated optimizations
+-oi         inline intrinsic functions
+-oi+        (C++) -oi with max inlining depth
+-ok         control flow entry/exit seq.
+-ol         perform loop optimizations
+-ol+        -ol with loop unrolling
+-om         generate inline math functions
+-on         numerically unstable floating-point
+-oo         continue compile when low on memory
+-op         improve floating-point consistency
+-or         re-order instructions to avoid stalls
+-os         optimize for space
+-ot         optimize for time
+-ou         ensure unique addresses for functions
+-ox         maximum optimization (-obmiler -s)
+        [C++ exception handling options]
+-xd  no exception handling
+-xds no exception handling: space
+-xdt no exception handling
+-xs  exception handling: balanced
+-xss exception handling: space
+-xst exception handling: time
+        [Preprocessor options]
+-d+             extend syntax of -d option
+-d<name>[=text] define a macro
+-fo=<file>      set object file name
+-i=<path>       include directory
+-p{c,l,w=<num>} Preprocess source file
+  c             - preserve comments
+  l             - insert #line directives
+  w=<num>       - wrap output at column <num>
+-pil            ignore #line directives
+-t=<num>        (C++) <num> of spaces in tab stop
+-tp=<name>      (C) set #pragma on( <name> )
+-u<name>        undefine macro name
+        [Linker options]
+-"linker_directives" additional linker directives
+-@=<file>            additional directive file
+-bcl=<os>            compile and link for <os>
+-bd                  build Dynamic link library
+-bm                  build Multi-thread application
+-br                  build with dll run-time library
+-bw                  build default Windowing app.
+-fd[=<file>]         write directives
+-fe=<file>           name executable file
+-fm[=<file>]         generate map file
+-k<stack_size>       set stack size
+-l=<target>          link for the specified <target>

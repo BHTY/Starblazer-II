@@ -9,6 +9,8 @@
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
 #include "../headers/blazer2.h"
+#include "../headers/net.h"
+#include "../headers/serial.h"
 
 #define PIC_EOI 0x20
 #define PIC2_COMMAND 0xA0
@@ -106,6 +108,9 @@ void SG_Init(int argc, char** argv){
 	frontbuffer = (char*)0xA0000L;
 	FBPTR = malloc(64000);
 	setmode(0x13);
+	
+	initSerial();
+	clearBuffer();
 
 	prev_int_09 = _dos_getvect(0x09);
 	_dos_setvect(9, keyirq);
@@ -176,6 +181,23 @@ void SG_ProcessEvents() {
 	SG_WaitBlank();
 }
 
+bool_t SG_OpenConnection(uint32 addr){
+	//printf("Serial port initialized\n");
+	return 1;
+}
+
+int SG_RecievePacket(void* buf, int num_bytes){
+	//getsSerial(buf, num_bytes);
+}
+
+void SG_SendPacket(void* buf, int num_bytes){
+	//putsSerial(buf, num_bytes);
+}
+
+void SG_CloseConnection(){
+	// there's no way to do this, is there?
+}
+
 void SG_Sleep(int ms) {
 
 }
@@ -188,15 +210,22 @@ void dos_exit() {
 
 int main(int argc, char** argv){
 	SG_WelcomeMessage();
+	printf("%d\n", sizeof(PACKET));
 	getch();
+
 	SG_Init(argc, argv);
 	SG_InitPalette();
 	title_init();
+	
 
 	while (1){
 		SG_Tick();
 
 		if (SG_KeyDown('x')) break;
+		if (multiplayer && StarblazerEntities[0]->health <= 0) {
+			send_death();
+			break;
+		}
 	}
 
 	dos_exit();

@@ -33,6 +33,7 @@ void multiplayer_button(uint32 unimportant){
 		multiplayer = 1;
 		destroy_hypercraft();
 		blazer2_init();
+
 	}
 }
 

@@ -310,6 +310,8 @@ This function is called either from the title module (singleplayer) or mpsetup m
 The multiplayer flag is set by the calling function. If we're in multiplayer mode, the connection has already been opened.
 */
 
+unsigned char accumPitch, accumYaw, accumRoll;
+
 void blazer2_init(){
 	uint32 i;
 
@@ -355,6 +357,10 @@ void blazer2_init(){
 	//spawn the camera entity & certain pos and angle
 	i = spawn_entity(&cam_template, int_fixed(rand() % 100 - 50), int_fixed(rand() % 100 - 50), int_fixed(rand() % 100 - 50), 0, 0, 0);
 
+	accumPitch = 0;
+	accumYaw = 0;
+	accumRoll = 0;
+
 	//setup core state variables (i.e. boost meter, laser bar, etc.)
 	player_boost = player_fighter.boost_size;
 	player_battery = player_fighter.energy_tank;
@@ -367,6 +373,10 @@ void blazer2_init(){
 			spawn_asteroid();
 		}
 	}
+
+#ifdef __DOS32A__
+	if (multiplayer) setup_duel(); // moves each player to the appropriate starting pos & rot - serial play only
+#endif
 
 	//set the module fn pointers
 	SG_Module = blazer2_module;
@@ -459,6 +469,7 @@ void respawn_player(){
 	StarblazerEntities[0]->pos.z = int_fixed(rand() % 100 - 50);
 }
 
+
 void blazer2_module(){
 	uint32 id;
 	joystick_t joy;
@@ -494,11 +505,15 @@ void blazer2_module(){
 
 	//process inputs
 	quat_pitch(angle_multiply(player_fighter.turn_rate, joy.pitch), &(StarblazerEntities[0]->orientation));
+	accumPitch += angle_multiply(player_fighter.turn_rate, joy.pitch);
 	quat_yaw(angle_multiply(player_fighter.turn_rate, joy.yaw), &(StarblazerEntities[0]->orientation));
+	accumYaw += angle_multiply(player_fighter.turn_rate, joy.yaw);
 	quat_roll(angle_multiply(player_fighter.turn_rate, joy.roll), &(StarblazerEntities[0]->orientation));
+	accumRoll += angle_multiply(player_fighter.turn_rate, joy.roll);
 
 	if (SG_KeyDown('P')){
 		shading = !shading;
+		SG_WaitBlank();
 	}
 
 	//shoot
@@ -628,6 +643,12 @@ void draw_debug(){
 
 	sprintf(num, "VERT %d / %d", SL_VERTEX_INDEX, MAX_VERTS);
 	vputs(num, 240, 7, 1, 1, 175, 1);
+	
+	sprintf(num, "%d %d %d %d", StarblazerEntities[0]->orientation.x, StarblazerEntities[0]->orientation.y, StarblazerEntities[0]->orientation.z, StarblazerEntities[0]->orientation.w);
+	vputs(num, 100, 14, 1, 1, 175, 1);
+	
+	sprintf(num, "%d %d %d %d", StarblazerEntities[players[0].entity_id]->orientation.x, StarblazerEntities[players[0].entity_id]->orientation.y, StarblazerEntities[players[0].entity_id]->orientation.z, StarblazerEntities[players[0].entity_id]->orientation.w);
+	vputs(num, 100, 21, 1, 1, 175, 1);
 }
 
 void draw_HPbar(){
@@ -867,7 +888,7 @@ void blazer2_draw(){
 	//draw weapons energy tank
 	draw_battery();
 
-	if (multiplayer) { draw_nametags(); }
+	//if (multiplayer) { draw_nametags(); }
     
 	//draw targeting computer lead position
     //draw screen crack

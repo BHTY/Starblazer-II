@@ -21,11 +21,12 @@ typedef struct{
 
 extern CONNECTED_PLAYER players[16];
 
-#ifdef dos
+#ifdef __DOS32A__
 
 typedef struct{
 	VEC3 pos;
-	uint8 pitchDelta, yawDelta, rollDelta;
+	uint8 pitchDelta, yawDelta, rollDelta; // i know i know
+	// QUAT rot;
 	uint8 flags;
 } PACKET;
 
@@ -37,7 +38,6 @@ typedef struct{
 #define RADAR_LOCK(packet) (packet.flags & 4)
 
 #else
-
 typedef struct{
 	VEC3 pos;
 	QUAT rot;
