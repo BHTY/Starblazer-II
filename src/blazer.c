@@ -3,6 +3,8 @@
 #include "../headers/graphics.h"
 #include "../headers/font.h"
 #include <stdio.h>
+#include <time.h>
+#include <stdlib.h>
 
 extern void title_draw();
 extern void title_module();
@@ -142,7 +144,7 @@ void SG_GameInit(){
 	SG_LoadConfig(&GAME_SETTINGS);
 	SG_Draw = title_draw;
 	SG_Module = title_module;
-
+	
 	unpack_glyphs("starfont.fnt");
 	srand(time(NULL));
 

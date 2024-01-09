@@ -75,6 +75,7 @@ void SG_Tick();
 void SG_PresentFrame();
 void SG_WelcomeMessage();
 void SG_GameInit();
+void SG_InitPalette();
 
 void SG_LoadConfig(SG_config_t*);
 void SG_SaveConfig(SG_config_t*);

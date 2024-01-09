@@ -18,6 +18,7 @@ extern uint32 SND_EXPLODE, SND_HIT, SND_LASER, SND_LASER_ENEMY;
 extern LASER ENEMY_LASER_SHREDDER, ENEMY_LASER_DRAGONBREATH;
 extern bool_t laser_type;
 
+void blazer2_init();
 void explode_at(VEC3*);
 void explode_entity(ENTITY**); //frees the entity and spawns an explosion there
 void vjoy_read(joystick_t* joy);

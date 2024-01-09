@@ -3,6 +3,7 @@
 	Description: Hypercraft
 */
 
+#include <stdlib.h>
 #include "../headers/hyptest.h"
 #include "../headers/ecs.h"
 #include "../headers/blazer2.h"

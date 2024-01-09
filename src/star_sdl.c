@@ -11,11 +11,14 @@ Description: Starblazer II for SDL2 on Linux
 
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 #include "../headers/star_gen.h"
 #include "../headers/blazer.h"
 #include "../headers/graphics.h"
 #include "../headers/sndmixer.h"
+
+extern void title_init();
 
 char* SG_platform = "nix";
 char* SG_title = "Starblazer II for SDL2";
@@ -50,7 +53,7 @@ bool_t SG_OpenConnection(uint32 addr){
 		return 0;
 	}
 	
-	ioctl(server_connection, SOCK_NONBLOCK, &iMode);
+	//ioctl(server_connection, SOCK_NONBLOCK, &iMode);
 	
 	return 1;
 }
@@ -93,7 +96,7 @@ void SG_Init(int argc, char** argv){
 	//do the generic initialization
 	SG_GameInit();
 
-
+	SDL_Init(SDL_INIT_VIDEO);
 	SDL_CreateWindowAndRenderer(GAME_SETTINGS.vid_settings.window_size_x, GAME_SETTINGS.vid_settings.window_size_y, 0, &window, &renderer);
 	SDL_SetWindowTitle(window, SG_title);
 	
@@ -198,9 +201,11 @@ void SG_Sleep(int ms){
 int main(int argc, char** argv){
 	SG_WelcomeMessage();
 	SG_Init(argc, argv);
+	
 	SG_InitPalette();
+	
 	title_init();
-
+	
 	while (gamerunning){
 		SG_Tick();
 	}

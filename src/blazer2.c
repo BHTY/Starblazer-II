@@ -12,6 +12,11 @@
 #include "../headers/hyptest.h"
 #include "../headers/net.h"
 #include "../headers/sndmixer.h"
+#include "../headers/font.h"
+#include "../headers/graphics.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 
 #define NUM_SHARDS 64
 

@@ -46,12 +46,12 @@ _current_glyph DD 0270fH
 _DATA	ENDS
 PUBLIC	??_C@_01LHO@r?$AA@				; `string'
 PUBLIC	_unpack_glyphs
+EXTRN	_fclose:NEAR
 EXTRN	_malloc:NEAR
 EXTRN	_fopen:NEAR
 EXTRN	_fread:NEAR
 EXTRN	_fseek:NEAR
 EXTRN	_ftell:NEAR
-EXTRN	_fclose:NEAR
 ;	COMDAT ??_C@_01LHO@r?$AA@
 _DATA	SEGMENT
 ??_C@_01LHO@r?$AA@ DB 'r', 00H				; `string'
@@ -107,7 +107,7 @@ _unpack_glyphs PROC NEAR				; COMDAT
 	add	esp, 4
 	mov	eax, OFFSET FLAT:_glyphs
 ; Line 32
-$L454:
+$L460:
 ; Line 33
 	mov	DWORD PTR [eax], edi
 	add	eax, 4
@@ -117,7 +117,7 @@ $L454:
 	add	ecx, 4
 	add	edi, ecx
 	cmp	eax, OFFSET FLAT:_glyphs+192
-	jb	SHORT $L454
+	jb	SHORT $L460
 ; Line 40
 	pop	edi
 	pop	esi
@@ -137,55 +137,51 @@ _scaleX$ = 24
 _scaleY$ = 28
 __draw_glyph PROC NEAR					; COMDAT
 ; Line 44
-	sub	esp, 4
 	push	ebx
 	push	esi
+	mov	esi, DWORD PTR _scaleY$[esp+4]
 	push	edi
-	xor	ebx, ebx
-	mov	edi, DWORD PTR _scaleY$[esp+12]
 	push	ebp
+	xor	edi, edi
 ; Line 48
-	mov	esi, DWORD PTR _glyph$[esp+16]
-	neg	edi
-	cmp	DWORD PTR [esi], ebx
-	jle	SHORT $L464
-	movsx	eax, BYTE PTR _color$[esp+16]
-	lea	ebp, DWORD PTR [esi+16]
-	mov	DWORD PTR -4+[esp+20], eax
-$L466:
+	mov	ebp, DWORD PTR _glyph$[esp+12]
+	neg	esi
+	cmp	DWORD PTR [ebp], edi
+	jle	SHORT $L470
+	lea	ebx, DWORD PTR [ebp+16]
+$L472:
 ; Line 49
-	mov	eax, DWORD PTR -4+[esp+20]
-	add	ebp, 16					; 00000010H
+	mov	al, BYTE PTR _color$[esp+12]
+	add	ebx, 16					; 00000010H
 	push	eax
-	inc	ebx
-	mov	eax, DWORD PTR [ebp-16]
-	imul	eax, edi
-	add	eax, DWORD PTR _centerY$[esp+20]
+	inc	edi
+	mov	eax, DWORD PTR [ebx-16]
+	imul	ax, si
+	add	ax, WORD PTR _centerY$[esp+16]
 	push	eax
-	mov	eax, DWORD PTR [ebp-20]
-	imul	eax, DWORD PTR _scaleX$[esp+24]
-	add	eax, DWORD PTR _centerX$[esp+24]
+	mov	eax, DWORD PTR [ebx-20]
+	imul	ax, WORD PTR _scaleX$[esp+20]
+	add	ax, WORD PTR _centerX$[esp+20]
 	push	eax
-	mov	eax, DWORD PTR [ebp-24]
-	imul	eax, edi
-	add	eax, DWORD PTR _centerY$[esp+28]
+	mov	eax, DWORD PTR [ebx-24]
+	imul	ax, si
+	add	ax, WORD PTR _centerY$[esp+24]
 	push	eax
-	mov	eax, DWORD PTR [ebp-28]
-	imul	eax, DWORD PTR _scaleX$[esp+32]
-	add	eax, DWORD PTR _centerX$[esp+32]
+	mov	eax, DWORD PTR [ebx-28]
+	imul	ax, WORD PTR _scaleX$[esp+28]
+	add	ax, WORD PTR _centerX$[esp+28]
 	push	eax
 	call	_drawline
 	add	esp, 20					; 00000014H
 ; Line 48
-	cmp	DWORD PTR [esi], ebx
-	jg	SHORT $L466
+	cmp	DWORD PTR [ebp], edi
+	jg	SHORT $L472
 ; Line 51
-$L464:
+$L470:
 	pop	ebp
 	pop	edi
 	pop	esi
 	pop	ebx
-	add	esp, 4
 	ret	0
 __draw_glyph ENDP
 _TEXT	ENDS
@@ -235,44 +231,44 @@ _draw_string PROC NEAR					; COMDAT
 	sub	esp, 4
 	push	ebx
 	push	esi
-	mov	ebx, DWORD PTR _str$[esp+8]
+	mov	esi, DWORD PTR _str$[esp+8]
 	push	edi
 	push	ebp
 ; Line 59
-	cmp	BYTE PTR [ebx], 0
+	cmp	BYTE PTR [esi], 0
 	mov	ebp, DWORD PTR _upperRightX$[esp+16]
 	mov	DWORD PTR _original$[esp+20], ebp
 ; Line 61
-	je	$L489
-	mov	esi, DWORD PTR _scaleX$[esp+16]
-	mov	edi, DWORD PTR _scaleY$[esp+16]
-$L488:
-	mov	al, BYTE PTR [ebx]
+	je	$L494
+	mov	edi, DWORD PTR _scaleX$[esp+16]
+	mov	ebx, DWORD PTR _scaleY$[esp+16]
+$L493:
+	mov	al, BYTE PTR [esi]
 ; Line 63
 	cmp	al, 93					; 0000005dH
-	jne	SHORT $L490
+	jne	SHORT $L495
 ; Line 64
-	mov	al, BYTE PTR [ebx+1]
-	add	ebx, 2
+	mov	al, BYTE PTR [esi+1]
+	add	esi, 2
 	mov	BYTE PTR _color$[esp+16], al
 ; Line 66
-	jmp	$L532
+	jmp	$L537
 ; Line 69
-$L490:
+$L495:
 	cmp	al, 47					; 0000002fH
-	jne	SHORT $L491
+	jne	SHORT $L496
 ; Line 71
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -283,21 +279,21 @@ $L490:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 74
-$L491:
-	cmp	BYTE PTR [ebx], 39			; 00000027H
-	jne	SHORT $L492
+$L496:
+	cmp	BYTE PTR [esi], 39			; 00000027H
+	jne	SHORT $L497
 ; Line 77
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -308,27 +304,27 @@ $L491:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 80
-$L492:
-	mov	cl, BYTE PTR [ebx]
+$L497:
+	mov	cl, BYTE PTR [esi]
 	cmp	cl, 65					; 00000041H
-	jl	SHORT $L493
+	jl	SHORT $L498
 	cmp	cl, 90					; 0000005aH
-	jg	SHORT $L493
+	jg	SHORT $L498
 ; Line 81
 	sub	cl, 65					; 00000041H
-	push	edi
+	push	ebx
 ; Line 83
 	mov	al, BYTE PTR _color$[esp+20]
-	push	esi
+	push	edi
 	movsx	ecx, cl
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	mov	edx, DWORD PTR _upperRightY$[esp+28]
 	sar	eax, 1
 	add	edx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	push	edx
 	cdq
 	sub	eax, edx
@@ -339,27 +335,27 @@ $L492:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 86
-$L493:
-	mov	cl, BYTE PTR [ebx]
+$L498:
+	mov	cl, BYTE PTR [esi]
 	cmp	cl, 48					; 00000030H
-	jl	SHORT $L494
+	jl	SHORT $L499
 	cmp	cl, 57					; 00000039H
-	jg	SHORT $L494
+	jg	SHORT $L499
 ; Line 87
 	sub	cl, 22					; 00000016H
-	push	edi
+	push	ebx
 ; Line 89
 	mov	al, BYTE PTR _color$[esp+20]
-	push	esi
+	push	edi
 	movsx	ecx, cl
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	mov	edx, DWORD PTR _upperRightY$[esp+28]
 	sar	eax, 1
 	add	edx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	push	edx
 	cdq
 	sub	eax, edx
@@ -370,21 +366,21 @@ $L493:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 92
-$L494:
-	cmp	BYTE PTR [ebx], 46			; 0000002eH
-	jne	SHORT $L495
+$L499:
+	cmp	BYTE PTR [esi], 46			; 0000002eH
+	jne	SHORT $L500
 ; Line 95
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -395,21 +391,21 @@ $L494:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 98
-$L495:
-	cmp	BYTE PTR [ebx], 44			; 0000002cH
-	jne	SHORT $L496
+$L500:
+	cmp	BYTE PTR [esi], 44			; 0000002cH
+	jne	SHORT $L501
 ; Line 101
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -420,21 +416,21 @@ $L495:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 104
-$L496:
-	cmp	BYTE PTR [ebx], 45			; 0000002dH
-	jne	SHORT $L497
+$L501:
+	cmp	BYTE PTR [esi], 45			; 0000002dH
+	jne	SHORT $L502
 ; Line 107
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -445,21 +441,21 @@ $L496:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 110
-$L497:
-	cmp	BYTE PTR [ebx], 63			; 0000003fH
-	jne	SHORT $L498
+$L502:
+	cmp	BYTE PTR [esi], 63			; 0000003fH
+	jne	SHORT $L503
 ; Line 113
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -470,21 +466,21 @@ $L497:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 116
-$L498:
-	cmp	BYTE PTR [ebx], 33			; 00000021H
-	jne	SHORT $L499
+$L503:
+	cmp	BYTE PTR [esi], 33			; 00000021H
+	jne	SHORT $L504
 ; Line 119
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -495,21 +491,21 @@ $L498:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 122
-$L499:
-	cmp	BYTE PTR [ebx], 58			; 0000003aH
-	jne	SHORT $L500
+$L504:
+	cmp	BYTE PTR [esi], 58			; 0000003aH
+	jne	SHORT $L505
 ; Line 125
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -520,21 +516,21 @@ $L499:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 128
-$L500:
-	cmp	BYTE PTR [ebx], 59			; 0000003bH
-	jne	SHORT $L501
+$L505:
+	cmp	BYTE PTR [esi], 59			; 0000003bH
+	jne	SHORT $L506
 ; Line 131
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -545,21 +541,21 @@ $L500:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 134
-$L501:
-	cmp	BYTE PTR [ebx], 116			; 00000074H
-	jne	SHORT $L502
+$L506:
+	cmp	BYTE PTR [esi], 116			; 00000074H
+	jne	SHORT $L507
 ; Line 137
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -570,21 +566,21 @@ $L501:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 140
-$L502:
-	cmp	BYTE PTR [ebx], 43			; 0000002bH
-	jne	SHORT $L503
+$L507:
+	cmp	BYTE PTR [esi], 43			; 0000002bH
+	jne	SHORT $L508
 ; Line 143
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -595,21 +591,21 @@ $L502:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 146
-$L503:
-	cmp	BYTE PTR [ebx], 120			; 00000078H
-	jne	SHORT $L504
+$L508:
+	cmp	BYTE PTR [esi], 120			; 00000078H
+	jne	SHORT $L509
 ; Line 149
 	mov	al, BYTE PTR _color$[esp+16]
-	push	edi
+	push	ebx
 	mov	ecx, DWORD PTR _upperRightY$[esp+20]
-	push	esi
+	push	edi
 	push	eax
-	lea	eax, DWORD PTR [edi+edi*4]
+	lea	eax, DWORD PTR [ebx+ebx*4]
 	cdq
 	sub	eax, edx
 	sar	eax, 1
 	add	ecx, eax
-	lea	eax, DWORD PTR [esi+esi*2]
+	lea	eax, DWORD PTR [edi+edi*2]
 	cdq
 	push	ecx
 	sub	eax, edx
@@ -620,17 +616,17 @@ $L503:
 	call	_draw_glyph
 	add	esp, 24					; 00000018H
 ; Line 152
-$L504:
-	inc	ebx
-	lea	eax, DWORD PTR [esi+esi*2]
+$L509:
+	inc	esi
+	lea	eax, DWORD PTR [edi+edi*2]
 ; Line 153
 	add	eax, DWORD PTR _spacing$[esp+16]
 	add	ebp, eax
-$L532:
+$L537:
 ; Line 154
-	cmp	BYTE PTR [ebx], 0
-	jne	$L488
-$L489:
+	cmp	BYTE PTR [esi], 0
+	jne	$L493
+$L494:
 ; Line 156
 	sub	ebp, DWORD PTR _original$[esp+20]
 	mov	eax, ebp
@@ -646,13 +642,13 @@ _TEXT	ENDS
 PUBLIC	_vputs
 ;	COMDAT _vputs
 _TEXT	SEGMENT
-_str$ = 8
-_x$ = 12
 _y$ = 16
 _xscale$ = 20
 _yscale$ = 24
 _color$ = 28
 _spacing$ = 32
+_str$ = 8
+_x$ = 12
 _vputs	PROC NEAR					; COMDAT
 ; Line 160
 	mov	cl, BYTE PTR _color$[esp-4]

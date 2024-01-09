@@ -3,6 +3,7 @@
 	Description: Core 2D Graphics Primitives
 */
 
+#include <stdlib.h>
 #include "../headers/graphics.h"
 #include "../headers/sl_math.h"
 #include <string.h>
