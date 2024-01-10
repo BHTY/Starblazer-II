@@ -644,11 +644,11 @@ void draw_debug(){
 	sprintf(num, "VERT %d / %d", SL_VERTEX_INDEX, MAX_VERTS);
 	vputs(num, 240, 7, 1, 1, 175, 1);
 	
-	sprintf(num, "%d %d %d %d", StarblazerEntities[0]->orientation.x, StarblazerEntities[0]->orientation.y, StarblazerEntities[0]->orientation.z, StarblazerEntities[0]->orientation.w);
+	/*sprintf(num, "%d %d %d %d", StarblazerEntities[0]->orientation.x, StarblazerEntities[0]->orientation.y, StarblazerEntities[0]->orientation.z, StarblazerEntities[0]->orientation.w);
 	vputs(num, 100, 14, 1, 1, 175, 1);
 	
 	sprintf(num, "%d %d %d %d", StarblazerEntities[players[0].entity_id]->orientation.x, StarblazerEntities[players[0].entity_id]->orientation.y, StarblazerEntities[players[0].entity_id]->orientation.z, StarblazerEntities[players[0].entity_id]->orientation.w);
-	vputs(num, 100, 21, 1, 1, 175, 1);
+	vputs(num, 100, 21, 1, 1, 175, 1);*/
 }
 
 void draw_HPbar(){

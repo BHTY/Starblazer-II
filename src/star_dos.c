@@ -110,7 +110,6 @@ void SG_Init(int argc, char** argv){
 	setmode(0x13);
 	
 	initSerial();
-	clearBuffer();
 
 	prev_int_09 = _dos_getvect(0x09);
 	_dos_setvect(9, keyirq);
