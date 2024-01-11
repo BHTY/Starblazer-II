@@ -209,7 +209,7 @@ void dos_exit() {
 
 int main(int argc, char** argv){
 	SG_WelcomeMessage();
-	printf("%d\n", sizeof(PACKET));
+	printf("Press any key.\n");//printf("%d\n", sizeof(PACKET));
 	getch();
 
 	SG_Init(argc, argv);
