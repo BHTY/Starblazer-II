@@ -5,6 +5,7 @@ Description: SLipstream Math functions for 3D graphics
 
 #include "../headers/sl_math.h"
 #include "../headers/tables.h"
+#include <stdint.h>
 
 uint32 int_abs(uint32 x){
 	uint32 y = -(x >> 31);
@@ -147,7 +148,7 @@ ANGLE angle_atan2(FIXED y, FIXED x) {
 	// TODO!
 	return 0;
 }
-FIXED fast_sqrt(FIXED n) {
+FIXED old_fast_sqrt(FIXED n) {
 	FIXED x = n / 2;
 	int i;
 	//printf("Square rooting %f\n", n/65536.0);
@@ -158,6 +159,82 @@ FIXED fast_sqrt(FIXED n) {
 		x = (x + fixed_div(n, x)) / 2;
 	}
 	return x;
+}
+// https://github.com/chmike/fpsqrt/blob/master/fpsqrt.c
+FIXED fast_sqrt(FIXED v) {
+    uint32_t t, q, b, r;
+    r = (int32_t)v; 
+    q = 0;          
+    b = 0x40000000UL;
+    if( r < 0x40000200 )
+    {
+        while( b != 0x40 )
+        {
+            t = q + b;
+            if( r >= t )
+            {
+                r -= t;
+                q = t + b; // equivalent to q += 2*b
+            }
+            r <<= 1;
+            b >>= 1;
+        }
+        q >>= 8;
+        return q;
+    }
+    while( b > 0x40 )
+    {
+        t = q + b;
+        if( r >= t )
+        {
+            r -= t;
+            q = t + b; // equivalent to q += 2*b
+        }
+        if( (r & 0x80000000) != 0 )
+        {
+            q >>= 1;
+            b >>= 1;
+            r >>= 1;
+            while( b > 0x20 )
+            {
+                t = q + b;
+                if( r >= t )
+                {
+                    r -= t;
+                    q = t + b;
+                }
+                r <<= 1;
+                b >>= 1;
+            }
+            q >>= 7;
+            return q;
+        }
+        r <<= 1;
+        b >>= 1;
+    }
+    q >>= 8;
+    return q;
+}
+// also:
+FIXED fast_sqrt_int(int32_t v) {
+    uint32_t t, q, b, r;
+    if (v == 0) return 0;
+    r = v;
+    b = 0x40000000;
+    q = 0;
+    while( b > 0 )
+    {
+        t = q + b;
+        if( r >= t )
+        {
+            r -= t;
+            q = t + b;
+        }
+        r <<= 1;
+        b >>= 1;
+    }
+    if( r > q ) ++q;
+    return q;
 }
 void vec3_add(VEC3 *a, VEC3 *b) {
 	b->x += a->x;
@@ -175,14 +252,28 @@ void vec3_cross(VEC3 *a, VEC3 *b, VEC3 *o) {
 	o->z = fixed_mul(a->x, b->y) - fixed_mul(a->y, b->x);
 }
 
-#define cap(a) (a < 0 ? 2147483647 : a)
+#define cap(a) (a < 0 ? 0x10000000 : a)
 
 void vec3_normalize(VEC3 *x) {
-	FIXED magnitude = fast_sqrt(cap(fixed_mul(x->x, x->x) + fixed_mul(x->y, x->y) + fixed_mul(x->z, x->z)));
+	short ix, iy, iz;
+	int total;
+	FIXED magnitude, inv;
+	FIXED a;
+	if (int_abs(x->x) > 32*65536 || int_abs(x->y) > 32*65536 || int_abs(x->z) > 32*65536) {
+		ix = x->x >> 16;
+		iy = x->y >> 16;
+		iz = x->z >> 16;
+		total = ix*ix+iy*iy+iz*iz;
+		magnitude = fast_sqrt_int(total);
+	} else {
+		a = fixed_mul(x->x, x->x) + fixed_mul(x->y, x->y) + fixed_mul(x->z, x->z);
+		magnitude = fast_sqrt(a);
+	}
 	if (magnitude == 0) return;
-	x->x = fixed_div(x->x, magnitude);
-	x->y = fixed_div(x->y, magnitude);
-	x->z = fixed_div(x->z, magnitude);
+	inv = fixed_div(0x10000, magnitude);
+	x->x = fixed_mul(x->x, inv);
+	x->y = fixed_mul(x->y, inv);
+	x->z = fixed_mul(x->z, inv);
 }
 
 	

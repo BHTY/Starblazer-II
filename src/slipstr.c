@@ -199,9 +199,6 @@ FIXED find_illumination(VEC3 *x1, VEC3 *x2, VEC3 *x3, VEC3 *light) {
 	vec3_subtract(x1, &v2);
 	vec3_cross(&v1, &v2, &norm);
 	vec3_normalize(&norm);
-	vec3_normalize(&norm);
-	vec3_normalize(&norm);
-	vec3_normalize(&norm);
 	look = *x1;
 	vec3_add(x2, &look);
 	vec3_add(x3, &look);
@@ -209,9 +206,6 @@ FIXED find_illumination(VEC3 *x1, VEC3 *x2, VEC3 *x3, VEC3 *light) {
 	look.y /= 3;
 	look.z /= 3;
 	vec3_subtract(light, &look);
-	vec3_normalize(&look);
-	vec3_normalize(&look);
-	vec3_normalize(&look);
 	vec3_normalize(&look);
 	return int_abs(vec3_dot(&look, &norm));
 }
